@@ -1,4 +1,4 @@
-user = open('user.txt','r').readline()
+user = open('/mnt/c/livestock/python/templates/user.txt','r').readline()
 
 # Import
 import sys
