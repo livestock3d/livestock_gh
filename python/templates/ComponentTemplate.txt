@@ -1,0 +1,25 @@
+#------------------------------------------------------------------------------#
+# IMPORTS
+
+import sys
+sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\Kode - Livestock\01 Python\Classes')
+import DelphinGH as dgh
+import DelphinClasses as dc
+import LivestockGH as ls
+import Rhino as rc
+
+n = 
+ghenv.Component.Name = ls.ComponentData[n][0]
+ghenv.Component.NickName = ls.ComponentData[n][1]
+ghenv.Component.Message = ls.ComponentData[n][2]
+ghenv.Component.IconDisplayMode = ghenv.Component.IconDisplayMode.application
+ghenv.Component.Category = ls.ComponentData[n][3]
+ghenv.Component.SubCategory = ls.ComponentData[n][4]
+ghenv.Component.Description = ls.ComponentData[n][5]
+#ghenv.Component.Icon = ls.ComponentData[n][6]
+
+#------------------------------------------------------------------------------#
+# COMPONENT
+
+#------------------------------------------------------------------------------#
+# OUTPUTS
