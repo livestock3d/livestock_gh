@@ -11,12 +11,10 @@ __status__ = "Work in Progress"
 def drainMeshPaths(meshPath,cpus):
     """ Estimates the trail of a drainage path on a mesh. """
 
-    print('start import')
     import threading
     import queue
     import pymesh as pm
-    import numpy as np
-    print('imports done')
+    from numpy import array
 
     # Load mesh
     mesh = pm.load_mesh(meshPath)
@@ -37,7 +35,7 @@ def drainMeshPaths(meshPath,cpus):
     i = 0
     while i < len(startPts):
         for j in range(0,len(faceIndex)):
-            startPoints.append([faceIndex[j],np.array([startPts[i],startPts[i+1],startPts[i+2]])])
+            startPoints.append([faceIndex[j],array([startPts[i],startPts[i+1],startPts[i+2]])])
             centerZ.append(startPts[i+2])
             i += 3
 
@@ -113,7 +111,7 @@ def drainMeshPaths(meshPath,cpus):
 
 def drainPools(path):
     import pymesh as pm
-    import numpy as np
+    from numpy import array, allclose, sum
     from scipy.optimize import newton
 
     # Paths
@@ -138,7 +136,7 @@ def drainPools(path):
     faceCen = []
     i = 0
     while i < len(cenPts):
-        faceCen.append(np.array([float(cenPts[i]), float(cenPts[i + 1]), float(cenPts[i + 2])]))
+        faceCen.append(array([float(cenPts[i]), float(cenPts[i + 1]), float(cenPts[i + 2])]))
         i += 3
 
     # Load points
@@ -147,7 +145,7 @@ def drainPools(path):
     for l in ptsLine:
         l = l[:-1]
         l = l.split(',')
-        endPts.append(np.array([float(l[0]), float(l[1]), float(l[2])]))
+        endPts.append(array([float(l[0]), float(l[1]), float(l[2])]))
     #print(len(endPts))
 
     # Load volumes
@@ -170,7 +168,7 @@ def drainPools(path):
 
             # Find equivalent face center of points
             for index, cen in enumerate(faceCen):
-                if np.allclose(cen,pt):
+                if allclose(cen,pt):
                     fI.append(index)
                     break
 
@@ -179,7 +177,7 @@ def drainPools(path):
             j = 0
             while j < len(pts):
                 # If it is in list: add volume
-                if np.allclose(pts[j], pt):
+                if allclose(pts[j], pt):
                     vols[j] += vol[i]
                     j = len(pts)
                     found = True
@@ -192,7 +190,7 @@ def drainPools(path):
 
                 # Find equivalent face center of points
                 for index, cen in enumerate(faceCen):
-                    if np.allclose(cen,pt):
+                    if allclose(cen,pt):
                         fI.append(index)
                         break
 
@@ -249,11 +247,11 @@ def drainPools(path):
                         adjFace.append(int(af))
 
                         # Convert to numpy array
-                        faZ = np.array(faceZ)
-                        faA = np.array(faceA)
+                        faZ = array(faceZ)
+                        faA = array(faceA)
 
                         # Compute new z-value
-                        Z = (np.sum(faZ*faA)+volume)/np.sum(faA)
+                        Z = (sum(faZ*faA)+volume)/sum(faA)
 
         # Volume function to solve
         def findHeight(z):
@@ -268,15 +266,15 @@ def drainPools(path):
             z2 = z
 
             # Add vertices
-            bVert.append(np.array([x1, y1, z1])) #0
-            bVert.append(np.array([x1, y2, z1])) #1
-            bVert.append(np.array([x1, y2, z2])) #2
-            bVert.append(np.array([x1, y1, z2])) #3
+            bVert.append(array([x1, y1, z1])) #0
+            bVert.append(array([x1, y2, z1])) #1
+            bVert.append(array([x1, y2, z2])) #2
+            bVert.append(array([x1, y1, z2])) #3
 
-            bVert.append(np.array([x2, y2, z2])) #4
-            bVert.append(np.array([x2, y2, z1])) #5
-            bVert.append(np.array([x2, y1, z1])) #6
-            bVert.append(np.array([x2, y1, z2])) #7
+            bVert.append(array([x2, y2, z2])) #4
+            bVert.append(array([x2, y2, z1])) #5
+            bVert.append(array([x2, y1, z1])) #6
+            bVert.append(array([x2, y1, z2])) #7
 
             # Add faces
             bFace.append([0, 1, 3]) # side 1
@@ -301,9 +299,9 @@ def drainPools(path):
             bVox.append([2, 4, 6, 7])
 
             # Create boundary mesh
-            bVert = np.array(bVert)
-            bFace = np.array(bFace)
-            bVox = np.array(bVox)
+            bVert = array(bVert)
+            bFace = array(bFace)
+            bVox = array(bVox)
             bMesh = pm.form_mesh(bVert,bFace,bVox)
 
             # Make intersection
@@ -331,7 +329,7 @@ def drainPools(path):
                 newVerts = []
                 for v in f:
                     oldVerts.append(newMeshVert[v])
-                    newV = np.array([newMeshVert[v][0],newMeshVert[v][1],z])
+                    newV = array([newMeshVert[v][0],newMeshVert[v][1],z])
                     newVerts.append(newV)
 
                 # Append vertices
@@ -348,9 +346,9 @@ def drainPools(path):
                 volVox.append([iVer+1, iVer+2, iVer+3, iVer+5])
 
             # Create volume mesh
-            volVert = np.array(volVert)
-            volFace = np.array(volFace)
-            volVox = np.array(volVox)
+            volVert = array(volVert)
+            volFace = array(volFace)
+            volVox = array(volVox)
             volMesh = pm.form_mesh(volVert, volFace, volVox)
 
             # Compute volume
@@ -376,15 +374,15 @@ def drainPools(path):
             z2 = z
 
             # Add vertices
-            bVert.append(np.array([x1, y1, z1])) #0
-            bVert.append(np.array([x1, y2, z1])) #1
-            bVert.append(np.array([x1, y2, z2])) #2
-            bVert.append(np.array([x1, y1, z2])) #3
+            bVert.append(array([x1, y1, z1])) #0
+            bVert.append(array([x1, y2, z1])) #1
+            bVert.append(array([x1, y2, z2])) #2
+            bVert.append(array([x1, y1, z2])) #3
 
-            bVert.append(np.array([x2, y2, z2])) #4
-            bVert.append(np.array([x2, y2, z1])) #5
-            bVert.append(np.array([x2, y1, z1])) #6
-            bVert.append(np.array([x2, y1, z2])) #7
+            bVert.append(array([x2, y2, z2])) #4
+            bVert.append(array([x2, y2, z1])) #5
+            bVert.append(array([x2, y1, z1])) #6
+            bVert.append(array([x2, y1, z2])) #7
 
             # Add faces
             bFace.append([0, 1, 3]) # side 1
@@ -409,9 +407,9 @@ def drainPools(path):
             bVox.append([2, 4, 6, 7])
 
             # Create boundary mesh
-            bVert = np.array(bVert)
-            bFace = np.array(bFace)
-            bVox = np.array(bVox)
+            bVert = array(bVert)
+            bFace = array(bFace)
+            bVox = array(bVox)
             bMesh = pm.form_mesh(bVert,bFace,bVox)
 
             # Make intersection
@@ -438,7 +436,7 @@ def drainPools(path):
                 newVerts = []
                 for v in f:
                     oldVerts.append(newMeshVert[v])
-                    newV = np.array([newMeshVert[v][0],newMeshVert[v][1],z])
+                    newV = array([newMeshVert[v][0],newMeshVert[v][1],z])
                     newVerts.append(newV)
 
                 # Append vertices
@@ -455,9 +453,9 @@ def drainPools(path):
                 volVox.append([iVer+1, iVer+2, iVer+3, iVer+5])
 
             # Create volume mesh
-            volVert = np.array(volVert)
-            volFace = np.array(volFace)
-            volVox = np.array(volVox)
+            volVert = array(volVert)
+            volFace = array(volFace)
+            volVox = array(volVox)
             volMesh = pm.form_mesh(volVert, volFace, volVox)
 
             volMesh.add_attribute('voxel_volume')
