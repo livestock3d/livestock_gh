@@ -18,8 +18,10 @@ At the moment LivestockGH depends on the following python libraries:
 - Paramiko
 
 Clone the repositories into the livestock folder with the following command:
+'''
 curl https://codeload.github.com/livestock3d/livestock_gh/tar.gz/master | \tar -xz --strip=2 livestock_gh-master/python/classes
 curl https://codeload.github.com/livestock3d/livestock_gh/tar.gz/master | \tar -xz --strip=2 livestock_gh-master/python/templates
+'''
 
 # Windows
 Download the GH components by cloning the "grasshopper/components" repository and move them to the Grasshopper userObjects folder.
