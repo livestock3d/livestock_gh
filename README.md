@@ -19,7 +19,7 @@ At the moment LivestockGH depends on the following python libraries:
 
 Clone the repositories into the livestock folder with the following command:
 ```
-cd home/<"user">/
+cd /home/<"user">
 mkdir livestock
 cd livestock
 curl https://codeload.github.com/livestock3d/livestock_gh/tar.gz/master | \tar -xz --strip=2 livestock_gh-master/python/classes
