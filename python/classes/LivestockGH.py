@@ -8,7 +8,7 @@ __status__ = "Work in Progress"
 #----------------------------------------------------------------------------------------------------------------------#
 #Functions and Classes
 
-componentFile = r'C:\livestock\ComponetList.txt'
+componentFile = r'C:\livestock\python\ComponetList.txt'
 
 read = open(componentFile, 'r')
 lines = read.readlines()
