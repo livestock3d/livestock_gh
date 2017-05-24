@@ -3,7 +3,7 @@ import os
 import paramiko
 
 # Create output text file
-folder = r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\Kode - Livestock\01 Python\Templates'
+folder = r'C:\livestock\python\templates'
 inData = '\\InData.txt'
 
 file_obj = open(folder + inData, 'r')
@@ -45,19 +45,3 @@ while True:
 print('Closing connection!')
 os.remove(folder + '\\out.txt')
 ssh.close()
-
-
-
-
-
-
-"""
-connection = ssh.ssh(ip,port,user,pw)
-connection.sendCommand(command)
-
-
-while True:
-    if os.path.isfile('out.txt'):
-        break
-    time.sleep(0.5)
-"""
