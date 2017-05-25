@@ -1,5 +1,5 @@
 # LIVESTOCK - GRASSHOPPER
-LivestockGH is a plugin/library for Grasshopper written in Python
+LivestockGH is a plugin/library for Grasshopper written in Python.
 
 # INSTALLATION
 Livestock uses PyMesh to handle geometry.
