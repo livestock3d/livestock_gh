@@ -7,6 +7,6 @@ import RainClasses as rc
 
 print('reached template')
 meshPath = '/mnt/c/livestock/python/templates/drainMesh.obj'
-cpu = open('cpu.txt','r').readline()
+cpu = open('/mnt/c/livestock/python/templates/cpu.txt','r').readline()
 rc.drainMeshPaths(meshPath, int(cpu))
 sys.stdout = open('out.txt','w')
