@@ -9,4 +9,5 @@ print('reached template')
 meshPath = '/mnt/c/livestock/python/templates/drainMesh.obj'
 cpu = open('/mnt/c/livestock/python/templates/cpu.txt','r').readline()
 rc.drainMeshPaths(meshPath, int(cpu))
+print('finished with template')
 sys.stdout = open('out.txt','w')
