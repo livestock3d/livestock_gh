@@ -520,7 +520,7 @@ def drainPools(path):
     file[6] = 'meshNames.txt,' + mNames
 
     outfile_obj = open("InData.txt", 'w')
-    outfile_obj.readlines(file)
+    outfile_obj.writelines(file)
 
     file_obj.close()
 
