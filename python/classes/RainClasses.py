@@ -512,7 +512,6 @@ def drainPools(path):
 
     file_obj = open("InData.txt",'r')
     file = file_obj.readlines()
-    print(len(file))
 
     mNames = ''
     for n in meshNames:

@@ -97,7 +97,7 @@ while True:
 
         for f in ret:
             sftp.get(remotefolder + '/' + f, localfolder + '/' + f)
-            #print(f)
+            print(f)
             sftp.remove(f)
 
         # Delete input files
