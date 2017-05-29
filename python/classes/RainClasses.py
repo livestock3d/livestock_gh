@@ -223,17 +223,17 @@ def drainPools(path):
 
                         # If current face holds a volume add that volume to the current volume
                         if af in fI:
-                            print('found in fI')
+                            #print('found in fI')
                             queueIndex = fI.index(af)
 
                             if queueIndex in notDoneList:
-                                print('found in notDoneList')
+                                #print('found in notDoneList')
                                 volume += vols[queueIndex]
                                 notDoneList.remove(queueIndex)
                                 doneList.append(queueIndex)
 
                             elif queueIndex in doneList:
-                                print('found in doneList')
+                                #print('found in doneList')
                                 vols[queueIndex] += volume
                                 notDoneList.append(queueIndex)
                                 doneList.remove(queueIndex)

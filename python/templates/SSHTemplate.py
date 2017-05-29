@@ -33,6 +33,7 @@ print('Opening connection')
 sftp = ssh.open_sftp()
 for f in trans:
     sftp.put(localfolder + '/' + f, remotefolder + '/' + f)
+sftp.put(localfolder + '/InData.txt', remotefolder + '/InData.txt')
 
 channel = ssh.invoke_shell()
 
@@ -87,10 +88,12 @@ while True:
         print('Copying and deleting result files')
 
         # Get return files
+        sftp.get(remotefolder + '/InData.txt', localfolder + '/InData.txt')
         file_obj = open(localfolder + inData, 'r')
         data = file_obj.readlines()
         file_obj.close()
         ret = data[6].split(',')
+        sftp.remove('InData.txt')
 
         for f in ret:
             sftp.get(remotefolder + '/' + f, localfolder + '/' + f)
