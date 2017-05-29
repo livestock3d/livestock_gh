@@ -96,8 +96,8 @@ while True:
         sftp.remove('InData.txt')
 
         for f in ret:
-            sftp.get(remotefolder + '/' + f, localfolder + '/' + f)
             print(f)
+            sftp.get(remotefolder + '/' + f, localfolder + '/' + f)
             sftp.remove(f)
 
         # Delete input files
