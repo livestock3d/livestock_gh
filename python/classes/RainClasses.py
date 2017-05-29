@@ -356,6 +356,9 @@ def drainPools(path):
             volVol = volMesh.get_attribute('voxel_volume')
             volVol = sum(map(abs, volVol))
 
+            print('volume',volume)
+            print('volVol',volVol)
+
             return volume - volVol
 
         # Get final height
