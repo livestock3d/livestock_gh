@@ -252,7 +252,7 @@ def drainPools(path):
                         faA = array(faceA)
 
                         # Compute new z-value
-                        Z = (sum(faZ*faA)+volume)/sum(faA)
+                        Z = (npsum(faZ*faA)+volume)/npsum(faA)
 
         # Volume function to solve
         def findHeight(z):
@@ -356,7 +356,7 @@ def drainPools(path):
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
             print('volVol0', volVol)
-            volVol = sum(map(abs, volVol))
+            volVol = npsum(map(abs, volVol))
 
             print('volume',volume)
             print('volVol1',volVol)
@@ -466,7 +466,7 @@ def drainPools(path):
 
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
-            volVol = sum(map(abs, volVol))
+            volVol = npsum(map(abs, volVol))
 
             # Clean up mesh
             volMesh, info = pm.remove_isolated_vertices(volMesh)
