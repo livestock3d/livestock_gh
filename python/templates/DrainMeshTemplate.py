@@ -1,13 +1,20 @@
-user = open('/mnt/c/livestock/python/templates/user.txt','r').readline()
+print('Running template DrainMeshTemplate.py')
 
-# Import
+# Get user
+user = open('user.txt','r').readline()
+
+# Imports
 import sys
 sys.path.insert(0, "/home/" + user + "/livestock/classes")
 import RainClasses as rc
 
-print('reached template')
-meshPath = '/mnt/c/livestock/python/templates/drainMesh.obj'
-cpu = open('/mnt/c/livestock/python/templates/cpu.txt','r').readline()
+# Get files
+meshPath = '/home/' + user + '/livestock/templates/drainMesh.obj'
+cpu = open('/home/' + user + '/livestock/templates/cpu.txt','r').readline()
+
+# Run template
 rc.drainMeshPaths(meshPath, int(cpu))
-print('finished with template')
+
+# Annouce that template finished and create out file
+print('Finished with template')
 sys.stdout = open('out.txt','w')
