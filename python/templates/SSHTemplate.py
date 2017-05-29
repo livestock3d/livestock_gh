@@ -18,6 +18,7 @@ trans = data[4][:-1].split(',')
 run = data[5][:-1]
 ret = data[6].split(',')
 
+
 remotefolder = '/home/' + user + '/livestock/templates'
 
 
@@ -27,6 +28,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 ssh.connect(ip,port=port,username=user,password=pw)
 print('Opening connection')
+print('remote',remotefolder[-10:] + '$ ')
 
 # Copy files to remove server
 sftp = ssh.open_sftp()
@@ -39,23 +41,21 @@ channel_data = ''
 
 while True:
     if channel.recv_ready():
+        channel_old = channel_data
         channel_bytes = channel.recv(9999)
         channel_data += channel_bytes.decode("utf-8")
-        print(channel_data)
+        if not channel_old == channel_data:
+            print(channel_data)
 
     else:
         pass
-
     if channel_data.endswith('ocni@KONGSGAARD-PC:~$ '):
         channel.send('cd ' + remotefolder + '\n')
+        print('folder send')
 
-    elif channel_data.endswith(remotefolder[-10:-1] + '$ '):
+    elif channel_data.endswith(remotefolder[-10:] + '$ '):
         channel.send('python ' + run + '\n')
-
-    try:
-        sftp.get(remotefolder + '/out.txt', localfolder + '/out.txt')
-    except:
-        pass
+        print('command send')
 
     elif os.path.isfile(localfolder + '\\out.txt'):
         print('Succes!')
