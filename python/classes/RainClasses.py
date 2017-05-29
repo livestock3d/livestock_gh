@@ -111,7 +111,8 @@ def drainMeshPaths(meshPath,cpus):
 
 def drainPools(path):
     import pymesh as pm
-    from numpy import array, allclose, sum
+    from numpy import array, allclose
+    from numpy import sum as npsum
     from scipy.optimize import newton
 
     # Paths
@@ -355,7 +356,7 @@ def drainPools(path):
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
             print('volVol0', volVol)
-            volVol = sum(map(abs, volVol))
+            volVol = npsum(map(abs, volVol))
 
             print('volume',volume)
             print('volVol1',volVol)
