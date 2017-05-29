@@ -94,7 +94,6 @@ while True:
         file_obj.close()
         ret = data[6].split(',')
         sftp.remove('InData.txt')
-        print(ret)
 
         for f in ret:
             print(f)
