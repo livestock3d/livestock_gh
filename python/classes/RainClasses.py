@@ -506,9 +506,8 @@ def drainPools(path):
         doneList.append(i)
         loopLength = len(notDoneList)
 
-    file_obj = open("meshNames.txt",'w')
-    for name in meshNames:
-        file_obj.write(name+'\n')
+    file_obj = open("Indata.txt",'w')
+    file_obj[6] = meshNames
     file_obj.close()
 
 

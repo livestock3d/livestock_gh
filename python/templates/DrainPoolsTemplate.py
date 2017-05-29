@@ -1,11 +1,19 @@
-user = open('/mnt/c/livestock/python/templates/user.txt','r').readline()
+print('Running template DrainPoolsTemplate.py')
+
+# Get user
+user = open('user.txt','r').readline()
 
 # Import
 import sys
 sys.path.insert(0, "/home/" + user + "/livestock/classes")
 import RainClasses as rc
 
-print('reached template')
-poolPath = "/mnt/c/livestock/python/templates"
+# Get path
+poolPath = '/home/' + user + '/livestock/templates/'
+
+# Run function
 b = rc.drainPools(poolPath)
+
+# Annouce that template finished and create out file
+print('Finished with template')
 sys.stdout = open('out.txt','w')

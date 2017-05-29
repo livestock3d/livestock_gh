@@ -12,7 +12,7 @@ import RainClasses as rc
 meshPath = '/home/' + user + '/livestock/templates/drainMesh.obj'
 cpu = open('/home/' + user + '/livestock/templates/cpu.txt','r').readline()
 
-# Run template
+# Run function
 rc.drainMeshPaths(meshPath, int(cpu))
 
 # Annouce that template finished and create out file

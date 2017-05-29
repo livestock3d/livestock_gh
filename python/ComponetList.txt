@@ -17,5 +17,5 @@ Delphin Output Format	Output Format	VER 0.0.1 | April 2017	Livestock	1 | Delphin
 Livestock Python Executor	Python Executor	VER 0.0.1 | April 2017	Livestock	0 | Miscellaneous	Path to python executor
 Livestock SSH Connection	SSH Connection	VER 0.0.1 | May 2017	Livestock	0 | Miscellaneous	Setup SSH connection
 Livestock Mesh Drainage	Mesh Drainage	VER 0.0.1 | May 2017	Livestock	2 | Rain and Flow	Simulates drainage in order to analyse a mesh for local pooling of rain water.
-Livestock Mesh Pools	Mesh Pools	VER 0.0.1 | May 2017	Livestock	2 | Rain and Flow
+Livestock Mesh Pools	Mesh Pools	VER 0.0.1 | May 2017	Livestock	2 | Rain and Flow	Calculates rain pools based on drainage paths
 Livestock Update	Update	VER 0.0.1 | May 2017	Livestock	0 | Miscellaneous	Update Livestock

@@ -8,6 +8,7 @@ inData = '\\InData.txt'
 
 file_obj = open(localfolder + inData, 'r')
 data = file_obj.readlines()
+file_obj.close()
 
 # Get data
 ip = data[0][:-1]
@@ -16,7 +17,6 @@ user = data[2][:-1]
 pw = data[3][:-1]
 trans = data[4][:-1].split(',')
 run = data[5][:-1]
-ret = data[6].split(',')
 
 
 remotefolder = '/home/' + user + '/livestock/templates'
@@ -85,6 +85,13 @@ while True:
 
         # Copy result files to local and delete remotely
         print('Copying and deleting result files')
+
+        # Get return files
+        file_obj = open(localfolder + inData, 'r')
+        data = file_obj.readlines()
+        file_obj.close()
+        ret = data[6].split(',')
+
         for f in ret:
             sftp.get(remotefolder + '/' + f, localfolder + '/' + f)
             #print(f)
