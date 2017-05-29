@@ -356,7 +356,7 @@ def drainPools(path):
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
             print('volVol0', volVol)
-            volVol = npsum(array((map(abs, volVol))))
+            volVol = sum(list((map(abs, volVol))))
 
             print('volume',volume)
             print('volVol1',volVol)
