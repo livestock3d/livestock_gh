@@ -354,10 +354,11 @@ def drainPools(path):
             # Compute volume
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
+            print('volVol0', volVol)
             volVol = sum(map(abs, volVol))
 
             print('volume',volume)
-            print('volVol',volVol)
+            print('volVol1',volVol)
 
             return volume - volVol
 
