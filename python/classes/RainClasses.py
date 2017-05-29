@@ -356,7 +356,7 @@ def drainPools(path):
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
             print('volVol0', volVol)
-            volVol = npsum(map(abs, volVol))
+            volVol = float(npsum(map(abs, volVol)))
 
             print('volume',volume)
             print('volVol1',volVol)
@@ -466,7 +466,7 @@ def drainPools(path):
 
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
-            volVol = npsum(map(abs, volVol))
+            volVol = float(npsum(map(abs, volVol)))
 
             # Clean up mesh
             volMesh, info = pm.remove_isolated_vertices(volMesh)
