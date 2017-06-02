@@ -528,9 +528,3 @@ def drainPools(path):
     file_obj = open("meshNames.txt", 'w')
     file_obj.write(mNames)
     file_obj.close()
-
-
-
-
-
-
