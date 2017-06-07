@@ -300,7 +300,6 @@ def cleanAndCoerceList(brepList):
 
     from Rhino.Geometry.Brep import JoinBreps
     import rhinoscriptsyntax as rs
-    import scriptcontext as sc
 
     outputMesh = []
     outputBrep = []
