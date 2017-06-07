@@ -340,7 +340,7 @@ def cleanAndCoerceList(brepList):
                         except:
                             pass
 
-                geo = JoinBreps(tempBrep, sc.doc.ModelAbsoluteTolerance)
+                geo = JoinBreps(tempBrep, 0.01)
 
                 for Brep in tempBrep:
                     Brep.Dispose()
