@@ -300,7 +300,7 @@ def cleanAndCoerceList(brepList):
 
     from Rhino.Geometry.Brep import JoinBreps
     import rhinoscriptsyntax as rs
-    from scriptcontext.doc import ModelAbsoluteTolerance
+    import scriptcontext as sc
 
     outputMesh = []
     outputBrep = []
@@ -340,7 +340,7 @@ def cleanAndCoerceList(brepList):
                         except:
                             pass
 
-                geo = JoinBreps(tempBrep, ModelAbsoluteTolerance)
+                geo = JoinBreps(tempBrep, sc.doc.ModelAbsoluteTolerance)
 
                 for Brep in tempBrep:
                     Brep.Dispose()
@@ -373,7 +373,7 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
     """Ladybug - RayTrace"""
 
     import Rhino.Geometry as rc
-    from scriptcontext.doc import ModelAbsoluteTolerance
+    import scriptcontext as sc
 
     # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
     if len(context) != 0:
@@ -406,7 +406,7 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
                     try:
                         # create last ray
                         # calculate plane at intersection
-                        intNormal = cleanBrep.ClosestPoint(intPts[-1], ModelAbsoluteTolerance)[5]
+                        intNormal = cleanBrep.ClosestPoint(intPts[-1], sc.doc.ModelAbsoluteTolerance)[5]
 
                         lastVector = rc.Vector3d(ptList[-2] - ptList[-1])
                         lastVector.Unitize()
