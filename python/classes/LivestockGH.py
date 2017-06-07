@@ -263,3 +263,194 @@ def lineIntersection(p1, p2, p3, p4):
 
     return p1 + t * v1
 
+def parallel_makeContextMesh(brep, parallel=False):
+    """Ladybug - mesh breps parallel"""
+
+    import Rhino.Geometry as rc
+    from System.Threading.Tasks.Parallel import ForEach
+
+    def makeMeshFromSrf(i):
+        try:
+            mesh[i] = rc.Mesh.CreateFromBrep(brep[i], meshParam)
+            brep[i].Dispose()
+        except:
+            print('Error in converting Brep to Mesh...')
+            pass
+
+    # prepare bulk list for each surface
+    mesh = [None] * len(brep)
+
+    # set-up mesh parameters for each surface based on surface size
+    meshParam = rc.MeshingParameters.Default  # Coarse
+    rc.MeshingParameters.GridMaxCount.__set__(meshParam, 1)
+    rc.MeshingParameters.SimplePlanes.__set__(meshParam, True)
+    rc.MeshingParameters.GridAmplification.__set__(meshParam, 1.5)
+
+    ## Call the mesh function
+    if parallel:
+        ForEach(xrange(len(brep)), makeMeshFromSrf)
+    else:
+        for i in range(len(mesh)):
+            makeMeshFromSrf(i)
+
+    return mesh
+
+def cleanAndCoerceList(brepList):
+    """ Ladybug - This definition cleans the list and adds them to RhinoCommon"""
+
+    from Rhino.Geometry.Brep import JoinBreps
+    import rhinoscriptsyntax as rs
+    from scriptcontext.doc import ModelAbsoluteTolerance
+
+    outputMesh = []
+    outputBrep = []
+
+    for id in brepList:
+        if rs.IsMesh(id):
+            geo = rs.coercemesh(id)
+            if geo is not None:
+                outputMesh.append(geo)
+                try:
+                    rs.DeleteObject(id)
+                except:
+                    pass
+
+        elif rs.IsBrep(id):
+            geo = rs.coercebrep(id)
+            if geo is not None:
+                outputBrep.append(geo)
+                try:
+                    rs.DeleteObject(id)
+                except:
+                    pass
+
+            else:
+                # the idea was to remove the problematice surfaces
+                # not all the geometry which is not possible since
+                # badGeometries won't pass rs.IsBrep()
+                tempBrep = []
+                surfaces = rs.ExplodePolysurfaces(id)
+
+                for surface in surfaces:
+                    geo = rs.coercesurface(surface)
+                    if geo is not None:
+                        tempBrep.append(geo)
+                        try:
+                            rs.DeleteObject(surface)
+                        except:
+                            pass
+
+                geo = JoinBreps(tempBrep, ModelAbsoluteTolerance)
+
+                for Brep in tempBrep:
+                    Brep.Dispose()
+                    try:
+                        rs.DeleteObject(id)
+                    except:
+                        pass
+                outputBrep.append(geo)
+
+    return outputMesh, outputBrep
+
+def flattenList(self, l):
+    """Ladybug - flattenList"""
+
+    from itertools.chain import from_iterable
+
+    return list(from_iterable(l))
+
+def joinMesh(self, meshList):
+    """Ladybug - joinMesh"""
+
+    from Rhino.Geometry import Mesh
+
+    joinedMesh = Mesh()
+    for m in meshList: joinedMesh.Append(m)
+
+    return joinedMesh
+
+def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
+    """Ladybug - RayTrace"""
+
+    import Rhino.Geometry as rc
+    from scriptcontext.doc import ModelAbsoluteTolerance
+
+    # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
+    if len(context) != 0:
+        ## clean the geometry and bring them to rhinoCommon separated as mesh and Brep
+        contextMesh, contextBrep = cleanAndCoerceList(context)
+        ## mesh Brep
+        contextMeshedBrep = parallel_makeContextMesh(contextBrep)
+
+        ## Flatten the list of surfaces
+        contextMeshedBrep = flattenList(contextMeshedBrep)
+        contextSrfs = contextMesh + contextMeshedBrep
+        joinedContext = joinMesh(contextSrfs)
+
+    # Get rid of trimmed parts
+    cleanBrep = rc.Brep.CreateFromMesh(joinedContext, False)
+
+    rays = []
+    for testPt in startPts:
+        for vector in startVectors:
+            vector.Unitize()
+            ray = rc.Geometry.Ray3d(testPt, vector)
+            if numOfBounce > 0:
+                intPts = rc.Intersect.Intersection.RayShoot(ray, [cleanBrep], numOfBounce)
+                # print intPts
+                if intPts:
+                    ptList = [testPt]
+                    ptList.extend(intPts)
+                    ray = rc.Polyline(ptList).ToNurbsCurve()
+
+                    try:
+                        # create last ray
+                        # calculate plane at intersection
+                        intNormal = cleanBrep.ClosestPoint(intPts[-1], ModelAbsoluteTolerance)[5]
+
+                        lastVector = rc.Vector3d(ptList[-2] - ptList[-1])
+                        lastVector.Unitize()
+
+                        crossProductNormal = rc.Vector3d.CrossProduct(intNormal, lastVector)
+
+                        plane = rc.Plane(intPts[-1], intNormal, crossProductNormal)
+
+                        mirrorT = rc.Transform.Mirror(intPts[-1], plane.Normal)
+
+                        lastRay = rc.Line(intPts[-1], lastBounceLen * lastVector).ToNurbsCurve()
+                        lastRay.Transform(mirrorT)
+
+                        ray = rc.Curve.JoinCurves([ray, lastRay])[0]
+                    except:
+                        pass
+
+                    rays.append(ray)
+                else:
+                    # no bounce so let's just create a line form the point
+                    firstRay = rc.Line(testPt, lastBounceLen * vector).ToNurbsCurve()
+                    rays.append(firstRay)
+
+    if len(rays) == 0:
+        print("No reflection!")
+        return False
+
+    return rays
+
+def rayShoot(startPt, vector, context, numOfBounce = 1):
+    """Build on: Ladybug - RayTrace"""
+
+    from Rhino.Geometryrc.Intersect.Intersection import RayShoot
+    from Rhino.Geometry import Ray3d
+
+    ray = Ray3d(startPt, vector)
+    if numOfBounce > 0:
+        intPt = RayShoot(ray, [context], numOfBounce)
+
+        if intPt:
+            return True
+        else:
+            return False
+
+    else:
+        print("No reflection!")
+        return False
