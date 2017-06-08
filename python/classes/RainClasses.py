@@ -529,81 +529,83 @@ def drainPools(path):
     file_obj.write(mNames)
     file_obj.close()
 
+
 class simpleRain():
-
-    def __init__(self, precipitation, windSpeed, windDirection, testPoints, context):
-        import sys
-        sys.path.insert(0, "C://livestock/python/classes")
-        import LivestockGH as ls
-        from Rhino.Geometry.Brep import CreateFromMesh
-
+    def __init__(self, precipitation, windSpeed, windDirection, testPoints, context, cpus):
+        self.cpus = cpus
         self.prec = precipitation
         self.windSpeed = windSpeed
         self.windDir = windDirection
         self.testPts = testPoints
-
-        # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
-        if len(context) != 0:
-            ## clean the geometry and bring them to rhinoCommon separated as mesh and Brep
-            contextMesh, contextBrep = ls.cleanAndCoerceList(context)
-            ## mesh Brep
-            contextMeshedBrep = ls.parallel_makeContextMesh(contextBrep)
-
-            ## Flatten the list of surfaces
-            contextMeshedBrep = ls.flattenList(contextMeshedBrep)
-            contextSrfs = contextMesh + contextMeshedBrep
-            joinedContext = ls.joinMesh(contextSrfs)
-
-        # Get rid of trimmed parts
-        self.context = CreateFromMesh(joinedContext, False)
-
+        self.context = context
         self.dirVec = False
         self.hourlyResult = False
 
-    # Help functions
-    def rotate_xy(self, angle):
-        from rhinoscriptsyntax import XformRotation2
-
-        return XformRotation2(angle, [0, 0, 1], [0, 0, 0])
-
-    def rotate_yz(self, angle):
-        from rhinoscriptsyntax import XformRotation2
-
-        return XformRotation2(angle, [1, 0, 0], [0, 0, 0])
-
-    def rain_vector(self, Vw, regn):
-        from math import exp, log, acos, sqrt
-
-        # Rain drop radius:
-        A = 1.3
-        p = 0.232
-        n = 2.25
-        if regn == 0:
-            return 0
-
-        def f_a(I):
-            return A * I ** p
-
-        a = f_a(regn)
-        r = a * exp(log(-log(0.5)) / n) / 1000
-
-        # Angle:
-        #rho_L = 1.2
-        #rho_w = 1000
-        #g = 9.81
-        #c = 0.3
-        # alpha = 3*c*rho_L*Vw^2*r^2/sqrt(4*r^4*(9*Vw^2*c^2*rho_L^2+64*g^2*r^2*rho_w^2))
-        # Simplified it becomes:
-
-        alpha = acos((0.54*Vw**2*r**2)/sqrt(r**4*(1.1664*Vw**2+6.159110400*10**9*r**2)))
-
-        return alpha
-
     # Final function
     def rainHits(self):
-        from math import degrees
-        from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform, ShootRay
         from System.Threading.Tasks.Parallel import ForEach
+        from math import degrees, exp, log, acos, sqrt
+        from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform, XformRotation2
+        from Rhino.Geometry.Intersect.Intersection import RayShoot
+        from Rhino.Geometry import Ray3d
+
+        # Help functions
+
+        def rain_vector(Vw, regn):
+
+            # Rain drop radius:
+            A = 1.3
+            p = 0.232
+            n = 2.25
+
+            if regn == 0:
+                return 0
+
+            def f_a(I):
+                return A * I ** p
+
+            a = f_a(regn)
+            r = a * exp(log(-log(0.5)) / n) / 1000
+
+            # Angle:
+            # rho_L = 1.2
+            # rho_w = 1000
+            # g = 9.81
+            # c = 0.3
+            # alpha = 3*c*rho_L*Vw^2*r^2/sqrt(4*r^4*(9*Vw^2*c^2*rho_L^2+64*g^2*r^2*rho_w^2))
+            # Simplified it becomes:
+
+            alpha = acos((0.54 * Vw ** 2 * r ** 2) / sqrt(r ** 4 * (1.1664 * Vw ** 2 + 6.159110400 * 10 ** 9 * r ** 2)))
+
+            return alpha
+
+        def rotate_yz(angle):
+            return XformRotation2(angle, [1, 0, 0], [0, 0, 0])
+
+        def rotate_xy(angle):
+            return XformRotation2(angle, [0, 0, 1], [0, 0, 0])
+
+        def rayShoot(i):
+            """Build on: Ladybug - RayTrace"""
+
+            # Initialize
+            numOfBounce = 1
+            startPt = self.testPts[i]
+            vector = direction_vector
+            ray = Ray3d(startPt, vector)
+
+            # Shoot ray
+            intPt = RayShoot(ray, [self.context], numOfBounce)
+
+            # Check for intersection
+            if intPt:
+                # print('Intersection!')
+                hourly_result.append(True)
+                return
+            else:
+                # print('No intersection!')
+                hourly_result.append(False)
+                return
 
         result = []
         dv_hourly = []
@@ -613,12 +615,12 @@ class simpleRain():
             dv = []
 
             # Rotate vectors towards the sky
-            R_v = self.rain_vector(self.windSpeed[i], self.prec[i])
-            towards_sky = self.rotate_yz(degrees(R_v))
+            R_v = rain_vector(self.windSpeed[i], self.prec[i])
+            towards_sky = rotate_yz(degrees(R_v))
 
             # Rotate vectors towards the wind
             w_d = -self.windDir[i]
-            towards_wind = self.rotate_xy(w_d)
+            towards_wind = rotate_xy(w_d)
 
             # Combine:
             transformation = XformMultiply(towards_wind, towards_sky)
@@ -626,60 +628,8 @@ class simpleRain():
             direction_vector = VectorTransform(north_vector, transformation)
             hourly_result = []
 
-            def make_ray(point):
-                if ShootRay(self.obs, point, direction_vector, 1):
-                    hourly_result.append(True)
-                else:
-                    hourly_result.append(False)
-
             # Call task function
-            ForEach(self.testPts, make_ray)
-
-            dv_hourly.append(direction_vector)
-            result.append(hourly_result)
-            i += 1
-
-        self.hourlyResult = result
-        self.dirVec = dv_hourly
-
-    # Final function
-    def rainHits_Ladybug(self):
-        import sys
-        sys.path.insert(0, "C://livestock/python/classes")
-        from math import degrees
-        from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform
-        from System.Threading.Tasks.Parallel import ForEach
-        from LivestockGH import rayShoot
-
-        result = []
-        dv_hourly = []
-        i = 0
-
-        while i < len(self.prec):
-            dv = []
-
-            # Rotate vectors towards the sky
-            R_v = self.rain_vector(self.windSpeed[i], self.prec[i])
-            towards_sky = self.rotate_yz(degrees(R_v))
-
-            # Rotate vectors towards the wind
-            w_d = -self.windDir[i]
-            towards_wind = self.rotate_xy(w_d)
-
-            # Combine:
-            transformation = XformMultiply(towards_wind, towards_sky)
-            north_vector = VectorCreate(AddPoint(0, 0, 0), AddPoint(0, -1, 0))
-            direction_vector = VectorTransform(north_vector, transformation)
-            hourly_result = []
-
-            def make_ray(point):
-                if rayShoot(point, direction_vector, self.context):
-                    hourly_result.append(True)
-                else:
-                    hourly_result.append(False)
-
-            # Call task function
-            ForEach(self.testPts, make_ray)
+            ForEach(range(len(self.testPts)), rayShoot)
 
             dv_hourly.append(direction_vector)
             result.append(hourly_result)

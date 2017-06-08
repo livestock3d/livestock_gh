@@ -351,14 +351,14 @@ def cleanAndCoerceList(brepList):
 
     return outputMesh, outputBrep
 
-def flattenList(self, l):
+def flattenList(l):
     """Ladybug - flattenList"""
 
-    from itertools.chain import from_iterable
+    from itertools import chain
 
-    return list(from_iterable(l))
+    return list(chain.from_iterable(l))
 
-def joinMesh(self, meshList):
+def joinMesh(meshList):
     """Ladybug - joinMesh"""
 
     from Rhino.Geometry import Mesh
@@ -438,16 +438,21 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
 def rayShoot(startPt, vector, context, numOfBounce = 1):
     """Build on: Ladybug - RayTrace"""
 
-    from Rhino.Geometryrc.Intersect.Intersection import RayShoot
+    from Rhino.Geometry.Intersect.Intersection import RayShoot
     from Rhino.Geometry import Ray3d
 
     ray = Ray3d(startPt, vector)
+    print('ray',ray)
+
     if numOfBounce > 0:
         intPt = RayShoot(ray, [context], numOfBounce)
+        print('intPt:',intPt)
 
         if intPt:
+            print('Intersection!')
             return True
         else:
+            print('No intersection!')
             return False
 
     else:
