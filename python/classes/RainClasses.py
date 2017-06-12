@@ -531,15 +531,22 @@ def drainPools(path):
 
 
 class simpleRain():
-    def __init__(self, precipitation, windSpeed, windDirection, testPoints, context, cpus):
-        self.cpus = cpus
+    def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
         self.prec = precipitation
         self.windSpeed = windSpeed
         self.windDir = windDirection
         self.testPts = testPoints
+        self.testVecs = testVectors
         self.context = context
+        self.temp = temperature
+        self.kMiss = k[0]
+        self.kHit = k[1]
         self.dirVec = False
         self.hourlyResult = False
+        self.wdr = False
+        self.xyAngles = []
+        self.yzAngles = []
+        self.cpus = int(cpus)
 
     # Final function
     def rainHits(self):
@@ -548,6 +555,9 @@ class simpleRain():
         from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform, XformRotation2
         from Rhino.Geometry.Intersect.Intersection import RayShoot
         from Rhino.Geometry import Ray3d
+        import threading
+        import Queue
+        import math
 
         # Help functions
 
@@ -575,7 +585,10 @@ class simpleRain():
             # alpha = 3*c*rho_L*Vw^2*r^2/sqrt(4*r^4*(9*Vw^2*c^2*rho_L^2+64*g^2*r^2*rho_w^2))
             # Simplified it becomes:
 
-            alpha = acos((0.54 * Vw ** 2 * r ** 2) / sqrt(r ** 4 * (1.1664 * Vw ** 2 + 6.159110400 * 10 ** 9 * r ** 2)))
+            a = (0.54 * Vw ** 2 * r ** 2) / sqrt(r ** 4 * (1.1664 * Vw ** 2 + 6.159110400 * 10 ** 9 * r ** 2))
+            if a > 1:
+                a = 1
+            alpha = acos(a)
 
             return alpha
 
@@ -585,55 +598,128 @@ class simpleRain():
         def rotate_xy(angle):
             return XformRotation2(angle, [0, 0, 1], [0, 0, 0])
 
-        def rayShoot(i):
+        # Correction of wind direction
+        def B_wind(angle, direction):
+            c = 360 - (angle + 90)
+            # print(c)
+
+            a = abs(c - direction)
+            if a < 180:
+                b = a
+            else:
+                b = 360 - a
+
+            return math.radians(b)
+
+        def rayShoot():
             """Build on: Ladybug - RayTrace"""
 
             # Initialize
-            numOfBounce = 1
-            startPt = self.testPts[i]
-            vector = direction_vector
-            ray = Ray3d(startPt, vector)
+            while True:
 
-            # Shoot ray
-            intPt = RayShoot(ray, [self.context], numOfBounce)
+                numOfBounce = 1
+                startPt, faceAngle = q.get()
+                if startPt is None:
+                    break
 
-            # Check for intersection
-            if intPt:
-                # print('Intersection!')
-                hourly_result.append(True)
-                return
-            else:
-                # print('No intersection!')
-                hourly_result.append(False)
-                return
+                vector = direction_vector
+                ray = Ray3d(startPt, vector)
+                # Check the wind direction
+                B = B_wind(faceAngle, self.windDir[i])
+                if B > math.pi / 2:
+                    hourly_rain.append(0)
+                    hourly_result.append(False)
+
+
+                else:
+                    # Compute rain amount
+                    K_wind = math.cos(B) / math.sqrt(
+                        1 + 1142 * (math.sqrt(self.prec[i]) / self.windSpeed[i] ** 4)) * math.exp(
+                        -12 / (self.windSpeed[i] * 5 * self.prec[i] ** (0.25)))
+
+                    # Shoot ray
+                    intPt = RayShoot(ray, [self.context], numOfBounce)
+
+                    # Check for intersection
+                    if intPt:
+                        # print('Intersection!')
+                        hourly_result.append(True)
+                        kRain = self.kHit
+                        hourly_rain.append(K_wind * kRain * self.prec[i])
+
+                    else:
+                        # print('No intersection!')
+                        hourly_result.append(False)
+                        kRain = self.kMiss
+                        hourly_rain.append(K_wind * kRain * self.prec[i])
+
+                # print('done')
+                q.task_done()
 
         result = []
-        dv_hourly = []
-        i = 0
+        dirVec_hourly = []
+        wdr = []
 
-        while i < len(self.prec):
-            dv = []
+        for i in range(0, len(self.prec)):
 
-            # Rotate vectors towards the sky
-            R_v = rain_vector(self.windSpeed[i], self.prec[i])
-            towards_sky = rotate_yz(degrees(R_v))
+            if self.temp[i] <= -2 or self.windSpeed[i] <= 0 or self.prec[i] <= 0:
+                dirVec_hourly.append(None)
+                result.append([False] * len(self.testPts))
 
-            # Rotate vectors towards the wind
-            w_d = -self.windDir[i]
-            towards_wind = rotate_xy(w_d)
+            else:
 
-            # Combine:
-            transformation = XformMultiply(towards_wind, towards_sky)
-            north_vector = VectorCreate(AddPoint(0, 0, 0), AddPoint(0, -1, 0))
-            direction_vector = VectorTransform(north_vector, transformation)
-            hourly_result = []
+                # Rotate vectors towards the sky
+                R_v = rain_vector(self.windSpeed[i], self.prec[i])
+                towards_sky = rotate_yz(degrees(R_v))
 
-            # Call task function
-            ForEach(range(len(self.testPts)), rayShoot)
+                # Rotate vectors towards the wind
+                w_d = self.windDir[i]
+                towards_wind = rotate_xy(w_d)
 
-            dv_hourly.append(direction_vector)
-            result.append(hourly_result)
-            i += 1
+                # Combine:
+                transformation = XformMultiply(towards_wind, towards_sky)
+                north_vector = VectorCreate(AddPoint(0, 0, 0), AddPoint(0, -1, 0))
+                direction_vector = VectorTransform(north_vector, transformation)
+                hourly_result = []
+                hourly_rain = []
+
+                # Put jobs in queue
+                q = Queue.Queue()
+
+                # Call task function
+
+                for c in range(self.cpus):
+                    t = threading.Thread(target=rayShoot)
+                    # t.setDaemon(True)
+                    t.start()
+
+                for fi, pts in enumerate(self.testPts):
+                    q.put((pts, self.xyAngles[fi]))
+
+                # Wait until all tasks in the queue have been processed
+                q.join()
+
+                dirVec_hourly.append(direction_vector)
+                result.append(hourly_result)
+                wdr.append(hourly_rain)
 
         self.hourlyResult = result
-        self.dirVec = dv_hourly
+        self.dirVec = dirVec_hourly
+        self.wdr = wdr
+
+    def computeAngles(self):
+        import Rhino.Geometry as rc
+        from math import degrees
+
+        # Construct planes
+        zero = rc.Point3d(0, 0, 0)
+        z = rc.Vector3d(0, 0, 1)
+        x = rc.Vector3d(1, 0, 0)
+        y = rc.Vector3d(0, 1, 0)
+        xy = rc.Plane(zero, z).WorldXY
+        yz = rc.Plane(zero, x).WorldYZ
+
+        # Compute angles on the XY and YZ plane
+        for fn in self.testVecs:
+            self.xyAngles.append(degrees(rc.Vector3d.VectorAngle(fn, y, xy)))
+            self.yzAngles.append(degrees(rc.Vector3d.VectorAngle(fn, z, yz)))
