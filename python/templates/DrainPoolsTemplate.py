@@ -1,7 +1,7 @@
 print('Running template DrainPoolsTemplate.py')
 
 # Get user
-user = open(r'C:\livestock\python\ssh\user.txt','r').readline()
+user = open('user.txt','r').readline()
 
 # Import
 import sys

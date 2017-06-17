@@ -1,7 +1,7 @@
 print('Running template DrainMeshTemplate.py')
 
 # Get user
-user = open(r'C:\livestock\python\ssh\user.txt','r').readline()
+user = open('user.txt','r').readline()
 
 # Imports
 import sys
