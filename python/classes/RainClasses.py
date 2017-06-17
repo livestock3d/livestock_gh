@@ -68,7 +68,7 @@ def drainMeshPaths(meshPath,cpus):
                         z = centerZ[ad]
                         i = ad
 
-                if pt[2] <= z:
+                if z > pt[2]:
                     run = False
 
                 else:
@@ -618,14 +618,14 @@ class simpleRain():
             while True:
 
                 numOfBounce = 1
-                startPt, faceAngle = q.get()
+                startPt, xyAngle, yzAngle = q.get()
                 if startPt is None:
                     break
 
                 vector = direction_vector
                 ray = Ray3d(startPt, vector)
                 # Check the wind direction
-                B = B_wind(faceAngle, self.windDir[i])
+                B = B_wind(xyAngle, self.windDir[i])
                 if B > math.pi / 2:
                     hourly_rain.append(0)
                     hourly_result.append(False)
@@ -645,13 +645,15 @@ class simpleRain():
                         # print('Intersection!')
                         hourly_result.append(True)
                         kRain = self.kHit
-                        hourly_rain.append(K_wind * kRain * self.prec[i])
+                        verticalFactor = (1/(90*K_wind*kRain)-1/90)*yzAngle
+                        hourly_rain.append((K_wind * kRain * self.prec[i])*verticalFactor)
 
                     else:
                         # print('No intersection!')
                         hourly_result.append(False)
                         kRain = self.kMiss
-                        hourly_rain.append(K_wind * kRain * self.prec[i])
+                        verticalFactor = (1 / (90 * K_wind * kRain) - 1 / 90) * yzAngle
+                        hourly_rain.append((K_wind * kRain * self.prec[i])*verticalFactor)
 
                 # print('done')
                 q.task_done()
@@ -694,7 +696,7 @@ class simpleRain():
                     t.start()
 
                 for fi, pts in enumerate(self.testPts):
-                    q.put((pts, self.xyAngles[fi]))
+                    q.put((pts, self.xyAngles[fi], self.yzAngles[fi]))
 
                 # Wait until all tasks in the queue have been processed
                 q.join()
@@ -722,4 +724,16 @@ class simpleRain():
         # Compute angles on the XY and YZ plane
         for fn in self.testVecs:
             self.xyAngles.append(degrees(rc.Vector3d.VectorAngle(fn, y, xy)))
-            self.yzAngles.append(degrees(rc.Vector3d.VectorAngle(fn, z, yz)))
+            yz = degrees(rc.Vector3d.VectorAngle(fn, z, yz))
+
+            #Correct angles
+            if yz > 90:
+                yz = 180-yz
+            elif yz > 180:
+                yz = yz-180
+            elif yz > 270:
+                yz = abs(yz-360)
+            elif yz < 0:
+                yz = yz*(-1)
+
+            self.yzAngles.append(yz)
