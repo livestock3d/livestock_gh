@@ -272,6 +272,7 @@ def drainPools(path):
 
         # Boundary Box
         maxmin = apxMesh.bbox
+        print(maxmin)
         zMax = mesh.bbox[1][2]
 
         # Volume function to solve
