@@ -256,6 +256,7 @@ def drainPools(path):
 
         # Volume function to solve
         def findHeight(z):
+            print(z)
 
             # Boundary Box
             maxmin = mesh.bbox
