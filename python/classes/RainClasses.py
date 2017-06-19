@@ -308,6 +308,7 @@ def drainPools(path):
 
             # Make intersection
             newMesh = pm.boolean(mesh,bMesh,'intersection')
+            pm.save_mesh('meshName.obj', newMesh)
 
             # Get bottom part of mesh
             newSource = newMesh.get_attribute('source')
