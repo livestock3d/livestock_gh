@@ -309,7 +309,7 @@ def drainPools(path):
             pm.save_mesh('meshName.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl')
+            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl',exact_mesh_file=('xmlmesh.obj'))
 
             # Get bottom part of mesh
             newSource = newMesh.get_attribute('source')
