@@ -262,7 +262,7 @@ def drainPools(path):
 
         for af in adjFace:
             iApxVert = len(apxVert)
-            apxVert.append([vertices[af]])
+            apxVert.append(vertices[af])
             apxFace.append([iApxVert, iApxVert + 1, iApxVert + 2])
 
         # Create boundary mesh
@@ -272,7 +272,10 @@ def drainPools(path):
 
         # Boundary Box
         maxmin = apxMesh.bbox
+        print('apxMesh',maxmin)
+
         zMax = mesh.bbox[1][2]
+        print('zMax',zMax)
         pm.save_mesh('apxmesh.obj', apxMesh)
 
         # Volume function to solve
