@@ -132,6 +132,7 @@ def drainPools(path):
     faceVert = mesh.faces
     vertices = mesh.vertices
     #print(mesh.get_attribute_names())
+    warning = None
 
     # Construct face center list
     faceCen = []
@@ -254,12 +255,33 @@ def drainPools(path):
                         # Compute new z-value
                         Z = (npsum(faZ*faA)+volume)/npsum(faA)
 
+        # Create approximate volume mesh
+        apxVert = []
+        apxFace = []
+        iApxVert = 0
+
+        for af in adjFace:
+            iApxVert = len(apxVert)
+            apxVert += vertices[af]
+            apxFace.append([iApxVert, iApxVert + 1, iApxVert + 2])
+
+        # Create boundary mesh
+        apxVert = array(apxVert)
+        apxFace = array(apxFace)
+        apxMesh = pm.form_mesh(apxVert, apxFace)
+
+        # Boundary Box
+        maxmin = apxMesh.bbox
+        zMax = mesh.bbox[1][2]
+
         # Volume function to solve
         def findHeight(z):
-            print(z)
 
-            # Boundary Box
-            maxmin = mesh.bbox
+            # Check if pools will overflow mesh
+            if z > zMax:
+                z = zMax
+                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
+
             bVert = []
             bFace = []
             bVox = []
@@ -309,7 +331,7 @@ def drainPools(path):
             pm.save_mesh('meshName.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl',exact_mesh_file=('xmlmesh.obj'))
+            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl')
 
             # Get bottom part of mesh
             newSource = newMesh.get_attribute('source')
@@ -355,19 +377,24 @@ def drainPools(path):
             volVox = array(volVox)
             volMesh = pm.form_mesh(volVert, volFace, volVox)
 
-            # Compute volume
-            volMesh.add_attribute('voxel_volume')
-            volVol = volMesh.get_attribute('voxel_volume')
-            volVol = sum(list((map(abs, volVol))))
+            if z == zMax:
+                return 0
 
-            #print('volume',volume)
-            #print('volVol1',volVol)
+            else:
+                # Compute volume
+                volMesh.add_attribute('voxel_volume')
+                volVol = volMesh.get_attribute('voxel_volume')
+                volVol = sum(list((map(abs, volVol))))
 
-            return volume - volVol
+                #print('volume',volume)
+                #print('volVol1',volVol)
+
+                return volume - volVol
 
         # Get final height
         z = newton(findHeight,Z)
 
+        """
         # Create final mesh
         def finalMesh(z):
 
@@ -476,9 +503,10 @@ def drainPools(path):
 
 
             return volMesh, volVol
+        """
 
         # Save final mesh
-        finalMesh, finalVol = finalMesh(z)
+        finalMesh, finalVol = findHeight(z)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
         pm.save_mesh(meshName, finalMesh)
 
@@ -489,6 +517,7 @@ def drainPools(path):
         print(' ')
 
         return meshName
+
 
     # Initialize pool-loop
     Z = []
@@ -531,6 +560,9 @@ def drainPools(path):
     file_obj = open("meshNames.txt", 'w')
     file_obj.write(mNames)
     file_obj.close()
+
+    if warning:
+        return warning
 
 
 class simpleRain():
