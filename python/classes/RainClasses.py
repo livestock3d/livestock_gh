@@ -262,7 +262,7 @@ def drainPools(path):
 
         for af in adjFace:
             iApxVert = len(apxVert)
-            apxVert += vertices[af]
+            apxVert.append([vertices[af]])
             apxFace.append([iApxVert, iApxVert + 1, iApxVert + 2])
 
         # Create boundary mesh
