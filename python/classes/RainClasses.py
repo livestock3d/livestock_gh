@@ -305,8 +305,8 @@ def drainPools(path):
             bFace = array(bFace)
             bVox = array(bVox)
             bMesh = pm.form_mesh(bVert,bFace,bVox)
-            pm.save_mesh('meshName.obj', bMesh)
 
+            pm.save_mesh('meshName.obj', bMesh)
 
             # Make intersection
             newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl')
