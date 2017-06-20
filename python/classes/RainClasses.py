@@ -300,32 +300,31 @@ def drainPools(path):
             bVert = []
             bFace = []
             bVox = []
-            z2 = z
 
             # Add vertices
-            bVert.append(array([x1, y1, z1])) #0
-            bVert.append(array([x1, y2, z1])) #1
-            bVert.append(array([x1, y2, z2])) #2
-            bVert.append(array([x1, y1, z2])) #3
+            bVert.append(array([x1, y1, z1]))  # 0
+            bVert.append(array([x1, y2, z1]))  # 1
+            bVert.append(array([x1, y2, z]))  # 2
+            bVert.append(array([x1, y1, z]))  # 3
 
-            bVert.append(array([x2, y2, z2])) #4
-            bVert.append(array([x2, y2, z1])) #5
-            bVert.append(array([x2, y1, z1])) #6
-            bVert.append(array([x2, y1, z2])) #7
+            bVert.append(array([x2, y2, z]))  # 4
+            bVert.append(array([x2, y2, z1]))  # 5
+            bVert.append(array([x2, y1, z1]))  # 6
+            bVert.append(array([x2, y1, z]))  # 7
 
             # Add faces
-            bFace.append([0, 1, 3]) # side 1
-            bFace.append([1, 2, 3]) # side 1
-            bFace.append([0, 3, 7]) # side 2
-            bFace.append([0, 6, 7]) # side 2
-            bFace.append([7, 6, 5]) # side 3
-            bFace.append([5, 7, 4]) # side 3
-            bFace.append([4, 5, 1]) # side 4
-            bFace.append([4, 2, 1]) # side 4
-            bFace.append([0, 1, 6]) # side 5
-            bFace.append([1, 5, 6]) # side 5
-            bFace.append([3, 7, 2]) # side 6
-            bFace.append([2, 7, 4]) # side 6
+            bFace.append([0, 1, 3])  # side 1
+            bFace.append([1, 2, 3])  # side 1
+            bFace.append([0, 3, 7])  # side 2
+            bFace.append([0, 6, 7])  # side 2
+            bFace.append([7, 6, 5])  # side 3
+            bFace.append([5, 7, 4])  # side 3
+            bFace.append([4, 5, 1])  # side 4
+            bFace.append([4, 2, 1])  # side 4
+            bFace.append([0, 1, 6])  # side 5
+            bFace.append([1, 5, 6])  # side 5
+            bFace.append([3, 7, 2])  # side 6
+            bFace.append([2, 7, 4])  # side 6
 
             # Add voxels
             bVox.append([0, 2, 3, 7])
@@ -343,19 +342,14 @@ def drainPools(path):
             pm.save_mesh('bMesh.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection')
+            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='cork')
             pm.save_mesh('intMesh.obj', newMesh)
-            print('newMesh:',newMesh)
 
             # Get bottom part of mesh
-            try:
-                newSource = newMesh.get_attribute('source')
-            except RuntimeError:
-                print('RuntimeError')
-                return 0.01
-
+            newSource = newMesh.get_attribute('source')
             newFace = newMesh.faces
             bottomFaces = []
+
             for i,s in enumerate(newSource):
                 if int(s) == 1:
                     bottomFaces.append(newFace[i])
