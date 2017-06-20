@@ -297,7 +297,7 @@ def drainPools(path):
             x1, y1, z1 = maxmin[0]
             x2, y2, z2 = maxmin[1]
             z2 = z
-            z1 = z1-0.1*z1
+            z1 = z1*1.1
 
             # Add vertices
             bVert.append(array([x1, y1, z1])) #0
