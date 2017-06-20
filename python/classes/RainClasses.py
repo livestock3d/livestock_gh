@@ -272,8 +272,8 @@ def drainPools(path):
         apxFace = array(apxFace)
         apxMesh = pm.form_mesh(apxVert, apxFace)
 
-        print('len apxVert', len(apxVert))
-        print('første vert', apxVert)
+        #print('len apxVert', len(apxVert))
+        #print('første vert', apxVert)
 
         # Boundary Box
         maxmin = apxMesh.bbox
@@ -336,7 +336,7 @@ def drainPools(path):
             bFace = array(bFace)
             bVox = array(bVox)
             bMesh = pm.form_mesh(bVert,bFace,bVox)
-
+            print('bMesh closed?',bMesh.is_closed())
             pm.save_mesh('meshName.obj', bMesh)
 
             # Make intersection
