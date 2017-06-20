@@ -336,12 +336,11 @@ def drainPools(path):
             bFace = array(bFace)
             bVox = array(bVox)
             bMesh = pm.form_mesh(bVert,bFace,bVox)
-            print('bMesh closed?',bMesh.is_closed())
-            pm.save_mesh('meshName.obj', bMesh)
+            pm.save_mesh('bMesh.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'symmetric_difference')
-            pm.save_mesh('newName.obj', newMesh)
+            newMesh = pm.boolean(mesh,bMesh,'intersection')
+            pm.save_mesh('intMesh.obj', newMesh)
 
             # Get bottom part of mesh
             newSource = newMesh.get_attribute('source')
