@@ -255,6 +255,8 @@ def drainPools(path):
                         # Compute new z-value
                         Z = (npsum(faZ*faA)+volume)/npsum(faA)
 
+        print('Approx Z:',Z)
+
         # Create approximate volume mesh
         apxVert = []
         apxFace = []
@@ -279,7 +281,8 @@ def drainPools(path):
         maxmin = apxMesh.bbox
         x1, y1, z1 = maxmin[0]
         x2, y2, z2 = maxmin[1]
-        print('apxMesh',maxmin)
+
+        print('apxMesh:',maxmin[0],'\n',maxmin[1])
 
         zMax = mesh.bbox[1][2]
         print('zMax:',zMax)
@@ -403,7 +406,7 @@ def drainPools(path):
                 return volume - volVol
 
         # Get final height
-        z = newton(findHeight,Z)
+        zFinal = newton(findHeight,Z)
 
         """
         # Create final mesh
@@ -517,7 +520,7 @@ def drainPools(path):
         """
 
         # Save final mesh
-        finalMesh, finalVol = findHeight(z)
+        finalMesh, finalVol = findHeight(zFinal)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
         pm.save_mesh(meshName, finalMesh)
 
