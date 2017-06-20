@@ -356,6 +356,7 @@ def drainPools(path):
             volFace = []
             volVox = []
 
+
             # Get bottom part of mesh
             for f in bottomFaces:
                 iVer = len(volVert)
