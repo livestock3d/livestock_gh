@@ -364,6 +364,7 @@ def drainPools(path):
                         bottomFaces.append(int(newFaceIndex))
                     else:
                         pass
+                print('number of bottom faces:',len(bottomFaces))
 
             if not bottomFaces:
                 newFace = newMesh.faces
