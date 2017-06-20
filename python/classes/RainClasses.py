@@ -342,7 +342,7 @@ def drainPools(path):
             pm.save_mesh('bMesh.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='cork')
+            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl')
             pm.save_mesh('intMesh.obj', newMesh)
 
             # Get bottom part of mesh
