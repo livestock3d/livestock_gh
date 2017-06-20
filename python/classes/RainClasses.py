@@ -359,9 +359,11 @@ def drainPools(path):
                 newFace = newMesh.faces
                 print('len newFace:',len(newFace))
                 print('first newFace:',newFace[0])
+                print('len of face centeroid:',len(newMesh.get_attribute('face_centroid')))
+                print('first centroid:',newMesh.get_attribute('face_centroid')[0])
                 bottomFaces = []
 
-                for newFaceIndex,newCen in enumerate(newMesh.get_attribute('face_centroid')):
+                for newFaceIndex, newCen in enumerate(newMesh.get_attribute('face_centroid')):
                     if newCen < z:
                         bottomFaces.append(newFace[newFaceIndex])
                     else:
