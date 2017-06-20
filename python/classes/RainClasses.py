@@ -350,17 +350,28 @@ def drainPools(path):
             try:
                 newSource = newMesh.get_attribute('source')
             except RuntimeError:
-                print('Changing Boolean Engine to Cork!')
+                # Change boolean engine to Cork and try different apporach to getting bottom faces
+                warning = 'Changing Boolean Engine to Cork!'
+                print(warning)
                 newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
                 pm.save_mesh('intMesh.obj', newMesh)
-                newSource = newMesh.get_attribute('source')
+                newMesh.add_attribute('face_centroid')
+                newFace = newMesh.faces
+                bottomFaces = []
 
-            newFace = newMesh.faces
-            bottomFaces = []
+                for newFaceIndex,newCen in enumerate(newMesh.get_attribute('face_centroid')):
+                    if newCen < z:
+                        bottomFaces.append(newFace[newFaceIndex])
+                    else:
+                        pass
 
-            for i,s in enumerate(newSource):
-                if int(s) == 1:
-                    bottomFaces.append(newFace[i])
+            if not bottomFaces:
+                newFace = newMesh.faces
+                bottomFaces = []
+
+                for i,s in enumerate(newSource):
+                    if int(s) == 1:
+                        bottomFaces.append(newFace[i])
 
             # Prepare to create volume mesh
             newMeshVert = newMesh.vertices
