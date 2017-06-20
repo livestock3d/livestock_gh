@@ -282,7 +282,7 @@ def drainPools(path):
         x1, y1, z1 = maxmin[0]
         x2, y2, z2 = maxmin[1]
 
-        print('apxMesh:',maxmin[0],'\n',maxmin[1])
+        print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
 
         zMax = mesh.bbox[1][2]
         print('zMax:',zMax)
@@ -348,7 +348,12 @@ def drainPools(path):
             print('newMesh:',newMesh)
 
             # Get bottom part of mesh
-            newSource = newMesh.get_attribute('source')
+            try:
+                newSource = newMesh.get_attribute('source')
+            except RuntimeError:
+                print('RuntimeError')
+                return 0.01
+
             newFace = newMesh.faces
             bottomFaces = []
             for i,s in enumerate(newSource):
