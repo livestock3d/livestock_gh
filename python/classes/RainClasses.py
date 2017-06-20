@@ -340,7 +340,7 @@ def drainPools(path):
             pm.save_mesh('meshName.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection')
+            newMesh = pm.boolean(mesh,bMesh,'symmetric_difference')
             pm.save_mesh('newName.obj', newMesh)
 
             # Get bottom part of mesh
