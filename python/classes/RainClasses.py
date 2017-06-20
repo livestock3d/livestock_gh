@@ -342,11 +342,19 @@ def drainPools(path):
             pm.save_mesh('bMesh.obj', bMesh)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection',engine='igl')
+            newMesh = pm.boolean(mesh,bMesh,'intersection')
             pm.save_mesh('intMesh.obj', newMesh)
+            print('newMesh attributes',newMesh.get_attribute_names())
 
             # Get bottom part of mesh
-            newSource = newMesh.get_attribute('source')
+            try:
+                newSource = newMesh.get_attribute('source')
+            except RuntimeError:
+                print('Changing Boolean Engine to Cork!')
+                newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
+                pm.save_mesh('intMesh.obj', newMesh)
+                newSource = newMesh.get_attribute('source')
+
             newFace = newMesh.faces
             bottomFaces = []
 
