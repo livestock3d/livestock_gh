@@ -357,6 +357,8 @@ def drainPools(path):
                 pm.save_mesh('intMesh.obj', newMesh)
                 newMesh.add_attribute('face_centroid')
                 newFace = newMesh.faces
+                print('len newFace:',len(newFace))
+                print('first newFace:',newFace[0])
                 bottomFaces = []
 
                 for newFaceIndex,newCen in enumerate(newMesh.get_attribute('face_centroid')):
