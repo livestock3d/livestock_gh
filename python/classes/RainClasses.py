@@ -120,7 +120,7 @@ def drainPools(path):
     endPtsFile = path + '/EndPoints.txt'
     volPtsFile = path + '/VolumePoints.txt'
 
-    # Initilize Mesh
+    # Initialize Mesh
     mesh = pm.load_mesh(meshFile)
     mesh.enable_connectivity()
     mesh.add_attribute('face_centroid')
@@ -277,14 +277,17 @@ def drainPools(path):
 
         # Boundary Box
         maxmin = apxMesh.bbox
+        x1, y1, z1 = maxmin[0]
+        x2, y2, z2 = maxmin[1]
         print('apxMesh',maxmin)
 
         zMax = mesh.bbox[1][2]
-        print('zMax',zMax)
+        print('zMax:',zMax)
         pm.save_mesh('apxmesh.obj', apxMesh)
 
         # Volume function to solve
         def findHeight(z):
+            print('current z:',z)
 
             # Check if pools will overflow mesh
             if z > zMax:
@@ -294,10 +297,7 @@ def drainPools(path):
             bVert = []
             bFace = []
             bVox = []
-            x1, y1, z1 = maxmin[0]
-            x2, y2, z2 = maxmin[1]
             z2 = z
-            z1 = z1*1.15
 
             # Add vertices
             bVert.append(array([x1, y1, z1])) #0
