@@ -6,6 +6,32 @@ Livestock uses PyMesh to handle geometry.
 Currently PyMesh is only available for Linux/Unix, therefore it is necessary to install Bash on your windows machine if you don't have linux server.
 #### Install Bash for Windows
 An installation guide can be found here: https://msdn.microsoft.com/en-us/commandline/wsl/install_guide
+#### Set up SSH connection to Bash
+```
+sudo apt-get remove openssh-server
+sudo apt-get install openssh-server
+sudo nano /etc/ssh/sshd_config
+```
+Set the following:
+```
+PermitRootLogin no
+Port 2222
+```
+Then add a line beneath it that says: 
+```
+AllowUsers big
+```
+Or whatever your username is for the linux subsystem
+```
+PasswordAuthentication yes
+UsePrivilegeSeparation no
+PubkeyAuthentication no
+RSAAuthentication no
+```
+Save and close sshd_config
+```
+sudo service ssh --full-restart
+```
 #### Install PyMesh
 To install PyMesh do the following steps after installing Bash for Windows:
 First download and install Anaconda for Linux from http://continuum.io/downloads.html \
