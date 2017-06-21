@@ -433,7 +433,6 @@ def drainPools(path):
         # Get final height
         zFinal = newton(findHeight,Z)
 
-        """
         # Create final mesh
         def finalMesh(z):
 
@@ -542,11 +541,10 @@ def drainPools(path):
 
 
             return volMesh, volVol
-        """
 
         # Save final mesh
-        print('zFinal',zFinal,'type:',type(zFinal))
-        finalMesh, finalVol = findHeight(zFinal)
+        #print('zFinal',zFinal,'type:',type(zFinal))
+        finalMesh, finalVol = finalMesh(zFinal)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
         pm.save_mesh(meshName, finalMesh)
 
