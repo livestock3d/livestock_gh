@@ -391,7 +391,7 @@ def drainPools(path):
                 # Change boolean engine to Cork
                 warning = 'Changing Boolean Engine to Cork!'
                 print(warning)
-                newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
+                newMesh = pm.boolean(bMesh, mesh, 'difference', engine='cork')
 
             pm.save_mesh('intMesh.obj', newMesh)
 
