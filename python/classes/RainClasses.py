@@ -385,7 +385,7 @@ def drainPools(path):
             warning = None
 
             # Make intersection with auto boolean engine
-            newMesh = pm.boolean(bMesh, mesh, 'difference')
+            newMesh = pm.boolean(mesh, bMesh, 'intersection')
 
             if newMesh.num_faces == 0:
                 # Change boolean engine to Cork
