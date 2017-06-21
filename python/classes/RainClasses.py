@@ -255,7 +255,7 @@ def drainPools(path):
                         # Compute new z-value
                         Z = (npsum(faZ*faA)+volume)/npsum(faA)
 
-        print('Approx Z:',Z)
+        #print('Approx Z:',Z)
 
         # Create approximate volume mesh
         apxVert = []
@@ -279,18 +279,18 @@ def drainPools(path):
 
         # Boundary Box
         maxmin = apxMesh.bbox
-        x1, y1, z1 = maxmin[0]
-        x2, y2, z2 = maxmin[1]
+        x1, y1, z1 = maxmin[0]*1.1  # Increase Bbox with 10%
+        x2, y2, z2 = maxmin[1]*1.1  # Increase Bbox with 10%
 
-        print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
+        #print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
 
         zMax = mesh.bbox[1][2]
-        print('zMax:',zMax)
+        #print('zMax:',zMax)
         pm.save_mesh('apxmesh.obj', apxMesh)
 
         # Volume function to solve
         def findHeight(z):
-            print('current z:',z)
+            #print('current z:',z)
 
             # Check if pools will overflow mesh
             if z > zMax:
@@ -344,7 +344,7 @@ def drainPools(path):
             # Make intersection
             newMesh = pm.boolean(mesh,bMesh,'intersection')
             pm.save_mesh('intMesh.obj', newMesh)
-            print('newMesh attributes',newMesh.get_attribute_names())
+            #print('newMesh attributes',newMesh.get_attribute_names())
 
             # Get bottom part of mesh
             try:
@@ -357,8 +357,8 @@ def drainPools(path):
                 pm.save_mesh('intMesh.obj', newMesh)
                 newMesh.add_attribute('face_centroid')
                 newFace = newMesh.faces
-                print('len newFace:',len(newFace))
-                print('first newFace:',newFace[0])
+                #print('len newFace:',len(newFace))
+                #print('first newFace:',newFace[0])
                 newCen = newMesh.get_attribute('face_centroid')
                 bottomFaces = []
 
@@ -368,8 +368,8 @@ def drainPools(path):
                         bottomFaces.append(newFace[newFaceIndex])
                     else:
                         pass
-                print('number of bottom faces:',len(bottomFaces))
-                print('first bottomFace:', bottomFaces[0])
+                #print('number of bottom faces:',len(bottomFaces))
+                #print('first bottomFace:', bottomFaces[0])
 
             if not bottomFaces:
                 newFace = newMesh.faces
@@ -545,6 +545,7 @@ def drainPools(path):
         """
 
         # Save final mesh
+        print('zFinal',zFinal,'type:',type(zFinal))
         finalMesh, finalVol = findHeight(zFinal)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
         pm.save_mesh(meshName, finalMesh)
