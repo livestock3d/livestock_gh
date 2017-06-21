@@ -258,7 +258,7 @@ def drainPools(path):
                         # Compute new z-value
                         Z = (npsum(faZ*faA)+volume)/npsum(faA)
 
-        print('Approx Z:',Z)
+        #print('Approx Z:',Z)
 
         # Create approximate volume mesh
         apxVert = []
@@ -426,7 +426,7 @@ def drainPools(path):
 
         # Volume function to solve
         def findHeight(z):
-            print('current z:',z)
+            #print('current z:',z)
 
             # Check if pools will overflow mesh
             if z > zMax:
@@ -544,7 +544,7 @@ def drainPools(path):
     file_obj.write(mNames)
     file_obj.close()
 
-    print('function warn', [boolWarning, poolWarning])
+    #print('function warn', [boolWarning, poolWarning])
     if boolWarning or poolWarning:
         return [boolWarning, poolWarning]
     else:
