@@ -134,8 +134,8 @@ def drainPools(path):
     faceVert = mesh.faces
     vertices = mesh.vertices
     #print(mesh.get_attribute_names())
-    boolWarning = None
-    poolWarning = None
+    boolWarning = False
+    poolWarning = False
 
     # Construct face center list
     faceCen = []
