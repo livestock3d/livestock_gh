@@ -1,5 +1,7 @@
 # LIVESTOCK - GRASSHOPPER
 LivestockGH is a plugin/library for Grasshopper written in Python.
+Currently LivestockGH only works with Rhino5. Make sure that Grasshopper is installed.
+GhPython is also needed. It can be downloaded here: http://www.food4rhino.com/app/ghpython
 
 # INSTALLATION
 Livestock uses PyMesh to handle geometry.
@@ -19,7 +21,7 @@ Port 2222
 ```
 Then add a line beneath it that says: 
 ```
-AllowUsers big
+AllowUsers <USER>
 ```
 Or whatever your username is for the linux subsystem
 ```
