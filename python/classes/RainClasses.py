@@ -545,7 +545,10 @@ def drainPools(path):
     file_obj.close()
 
     if boolWarning or poolWarning:
+        print('function warn',[boolWarning, poolWarning])
         return [boolWarning, poolWarning]
+    else:
+        return None
 
 class simpleRain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
