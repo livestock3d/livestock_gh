@@ -132,7 +132,8 @@ def drainPools(path):
     faceVert = mesh.faces
     vertices = mesh.vertices
     #print(mesh.get_attribute_names())
-    warning = None
+    boolWarning = None
+    poolWarning = None
 
     # Construct face center list
     faceCen = []
@@ -385,8 +386,8 @@ def drainPools(path):
 
             if newMesh.num_faces == 0:
                 # Change boolean engine to Cork
-                warning = 'Changing Boolean Engine to Cork!'
-                print(warning)
+                boolWarning = 'Changing Boolean Engine to Cork!'
+                print(boolWarning)
                 newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
 
             pm.save_mesh('intMesh.obj', newMesh)
@@ -427,7 +428,7 @@ def drainPools(path):
             # Check if pools will overflow mesh
             if z > zMax:
                 z = zMax
-                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
+                poolWarning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
 
             # Create Bbox
             bMesh = createBbox(z)
@@ -461,7 +462,7 @@ def drainPools(path):
             # Check if pools will overflow mesh
             if z > zMax:
                 z = zMax
-                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
+                poolWarning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
 
             # Create Bbox
             bMesh = createBbox(z)
@@ -541,8 +542,8 @@ def drainPools(path):
     file_obj.write(mNames)
     file_obj.close()
 
-    if warning:
-        return warning
+    if boolWarning or poolWarning:
+        return [boolWarning, poolWarning]
 
 
 class simpleRain():

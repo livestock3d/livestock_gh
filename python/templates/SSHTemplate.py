@@ -112,7 +112,7 @@ while True:
         pass
 
 # Remove out file
-os.remove(localfolder + '\\out.txt')
+#os.remove(localfolder + '\\out.txt')
 
 # Close connection
 print('Closing connection!')
