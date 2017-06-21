@@ -134,8 +134,8 @@ def drainPools(path):
     faceVert = mesh.faces
     vertices = mesh.vertices
     #print(mesh.get_attribute_names())
-    boolWarning = False
-    poolWarning = False
+    boolWarning = None
+    poolWarning = None
 
     # Construct face center list
     faceCen = []
@@ -382,14 +382,15 @@ def drainPools(path):
             return volMesh
 
         def intersectAndBottomFaces(bMesh, z):
+            warning = None
 
             # Make intersection with auto boolean engine
             newMesh = pm.boolean(mesh, bMesh, 'intersection')
 
             if newMesh.num_faces == 0:
                 # Change boolean engine to Cork
-                boolWarning = 'Changing Boolean Engine to Cork!'
-                print(boolWarning)
+                warning = 'Changing Boolean Engine to Cork!'
+                print(warning)
                 newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
 
             pm.save_mesh('intMesh.obj', newMesh)
@@ -421,7 +422,7 @@ def drainPools(path):
                     if newCenZ < z:
                         bottomFaces.append(newFace[newFaceIndex])
 
-                return newMesh, bottomFaces
+                return newMesh, bottomFaces, warning
 
         # Volume function to solve
         def findHeight(z):
@@ -430,13 +431,12 @@ def drainPools(path):
             # Check if pools will overflow mesh
             if z > zMax:
                 z = zMax
-                poolWarning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
 
             # Create Bbox
             bMesh = createBbox(z)
 
             # Make intersection
-            newMesh, bottomFaces = intersectAndBottomFaces(bMesh, z)
+            newMesh, bottomFaces, warning = intersectAndBottomFaces(bMesh, z)
 
             # Create volume mesh
             volMesh = getVolMesh(newMesh, bottomFaces, z)
@@ -460,6 +460,7 @@ def drainPools(path):
 
         # Create final mesh
         def finalMesh(z):
+            poolWarning = None
 
             # Check if pools will overflow mesh
             if z > zMax:
@@ -470,7 +471,7 @@ def drainPools(path):
             bMesh = createBbox(z)
 
             # Make intersection
-            newMesh, bottomFaces = intersectAndBottomFaces(bMesh, z)
+            newMesh, bottomFaces, boolWarning = intersectAndBottomFaces(bMesh, z)
 
             # Create volume mesh
             volMesh = getVolMesh(newMesh, bottomFaces, z)
@@ -484,12 +485,11 @@ def drainPools(path):
             #print('num vertex removed', info["num_vertex_removed"])
             volMesh, info = pm.remove_duplicated_faces(volMesh)
 
-
-            return volMesh, volVol
+            return volMesh, volVol, poolWarning, poolWarning
 
         # Save final mesh
         #print('zFinal',zFinal,'type:',type(zFinal))
-        finalMesh, finalVol = finalMesh(zFinal)
+        finalMesh, finalVol, poolWarning, boolWarning = finalMesh(zFinal)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
         pm.save_mesh(meshName, finalMesh)
 
