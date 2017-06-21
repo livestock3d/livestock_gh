@@ -64,11 +64,17 @@ For further information go to: https://github.com/qnzhou/PyMesh
 #### Install Anaconda for Windows
 As Livestock depends on several non-standard Python libraries, we recommend to install Anaconda to manage the python libraries. We here at Livestock have made an environment where all the python libraries we use are included in.
 To download Anaconda go to: https://www.continuum.io/downloads
-To download Livestock Anaconda Environment go to: ---
 At the moment LivestockGH depends on the following python libraries:
 - SciPy
 - Numpy
 - Paramiko
+
+To install Livestock Anaconda Environment:\
+Open Windows command promt and type
+```
+cd C:\livestock\python
+conda env create -f livestock.yml
+```
 
 #### Download Livestock Python Libraries
 Clone the repositories into the livestock folder with the following command:
