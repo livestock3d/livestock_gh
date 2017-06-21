@@ -499,7 +499,7 @@ def drainPools(path):
         print('closed?',finalMesh.is_closed())
         print(' ')
 
-        return meshName
+        return meshName, poolWarning, poolWarning
 
 
     # Initialize pool-loop
@@ -513,7 +513,7 @@ def drainPools(path):
     # Use pool function on each set of points
     while i < loopLength:
         I = notDoneList.pop(i)
-        names = pool(fI[I],pts[I],vols[I])
+        names, poolWarning, poolWarning = pool(fI[I],pts[I],vols[I])
 
         # Put meshNames in name list
         if names:
