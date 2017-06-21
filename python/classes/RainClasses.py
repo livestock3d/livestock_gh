@@ -290,15 +290,8 @@ def drainPools(path):
         #print('zMax:',zMax)
         pm.save_mesh('apxmesh.obj', apxMesh)
 
-        # Volume function to solve
-        def findHeight(z):
-            #print('current z:',z)
-
-            # Check if pools will overflow mesh
-            if z > zMax:
-                z = zMax
-                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
-
+        # Findheight helper functions
+        def createBbox(z):
             bVert = []
             bFace = []
             bVox = []
@@ -340,47 +333,12 @@ def drainPools(path):
             bVert = array(bVert)
             bFace = array(bFace)
             bVox = array(bVox)
-            bMesh = pm.form_mesh(bVert,bFace,bVox)
+            bMesh = pm.form_mesh(bVert, bFace, bVox)
             pm.save_mesh('bMesh.obj', bMesh)
 
-            # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection')
-            pm.save_mesh('intMesh.obj', newMesh)
-            #print('newMesh attributes',newMesh.get_attribute_names())
+            return bMesh
 
-            # Get bottom part of mesh
-            try:
-                newSource = newMesh.get_attribute('source')
-                bottomFaces = None
-            except RuntimeError:
-                # Change boolean engine to Cork and try different apporach to getting bottom faces
-                warning = 'Changing Boolean Engine to Cork!'
-                print(warning)
-                newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
-                pm.save_mesh('intMesh.obj', newMesh)
-                newMesh.add_attribute('face_centroid')
-                newFace = newMesh.faces
-                #print('len newFace:',len(newFace))
-                #print('first newFace:',newFace[0])
-                newCen = newMesh.get_attribute('face_centroid')
-                bottomFaces = []
-
-                for newFaceIndex in range(len(newFace)):
-                    newCenZ = newCen[newFaceIndex*3+2]
-                    if newCenZ < z:
-                        bottomFaces.append(newFace[newFaceIndex])
-                    else:
-                        pass
-                #print('number of bottom faces:',len(bottomFaces))
-                #print('first bottomFace:', bottomFaces[0])
-
-            if not bottomFaces:
-                newFace = newMesh.faces
-                bottomFaces = []
-
-                for i,s in enumerate(newSource):
-                    if int(s) == 1:
-                        bottomFaces.append(newFace[i])
+        def getVolMesh(newMesh, bottomFaces, z):
 
             # Prepare to create volume mesh
             newMeshVert = newMesh.vertices
@@ -388,8 +346,7 @@ def drainPools(path):
             volFace = []
             volVox = []
 
-
-            # Get bottom part of mesh
+            # Create volume mesh from bottom part of mesh
             for f in bottomFaces:
                 iVer = len(volVert)
 
@@ -397,7 +354,7 @@ def drainPools(path):
                 newVerts = []
                 for v in f:
                     oldVerts.append(newMeshVert[v])
-                    newV = array([newMeshVert[v][0],newMeshVert[v][1],z])
+                    newV = array([newMeshVert[v][0], newMeshVert[v][1], z])
                     newVerts.append(newV)
 
                 # Append vertices
@@ -405,19 +362,81 @@ def drainPools(path):
                 volVert += newVerts
 
                 # Append faces
-                volFace.append([iVer, iVer+1, iVer+2])
-                volFace.append([iVer+3, iVer+4, iVer+5])
+                volFace.append([iVer, iVer + 1, iVer + 2])
+                volFace.append([iVer + 3, iVer + 4, iVer + 5])
 
                 # Append voxels
-                volVox.append([iVer, iVer+1, iVer+2, iVer+3])
-                volVox.append([iVer+1, iVer+3, iVer+4, iVer+5])
-                volVox.append([iVer+1, iVer+2, iVer+3, iVer+5])
+                volVox.append([iVer, iVer + 1, iVer + 2, iVer + 3])
+                volVox.append([iVer + 1, iVer + 3, iVer + 4, iVer + 5])
+                volVox.append([iVer + 1, iVer + 2, iVer + 3, iVer + 5])
 
             # Create volume mesh
             volVert = array(volVert)
             volFace = array(volFace)
             volVox = array(volVox)
             volMesh = pm.form_mesh(volVert, volFace, volVox)
+
+            return volMesh
+
+        def intersectAndBottomFaces(bMesh, z):
+
+            # Make intersection with auto boolean engine
+            newMesh = pm.boolean(mesh, bMesh, 'intersection')
+
+            if newMesh.num_faces == 0:
+                # Change boolean engine to Cork
+                warning = 'Changing Boolean Engine to Cork!'
+                print(warning)
+                newMesh = pm.boolean(mesh, bMesh, 'intersection', engine='cork')
+
+            pm.save_mesh('intMesh.obj', newMesh)
+
+
+            # Get bottom part of mesh
+            try:
+                newSource = newMesh.get_attribute('source')
+                newFace = newMesh.faces
+                bottomFaces = []
+
+                for i, s in enumerate(newSource):
+                    if int(s) == 1:
+                        bottomFaces.append(newFace[i])
+
+                return newMesh, bottomFaces
+
+            except RuntimeError:
+                # Try different approach to getting bottom faces
+                newMesh.add_attribute('face_centroid')
+                newFace = newMesh.faces
+                # print('len newFace:',len(newFace))
+                # print('first newFace:',newFace[0])
+                newCen = newMesh.get_attribute('face_centroid')
+                bottomFaces = []
+
+                for newFaceIndex in range(len(newFace)):
+                    newCenZ = newCen[newFaceIndex * 3 + 2]
+                    if newCenZ < z:
+                        bottomFaces.append(newFace[newFaceIndex])
+
+                return newMesh, bottomFaces
+
+        # Volume function to solve
+        def findHeight(z):
+            #print('current z:',z)
+
+            # Check if pools will overflow mesh
+            if z > zMax:
+                z = zMax
+                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
+
+            # Create Bbox
+            bMesh = createBbox(z)
+
+            # Make intersection
+            newMesh, bottomFaces = intersectAndBottomFaces(bMesh, z)
+
+            # Create volume mesh
+            volMesh = getVolMesh(newMesh, bottomFaces, z)
 
             if z == zMax:
                 return 0
@@ -439,99 +458,19 @@ def drainPools(path):
         # Create final mesh
         def finalMesh(z):
 
-            # Boundary Box
-            maxmin = mesh.bbox
-            bVert = []
-            bFace = []
-            bVox = []
-            x1, y1, z1 = maxmin[0]
-            x2, y2, z2 = maxmin[1]
-            z2 = z
+            # Check if pools will overflow mesh
+            if z > zMax:
+                z = zMax
+                warning = 'The pool have a greater volume than the mesh can contain. Pool set to fill entire mesh.'
 
-            # Add vertices
-            bVert.append(array([x1, y1, z1])) #0
-            bVert.append(array([x1, y2, z1])) #1
-            bVert.append(array([x1, y2, z2])) #2
-            bVert.append(array([x1, y1, z2])) #3
-
-            bVert.append(array([x2, y2, z2])) #4
-            bVert.append(array([x2, y2, z1])) #5
-            bVert.append(array([x2, y1, z1])) #6
-            bVert.append(array([x2, y1, z2])) #7
-
-            # Add faces
-            bFace.append([0, 1, 3]) # side 1
-            bFace.append([1, 2, 3]) # side 1
-            bFace.append([0, 3, 7]) # side 2
-            bFace.append([0, 6, 7]) # side 2
-            bFace.append([7, 6, 5]) # side 3
-            bFace.append([5, 7, 4]) # side 3
-            bFace.append([4, 5, 1]) # side 4
-            bFace.append([4, 2, 1]) # side 4
-            bFace.append([0, 1, 6]) # side 5
-            bFace.append([1, 5, 6]) # side 5
-            bFace.append([3, 7, 2]) # side 6
-            bFace.append([2, 7, 4]) # side 6
-
-            # Add voxels
-            bVox.append([0, 2, 3, 7])
-            bVox.append([0, 1, 2, 7])
-            bVox.append([0, 1, 6, 7])
-            bVox.append([2, 4, 5, 7])
-            bVox.append([1, 2, 5, 6])
-            bVox.append([2, 4, 6, 7])
-
-            # Create boundary mesh
-            bVert = array(bVert)
-            bFace = array(bFace)
-            bVox = array(bVox)
-            bMesh = pm.form_mesh(bVert,bFace,bVox)
+            # Create Bbox
+            bMesh = createBbox(z)
 
             # Make intersection
-            newMesh = pm.boolean(mesh,bMesh,'intersection')
-
-            # Get bottom part of mesh
-            newSource = newMesh.get_attribute('source')
-            newFace = newMesh.faces
-            bottomFaces = []
-            for i,s in enumerate(newSource):
-                if int(s) == 1:
-                    bottomFaces.append(newFace[i])
-
-            # Prepare to create volume mesh
-            newMeshVert = newMesh.vertices
-            volVert = []
-            volFace = []
-            volVox = []
-
-            for f in bottomFaces:
-                iVer = len(volVert)
-
-                oldVerts = []
-                newVerts = []
-                for v in f:
-                    oldVerts.append(newMeshVert[v])
-                    newV = array([newMeshVert[v][0],newMeshVert[v][1],z])
-                    newVerts.append(newV)
-
-                # Append vertices
-                volVert += oldVerts
-                volVert += newVerts
-
-                # Append faces
-                volFace.append([iVer, iVer+1, iVer+2])
-                volFace.append([iVer+3, iVer+4, iVer+5])
-
-                # Append voxels
-                volVox.append([iVer, iVer+1, iVer+2, iVer+3])
-                volVox.append([iVer+1, iVer+3, iVer+4, iVer+5])
-                volVox.append([iVer+1, iVer+2, iVer+3, iVer+5])
+            newMesh, bottomFaces = intersectAndBottomFaces(bMesh, z)
 
             # Create volume mesh
-            volVert = array(volVert)
-            volFace = array(volFace)
-            volVox = array(volVox)
-            volMesh = pm.form_mesh(volVert, volFace, volVox)
+            volMesh = getVolMesh(newMesh, bottomFaces, z)
 
             volMesh.add_attribute('voxel_volume')
             volVol = volMesh.get_attribute('voxel_volume')
