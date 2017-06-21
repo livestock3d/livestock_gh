@@ -395,7 +395,6 @@ def drainPools(path):
 
             #pm.save_mesh('intMesh.obj', newMesh)
 
-
             # Get bottom part of mesh
             try:
                 newSource = newMesh.get_attribute('source')
@@ -406,7 +405,7 @@ def drainPools(path):
                     if int(s) == 1:
                         bottomFaces.append(newFace[i])
 
-                return newMesh, bottomFaces
+                return newMesh, bottomFaces, warning
 
             except RuntimeError:
                 # Try different approach to getting bottom faces
