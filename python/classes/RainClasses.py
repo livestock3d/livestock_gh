@@ -109,6 +109,8 @@ def drainMeshPaths(meshPath,cpus):
     file_obj.close()
     pm.save_mesh('newDrainMesh.obj',mesh)
 
+    return None
+
 def drainPools(path):
     import pymesh as pm
     from numpy import array, allclose
@@ -544,7 +546,6 @@ def drainPools(path):
 
     if boolWarning or poolWarning:
         return [boolWarning, poolWarning]
-
 
 class simpleRain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):

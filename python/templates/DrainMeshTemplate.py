@@ -13,8 +13,12 @@ meshPath = '/home/' + user + '/livestock/templates/drainMesh.obj'
 cpu = open('/home/' + user + '/livestock/templates/cpu.txt','r').readline()
 
 # Run function
-drainMeshPaths(meshPath, int(cpu))
+warn = drainMeshPaths(meshPath, int(cpu))
 
 # Annouce that template finished and create out file
 print('Finished with template')
-sys.stdout = open('out.txt','w')
+file_obj = open('out.txt','w')
+if warn:
+    for w in warn:
+        file_obj.write(w + '\n')
+file_obj.close()
