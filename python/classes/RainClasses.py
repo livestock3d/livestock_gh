@@ -359,16 +359,17 @@ def drainPools(path):
                 newFace = newMesh.faces
                 print('len newFace:',len(newFace))
                 print('first newFace:',newFace[0])
-                print('len of face centeroid:',len(newMesh.get_attribute('face_centroid')))
-                print('first centroid:',newMesh.get_attribute('face_centroid')[0])
+                newCen = newMesh.get_attribute('face_centroid')
                 bottomFaces = []
 
-                for newFaceIndex, newCen in enumerate(newMesh.get_attribute('face_centroid')):
-                    if newCen < z:
+                for newFaceIndex, newCen in range(len(newFace)):
+                    newCenZ = newCen[newFaceIndex*3+2]
+                    if newCenZ < z:
                         bottomFaces.append(newFace[newFaceIndex])
                     else:
                         pass
                 print('number of bottom faces:',len(bottomFaces))
+                print('first bottomFace:', bottomFaces[0])
 
             if not bottomFaces:
                 newFace = newMesh.faces
