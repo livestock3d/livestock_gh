@@ -1,0 +1,36 @@
+name: livestock
+channels:
+- anaconda-fusion
+- defaults
+dependencies:
+- cffi=1.9.1=py35_0
+- cryptography=1.7.1=py35_0
+- cycler=0.10.0=py35_0
+- icu=57.1=vc14_0
+- idna=2.2=py35_0
+- jpeg=9b=vc14_0
+- libpng=1.6.27=vc14_0
+- matplotlib=2.0.0=np112py35_0
+- mkl=2017.0.1=0
+- numpy=1.12.1=py35_0
+- openssl=1.0.2k=vc14_0
+- paramiko=2.1.2=py35_0
+- pip=9.0.1=py35_1
+- pyasn1=0.2.3=py35_0
+- pycparser=2.17=py35_0
+- pyparsing=2.1.4=py35_0
+- pyqt=5.6.0=py35_2
+- python=3.5.3=0
+- python-dateutil=2.6.0=py35_0
+- pytz=2017.2=py35_0
+- qt=5.6.2=vc14_3
+- scipy=0.19.0=np112py35_0
+- setuptools=27.2.0=py35_1
+- sip=4.18=py35_0
+- six=1.10.0=py35_0
+- tk=8.5.18=vc14_0
+- vs2015_runtime=14.0.25123=0
+- wheel=0.29.0=py35_0
+- zlib=1.2.8=vc14_3
+prefix: C:\Program Files\Anaconda3\envs\livestock
+
