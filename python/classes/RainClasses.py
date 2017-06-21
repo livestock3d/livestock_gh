@@ -739,16 +739,16 @@ class simpleRain():
         # Compute angles on the XY and YZ plane
         for fn in self.testVecs:
             self.xyAngles.append(degrees(rc.Vector3d.VectorAngle(fn, y, xy)))
-            yz = degrees(rc.Vector3d.VectorAngle(fn, z, yz))
+            yz_tmp = degrees(rc.Vector3d.VectorAngle(fn, z, yz))
 
             #Correct angles
-            if yz > 90:
-                yz = 180-yz
-            elif yz > 180:
-                yz = yz-180
-            elif yz > 270:
-                yz = abs(yz-360)
-            elif yz < 0:
-                yz = yz*(-1)
+            if yz_tmp > 90:
+                yz_tmp = 180-yz_tmp
+            elif yz_tmp > 180:
+                yz_tmp = yz_tmp-180
+            elif yz_tmp > 270:
+                yz_tmp = abs(yz_tmp-360)
+            elif yz_tmp < 0:
+                yz_tmp = yz_tmp*(-1)
 
-            self.yzAngles.append(yz)
+            self.yzAngles.append(yz_tmp)
