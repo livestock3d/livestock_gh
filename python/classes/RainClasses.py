@@ -351,6 +351,7 @@ def drainPools(path):
             # Get bottom part of mesh
             try:
                 newSource = newMesh.get_attribute('source')
+                bottomFaces = None
             except RuntimeError:
                 # Change boolean engine to Cork and try different apporach to getting bottom faces
                 warning = 'Changing Boolean Engine to Cork!'
