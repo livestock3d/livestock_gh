@@ -279,8 +279,10 @@ def drainPools(path):
 
         # Boundary Box
         maxmin = apxMesh.bbox
-        x1, y1, z1 = maxmin[0]*1.1  # Increase Bbox with 10%
+        x1, y1, z1 = maxmin[0]
         x2, y2, z2 = maxmin[1]*1.1  # Increase Bbox with 10%
+        x1 = x1*0.9  # Decrease Bbox with 10%
+        y1 = y1*0.9  # Decrease Bbox with 10%
 
         #print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
 
