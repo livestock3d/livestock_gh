@@ -10,6 +10,7 @@ An installation guide can be found here: https://msdn.microsoft.com/en-us/comman
 To install PyMesh do the following steps after installing Bash for Windows:
 First download and install Anaconda for Linux from http://continuum.io/downloads.html \
 Close and open Bash afterwards.
+
 ```
 sudo apt-get update
 sudo apt-get install python3 libpython3-dev git cmake swig gcc g++ libeigen3-dev libgmp-dev libmpfr-dev libboost-thread-dev libboost-dev
