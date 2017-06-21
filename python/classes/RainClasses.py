@@ -287,11 +287,11 @@ def drainPools(path):
         x1 = x1*0.9  # Decrease Bbox with 10%
         y1 = y1*0.9  # Decrease Bbox with 10%
 
-        print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
+        #print('apxMesh:',maxmin[0],'\n\t',maxmin[1])
 
         zMax = mesh.bbox[1][2]
         #print('zMax:',zMax)
-        pm.save_mesh('apxmesh.obj', apxMesh)
+        #pm.save_mesh('apxmesh.obj', apxMesh)
 
         # Findheight helper functions
         def createBbox(z):
@@ -337,7 +337,7 @@ def drainPools(path):
             bFace = array(bFace)
             bVox = array(bVox)
             bMesh = pm.form_mesh(bVert, bFace, bVox)
-            pm.save_mesh('bMesh.obj', bMesh)
+            #pm.save_mesh('bMesh.obj', bMesh)
 
             return bMesh
 
@@ -393,7 +393,7 @@ def drainPools(path):
                 print(warning)
                 newMesh = pm.boolean(bMesh, mesh, 'difference', engine='cork')
 
-            pm.save_mesh('intMesh.obj', newMesh)
+            #pm.save_mesh('intMesh.obj', newMesh)
 
 
             # Get bottom part of mesh
