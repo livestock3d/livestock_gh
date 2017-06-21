@@ -277,9 +277,6 @@ def drainPools(path):
         apxFace = array(apxFace)
         apxMesh = pm.form_mesh(apxVert, apxFace)
 
-        #print('len apxVert', len(apxVert))
-        #print('første vert', apxVert)
-
         # Boundary Box
         maxmin = apxMesh.bbox
         x1, y1, z1 = maxmin[0]
@@ -569,7 +566,6 @@ class simpleRain():
 
     # Final function
     def rainHits(self):
-        from System.Threading.Tasks.Parallel import ForEach
         from math import degrees, exp, log, acos, sqrt
         from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform, XformRotation2
         from Rhino.Geometry.Intersect.Intersection import RayShoot
