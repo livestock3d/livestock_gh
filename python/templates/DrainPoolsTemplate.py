@@ -5,6 +5,7 @@ user = open('user.txt','r').readline()
 
 # Import
 import sys
+import time
 sys.path.insert(0, "/home/" + user + "/livestock/classes")
 from RainClasses import drainPools
 
@@ -22,3 +23,5 @@ if warn:
     for w in warn:
         file_obj.write(w + '\n')
 file_obj.close()
+
+time.sleep(2)
