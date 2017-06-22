@@ -30,7 +30,7 @@ UsePrivilegeSeparation no
 PubkeyAuthentication no
 RSAAuthentication no
 ```
-Save and close sshd_config
+Save and close sshd_config and the type:
 ```
 sudo service ssh --full-restart
 ```
@@ -72,10 +72,9 @@ At the moment LivestockGH depends on the following python libraries:
 - Paramiko
 
 To install Livestock Anaconda Environment:\
-Open Windows command promt and type
+Open Windows command promt as administrator and type
 ```
-cd C:\livestock\python
-conda env create -f livestock.yml
+conda env create s123455/livestock
 ```
 
 #### Download Livestock Python Libraries

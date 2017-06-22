@@ -707,7 +707,7 @@ class simpleRain():
 
                 for c in range(self.cpus):
                     t = threading.Thread(target=rayShoot)
-                    # t.setDaemon(True)
+                    t.setDaemon(True)
                     t.start()
 
                 for fi, pts in enumerate(self.testPts):
