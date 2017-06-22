@@ -546,6 +546,7 @@ def drainPools(path):
     else:
         return None
 
+
 class simpleRain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
         self.prec = precipitation
@@ -566,7 +567,7 @@ class simpleRain():
 
     # Final function
     def rainHits(self):
-        from math import degrees, exp, log, acos, sqrt
+        from math import degrees, exp, log, acos, sqrt, pi, cos, radians
         from rhinoscriptsyntax import XformMultiply, VectorCreate, AddPoint, VectorTransform, XformRotation2
         from Rhino.Geometry.Intersect.Intersection import RayShoot
         from Rhino.Geometry import Ray3d
@@ -624,32 +625,31 @@ class simpleRain():
             else:
                 b = 360 - a
 
-            return math.radians(b)
+            return radians(b)
 
         def rayShoot():
             """Build on: Ladybug - RayTrace"""
 
             # Initialize
-            while True:
-
+            while not q.empty():
                 numOfBounce = 1
                 startPt, xyAngle, yzAngle = q.get()
-                if startPt is None:
-                    break
 
                 vector = direction_vector
                 ray = Ray3d(startPt, vector)
                 # Check the wind direction
                 B = B_wind(xyAngle, self.windDir[i])
-                if B > math.pi / 2:
+                # print(B)
+                if B > pi / 2:
+                    # print('more than 90')
                     hourly_rain.append(0)
                     hourly_result.append(False)
 
-
                 else:
+                    # print('less than 90')
                     # Compute rain amount
-                    K_wind = math.cos(B) / math.sqrt(
-                        1 + 1142 * (math.sqrt(self.prec[i]) / self.windSpeed[i] ** 4)) * math.exp(
+                    K_wind = cos(B) / sqrt(
+                        1 + 1142 * (sqrt(self.prec[i]) / self.windSpeed[i] ** 4)) * exp(
                         -12 / (self.windSpeed[i] * 5 * self.prec[i] ** (0.25)))
 
                     # Shoot ray
@@ -660,15 +660,17 @@ class simpleRain():
                         # print('Intersection!')
                         hourly_result.append(True)
                         kRain = self.kHit
-                        verticalFactor = (1/(90*K_wind*kRain)-1/90)*yzAngle
-                        hourly_rain.append((K_wind * kRain * self.prec[i])*verticalFactor)
+                        # verticalFactor = (1/(90*K_wind*kRain)-1/90)*yzAngle
+                        # print(verticalFactor)
+                        hourly_rain.append((K_wind * kRain * self.prec[i]))
 
                     else:
                         # print('No intersection!')
                         hourly_result.append(False)
                         kRain = self.kMiss
-                        verticalFactor = (1 / (90 * K_wind * kRain) - 1 / 90) * yzAngle
-                        hourly_rain.append((K_wind * kRain * self.prec[i])*verticalFactor)
+                        # verticalFactor = (1 / (90 * K_wind * kRain) - 1 / 90) * yzAngle
+                        # print('vf',verticalFactor)
+                        hourly_rain.append((K_wind * kRain * self.prec[i]))
 
                 # print('done')
                 q.task_done()
@@ -702,7 +704,8 @@ class simpleRain():
 
                 # Put jobs in queue
                 q = Queue.Queue()
-
+                for fi, pts in enumerate(self.testPts):
+                    q.put((pts, self.xyAngles[fi], self.yzAngles[fi]))
                 # Call task function
 
                 for c in range(self.cpus):
@@ -710,9 +713,7 @@ class simpleRain():
                     t.setDaemon(True)
                     t.start()
 
-                for fi, pts in enumerate(self.testPts):
-                    q.put((pts, self.xyAngles[fi], self.yzAngles[fi]))
-
+                # break
                 # Wait until all tasks in the queue have been processed
                 q.join()
 
@@ -741,14 +742,14 @@ class simpleRain():
             self.xyAngles.append(degrees(rc.Vector3d.VectorAngle(fn, y, xy)))
             yz_tmp = degrees(rc.Vector3d.VectorAngle(fn, z, yz))
 
-            #Correct angles
+            # Correct angles
             if yz_tmp > 90:
-                yz_tmp = 180-yz_tmp
+                yz_tmp = 180 - yz_tmp
             elif yz_tmp > 180:
-                yz_tmp = yz_tmp-180
+                yz_tmp = yz_tmp - 180
             elif yz_tmp > 270:
-                yz_tmp = abs(yz_tmp-360)
+                yz_tmp = abs(yz_tmp - 360)
             elif yz_tmp < 0:
-                yz_tmp = yz_tmp*(-1)
+                yz_tmp = yz_tmp * (-1)
 
             self.yzAngles.append(yz_tmp)
