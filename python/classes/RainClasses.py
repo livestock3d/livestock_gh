@@ -573,9 +573,8 @@ class simpleRain():
         from Rhino.Geometry import Ray3d
         import threading
         import Queue
-        import math
 
-        # Help functions
+        # Helper functions
 
         def rain_vector(Vw, regn):
 

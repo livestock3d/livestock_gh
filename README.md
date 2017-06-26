@@ -37,11 +37,27 @@ sudo service ssh --full-restart
 ```
 #### Install PyMesh
 To install PyMesh do the following steps after installing Bash for Windows:
-First download and install Anaconda for Linux from http://continuum.io/downloads.html \
-Close and open Bash afterwards.
+First download and install Anaconda for Linux from https://www.continuum.io/downloads \
+Make sure Ubuntu is updated and install some new packages:
 ```
 sudo apt-get update
-sudo apt-get install python3 libpython3-dev git cmake swig gcc g++ libeigen3-dev libgmp-dev libmpfr-dev libboost-thread-dev libboost-dev
+sudo apt-get upgrade
+sudo apt-get install python3 libpython3-dev checkinstall git cmake swig gcc g++ libeigen3-dev libgmp-dev libmpfr-dev libboost-thread-dev libboost-dev
+```
+Install CGAL-4.10
+```
+mkdir -p ~/src
+cd ~/src
+wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.10/CGAL-4.10.tar.xz
+tar xf CGAL-4.10.tar.xz
+cd CGAL-4.10
+cmake .
+make
+sudo checkinstall
+```
+Follow the instructions given by checkinstall. Now download and install PyMesh:
+```
+cd ~/
 git clone https://github.com/qnzhou/PyMesh.git
 cd PyMesh/
 git submodule init
@@ -56,13 +72,19 @@ cd ../../
 mkdir build
 cd build/
 cmake ..
-make -j 2
-make -j 2 tools
+make
+make src_tests
+make tools
+make tools_tests
 cd ..
 ./setup.py install --user
 ```
-For further information go to: https://github.com/qnzhou/PyMesh\
-~~Please note that the current CGAL which comes with PyMesh is not new enough to run PyMesh. Therefore follow the instructions given here: https://askubuntu.com/questions/668438/install-cgal-lib-version-4-5-1 and replace the version with the newest version which can be found here: https://github.com/CGAL/cgal/releases~~
+To check if everything works run:
+```
+python -c "import pymesh; pymesh.test()"
+```
+For PyMesh issues (installation or otherwise) and further information go to: https://github.com/qnzhou/PyMesh
+
 #### Install Anaconda for Windows
 As Livestock depends on several non-standard Python libraries, we recommend to install Anaconda to manage the python libraries. We here at Livestock have made an environment where all the python libraries we use are included in.
 To download Anaconda go to: https://www.continuum.io/downloads\
@@ -80,7 +102,7 @@ conda env create s123455/livestock
 #### Download Livestock Python Libraries
 Open Bash and clone the repositories into the livestock folder with the following command:
 ```
-cd /home/USER
+cd ~/
 mkdir livestock
 cd livestock/
 curl https://codeload.github.com/ocni-dtu/livestock_gh/tar.gz/master | \tar -xz --strip=2 livestock_gh-master/python/classes

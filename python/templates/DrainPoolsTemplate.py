@@ -5,11 +5,11 @@ user = open('user.txt','r').readline()
 
 # Import
 import sys
-sys.path.insert(0, "/home/" + user + "/livestock/classes")
+sys.path.insert(0, "~/livestock/classes")
 from RainClasses import drainPools
 
 # Get path
-poolPath = '/home/' + user + '/livestock/templates/'
+poolPath = '~/livestock/templates/'
 
 # Run function
 warn = drainPools(poolPath)
