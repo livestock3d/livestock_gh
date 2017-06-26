@@ -35,7 +35,7 @@ Save and close sshd_config and the type:
 ```
 sudo service ssh --full-restart
 ```
-#### Install PyMesh
+## Install PyMesh for Bash
 To install PyMesh do the following steps after installing Bash for Windows:
 First download and install Anaconda for Linux from https://www.continuum.io/downloads \
 Make sure Ubuntu is updated and install some new packages:
@@ -44,7 +44,7 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install python3 libpython3-dev checkinstall git cmake swig gcc g++ libeigen3-dev libgmp-dev libmpfr-dev libboost-thread-dev libboost-dev
 ```
-Install CGAL-4.10
+#### Install CGAL-4.10
 ```
 mkdir -p ~/src
 cd ~/src
@@ -55,7 +55,9 @@ cmake .
 make
 sudo checkinstall
 ```
-Follow the instructions given by checkinstall. Now download and install PyMesh:
+Follow the instructions given by checkinstall. 
+#### Install PyMesh
+Now download and install PyMesh:
 ```
 cd ~/
 git clone https://github.com/qnzhou/PyMesh.git
