@@ -487,7 +487,8 @@ def drainPools(path):
         #print('zFinal',zFinal,'type:',type(zFinal))
         finalMesh, finalVol, poolWarning, boolWarning = finalMesh(zFinal)
         meshName = "poolMesh_" + str(faceIndex) + ".obj"
-        pm.save_mesh(meshName, finalMesh)
+        hullMesh = pm.compute_outer_hull(finalMesh)
+        pm.save_mesh(meshName, hullMesh)
 
         print(' ')
         print('volume',"{0:.3f}".format(volume))
