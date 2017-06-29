@@ -13,6 +13,7 @@ poolPath = '~/livestock/templates/'
 
 # Run function
 warn = drainPools(poolPath)
+print(warn)
 
 # Annouce that template finished and create out file
 print('Finished with template')

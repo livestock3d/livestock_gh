@@ -14,6 +14,7 @@ cpu = open('~/livestock/templates/cpu.txt','r').readline()
 
 # Run function
 warn = drainMeshPaths(meshPath, int(cpu))
+print(warn)
 
 # Annouce that template finished and create out file
 print('Finished with template')
