@@ -5,7 +5,7 @@ user = open('user.txt','r').readline()
 
 # Import
 import sys
-sys.path.insert(0, "~/livestock/classes")
+sys.path.insert(0, "/home/" + user + "/livestock/classes")
 from RainClasses import drainPools
 
 # Get path
