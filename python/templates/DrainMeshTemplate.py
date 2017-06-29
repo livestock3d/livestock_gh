@@ -9,8 +9,8 @@ sys.path.insert(0, "/home/" + user + "/livestock/classes")
 from RainClasses import drainMeshPaths
 
 # Get files
-meshPath = '~/livestock/templates/drainMesh.obj'
-cpu = open('~/livestock/templates/cpu.txt','r').readline()
+meshPath = "/home/" + user + '/livestock/templates/drainMesh.obj'
+cpu = open("/home/" + user + '/livestock/templates/cpu.txt','r').readline()
 
 # Run function
 warn = drainMeshPaths(meshPath, int(cpu))

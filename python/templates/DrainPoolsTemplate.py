@@ -9,7 +9,7 @@ sys.path.insert(0, "/home/" + user + "/livestock/classes")
 from RainClasses import drainPools
 
 # Get path
-poolPath = '~/livestock/templates/'
+poolPath = "/home/" + user + '/livestock/templates/'
 
 # Run function
 warn = drainPools(poolPath)
