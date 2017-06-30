@@ -20,3 +20,4 @@ Livestock Mesh Drainage	Mesh Drainage	VER 0.0.1 | May 2017	Livestock	2 | Rain an
 Livestock Mesh Pools	Mesh Pools	VER 0.0.1 | May 2017	Livestock	2 | Rain and Flow	Calculates rain pools based on drainage paths
 Livestock Update	Update	VER 0.0.1 | May 2017	Livestock	0 | Miscellaneous	Update Livestock
 Livestock Simple Rain	Simple Rain	VER 0.0.1 | June 2017	Livestock	2 | Rain and Flow	Use this component to calculate the view vectors for a surface. The component takes in hourly weather datasets and calculates the view vector of the surface(s) in question. The view vector is used to determine if, and what hour of the year, the test point is hit by rain. The calculatin method is based on the paper: Ennis, B. J., & Litster, J. D. (1997). A Study of Driving Rain. Knowledge Creation Diffusion Utilization, 20�54.
+Livestock Fix Mesh  Fix Mesh    VER 0.0.1 | June 2017   Livestock	0 | Miscellaneous	Fixes Mesh
