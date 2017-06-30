@@ -12,7 +12,7 @@ from GeometryClasses import fix_mesh
 # Get files
 meshPath = "/home/" + user + '/livestock/templates/mesh.obj'
 outPath = "/home/" + user + '/livestock/templates/fixedMesh.obj'
-detail = open('deatil.txt','r').readline()
+detail = open('detail.txt','r').readline()
 
 # Run function
 mesh = pm.load_mesh(meshPath)
