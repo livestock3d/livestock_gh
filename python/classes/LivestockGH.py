@@ -137,7 +137,7 @@ def importObj(path):
 
     # Check if file is generated with PyMesh
     if lines[0].startswith('# Generated with PyMesh'):
-        print('PyMesh')
+        print('Generated with PyMesh')
         for line in lines:
             if line.find("v") == 0:
                 mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]), float((line.split(' '))[2]), float((line.split(' '))[3])))
@@ -191,23 +191,6 @@ def writeFile(text, path, name, filetype='txt'):
 
     # Close file
     fileWrite.close()
-
-def binarySearch(alist, item):
-    first = 0
-    last = len(alist)-1
-    found = False
-
-    while first<=last and not found:
-        midpoint = (first + last)//2
-        if alist[midpoint] == item:
-            found = True
-        else:
-            if item < alist[midpoint]:
-                last = midpoint-1
-            else:
-                first = midpoint+1
-
-    return found
 
 def loadPoints(pathAndFile):
     from Rhino.Geometry import Point3d
