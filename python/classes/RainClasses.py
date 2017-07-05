@@ -547,7 +547,6 @@ def drainPools(path):
     else:
         return None
 
-
 class simpleRain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
         self.prec = precipitation
