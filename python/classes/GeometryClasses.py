@@ -5,11 +5,11 @@ def fix_mesh(mesh, detail="normal"):
     bbox_min, bbox_max = mesh.bbox
     diag_len = norm(bbox_max - bbox_min)
     if detail == "normal":
-        target_len = diag_len * 5e-3
-    elif detail == "high":
-        target_len = diag_len * 2.5e-3
-    elif detail == "low":
         target_len = diag_len * 1e-2
+    elif detail == "high":
+        target_len = diag_len * 5e-3
+    elif detail == "low":
+        target_len = diag_len
     print("Target resolution: {} mm".format(target_len))
 
     count = 0
