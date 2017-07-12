@@ -9,7 +9,7 @@ def fix_mesh(mesh, detail="normal"):
     elif detail == "high":
         target_len = diag_len * 5e-3
     elif detail == "low":
-        target_len = diag_len
+        target_len = diag_len * 0.1
     print("Target resolution: {} mm".format(target_len))
 
     count = 0
