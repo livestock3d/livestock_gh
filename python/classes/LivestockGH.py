@@ -442,10 +442,11 @@ def rayShoot(startPt, vector, context, numOfBounce = 1):
         print("No reflection!")
         return False
 
+
 def loadMeshData(path):
     import os.path
 
-    path = path.split('.')[1] + '_Data.txt'
+    path = path.split('.')[0] + '_Data.txt'
 
     # Check if file exists
     exists = os.path.isfile(path)
