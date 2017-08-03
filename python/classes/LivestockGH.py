@@ -20,7 +20,9 @@ def componetList():
         l = l.split(';')
         ComponentData.append(l)
 
-componetList()
+    return ComponentData
+
+ComponentData = componetList()
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
