@@ -8,17 +8,23 @@ __status__ = "Work in Progress"
 #----------------------------------------------------------------------------------------------------------------------#
 #Functions and Classes
 
-componentFile = r'C:\livestock\python\ComponetList.txt'
+def componetList():
+    """Function that reads the grasshopper component list"""
 
-read = open(componentFile, 'r')
-lines = read.readlines()
-ComponentData = []
-for l in lines:
-    l = l.split('\t')
-    ComponentData.append(l)
+    componentFile = r'C:\livestock\python\ComponetList.csv'
+
+    read = open(componentFile, 'r')
+    lines = read.readlines()
+    ComponentData = []
+    for l in lines:
+        l = l.split(';')
+        ComponentData.append(l)
+
+componetList()
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
+
     def extend_at(path, index, simple_input, rest_list):
         target = path[index]
         if len(rest_list) <= target: rest_list.extend([None]*(target-len(rest_list)+1))
@@ -35,6 +41,7 @@ def tree_to_list(input, retrieve_base = lambda x: x[0]):
 
 def list_to_tree(input, none_and_holes=True, source=[0]):
     """Transforms nestings of lists or tuples to a Grasshopper DataTree"""
+
     from Grasshopper import DataTree as Tree
     from Grasshopper.Kernel.Data import GH_Path as Path
     from System import Array
