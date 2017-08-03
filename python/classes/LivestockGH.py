@@ -17,12 +17,14 @@ def componetList():
     lines = read.readlines()
     ComponentData = []
     for l in lines:
+        l = l.split('\n')[0]
         l = l.split(';')
         ComponentData.append(l)
 
     return ComponentData
 
 ComponentData = componetList()
+#print(ComponentData)
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
