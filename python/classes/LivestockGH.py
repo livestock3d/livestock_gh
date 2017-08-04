@@ -8,23 +8,21 @@ __status__ = "Work in Progress"
 #----------------------------------------------------------------------------------------------------------------------#
 #Functions and Classes
 
-def componetList():
-    """Function that reads the grasshopper component list"""
+def componetData(n):
+    """Function that reads the grasshopper component list and returns the component data"""
 
     componentFile = r'C:\livestock\python\ComponetList.csv'
 
     read = open(componentFile, 'r')
     lines = read.readlines()
-    ComponentData = []
-    for l in lines:
-        l = l.split('\n')[0]
-        l = l.split(';')
-        ComponentData.append(l)
+    l = lines[n]
+    data = []
+    l = l.split('\n')[0]
+    data = l.split(';')
 
-    return ComponentData
+    return data
 
-ComponentData = componetList()
-#print(ComponentData)
+print(componetData(0))
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
