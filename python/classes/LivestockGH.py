@@ -22,7 +22,18 @@ def componetData(n):
 
     return data
 
-print(componetData(0))
+def componetData1(n):
+    import csv
+    """Function that reads the grasshopper component list and returns the component data"""
+
+    componentFile = r'C:\livestock\python\ComponetList.csv'
+
+    with open(componentFile, 'r') as csvfile:
+        read = csv.reader(csvfile, delimiter=';')
+        for row in read:
+            print(row)
+
+print(componetData1(0))
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
