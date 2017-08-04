@@ -11,29 +11,15 @@ __status__ = "Work in Progress"
 def componetData(n):
     """Function that reads the grasshopper component list and returns the component data"""
 
-    componentFile = r'C:\livestock\python\ComponetList.csv'
+    componentFile = r'C:\livestock\python\ComponetList.txt'
 
     read = open(componentFile, 'r')
     lines = read.readlines()
     l = lines[n]
-    data = []
     l = l.split('\n')[0]
-    data = l.split(';')
+    l = l.split('\t')
 
-    return data
-
-def componetData1(n):
-    import csv
-    """Function that reads the grasshopper component list and returns the component data"""
-
-    componentFile = r'C:\livestock\python\ComponetList.csv'
-
-    with open(componentFile, 'r') as csvfile:
-        read = csv.reader(csvfile, delimiter=';')
-        for row in read:
-            print(row)
-
-print(componetData1(0))
+    return l
 
 def tree_to_list(input, retrieve_base = lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
@@ -462,7 +448,6 @@ def rayShoot(startPt, vector, context, numOfBounce = 1):
         print("No reflection!")
         return False
 
-
 def loadMeshData(path):
     import os.path
 
@@ -482,3 +467,11 @@ def loadMeshData(path):
 
     else:
         print("Mesh don't have any associated data")
+
+def cleanSSHFolder():
+    from shutil import rmtree
+    from os import listdir, mkdir
+    sshPath = r'C:\livestock\python\ssh'
+    if not listdir(sshPath) == []:
+        rmtree(sshPath)
+        mkdir(sshPath)
