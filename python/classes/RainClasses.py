@@ -752,3 +752,38 @@ class simpleRain():
                 yz_tmp = yz_tmp * (-1)
 
             self.yzAngles.append(yz_tmp)
+
+def evaporationRate(T, R, W, P, z0, RH):
+    """
+    :param T: Temperature in C 
+    :param R: Radiation in kWh
+    :param W: Wind speed in m/s
+    :param P: Pressure in Pa
+    :param z0: Roughness height in m
+    :param RH: Relative humidity unitless
+    :return: 
+    """
+
+    from math import log, exp
+
+    #Evaporation based on the energy balance
+    lv = (2500-2.36*T)*1000 #j/kg
+    rhoWater = 1000 #kg/m3
+    Er = R/(lv*rhoWater) #m/s
+
+    #Evaporation based on aerodynamics
+    rhoAir = 1.2 #kg/m3
+    eas = 611*exp(17.27*T/(237.3+T)) #Pa
+    ea = RH*eas #Pa
+    k = 0.4 #Unknown unit
+    B = 0.622*k**2*rhoAir*W/(P*rhoWater*(log(10/z0))**2) #Unknown unit
+    Ea = B*(eas-ea) #m/s
+
+    #Combine the two methods
+    Cp = 1005 #Unknown unit
+    delta = 4098*eas/(273.3+T)**2 #Unknown unit
+    gamma = Cp*P/(0.622*lv) #Unknown unit
+    E = delta/(delta+gamma)*Er + gamma/(delta+gamma)*Ea #m/s
+    E = E*3600 #m/h
+
+    return E

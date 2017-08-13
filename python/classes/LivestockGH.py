@@ -220,12 +220,17 @@ def makeCurvesFromPoints(points):
     from Rhino import Geometry as rc
 
     curves = []
+    endPoints = []
     for pts in points:
-        crv = rc.Curve.CreateControlPointCurve(pts,5)
-        if crv:
-            curves.append(crv)
+        if len(pts)==1:
+            endPoints.append(pts[0])
+        else:
+            crv = rc.Curve.CreateControlPointCurve(pts,5)
+            if crv:
+                curves.append(crv)
+                endPoints.append(pts[-1])
 
-    return curves
+    return curves, endPoints
 
 def lineIntersection(p1, p2, p3, p4):
     """
