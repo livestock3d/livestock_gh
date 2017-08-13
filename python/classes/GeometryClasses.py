@@ -38,3 +38,66 @@ def fix_mesh(mesh, detail="normal"):
     mesh, __ = pymesh.remove_isolated_vertices(mesh)
 
     return mesh
+
+def ray_triangle_intersection(ray_near, ray_dir, V):
+    """
+    Möller–Trumbore intersection algorithm in pure python
+    Based on http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+    """
+    import numpy as np
+
+    v1, v2, v3 = V
+    eps = 0.000001
+    edge1 = v2 - v1
+    edge2 = v3 - v1
+    pvec = np.cross(ray_dir, edge2)
+    det = edge1.dot(pvec)
+
+    if abs(det) < eps:
+        return False, None
+
+    inv_det = 1. / det
+    tvec = ray_near - v1
+    u = tvec.dot(pvec) * inv_det
+    if u < 0. or u > 1.:
+        return False, None
+
+    qvec = np.cross(tvec, edge1)
+    v = ray_dir.dot(qvec) * inv_det
+    if v < 0. or u + v > 1.:
+        return False, None
+
+    t = edge2.dot(qvec) * inv_det
+    if t < eps:
+        return False, None
+
+    return True, t
+
+def lowestFaceVertex(v0, v1, v2):
+    from numpy import array
+
+    V = [v0, v1, v2]
+    x0, y0, z0 = v0
+    x1, y1, z1 = v1
+    x2, y2, z2 = v2
+    X = [x0, x1, x2]
+    Y = [y0, y1, y2]
+    Z = [z0, z1, z2]
+
+    Zsort = sorted(Z).reverse()
+
+    if Zsort[0] == Zsort[2]:
+        return array([sum(X)/3, sum(Y)/3, sum(Z)/3])
+
+    elif Zsort[0] > Zsort[1]:
+        i = Z.index[Zsort[0]]
+        return V[i]
+
+    elif Zsort[0] == Zsort[1]:
+        i0 = Z.index[Zsort[0]]
+        i1 = Z.index[Zsort[1]]
+        x = 0.5*(X[i0] + X[i1])
+        y = 0.5*(Y[i0] + Y[i1])
+        return array([x, y, Zsort[0]])
+
+

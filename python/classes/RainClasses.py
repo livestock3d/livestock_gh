@@ -14,6 +14,7 @@ def drainMeshPaths(meshPath,cpus):
     import threading
     import queue
     import pymesh as pm
+    import GeometryClasses as gc
     from numpy import array
 
     # Load mesh
@@ -29,6 +30,8 @@ def drainMeshPaths(meshPath,cpus):
     startPts = mesh.get_attribute('face_centroid')
     centerZ = []
     faceIndex = mesh.get_attribute('face_index')
+    faces = mesh.faces
+    vertices = mesh.vertices
 
     # Construct startpoint list
     startPoints = []
@@ -38,6 +41,13 @@ def drainMeshPaths(meshPath,cpus):
             startPoints.append([faceIndex[j],array([startPts[i],startPts[i+1],startPts[i+2]])])
             centerZ.append(startPts[i+2])
             i += 3
+
+    def faceVertices(faceIndex):
+        face = faces[int(faceIndex)]
+        v0 = vertices[face[0]]
+        v1 = vertices[face[1]]
+        v2 = vertices[face[2]]
+        return v0, v1, v2
 
     # Task function
     def drainPath():
@@ -69,6 +79,8 @@ def drainMeshPaths(meshPath,cpus):
                         i = ad
 
                 if z > pt[2]:
+                    v = gc.lowestFaceVertex(faceVertices(index))
+                    startPoints[-1][1] = v
                     run = False
 
                 else:
