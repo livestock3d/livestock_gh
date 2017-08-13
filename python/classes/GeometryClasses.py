@@ -84,6 +84,7 @@ def lowestFaceVertex(v0, v1, v2):
     Y = [y0, y1, y2]
     Z = [z0, z1, z2]
 
+    print('V:',V)
     Zsort = sorted(Z).reverse()
 
     if Zsort[0] == Zsort[2]:
