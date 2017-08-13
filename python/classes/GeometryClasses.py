@@ -77,9 +77,9 @@ def lowestFaceVertex(v0, v1, v2):
     from numpy import array
 
     V = [v0, v1, v2]
-    x0, y0, z0 = v0
-    x1, y1, z1 = v1
-    x2, y2, z2 = v2
+    x0, y0, z0 = v0[0], v0[1], v0[2]
+    x1, y1, z1 = v1[0], v1[1], v1[2]
+    x2, y2, z2 = v2[0], v2[1], v2[2]
     X = [x0, x1, x2]
     Y = [y0, y1, y2]
     Z = [z0, z1, z2]
