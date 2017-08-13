@@ -85,7 +85,7 @@ def lowestFaceVertex(v0, v1, v2):
     Z = [z0, z1, z2]
 
 
-    Zsort = sorted(Z)
+    Zsort = Z.sort()
     print('Z:', Zsort)
     if Zsort[0] == Zsort[2]:
         return array([sum(X)/3, sum(Y)/3, sum(Z)/3])
