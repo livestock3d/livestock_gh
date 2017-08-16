@@ -32,6 +32,7 @@ def drainMeshPaths(meshPath,cpus):
     faceIndex = mesh.get_attribute('face_index')
     faces = mesh.faces
     vertices = mesh.vertices
+    pathsOverEdge = False
 
     # Construct startpoint list
     startPoints = []
@@ -58,7 +59,6 @@ def drainMeshPaths(meshPath,cpus):
                 V = faceVertices(i)
                 intersect = gc.ray_triangle_intersection(point, array([0,0,-1]),V)
                 if intersect[0]:
-                    print('t:',intersect[1])
                     return i
                 else:
                     pass
@@ -104,7 +104,12 @@ def drainMeshPaths(meshPath,cpus):
                     v0, v1, v2 = faceVertices(index)
                     pt = gc.lowestFaceVertex(v0, v1, v2)
                     if len(adjacents) < 3:
-                        print('Path goes over an edge. Expect longer computation time.')
+                        if not pathsOverEdge:
+                            print('Path goes over an edge. Expect longer computation time.')
+                            pathsOverEdge = 1
+                        else:
+                            pathsOverEdge += 1
+
                         particles.append(pt)
                         index = overEdge(pt)
                         pt = startPoints[index][1]
@@ -145,6 +150,9 @@ def drainMeshPaths(meshPath,cpus):
         for pt in particles:
             file_obj.write(str(pt[0]) + ',' + str(pt[1]) + ',' + str(pt[2]) + '\t')
         file_obj.write('\n')
+
+    #Print statements
+    print('Number of paths that went over an edge:',pathsOverEdge)
 
     #Close out file and save mesh
     file_obj.close()
