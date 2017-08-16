@@ -32,7 +32,6 @@ def drainMeshPaths(meshPath,cpus):
     faceIndex = mesh.get_attribute('face_index')
     faces = mesh.faces
     vertices = mesh.vertices
-    pathsOverEdge = False
 
     # Construct startpoint list
     startPoints = []
@@ -104,12 +103,6 @@ def drainMeshPaths(meshPath,cpus):
                     v0, v1, v2 = faceVertices(index)
                     pt = gc.lowestFaceVertex(v0, v1, v2)
                     if len(adjacents) < 3:
-                        if not pathsOverEdge:
-                            print('Path goes over an edge. Expect longer computation time.')
-                            pathsOverEdge = 1
-                        else:
-                            pathsOverEdge += 1
-
                         particles.append(pt)
                         index = overEdge(pt)
                         pt = startPoints[index][1]
