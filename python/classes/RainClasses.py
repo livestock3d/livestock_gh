@@ -50,7 +50,7 @@ def drainMeshPaths(meshPath,cpus):
         return v0, v1, v2
 
     def overEdge(point):
-        for i in faceIndex:
+        for i in range(0,len(faceIndex)):
             if centerZ[i] >= point[2]:
                 pass
 
