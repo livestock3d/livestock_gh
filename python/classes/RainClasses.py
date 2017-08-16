@@ -56,7 +56,9 @@ def drainMeshPaths(meshPath,cpus):
 
             elif centerZ[i] <= point[2]:
                 V = faceVertices(i)
-                if gc.ray_triangle_intersection(point, array([0,0,-1]),V)[0]:
+                intersect = gc.ray_triangle_intersection(point, array([0,0,-1]),V)
+                if intersect[0]:
+                    print('t:',intersect[1])
                     return i
                 else:
                     pass
@@ -102,6 +104,7 @@ def drainMeshPaths(meshPath,cpus):
                     v0, v1, v2 = faceVertices(index)
                     pt = gc.lowestFaceVertex(v0, v1, v2)
                     if len(adjacents) < 3:
+                        print('Path goes over an edge. Expect longer computation time.')
                         particles.append(pt)
                         index = overEdge(pt)
                         pt = startPoints[index][1]
