@@ -15,7 +15,7 @@ def drainMeshPaths(meshPath,cpus):
     import queue
     import pymesh as pm
     import GeometryClasses as gc
-    from numpy import array
+    from numpy import array, allclose
 
     # Load mesh
     mesh = pm.load_mesh(meshPath)
@@ -24,7 +24,7 @@ def drainMeshPaths(meshPath,cpus):
     # Result list
     drainPoints = []
 
-    # Construct center points
+    # Initilize mesh data
     mesh.add_attribute('face_centroid')
     mesh.add_attribute('face_index')
     startPts = mesh.get_attribute('face_centroid')
@@ -32,8 +32,11 @@ def drainMeshPaths(meshPath,cpus):
     faceIndex = mesh.get_attribute('face_index')
     faces = mesh.faces
     vertices = mesh.vertices
+    faceDestination = []
+    rayPoints = []
 
-    # Construct startpoint list
+
+    # Construct start point list
     startPoints = []
     i = 0
     while i < len(startPts):
@@ -55,9 +58,17 @@ def drainMeshPaths(meshPath,cpus):
                 pass
 
             elif centerZ[i] <= point[2]:
+                # check to see if a similar point has already been processed
+                for j in range(0,len(rayPoints)):
+                    if allclose(point,rayPoints[j]):
+                        return faceDestination[j]
+
+                # if not shoot ray
                 V = faceVertices(i)
                 intersect = gc.ray_triangle_intersection(point, array([0,0,-1]),V)
                 if intersect[0]:
+                    rayPoints.append(point)
+                    faceDestination.append(i)
                     return i
                 else:
                     pass
