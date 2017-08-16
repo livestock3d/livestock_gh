@@ -103,9 +103,13 @@ def drainMeshPaths(meshPath,cpus):
                     v0, v1, v2 = faceVertices(index)
                     pt = gc.lowestFaceVertex(v0, v1, v2)
                     if len(adjacents) < 3:
-                        particles.append(pt)
-                        index = overEdge(pt)
-                        pt = startPoints[index][1]
+                        over = overEdge(pt)
+                        if over:
+                            particles.append(pt)
+                            index = over
+                            pt = startPoints[index][1]
+                        else:
+                            run = False
                     else:
                         run = False
 
