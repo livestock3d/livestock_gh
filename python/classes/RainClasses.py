@@ -49,6 +49,25 @@ def drainMeshPaths(meshPath,cpus):
         v2 = vertices[face[2]]
         return v0, v1, v2
 
+    def overEdge(point):
+        for i in faceIndex:
+            if centerZ[i] >= point[2]:
+                pass
+
+            elif centerZ[i] <= point[2]:
+                V = faceVertices(i)
+                if gc.ray_triangle_intersection(point, array([0,0,-1]),V)[0]:
+                    return i
+                else:
+                    pass
+
+            else:
+                print('Error in overEdge function!')
+                print('centerZ:', centerZ[i])
+                print('point:', point)
+                return None
+
+
     # Task function
     def drainPath():
 
@@ -82,7 +101,11 @@ def drainMeshPaths(meshPath,cpus):
                 if z > pt[2]:
                     v0, v1, v2 = faceVertices(index)
                     pt = gc.lowestFaceVertex(v0, v1, v2)
-                    run = False
+                    if len(adjacents) < 3:
+                        index = overEdge(pt)
+                        pt = startPoints[index][1]
+                    else:
+                        run = False
 
                 else:
                     index = startPoints[i][0]

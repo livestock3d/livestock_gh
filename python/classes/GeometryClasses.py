@@ -46,7 +46,9 @@ def ray_triangle_intersection(ray_near, ray_dir, V):
     """
     import numpy as np
 
-    v1, v2, v3 = V
+    v1 = V[0]
+    v2 = V[1]
+    v3 = V[2]
     eps = 0.000001
     edge1 = v2 - v1
     edge2 = v3 - v1
