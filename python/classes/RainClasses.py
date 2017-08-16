@@ -81,8 +81,7 @@ def drainMeshPaths(meshPath,cpus):
 
                 if z > pt[2]:
                     v0, v1, v2 = faceVertices(index)
-                    v = gc.lowestFaceVertex(v0, v1, v2)
-                    startPoints[-1][1] = v
+                    pt = gc.lowestFaceVertex(v0, v1, v2)
                     run = False
 
                 else:
