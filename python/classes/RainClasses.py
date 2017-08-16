@@ -59,6 +59,7 @@ def drainMeshPaths(meshPath,cpus):
             pt = job[1]
 
             particles = []
+            particles.append(pt)
             run = True
             # print('index:',index)
             # print('point:',pt)
@@ -66,7 +67,7 @@ def drainMeshPaths(meshPath,cpus):
             while run:
                 # Get adjacents faces
                 adjacents = mesh.get_face_adjacent_faces(int(index))
-                particles.append(pt)
+
 
                 # Check if center points of adjacents faces have a lower Z-value
                 z = None
@@ -78,8 +79,6 @@ def drainMeshPaths(meshPath,cpus):
                         z = centerZ[ad]
                         i = ad
 
-                print('z:',z)
-                print('pt:',pt[2])
                 if z > pt[2]:
                     v0, v1, v2 = faceVertices(index)
                     v = gc.lowestFaceVertex(v0, v1, v2)
@@ -90,6 +89,7 @@ def drainMeshPaths(meshPath,cpus):
                     index = startPoints[i][0]
                     pt = startPoints[i][1]
 
+                particles.append(pt)
             #print('particles:',particles)
             #print(len(particles))
 
