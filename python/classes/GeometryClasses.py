@@ -96,7 +96,7 @@ def lowestFaceVertex(v0, v1, v2):
     if Zsort[0] == Zsort[2]:
         return array([sum(X)/3, sum(Y)/3, sum(Z)/3])
 
-    elif Zsort[0] > Zsort[1]:
+    elif Zsort[0] < Zsort[1]:
         i = Z.index[Zsort[0]]
         return V[i]
 
@@ -106,5 +106,12 @@ def lowestFaceVertex(v0, v1, v2):
         x = 0.5*(X[i0] + X[i1])
         y = 0.5*(Y[i0] + Y[i1])
         return array([x, y, Zsort[0]])
+
+    else:
+        print('Error finding lowest point!')
+        print('v0:',v0)
+        print('v1:', v1)
+        print('v2:', v2)
+        return None
 
 
