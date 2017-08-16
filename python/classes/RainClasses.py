@@ -145,7 +145,6 @@ def drainMeshPaths(meshPath,cpus):
         file_obj.write('\n')
 
     #Print statements
-    print('Number of paths that went over an edge:',pathsOverEdge)
 
     #Close out file and save mesh
     file_obj.close()
