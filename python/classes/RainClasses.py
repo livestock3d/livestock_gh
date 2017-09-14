@@ -23,6 +23,7 @@ def drainMeshPaths(meshPath,cpus):
 
     # Result list
     drainPoints = []
+    drainFaces = []
 
     # Initilize mesh data
     mesh.add_attribute('face_centroid')
@@ -91,6 +92,8 @@ def drainMeshPaths(meshPath,cpus):
 
             particles = []
             particles.append(pt)
+            faceIndices = []
+            faceIndices.append(index)
             run = True
             # print('index:',index)
             # print('point:',pt)
@@ -129,11 +132,13 @@ def drainMeshPaths(meshPath,cpus):
                     pt = startPoints[i][1]
 
                 particles.append(pt)
+                faceIndices.append(index)
             #print('particles:',particles)
             #print(len(particles))
 
             # End task
             drainPoints.append(particles)
+            drainFaces.append(faceIndices)
             q.task_done()
 
     # Call task function
@@ -151,21 +156,28 @@ def drainMeshPaths(meshPath,cpus):
     q.join()
 
     # Open file, which the points should be written to
-    file_obj = open('drainPoints.txt', 'w')
+    ptFile = open('drainPoints.txt', 'w')
+    faceFile = open('drainFaces.txt', 'w')
 
     # Write points to file
     for particles in drainPoints:
         for pt in particles:
-            file_obj.write(str(pt[0]) + ',' + str(pt[1]) + ',' + str(pt[2]) + '\t')
-        file_obj.write('\n')
+            ptFile.write(str(pt[0]) + ',' + str(pt[1]) + ',' + str(pt[2]) + '\t')
+        ptFile.write('\n')
 
-    #Print statements
+    # Write face indices to file
+    for curves in drainFaces:
+        for index in curves:
+            faceFile.write(str(index) + '\t')
+        faceFile.write('\n')
 
-    #Close out file and save mesh
-    file_obj.close()
+
+    #Close outfiles and save mesh
+    ptFile.close()
+    faceFile.close()
     pm.save_mesh('newDrainMesh.obj',mesh)
 
-    return None
+    return True
 
 def drainPools(path):
     import pymesh as pm
@@ -843,3 +855,51 @@ def evaporationRate(T, R, W, P, z0, RH):
     E = E*3600 #m/h
 
     return E
+
+def topographicIndex(meshPath, drainCurves):
+    import numpy as np
+    import pyMesh as pm
+
+    # Load mesh
+    mesh = pm.load_mesh(meshPath)
+
+    # Initilize mesh data
+    mesh.add_attribute('face_normal')
+    mesh.add_attribute('face_area')
+    faceNormal = mesh.get_attribute('face_normal')
+    faceArea = mesh.get_attribute('face_area')
+
+    TI = []
+
+    def topoIndex(a, beta):
+        return np.log(a / np.tan(beta))
+
+    def computeBeta(normal):
+        z = np.array([0,0,1])
+        dot = np.dot(normal,z)
+        nZ = np.linalg.norm(z)
+        nN = np.linalg.norm(normal)
+
+        return np.arccos(dot/(nN*nZ))
+
+    def processDrainCurve(curveIndex):
+        """Processes a single drain curve"""
+
+        A = []
+        beta = []
+        ti = []
+
+        for face in drainCurves[curveIndex]:
+            a = faceArea[face]
+            b = computeBeta(faceNormal[curveIndex])
+
+            A.append(a)
+            beta.append(b)
+            ti.append(topoIndex(a,b))
+
+        return ti
+
+    for curve in range(len(drainCurves)):
+        TI.append(processDrainCurve(curve))
+
+    return TI
