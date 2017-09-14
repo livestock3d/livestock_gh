@@ -858,7 +858,7 @@ def evaporationRate(T, R, W, P, z0, RH):
 
 def topographicIndex(meshPath, drainCurvesPath):
     import numpy as np
-    import pyMesh as pm
+    import pymesh as pm
 
     # Load mesh and curves
     mesh = pm.load_mesh(meshPath)

@@ -123,5 +123,5 @@ def topographicIndexTemplate(path):
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
 
-#path = r'C:\livestock\python\ssh'
-
+path = r'C:\livestock\python\ssh'
+topographicIndexTemplate(path)
