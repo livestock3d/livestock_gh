@@ -93,7 +93,7 @@ def drainMeshPaths(meshPath,cpus):
             particles = []
             particles.append(pt)
             faceIndices = []
-            faceIndices.append(index)
+            faceIndices.append(int(index))
             run = True
             # print('index:',index)
             # print('point:',pt)
@@ -866,7 +866,7 @@ def topographicIndex(meshPath, drainCurvesPath):
     file = open(drainCurvesPath, 'r')
     lines = file.readlines()
     for l in lines:
-        drainCurves.append(int(i) for i in l.split(',')[:-1])
+        drainCurves.append(int(i) for i in l.split(',')[1:-1])
     print('drainCurves:',drainCurves)
 
     # Initilize mesh data
