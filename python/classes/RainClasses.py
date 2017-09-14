@@ -132,7 +132,7 @@ def drainMeshPaths(meshPath,cpus):
                     pt = startPoints[i][1]
 
                 particles.append(pt)
-                faceIndices.append(index)
+                faceIndices.append(int(index))
             #print('particles:',particles)
             #print(len(particles))
 
@@ -856,12 +856,18 @@ def evaporationRate(T, R, W, P, z0, RH):
 
     return E
 
-def topographicIndex(meshPath, drainCurves):
+def topographicIndex(meshPath, drainCurvesPath):
     import numpy as np
     import pyMesh as pm
 
-    # Load mesh
+    # Load mesh and curves
     mesh = pm.load_mesh(meshPath)
+    drainCurves = []
+    file = open(drainCurvesPath, 'r')
+    lines = file.readlines()
+    for l in lines:
+        drainCurves.append(int(i) for i in l.split(',')[:-1])
+    print('drainCurves:',drainCurves)
 
     # Initilize mesh data
     mesh.add_attribute('face_normal')
