@@ -893,7 +893,6 @@ def topographicIndex(meshPath, drainCurvesPath):
         A = 0
 
         for face in drainCurves[curveIndex]:
-            print('face',face)
             A += faceArea[face]
             drainArea[face] += A
 
@@ -907,4 +906,12 @@ def topographicIndex(meshPath, drainCurvesPath):
         b = computeBeta(faceNormal[face])
         TI.append(topoIndex(a,b))
 
-    return TI
+    # Write topographic indices to file
+    topoFile = open('topographicIndex.txt', 'w')
+
+    for face in TI:
+        topoFile.write(str(face) + '\n')
+    topoFile.write('\n')
+
+    topoFile.close()
+
