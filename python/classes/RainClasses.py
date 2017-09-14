@@ -873,8 +873,7 @@ def topographicIndex(meshPath, drainCurvesPath):
     mesh.add_attribute('face_area')
     faceNormal = mesh.get_attribute('face_normal')
     faceArea = mesh.get_attribute('face_area')
-    drainArea = []*mesh.num_faces
-    print('num face', mesh.num_faces)
+    drainArea = [0]*mesh.num_faces
     TI = []
 
     def topoIndex(a, beta):
