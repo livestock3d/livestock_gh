@@ -476,8 +476,13 @@ def loadMeshData(path):
 def cleanSSHFolder():
     from shutil import rmtree
     from os import listdir, mkdir
+    from os.path import isdir
+
     sshPath = r'C:\livestock\python\ssh'
-    if not listdir(sshPath) == []:
-        rmtree(sshPath)
+    if isdir(sshPath):
+        if not listdir(sshPath) == []:
+            rmtree(sshPath)
+            mkdir(sshPath)
+    else:
         mkdir(sshPath)
 

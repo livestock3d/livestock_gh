@@ -868,7 +868,7 @@ def topographicIndex(meshPath, drainCurves):
     mesh.add_attribute('face_area')
     faceNormal = mesh.get_attribute('face_normal')
     faceArea = mesh.get_attribute('face_area')
-
+    drainArea = []*mesh.num_faces
     TI = []
 
     def topoIndex(a, beta):
@@ -885,21 +885,20 @@ def topographicIndex(meshPath, drainCurves):
     def processDrainCurve(curveIndex):
         """Processes a single drain curve"""
 
-        A = []
-        beta = []
-        ti = []
+        A = 0
 
         for face in drainCurves[curveIndex]:
-            a = faceArea[face]
-            b = computeBeta(faceNormal[curveIndex])
+            A += faceArea[face]
+            drainArea[face] += A
 
-            A.append(a)
-            beta.append(b)
-            ti.append(topoIndex(a,b))
-
-        return ti
+        return True
 
     for curve in range(len(drainCurves)):
-        TI.append(processDrainCurve(curve))
+        processDrainCurve(curve)
+
+    for face in range(mesh.num_faces):
+        a = drainArea[face]
+        b = computeBeta(faceNormal[face])
+        TI.append(topoIndex(a,b))
 
     return TI
