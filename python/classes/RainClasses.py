@@ -867,7 +867,6 @@ def topographicIndex(meshPath, drainCurvesPath):
     lines = file.readlines()
     for l in lines:
         drainCurves.append(int(i) for i in l.split(',')[1:-1])
-    print('drainCurves:',drainCurves)
 
     # Initilize mesh data
     mesh.add_attribute('face_normal')
@@ -894,6 +893,7 @@ def topographicIndex(meshPath, drainCurvesPath):
         A = 0
 
         for face in drainCurves[curveIndex]:
+            print('face',face)
             A += faceArea[face]
             drainArea[face] += A
 
