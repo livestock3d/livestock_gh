@@ -102,8 +102,8 @@ def sshTemplate(path):
 
     return True
 
-def topologicalIndexTemplate(path):
-    file = open(path + '\\TopologicalIndexTemplate.py', 'w')
+def topographicIndexTemplate(path):
+    file = open(path + '\\topographicIndexTemplate.py', 'w')
     file.write("print('Running template topographicIndexTemplate.py')\n")
 
     file.write("# Imports\n")
@@ -115,7 +115,7 @@ def topologicalIndexTemplate(path):
 
     file.write("# Get files\n")
     file.write("meshPath = homeUser + '/livestock/templates/drainMesh.obj'\n")
-    file.write("drainfaces = open(homeUser + '/livestock/templates/drainfaces.txt','r').readline()\n")
+    file.write("drainfaces = homeUser + '/livestock/templates/drainfaces.txt'\n")
 
     file.write("# Run function\n")
     file.write("topographicIndex(meshPath, drainfaces)\n")
