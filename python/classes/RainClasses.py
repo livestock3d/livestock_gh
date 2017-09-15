@@ -882,7 +882,7 @@ def topographicIndex(meshPath, drainCurvesPath):
 
     def computeBeta(normal):
         z = np.array([0,0,1])
-
+        print('normal',normal)
         return gc.angleBetweenVectors(z, normal, forceAngle='acute')[0]
 
     def processDrainCurve(curveIndex):
