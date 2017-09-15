@@ -858,6 +858,7 @@ def evaporationRate(T, R, W, P, z0, RH):
 
 def topographicIndex(meshPath, drainCurvesPath):
     import numpy as np
+    import GeometryClasses as gc
     import pymesh as pm
 
     # Load mesh and curves
@@ -873,7 +874,7 @@ def topographicIndex(meshPath, drainCurvesPath):
     mesh.add_attribute('face_area')
     faceNormal = mesh.get_attribute('face_normal')
     faceArea = mesh.get_attribute('face_area')
-    drainArea = [0]*mesh.num_faces
+    drainArea = faceArea
     TI = []
 
     def topoIndex(a, beta):
@@ -881,11 +882,8 @@ def topographicIndex(meshPath, drainCurvesPath):
 
     def computeBeta(normal):
         z = np.array([0,0,1])
-        dot = np.dot(normal,z)
-        nZ = np.linalg.norm(z)
-        nN = np.linalg.norm(normal)
 
-        return np.arccos(dot/(nN*nZ))
+        return gc.angleBetweenVectors(z, normal, forceAngle='acute')[0]
 
     def processDrainCurve(curveIndex):
         """Processes a single drain curve"""
@@ -893,8 +891,9 @@ def topographicIndex(meshPath, drainCurvesPath):
         A = 0
 
         for face in drainCurves[curveIndex]:
-            A += faceArea[face]
-            drainArea[face] += A
+            a = faceArea[face]
+            drainArea[face] += a
+            A += a
 
         return True
 

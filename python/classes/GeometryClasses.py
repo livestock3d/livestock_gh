@@ -39,6 +39,7 @@ def fix_mesh(mesh, detail="normal"):
 
     return mesh
 
+
 def ray_triangle_intersection(ray_near, ray_dir, V):
     """
     Möller–Trumbore intersection algorithm in pure python
@@ -74,6 +75,7 @@ def ray_triangle_intersection(ray_near, ray_dir, V):
         return False, None
 
     return True, t
+
 
 def lowestFaceVertex(v0, v1, v2):
     from numpy import array
@@ -117,3 +119,51 @@ def lowestFaceVertex(v0, v1, v2):
         return None
 
 
+def angleBetweenVectors(v1, v2, forceAngle = None):
+    """
+    Computes the angle between two vectors.
+    :param v1: Vector1 as numpy array
+    :param v2: Vector2 as numpy array
+    :param forceAngle: Default is None. Use to force angle into acute or obtuse.
+    :return: Angle in radians and its angle type.
+    """
+
+    # Import
+    from numpy import dot, sqrt, arccos, pi
+
+    # Dot product
+    dot_v1v2 = dot(v1, v2)
+
+    # Determine angle type
+    if dot_v1v2 > 0:
+        angleType = 'acute'
+    elif dot_v1v2 == 0:
+        return pi/2, 'perpendicular'
+    else:
+        angleType = 'obtuse'
+
+    # Vector magnitudes and compute angle
+    magV1 = sqrt(v1.dot(v1))
+    magV2 = sqrt(v2.dot(v2))
+    angle = arccos(dot_v1v2 / (magV1 * magV2))
+
+    # Compute desired angle type
+    if forceAngle == None:
+        return angle, angleType
+
+    elif forceAngle == 'acute':
+        if angle < pi/2:
+            return angle, 'acute'
+        else:
+            angle = pi - angle
+            return angle, 'acute'
+
+    elif forceAngle == 'obtuse':
+        if angle > pi/2:
+            return angle, 'obtuse'
+        else:
+            angle = pi - angle
+            return angle, 'obtuse'
+    else:
+        print('forceAngle has to be defined as None, acute or obtuse. forceAngle was:', str(forceAngle))
+        return None, None
