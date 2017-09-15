@@ -145,7 +145,7 @@ def angleBetweenVectors(v1, v2, forceAngle = None):
     # Vector magnitudes and compute angle
     magV1 = sqrt(v1.dot(v1))
     magV2 = sqrt(v2.dot(v2))
-    angle = arccos(dot_v1v2 / (magV1 * magV2))
+    angle = arccos(abs(dot_v1v2 / (magV1 * magV2)))
 
     # Compute desired angle type
     if forceAngle == None:
