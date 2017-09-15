@@ -895,7 +895,7 @@ def topographicIndex(meshPath, drainCurvesPath):
         A = 0
 
         for face in drainCurves[curveIndex]:
-            a = faceArea[face]
+            a = abs(faceArea[face])
             drainArea[face] += a
             A += a
 
