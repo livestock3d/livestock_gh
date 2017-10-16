@@ -1,3 +1,13 @@
+__author__ = "Christian Kongsgaard"
+__license__ = "GPL"
+__version__ = "0.0.1"
+__maintainer__ = "Christian Kongsgaard"
+__email__ = "ocni@dtu.dk"
+__status__ = "Work in Progress"
+
+#----------------------------------------------------------------------------------------------------------------------#
+#Functions and Classes
+
 def fix_mesh(mesh, detail="normal"):
     from numpy.linalg import norm
     import pymesh
@@ -145,14 +155,14 @@ def angleBetweenVectors(v1, v2, forceAngle = None):
     # Vector magnitudes and compute angle
     magV1 = sqrt(v1.dot(v1))
     magV2 = sqrt(v2.dot(v2))
-    angle = abs(arccos(dot_v1v2 / (magV1 * magV2)))
+    angle = arccos(abs(dot_v1v2 / (magV1 * magV2)))
 
     # Compute desired angle type
     if forceAngle == None:
         return angle, angleType
 
     elif forceAngle == 'acute':
-        if angle < pi/2:
+        if angleType == 'acute':
             return angle, 'acute'
         else:
             angle = pi - angle
