@@ -486,3 +486,22 @@ def cleanSSHFolder():
     else:
         mkdir(sshPath)
 
+def decomposeLadybugLocation(_location):
+    locationStr = _location.split('\n')
+    newLocStr = ""
+    # clean the idf file
+    for line in locationStr:
+        if '!' in line:
+            line = line.split('!')[0]
+            newLocStr = newLocStr + line.replace(" ", "")
+        else:
+            newLocStr = newLocStr + line
+
+    newLocStr = newLocStr.replace(';', "")
+
+    site, locationName, latitude, longitude, timeZone, elevation = newLocStr.split(',')
+
+    latitude, longitude, timeZone, elevation = float(latitude), float(longitude), float(timeZone), float(elevation)
+
+    return locationName, latitude, longitude, timeZone, elevation
+
