@@ -1,6 +1,18 @@
+__author__ = "Christian Kongsgaard"
+__license__ = "GPL"
+__version__ = "0.0.1"
+__maintainer__ = "Christian Kongsgaard"
+__email__ = "ocni@dtu.dk"
+__status__ = "Work in Progress"
+
+#----------------------------------------------------------------------------------------------------------------------#
+#Functions and Classes
+
 import cmf
 from datetime import datetime,timedelta
 import numpy as np
+
+
 
 class Model_1D():
 
@@ -78,6 +90,8 @@ class CMF_Model():
         self.mesh = meshPath
         self.weatherPath = weatherPath
         self.weather = {}
+        self.rainStation = None
+        self.meteo = None
         self.analysisLenght = analysisLength
         self.solved = False
         self.results = {}
@@ -216,13 +230,122 @@ class CMF_Model():
 
         return True
 
-    def createStream(self):
+    def createStream(self, shape, shapeParam, outlet):
         """Create a stream"""
-        return None
+        # ShapeParam(Tri) = [length, bankSlope, x, y, z, intialWaterDepth]
+        # ShapeParam(Rec) = [length, width, x, y, z, intialWaterDepth]
+        reaches = []
 
-    def readWeather(self):
-        """Reads a epw file and convert it into something usefull"""
-        return None
+        # Create stream
+        if shape == 0:
+            for i in range(len(shapeParam)):
+                reachShape = cmf.TriangularReach(shapeParam[i][0],shapeParam[i][1])
+                reaches.append([self.project.NewReach(shapeParam[i][2], shapeParam[i][3], shapeParam[i][4], reachShape, False)])
+                reaches[-1].depth(shapeParam[5])
+
+                # Connect reaches
+                if not reaches:
+                    pass
+                elif len(reaches) == len(shapeParam):
+                    channelOut = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
+                    reaches[-1].set_downstream(channelOut)
+                else:
+                    reaches[-2].set_downstream(reaches[-1])
+
+        elif shape == 1:
+            for i in range(len(shapeParam)):
+                reachShape = cmf.RectangularReach(shapeParam[i][0],shapeParam[i][1])
+                reaches.append([self.project.NewReach(shapeParam[i][2], shapeParam[i][3], shapeParam[i][4], reachShape, False)])
+                reaches[-1].depth(shapeParam[5])
+
+                # Connect reaches
+                if not reaches:
+                    pass
+                elif len(reaches) == len(shapeParam):
+                    channelOut = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
+                    reaches[-1].set_downstream(channelOut)
+                else:
+                    reaches[-2].set_downstream(reaches[-1])
+        else:
+            return None
+
+
+
+    def createWeather(self):
+        """Creates weather for the project"""
+
+        def readWeather(path):
+            """Reads a epw file and convert it into something usefull"""
+
+            weatherDict = {'temp': temp, 'wind': wind, 'relHum': rh, 'sun': sun, 'rad':rad, 'rain': rain, 'latitude': lat, 'longitude': long, 'timeZone': timeZone}
+            return weatherDict
+
+        def createTimeSeries(timeStep=1.0):
+            # Start date is the 1st of January 2010 at 00:00
+            start = cmf.Time(1, 1, 2010, 0, 0)
+            step = cmf.h * timeStep
+
+            # Type of interpolation between values
+            # 0 - Nearest neighbor,
+            # 1 - Linear,
+            # 2 - Squared,
+            # 3 - Cubic, etc.
+            interpolation = 1
+
+            # Create timeseries
+            return cmf.timeseries(begin=start, step=step, interpolation=interpolation)
+
+        def convertWeather(weather, timeSeries):
+            # Create time series
+            tSeries = timeSeries
+            wSeries = timeSeries
+            rhSeries = timeSeries
+            sunSeries = timeSeries
+            radSeries = timeSeries
+            rainSeries = timeSeries
+
+            # add data
+            for i in range(len(weather['temp'])):
+                tSeries.add(weather['temp'][i])
+                wSeries.add(weather['wind'][i])
+                rhSeries.add(weather['relHum'][i])
+                sunSeries.add(weather['sun'][i])
+                radSeries.add(weather['rad'][i])
+                rainSeries.add(weather['rain'][i])
+
+            return {'temp': tSeries, 'wind': wSeries, 'relHum': rhSeries, 'sun': sunSeries, 'rad':radSeries, 'rain': rainSeries}
+
+        def createWeatherStations(weatherSeries, lat, long, timeZone):
+            # Add a rainfall station to the project
+            self.rainStation = self.project.rainfall_stations.add(Name='Rain Station', Data=weatherSeries['rain'],
+                                                             Position=(0, 0, 0))
+
+            # Add a meteo station to the project
+            self.meteo = self.project.meteo_stations.add_station(Name='Meteo Station', position=(0, 0, 0), latitude=lat,
+                                                            longitude=long, timezone=timeZone)
+            self.meteo.T = weatherSeries['temp']
+            self.meteo.Tmax = self.meteo.T.reduce_max(self.meteo.T.begin, cmf.day)
+            self.meteo.Tmin = self.meteo.T.reduce_min(self.meteo.T.begin, cmf.day)
+            self.meteo.Windspeed = weatherSeries['wind']
+            self.meteo.rHmean = weatherSeries['relHum']
+            self.meteo.Sunshine = weatherSeries['sun']
+            self.meteo.Rs = weatherSeries['rad']
+
+            # Load some data
+            self.meteo.Tmax = cmf.timeseries.from_file('Tmax.timeseries')
+            self.meteo.Tmin = cmf.timeseries.from_file('Tmin.timeseries')
+            self.meteo.Rs = cmf.timeseries.from_file('Rs.timeseries')
+
+        def connectWeatherToCells():
+            for c in self.project.cells:
+                self.rainStation.use_for_cell(c)
+                self.meteo.use_for_cell(c)
+
+        weather = readWeather(self.weatherPath)
+        time = createTimeSeries()
+        weatherSeries = convertWeather(weather, time)
+        createWeatherStations(weatherSeries, weather['lat'], weather['long'], weather['timeZone'])
+
 
     def solve(self, tolerance = 1e-9):
         """Solves the model"""
@@ -276,3 +399,7 @@ class CMF_Model():
                 paths.append(filePathExtention + '.npy')
 
             return paths
+
+def groundTemperature():
+    return None
+
