@@ -11,4 +11,5 @@ Livestock Topological Index	Topological Index	VER 0.0.1 | September 2017	Livesto
 Livestock Adaptive Clothing	Adaptive Clothing	VER 0.0.1 | September 2017	Livestock	3 | Comfort	Computes the clothing values
 Livestock CMF Ground	CMF Ground	VER 0.0.1 | September 2017	Livestock	2 | Rain and Flow	Generates CMF ground
 Livestock CMF Weather	CMF Weather	VER 0.0.1 | September 2017	Livestock	2 | Rain and Flow	Generates CMF weather
-Livestock CMF Grass	CMF Grass	VER 0.0.1 | Oktober 2017	Livestock	2 | Rain and Flow	Generates CMF Grass
+Livestock CMF Surface Properties	CMF Surface Properties	VER 0.0.1 | October 2017	Livestock	2 | Rain and Flow	Generates CMF Surface Properties
+Livestock CMF Solve	CMF Solve	VER 0.0.1 | October 2017	Livestock	2 | Rain and Flow	Solves CMF Case
