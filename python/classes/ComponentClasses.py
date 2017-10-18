@@ -14,6 +14,7 @@ from clr import AddReference
 AddReference('Grasshopper')
 import Grasshopper.Kernel as gh
 import rhinoscriptsyntax as rs
+import os
 
 #----------------------------------------------------------------------------------------------------------------------#
 # Classes
@@ -454,48 +455,69 @@ class CMF_SurfaceProperties(GHComponent):
         GHComponent.__init__(self)
 
         def inputs():
-            return {0: ['faceIndices', 'Face indices on where the surface properties, should be applied - List of integers'],
-                    1: ['CustomGrass', 'Create a custom vegetation type. Input as string.\n Albedo, CanopyCapcityPerLAI,'
-                                      'CanopyClosure, CanopyPARExtinction, fraction_at_rootdepth, Height, LAI,'
-                                      'LeafWidth, RootContent, snow_albedo, StomatalResistance.\n'
-                                      'For further information see:\n'
-                                      'http://fb09-pasig.umwelt.uni-giessen.de/cmf/chrome/site/doxygen/classcmf_1_1upslope_1_1vegetation_1_1_vegetation.html']}
+            return {0: ['FaceIndices', 'Mesh face indices where to chosen surface property should be applied'],
+                    1: ['Property','0-1 grasses. 2-6 soils']}
 
         def outputs():
             return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['GrassData', "Prints the selected grass' properties"],
-                    2: ['Grass', 'Livestock Grass Data Class']}
+                    1: ['Units', 'Shows the units of the surface values'],
+                    2: ['SurfaceValues','Chosen surface properties values'],
+                    3: ['SurfaceProperties','Livestock surface properties data']}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.componetNumber = 13
-        self.grass = None
-        self.customGrass = None
+        self.data = None
+        self.units = None
+        self.dataPath = r'C:\livestock\data\surfaceData.csv'
+        self.propertyIndex = None
+        self.property = None
+        self.faceIndices = None
         self.checks = False
         self.results = None
+
+
+    def checkInputs(self, ghenv):
+        if self.propertyIndex:
+            self.checks = True
+        else:
+            warning = 'Temperature should be a float'
+            print(warning)
+            w = gh.GH_RuntimeMessageLevel.Warning
+            ghenv.Component.AddRuntimeMessage(w, warning)
 
     def config(self, ghenv):
 
         # Generate Component
         self.configComponent(ghenv, self.componetNumber)
 
-    def checkInputs(self, ghenv):
-        self.checks = True
+    def runChecks(self, ghenv, faceIndices, property):
 
-    def runChecks(self, ghenv, grass, customGrass):
         # Gather data
-        self.grass = grass
-        self.customGrass = customGrass
+        self.faceIndices = faceIndices
+        self.propertyIndex = property
 
         # Run checks
         self.checkInputs(ghenv)
 
-    def grassData(self, grassIndex):
-        return None
-    
-    def run(self, ghenv):
+    def load_csv(self):
+
+        load = ls.read_csv(self.dataPath)
+        self.units = load[0]
+        self.data = load[1]
+
+    def pickProperty(self):
+        self.load_csv()
+        self.property = self.data[self.propertyIndex]
+
+    def run(self):
         if self.checks:
-            self.results = None
+            self.pickProperty()
+            dic = {'faceIndices': self.faceIndices,
+                   'property': self.property}
+
+            self.results = ls.PassClass(dic, 'SurfaceProperty')
+
 
 
 class CMF_Tree(GHComponent):
@@ -508,6 +530,104 @@ class CMF_Solve(GHComponent):
 
     def __init__(self):
         GHComponent.__init__(self)
+
+        def inputs():
+            return {0: ['Ground', 'Input from Livestock CMF_Ground'],
+                    1: ['Weather','Input from Livestock CMF_Weather'],
+                    2: ['Trees','Input from Livestock CMF_Tree'],
+                    3: ['Stream','Input from Livestock CMF_Stream'],
+                    4: ['Folder', 'Path to folder'],
+                    5: ['CaseName','Case name as string'],
+                    6: ['Write','Boolean to write files'],
+                    7: ['Run', 'Boolean to run analysis']}
+
+        def outputs():
+            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
+                    1: ['ResultPath', 'Path to result files']}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.componetNumber = 14
+        self.ground = None
+        self.weather = None
+        self.trees = None
+        self.stream = None
+        self.folder = None
+        self.caseName = None
+        self.writeCase = None
+        self.runCase = None
+        self.written = False
+        self.checks = False
+        self.results = None
+
+    def checkInputs(self, ghenv):
+        if self.ground:
+            self.checks = True
+        else:
+            warning = 'Temperature should be a float'
+            print(warning)
+            w = gh.GH_RuntimeMessageLevel.Warning
+            ghenv.Component.AddRuntimeMessage(w, warning)
+
+    def config(self, ghenv):
+
+        # Generate Component
+        self.configComponent(ghenv, self.componetNumber)
+
+    def runChecks(self, ghenv, ground, weather, trees, stream, folder, name, write, run):
+
+        # Gather data
+        self.ground = ground
+        self.weather = weather
+        self.trees = trees
+        self.stream = stream
+        self.folder = folder
+        self.caseName = name
+        self.writeCase = write
+        self.runCase = run
+
+        # Run checks
+        self.checkInputs(ghenv)
+
+    def write(self):
+        import pandas as pd
+
+        # check if folder exists
+        if os.path.exists(self.folder + '/' + self.caseName):
+            pass
+        else:
+            os.mkdir(self.folder + '/' + self.caseName)
+
+        # Process weather
+        weatherDic = self.weather.c
+        weatherDF = pd.DataFrame(weatherDic)
+
+        # Process ground
+
+
+        # Process trees
+
+        # Process stream
+
+        # Write to HDF
+        file = self.folder + '/' + self.caseName + '.hdf5'
+        store = pd.HDFStore(file, "w", complib=str("zlib"), complevel=5)
+        store.put("weather", weatherDF, data_columns=weatherDF.columns)
+        store.put()
+        store.close()
+
+
+
+
+    def doCase(self):
+        return None
+
+    def run(self, ghenv):
+        if self.checks and self.writeCase:
+            self.write()
+
+        if self.written:
+            self.results = self.doCase()
 
 
 class GroundTemperature(GHComponent):
