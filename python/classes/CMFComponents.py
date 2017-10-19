@@ -10,9 +10,11 @@ __status__ = "Work in Progress"
 import sys
 sys.path.insert(0, r'C:\livestock\python\classes')
 import LivestockGH as ls
+import LivestockCSV as csv
 from clr import AddReference
 AddReference('Grasshopper')
 import Grasshopper.Kernel as gh
+import rhinoscriptsyntax as rs
 from ComponentClass import GHComponent
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -406,7 +408,7 @@ class CMF_SurfaceProperties(GHComponent):
 
     def load_csv(self):
 
-        load = ls.read_csv(self.dataPath)
+        load = csv.read_csv(self.dataPath)
         self.units = load[0]
         self.data = load[1]
 
@@ -430,7 +432,7 @@ class CMF_SyntheticTree(GHComponent):
 
         def inputs():
             return {0: ['FaceIndex', 'Mesh face index where tree is placed'],
-                    1: ['TreeType','Tree type. 0 - Deciduous, 1 - Coniferous, 2 - Shrubs'],
+                    1: ['TreeType','Tree types: 0 - Deciduous, 1 - Coniferous, 2 - Shrubs'],
                     2: ['Height','Height of tree in meters']}
 
         def outputs():
@@ -444,7 +446,9 @@ class CMF_SyntheticTree(GHComponent):
         self.componetNumber = 13
         self.data = None
         self.units = None
-        self.dataPath = r'C:\livestock\data\syntheticTreeData.csv'
+        self.dataPath = [r'C:\livestock\data\syntheticDeciduous.csv', r'C:\livestock\data\syntheticConiferous.csv',
+                         r'C:\livestock\data\syntheticShrubs.csv']
+        self.treeType = None
         self.height = None
         self.property = None
         self.faceIndex = None
@@ -453,7 +457,7 @@ class CMF_SyntheticTree(GHComponent):
 
 
     def checkInputs(self, ghenv):
-        if self.TreeType:
+        if self.height:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
@@ -478,13 +482,22 @@ class CMF_SyntheticTree(GHComponent):
 
     def load_csv(self):
 
-        load = ls.read_csv(self.dataPath)
+        load = csv.read_csv(self.dataPath[self.treeType])
         self.units = load[0]
         self.data = load[1]
 
     def computeTree(self):
         self.load_csv()
-        self.property = self.data[self.propertyIndex]
+        self.property = {'name': 'Synthetic Deciduous',
+                         'height': self.height,
+                         'lai': float(self.data[0][2]) * self.height + float(self.data[1][2]),
+                         'albedo': float(self.data[0][3]) * self.height + float(self.data[1][3]),
+                         'canopyClosure': float(self.data[2][4]),
+                         'canopyPAR': float(self.data[2][5]),
+                         'canopyCapasity': float(self.data[0][6]) * self.height + float(self.data[1][6]),
+                         'sc': float(self.data[0][7]) * self.height + float(self.data[1][7]),
+                         'rd': float(self.data[2][8]),
+                         'frac_root': float(self.data[2][9])}
 
     def run(self):
         if self.checks:
@@ -493,6 +506,10 @@ class CMF_SyntheticTree(GHComponent):
                    'property': self.property}
 
             self.results = ls.PassClass(dic, 'SyntheticTreeProperty')
+
+
+class CMF_RetentionCurve(GHComponent):
+    """"""
 
 
 class CMF_Solve(GHComponent):
