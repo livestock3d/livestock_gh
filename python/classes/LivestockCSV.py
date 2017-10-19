@@ -14,7 +14,7 @@ def read_csv(pathAndFile):
 
     file_obj = open(pathAndFile,'r')
     for l in file_obj.readlines():
-        line = l.split(",")[:-1]
+        line = l[:-1].split(",")
         data.append(line)
     file_obj.close()
 
@@ -30,17 +30,11 @@ def write_csv(pathAndFile, header, data, dimension=1):
 
     if dimension == 1:
         for i in range(0,len(data)):
-            if i == len(data) - 1:
-                file_obj.write(str(data[i]))
-            else:
                 file_obj.write(str(data[i]) + '\n')
 
     elif dimension == 2:
         for i in range(0,len(data)):
-            if i == len(data) - 1:
-                file_obj.write(','.join(data[i]))
-            else:
-                file_obj.write(','.join(data[i]) + '\n')
+                file_obj.write(','.join([str(s) for s in data[i]]) + '\n')
 
     else:
         raise ValueError('dimension must be 1 or 2. Dimension given was:'+str(dimension))
