@@ -509,7 +509,73 @@ class CMF_SyntheticTree(GHComponent):
 
 
 class CMF_RetentionCurve(GHComponent):
-    """"""
+
+    def __init__(self):
+        GHComponent.__init__(self)
+
+        def inputs():
+            return {0: ['SoilIndex', 'Index for chosing soil type']}
+
+        def outputs():
+            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
+                    1: ['Units', 'Shows the units of the curve values'],
+                    2: ['CurveValues','Chosen curve properties values'],
+                    3: ['RetentionCurve','Livestock Retention Curve']}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.componetNumber = 15
+        self.data = None
+        self.units = None
+        self.dataPath = r'C:\livestock\data\soilData.csv'
+        self.property = None
+        self.soilIndex = None
+        self.checks = False
+        self.results = None
+
+
+    def checkInputs(self, ghenv):
+        if isinstance(self.soilIndex, int):
+            self.checks = True
+        else:
+            warning = 'soilIndex should be an integer'
+            print(warning)
+            w = gh.GH_RuntimeMessageLevel.Warning
+            ghenv.Component.AddRuntimeMessage(w, warning)
+
+    def config(self, ghenv):
+
+        # Generate Component
+        self.configComponent(ghenv, self.componetNumber)
+
+    def runChecks(self, ghenv, soilIndex):
+
+        # Gather data
+        self.soilIndex = soilIndex
+
+        # Run checks
+        self.checkInputs(ghenv)
+
+    def load_csv(self):
+
+        load = csv.read_csv(self.dataPath)
+        self.units = load[0]
+        self.data = load[1]
+
+    def loadRetentionCurve(self):
+        self.load_csv()
+        self.property = {'type': str(self.data[self.soilIndex][0]),
+                         'K_sat': float(self.data[self.soilIndex][1]),
+                         'phi': float(self.data[self.soilIndex][2]),
+                         'alpha': float(self.data[self.soilIndex][3]),
+                         'n': float(self.data[self.soilIndex][4]),
+                         'm': float(self.data[self.soilIndex][5]),
+                         'l': float(self.data[self.soilIndex][6])}
+
+    def run(self):
+        if self.checks:
+            self.loadRetentionCurve()
+            self.results = ls.PassClass(self.property, 'SyntheticTreeProperty')
 
 
 class CMF_Solve(GHComponent):

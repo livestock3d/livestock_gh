@@ -13,3 +13,4 @@ Livestock CMF Ground	CMF Ground	VER 0.0.1 | September 2017	Livestock	2 | Rain an
 Livestock CMF Weather	CMF Weather	VER 0.0.1 | September 2017	Livestock	2 | Rain and Flow	Generates CMF weather
 Livestock CMF Surface Properties	CMF Surface Properties	VER 0.0.1 | October 2017	Livestock	2 | Rain and Flow	Generates CMF Surface Properties
 Livestock CMF Solve	CMF Solve	VER 0.0.1 | October 2017	Livestock	2 | Rain and Flow	Solves CMF Case
+Livestock CMF Retention Curve	CMF Retention Curve	VER 0.0.1 | October 2017	Livestock	2 | Rain and Flow	Generates retention curve
