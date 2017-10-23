@@ -11,6 +11,10 @@ __status__ = "Work in Progress"
 import cmf
 from datetime import datetime,timedelta
 import numpy as np
+import xml.etree.ElementTree as ET
+import os
+import xmltodict
+from pprint import pprint
 
 
 
@@ -403,3 +407,94 @@ class CMF_Model():
 def groundTemperature():
     return None
 
+
+def load_cmf_files(folder):
+
+    def load_weather():
+        weather_path = None
+
+        for f in files:
+            if f.startswith('weather'):
+                weather_path = folder + '/' + f
+            else:
+                pass
+
+        weather_tree = ET.tostring(ET.parse(weather_path).getroot())
+        weather = xmltodict.parse(weather_tree)
+        weather_dict = {}
+
+        for w_key in weather['weather'].keys():
+            lst0 = eval(weather['weather'][str(w_key)])
+            try:
+                lst1 = [float(i) for i in lst0]
+            except TypeError:
+                lst1 = lst0
+
+            weather_dict[str(w_key)] = lst1
+
+        return weather_dict
+
+    def load_tree():
+        tree_path = None
+
+        for f in files:
+            if f.startswith('trees'):
+                tree_path = folder + '/' + f
+            else:
+                pass
+
+        tree_tree = ET.tostring(ET.parse(tree_path).getroot())
+        trees = xmltodict.parse(tree_tree)
+        tree_dict = {}
+
+        for tree_key in trees['tree'].keys():
+            tree_dict[str(tree_key)] = {}
+
+            for t in trees['tree'][str(tree_key)].keys():
+                #print(t)
+                tree_dict[str(tree_key)][str(t)] = eval(trees['tree'][str(tree_key)][str(t)])
+
+        return tree_dict
+
+    def load_ground():
+        ground_path = None
+
+        for f in files:
+            if f.startswith('ground'):
+                ground_path = folder + '/' + f
+            else:
+                pass
+
+        ground_tree = ET.tostring(ET.parse(ground_path).getroot())
+        grounds = xmltodict.parse(ground_tree)
+        ground_dict = {}
+
+        for ground in grounds['ground'].keys():
+            ground_dict[str(ground)] = {}
+
+            for g in grounds['ground'][ground]:
+                ground_dict[str(ground)][str(g)] = eval(grounds['ground'][ground][g])
+        return ground_dict
+
+    def load_mesh():
+        mesh_path = None
+
+        for f in files:
+            if f.endswith('.obj'):
+                mesh_path = folder + '/' + f
+            else:
+                pass
+
+        return mesh_path
+
+    files = os.listdir(folder)
+
+    weather = load_weather()
+    trees = load_tree()
+    ground = load_ground()
+    mesh = load_mesh()
+
+    return weather, trees, ground, mesh
+
+
+load_cmf_files(r'C:\Users\Christian\Desktop\test_cmf\test_01')
