@@ -16,12 +16,12 @@ import os
 import xmltodict
 import pymesh as pm
 from itertools import compress
-from pprint import pprint
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Functions and Classes
 
-class CMFModel():
+
+class CMFModel:
 
     def __init__(self, mesh_path, weather_path, analysis_length=760):
         self.project = cmf.project
@@ -207,32 +207,32 @@ class CMFModel():
 
         # Create stream
         if shape == 0:
-            for i in range(len(shapeParam)):
-                reachShape = cmf.TriangularReach(shapeParam[i][0],shapeParam[i][1])
-                reaches.append([self.project.NewReach(shapeParam[i][2], shapeParam[i][3], shapeParam[i][4], reachShape, False)])
-                reaches[-1].depth(shapeParam[5])
+            for i in range(len(shape_param)):
+                reach_shape = cmf.TriangularReach(shape_param[i][0],shape_param[i][1])
+                reaches.append([self.project.NewReach(shape_param[i][2], shape_param[i][3], shape_param[i][4], reach_shape, False)])
+                reaches[-1].depth(shape_param[5])
 
                 # Connect reaches
                 if not reaches:
                     pass
-                elif len(reaches) == len(shapeParam):
-                    channelOut = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
-                    reaches[-1].set_downstream(channelOut)
+                elif len(reaches) == len(shape_param):
+                    channel_out = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
+                    reaches[-1].set_downstream(channel_out)
                 else:
                     reaches[-2].set_downstream(reaches[-1])
 
         elif shape == 1:
-            for i in range(len(shapeParam)):
-                reachShape = cmf.RectangularReach(shapeParam[i][0],shapeParam[i][1])
-                reaches.append([self.project.NewReach(shapeParam[i][2], shapeParam[i][3], shapeParam[i][4], reachShape, False)])
-                reaches[-1].depth(shapeParam[5])
+            for i in range(len(shape_param)):
+                reach_shape = cmf.RectangularReach(shape_param[i][0],shape_param[i][1])
+                reaches.append([self.project.NewReach(shape_param[i][2], shape_param[i][3], shape_param[i][4], reach_shape, False)])
+                reaches[-1].depth(shape_param[5])
 
                 # Connect reaches
                 if not reaches:
                     pass
-                elif len(reaches) == len(shapeParam):
-                    channelOut = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
-                    reaches[-1].set_downstream(channelOut)
+                elif len(reaches) == len(shape_param):
+                    channel_out = self.project.NewOutlet(outlet[0], outlet[1], outlet[2])
+                    reaches[-1].set_downstream(channel_out)
                 else:
                     reaches[-2].set_downstream(reaches[-1])
         else:
@@ -314,7 +314,7 @@ class CMFModel():
 
         weather = read_weather(self.weather_path)
         time = create_time_series()
-        weather_weries = convert_weather(weather, time)
+        weather_series = convert_weather(weather, time)
         create_weather_stations(weather_series, weather['lat'], weather['long'], weather['timeZone'])
 
     def solve(self, tolerance = 1e-9):
@@ -336,15 +336,15 @@ class CMFModel():
         moisture.append(moistureHourly)
 
         # Run solver
-        for t in solver.run(solver.t, solver.t + timedelta(hours = self.analysisLenght), timedelta(hours=1)):
-            potentialHourly = []
-            moistureHourly = []
+        for t in solver.run(solver.t, solver.t + timedelta(hours = self.analysis_lenght), timedelta(hours=1)):
+            potential_hourly = []
+            moisture_hourly = []
 
             for c in self.project.cells:
                 potential.append(c.layers.potential)
                 moisture.append(c.layers.theta)
-            potential.append(potentialHourly)
-            moisture.append(moistureHourly)
+            potential.append(potential_hourly)
+            moisture.append(moisture_hourly)
 
         # Save results
         self.results['potential'] = potential
@@ -364,9 +364,9 @@ class CMFModel():
             paths = []
 
             for res in self.results.keys():
-                filePathExtention = filePath + '\\' + res
-                np.save(filePathExtention, self.results[res])
-                paths.append(filePathExtention + '.npy')
+                file_path_extension = file_path + '\\' + res
+                np.save(file_path_extension, self.results[res])
+                paths.append(file_path_extension + '.npy')
 
             return paths
 
@@ -418,7 +418,6 @@ def load_cmf_files(folder):
             tree_dict[str(tree_key)] = {}
 
             for t in trees['tree'][str(tree_key)].keys():
-                #print(t)
                 tree_dict[str(tree_key)][str(t)] = eval(trees['tree'][str(tree_key)][str(t)])
 
         return tree_dict
