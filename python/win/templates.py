@@ -1,14 +1,38 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
-#----------------------------------------------------------------------------------------------------------------------#
-#Functions and Classes
+# -------------------------------------------------------------------------------------------------------------------- #
+# Functions and Classes
 
-def drainMeshTemplate():
+
+def pick_template(template_name, path):
+
+    template_name = str(template_name)
+
+    if template_name == 'drain_mesh':
+        drain_mesh_template(path)
+
+    elif template_name == 'drain_pools':
+        drain_pools_template(path)
+
+    elif template_name == 'fix_mesh':
+        fix_mesh_template(path)
+
+    elif template_name == 'ssh':
+        ssh_template(path)
+
+    elif template_name == 'topographic_index':
+        topographic_index_template(path)
+
+    elif template_name == 'cmf':
+        cmf_template(path)
+
+    else:
+        raise NameError('Could not find template: '+str(template_name))
+
+
+def drain_mesh_template(path):
     file = open('DrainMeshTemplate.py','w')
     file.write("print('Running template DrainMeshTemplate.py')\n")
 
@@ -33,7 +57,8 @@ def drainMeshTemplate():
 
     return True
 
-def drainPoolsTemplate():
+
+def drain_pools_template(path):
     file = open('DrainPoolsTemplate.py', 'w')
     file.write("print('Running template DrainPoolsTemplate.py')")
 
@@ -57,7 +82,8 @@ def drainPoolsTemplate():
 
     return True
 
-def fixMeshTemplate():
+
+def fix_mesh_template(path):
     file = open('FixMeshTemplate.py', 'w')
     file.write("print('Running template FixMeshTemplate.py')")
 
@@ -84,12 +110,13 @@ def fixMeshTemplate():
     file.write("print('Finished with template')")
     file.write("file_obj = open('out.txt', 'w')")
 
-def sshTemplate(path):
+
+def ssh_template(path):
     file = open(path + '\\sshTemplate.py', 'w')
 
     file.write("# Imports\n")
     file.write("import sys\n")
-    file.write("sys.path.insert(0, 'C:\livestock\python\classes')\n")
+    file.write("sys.path.insert(0, 'C:\livestock\python')\n")
     file.write("from SSHClasses import sshConnection\n")
 
     file.write("# Run function\n")
@@ -102,7 +129,8 @@ def sshTemplate(path):
 
     return True
 
-def topographicIndexTemplate(path):
+
+def topographic_index_template(path):
     file = open(path + '\\topographicIndexTemplate.py', 'w')
     file.write("print('Running template topographicIndexTemplate.py')\n")
 
@@ -124,5 +152,6 @@ def topographicIndexTemplate(path):
     file.write("print('Finished with template')\n")
     file.write("file_obj = open('out.txt', 'w')")
 
-path = r'C:\livestock\python\ssh'
-topographicIndexTemplate(path)
+
+def cmf_template(path):
+    return None

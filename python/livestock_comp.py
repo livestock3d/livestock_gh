@@ -12,4 +12,9 @@ __status__ = "Work in Progress"
 # -------------------------------------------------------------------------------------------------------------------- #
 
 # Imports
-from comp import *
+from comp.comp_cmf import *
+from comp.comfort import *
+from comp.component import *
+from comp.geometry import *
+from comp.misc import *
+from comp.rain import *

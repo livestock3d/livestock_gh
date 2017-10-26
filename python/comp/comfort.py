@@ -1,22 +1,18 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
+
 
 #----------------------------------------------------------------------------------------------------------------------#
 # Imports
-import sys
-sys.path.insert(0, r'C:\livestock\python\classes')
-import LivestockGH as ls
 from clr import AddReference
 AddReference('Grasshopper')
 import Grasshopper.Kernel as gh
-from ComponentClass import GHComponent
+from comp.component import GHComponent
 
 #----------------------------------------------------------------------------------------------------------------------#
-# Classes
+# Comfort Classes
+
 
 class AdaptiveClothing(GHComponent):
 
@@ -32,13 +28,13 @@ class AdaptiveClothing(GHComponent):
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.componetNumber = 10
+        self.component_number = 10
         self.T = None
         self.checks = False
         self.results = None
 
 
-    def checkInputs(self, ghenv):
+    def check_inputs(self, ghenv):
         if isinstance(self.T, float):
             self.checks = True
         else:
@@ -68,13 +64,13 @@ class AdaptiveClothing(GHComponent):
     def config(self, ghenv):
 
         # Generate Component
-        self.configComponent(ghenv, self.componetNumber)
+        self.config_component(ghenv, self.component_number)
 
-    def runChecks(self, ghenv, t):
+    def run_checks(self, ghenv, t):
         # Gather data
         self.T = t
         # Run checks
-        self.checkInputs(ghenv)
+        self.check_inputs(ghenv)
 
     def run(self, ghenv):
         if self.checks:

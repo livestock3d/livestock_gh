@@ -177,3 +177,28 @@ def angleBetweenVectors(v1, v2, forceAngle = None):
     else:
         print('forceAngle has to be defined as None, acute or obtuse. forceAngle was:', str(forceAngle))
         return None, None
+
+def line_intersection(p1, p2, p3, p4):
+    """
+    Computes the intersection between two lines given 4 points on those lines.
+    :param p1: Numpy array. First point on line 1
+    :param p2: Numpy array. Second point on line 1
+    :param p3: Numpy array. First point on line 2
+    :param p4: Numpy array. Second point on line 2
+    :return: Numpy array. Intersection point
+    """
+
+    # Imports
+    from numpy import cross
+    from numpy.linalg import norm
+
+    # Direction vectors
+    v1 = (p2 - p1)
+    v2 = (p4 - p3)
+
+    # Cross-products and vector norm
+    cv12 = cross(v1, v2)
+    cpv = cross((p1 - p3), v2)
+    t = norm(cpv) / norm(cv12)
+
+    return p1 + t * v1

@@ -1,67 +1,22 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
-#----------------------------------------------------------------------------------------------------------------------#
-#Functions and Classes
+# -------------------------------------------------------------------------------------------------------------------- #
+# Imports
 
-def componetData(n):
-    """Function that reads the grasshopper component list and returns the component data"""
+# Module imports
 
-    componentFile = r'C:\livestock\python\ComponetList.txt'
 
-    read = open(componentFile, 'r')
-    lines = read.readlines()
-    l = lines[n]
-    l = l.split('\n')[0]
-    l = l.split('\t')
+# Livestock imports
+import gh.grasshopper as ls
+from win.templates import *
 
-    return l
+# Grasshopper imports
+import scriptcontext as sc
 
-def tree_to_list(input, retrieve_base = lambda x: x[0]):
-    """Returns a list representation of a Grasshopper DataTree"""
-
-    def extend_at(path, index, simple_input, rest_list):
-        target = path[index]
-        if len(rest_list) <= target: rest_list.extend([None]*(target-len(rest_list)+1))
-        if index == path.Length - 1:
-            rest_list[target] = list(simple_input)
-        else:
-            if rest_list[target] is None: rest_list[target] = []
-            extend_at(path, index+1, simple_input, rest_list[target])
-    all = []
-    for i in range(input.BranchCount):
-        path = input.Path(i)
-        extend_at(path, 0, input.Branch(path), all)
-    return retrieve_base(all)
-
-def list_to_tree(input, none_and_holes=True, source=[0]):
-    """Transforms nestings of lists or tuples to a Grasshopper DataTree"""
-
-    from Grasshopper import DataTree as Tree
-    from Grasshopper.Kernel.Data import GH_Path as Path
-    from System import Array
-    def proc(input,tree,track):
-        path = Path(Array[int](track))
-        if len(input) == 0 and none_and_holes: tree.EnsurePath(path); return
-        for i,item in enumerate(input):
-            if hasattr(item, '__iter__'): #if list or tuple
-                track.append(i); proc(item,tree,track); track.pop()
-            else:
-                if none_and_holes: tree.Insert(item,path,i)
-                elif item is not None: tree.Add(item,path)
-    if input is not None: t=Tree[object]();proc(input,t,source[:]);return t
-
-class PassClass:
-    def __init__(self, pyClass, name):
-        self.c = pyClass
-        self.n = name
-
-    def __repr__(self):
-        return "Livestock." + self.n
+# -------------------------------------------------------------------------------------------------------------------- #
+# Livestock Grasshopper Geometry Classes and Functions
 
 def bake(geo, doc):
     import scriptcontext as sc
@@ -70,46 +25,40 @@ def bake(geo, doc):
 
     # we create or use some geometry
     geo_id = geo
-    #print(geo_id)
-    # (we could do all operations here...
 
     # we obtain the reference in the Rhino doc
     sc.doc = doc
-    #print(sc.doc)
     doc_object = rs.coercerhinoobject(geo_id)
-    #print(type(doc_object))
+
 
     attributes = doc_object.Attributes
-    #print('the type of attributes is: ' + str(type(attributes)))
     geometry = doc_object.Geometry
-    #print('the type of geometry is: ' + str(type(geometry)))
 
     # we change the scriptcontext
     sc.doc = rc.RhinoDoc.ActiveDoc
 
     # we add both the geometry and the attributes to the Rhino doc
     rhino_line = sc.doc.Objects.Add(geometry, attributes)
-    #print('the Rhino doc ID is: ' + str(rhino_line))
 
     # we put back the original Grasshopper document as default
     sc.doc = doc
     return rhino_line
 
-def export(ids, filePath, fileName, fileType,doc):
+def export(ids, file_path, file_name, file_type, doc):
     import scriptcontext as sc
     import rhinoscriptsyntax as rs
     import Rhino as rc
 
-    selIds = ""
+    sel_ids = ""
     for i in range(len(ids)):
-        selIds += "_SelId %s " % ids[i]
+        sel_ids += "_SelId %s " % ids[i]
 
-    fileNameAndType = fileName + fileType
-    finalPath = chr(34) + filePath + '\\' + fileNameAndType + chr(34)
+    file_name_and_type = file_name + file_type
+    final_path = chr(34) + file_path + '\\' + file_name_and_type + chr(34)
 
-    commandString = "_-Export " + selIds + "_Enter " + finalPath + " _Enter _Enter _Enter"
+    command_string = "_-Export " + sel_ids + "_Enter " + final_path + " _Enter _Enter _Enter"
     echo = False
-    done = rs.Command(commandString, echo)
+    done = rs.Command(command_string, echo)
 
     sc.doc = rc.RhinoDoc.ActiveDoc
     rs.SelectObject(ids)
@@ -121,11 +70,11 @@ def export(ids, filePath, fileName, fileType,doc):
     else:
         return False
 
-def bakeExportDelete(geo, filePath, fileName, fileType,doc):
+def bake_export_delete(geo, file_path, file_name, file_type, doc):
     g = bake(geo,doc)
-    export([g, ], filePath, fileName, fileType,doc)
+    export([g, ], file_path, file_name, file_type, doc)
 
-def importObj(path):
+def import_obj(path):
     """
     Reads a .obj file and converts it into a Rhino Mesh
     :param path: path including file name and file extension (.obj)
@@ -172,38 +121,13 @@ def importObj(path):
     file.close()
     return mesh
 
-def writeFile(text, path, name, filetype='txt'):
-    import os
 
-    # Make file path name with extension
-    filePath = os.path.join(path, name + "." + str(filetype))
-
-    # Open file
-    fileWrite = open(filePath, "w")
-
-    # Write text data to file
-    # If integer
-    if isinstance(text,int):
-        fileWrite.write(str(text))
-
-    else:
-        i = 0
-        while i < len(text):
-            if i == len(text) - 1:
-                fileWrite.write(str(text[i]))
-            else:
-                fileWrite.write(str(text[i]) + "\n")
-            i += 1
-
-    # Close file
-    fileWrite.close()
-
-def loadPoints(pathAndFile):
+def load_points(path_and_file):
     from Rhino.Geometry import Point3d
     from os import remove
 
     points = []
-    file_obj = open(pathAndFile,'r')
+    file_obj = open(path_and_file,'r')
     for l in file_obj.readlines():
         line = l.split("\t")[:-1]
         pts = []
@@ -213,10 +137,11 @@ def loadPoints(pathAndFile):
         points.append(pts)
 
     file_obj.close()
-    remove(pathAndFile)
+    remove(path_and_file)
     return points
 
-def makeCurvesFromPoints(points):
+
+def make_curves_from_points(points):
     from Rhino import Geometry as rc
 
     curves = []
@@ -232,32 +157,8 @@ def makeCurvesFromPoints(points):
 
     return curves, endPoints
 
-def lineIntersection(p1, p2, p3, p4):
-    """
-    Computes the intersection between two lines given 4 points on those lines.
-    :param p1: Numpy array. First point on line 1
-    :param p2: Numpy array. Second point on line 1
-    :param p3: Numpy array. First point on line 2
-    :param p4: Numpy array. Second point on line 2
-    :return: Numpy array. Intersection point
-    """
 
-    # Imports
-    from numpy import cross
-    from numpy.linalg import norm
-
-    # Direction vectors
-    v1 = (p2 - p1)
-    v2 = (p4 - p3)
-
-    # Cross-products and vector norm
-    cv12 = cross(v1, v2)
-    cpv = cross((p1 - p3), v2)
-    t = norm(cpv) / norm(cv12)
-
-    return p1 + t * v1
-
-def parallel_makeContextMesh(brep, parallel=False):
+def parallel_make_context_mesh(brep, parallel=False):
     """Ladybug - mesh breps parallel"""
 
     import Rhino.Geometry as rc
@@ -289,7 +190,8 @@ def parallel_makeContextMesh(brep, parallel=False):
 
     return mesh
 
-def cleanAndCoerceList(brepList):
+
+def clean_and_coerce_list(brep_list):
     """ Ladybug - This definition cleans the list and adds them to RhinoCommon"""
 
     from Rhino.Geometry.Brep import JoinBreps
@@ -298,7 +200,7 @@ def cleanAndCoerceList(brepList):
     outputMesh = []
     outputBrep = []
 
-    for id in brepList:
+    for id in brep_list:
         if rs.IsMesh(id):
             geo = rs.coercemesh(id)
             if geo is not None:
@@ -345,22 +247,16 @@ def cleanAndCoerceList(brepList):
 
     return outputMesh, outputBrep
 
-def flattenList(l):
-    """Ladybug - flattenList"""
-
-    from itertools import chain
-
-    return list(chain.from_iterable(l))
-
-def joinMesh(meshList):
+def join_mesh(mesh_list):
     """Ladybug - joinMesh"""
 
     from Rhino.Geometry import Mesh
 
-    joinedMesh = Mesh()
-    for m in meshList: joinedMesh.Append(m)
+    joined_mesh = Mesh()
+    for m in mesh_list: joined_mesh.Append(m)
 
-    return joinedMesh
+    return joined_mesh
+
 
 def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
     """Ladybug - RayTrace"""
@@ -429,6 +325,7 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
 
     return rays
 
+
 def rayShoot(startPt, vector, context, numOfBounce = 1):
     """Build on: Ladybug - RayTrace"""
 
@@ -453,7 +350,8 @@ def rayShoot(startPt, vector, context, numOfBounce = 1):
         print("No reflection!")
         return False
 
-def loadMeshData(path):
+
+def load_mesh_data(path):
     import os.path
 
     path = path.split('.')[0] + '_Data.txt'
@@ -472,74 +370,3 @@ def loadMeshData(path):
 
     else:
         print("Mesh don't have any associated data")
-
-def cleanSSHFolder():
-    from shutil import rmtree
-    from os import listdir, mkdir
-    from os.path import isdir
-
-    sshPath = r'C:\livestock\python\ssh'
-    if isdir(sshPath):
-        if not listdir(sshPath) == []:
-            rmtree(sshPath)
-            mkdir(sshPath)
-    else:
-        mkdir(sshPath)
-
-def decomposeLadybugLocation(_location):
-    locationStr = _location.split('\n')
-    newLocStr = ""
-    # clean the idf file
-    for line in locationStr:
-        if '!' in line:
-            line = line.split('!')[0]
-            newLocStr = newLocStr + line.replace(" ", "")
-        else:
-            newLocStr = newLocStr + line
-
-    newLocStr = newLocStr.replace(';', "")
-
-    site, locationName, latitude, longitude, timeZone, elevation = newLocStr.split(',')
-
-    latitude, longitude, timeZone, elevation = float(latitude), float(longitude), float(timeZone), float(elevation)
-
-    return locationName, latitude, longitude, timeZone, elevation
-
-def read_csv(pathAndFile):
-
-    data = []
-
-    file_obj = open(pathAndFile,'r')
-    for l in file_obj.readlines():
-        line = l.split(",")[:-1]
-        data.append(line)
-    file_obj.close()
-
-    header = data[0]
-    data = data[1:]
-
-    return header, data
-
-def write_csv(pathAndFile, header, data, dimension=1):
-    file_obj = open(pathAndFile, 'w')
-    header_str = ','.join(header)
-    file_obj.write(header_str + '\n')
-
-    if dimension == 1:
-        for i in range(0,len(data)):
-            if i == len(data) - 1:
-                file_obj.write(str(data[i]))
-            else:
-                file_obj.write(str(data[i]) + '\n')
-
-    elif dimension == 2:
-        for i in range(0,len(data)):
-            if i == len(data) - 1:
-                file_obj.write(','.join(data[i]))
-            else:
-                file_obj.write(','.join(data[i]) + '\n')
-
-    else:
-        raise ValueError('dimension must be 1 or 2. Dimension given was:'+str(dimension))
-
-    file_obj.close()

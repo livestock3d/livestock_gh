@@ -12,4 +12,7 @@ __status__ = "Work in Progress"
 # -------------------------------------------------------------------------------------------------------------------- #
 
 # Imports
-from lib import *
+from lib.lib_cmf import *
+from lib.csv import *
+from lib.geometry import *
+from lib.rain import *
