@@ -55,9 +55,6 @@ def write_ssh_commands(ssh_dict):
     :return:
     """
 
-    # Write user file
-    gh_misc.write_file([ssh_dict['user'], ], ssh_path, 'user')
-
     # Write SSH commands
     gh_misc.write_file([ssh_dict['ip'],
                    ssh_dict['port'],

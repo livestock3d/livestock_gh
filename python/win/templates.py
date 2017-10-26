@@ -3,7 +3,7 @@ __license__ = "MIT"
 __version__ = "0.0.1"
 
 # -------------------------------------------------------------------------------------------------------------------- #
-# Functions and Classes
+# Livestock Templates Functions
 
 
 def pick_template(template_name, path):
@@ -117,10 +117,10 @@ def ssh_template(path):
     file.write("# Imports\n")
     file.write("import sys\n")
     file.write("sys.path.insert(0, 'C:\livestock\python')\n")
-    file.write("from SSHClasses import sshConnection\n")
+    file.write("import win.ssh as win_ssh\n")
 
     file.write("# Run function\n")
-    file.write("sshConnection()\n")
+    file.write("win_ssh.ssh_connection()\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('SSH Template written')")
@@ -154,4 +154,22 @@ def topographic_index_template(path):
 
 
 def cmf_template(path):
-    return None
+    file = open(path + '\\cmf_template.py', 'w')
+    file.write("print('Running Template: cmf_template.py')\n")
+
+    file.write("# Imports\n")
+    file.write("from pathlib import Path\n")
+    file.write("import sys\n")
+    file.write("home_user = str(Path.home())\n")
+    file.write("sys.path.insert(0, home_user + '/livestock')\n")
+    file.write("from lib.lib_cmf import CMFModel\n")
+
+    file.write("# Run CMF Model\n")
+    file.write("folder = home_user + '/livestock/ssh\n")
+    file.write("model = CMFModel(folder)\n")
+    file.write("model.run_model()\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')")
+    file.write("file_obj.close()")
