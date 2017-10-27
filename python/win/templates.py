@@ -166,8 +166,9 @@ def cmf_template(path):
 
     file.write("# Run CMF Model\n")
     file.write("folder = home_user + '/livestock/ssh\n")
+    file.write("result_path = folder + '/results.xml'\n")
     file.write("model = CMFModel(folder)\n")
-    file.write("model.run_model()\n")
+    file.write("model.run_model(result_path)\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")

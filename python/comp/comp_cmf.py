@@ -10,6 +10,7 @@ import os
 import xml.etree.ElementTree as ET
 import collections
 import subprocess
+from shutil import copyfile
 
 # Livestock imports
 import gh.misc as gh_misc
@@ -639,6 +640,8 @@ class CMFSolve(GHComponent):
         else:
             os.mkdir(self.folder + '/' + self.case_name)
 
+        files_written = []
+
         # Process weather
         weather_dict = self.weather.c
         weather_root = ET.Element('weather')
@@ -651,8 +654,12 @@ class CMFSolve(GHComponent):
         weather_tree = ET.ElementTree(weather_root)
         weather_tree.write(self.case_path + '/' + 'weather.xml', xml_declaration=True)
 
+        files_written.append('weather.xml')
+
         # Save Mesh
         gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
+
+        files_written.append('mesh.obj')
 
         # Process ground
         ground_dict = list(ground.c for ground in self.ground)
@@ -672,6 +679,8 @@ class CMFSolve(GHComponent):
         ground_tree = ET.ElementTree(ground_root)
         ground_tree.write(self.case_path + '/' + 'ground.xml', xml_declaration=True)
 
+        files_written.append('ground.xml')
+
         # Process trees
         tree_dict = list(tree.c for tree in self.trees)
         tree_root = ET.Element('tree')
@@ -687,6 +696,8 @@ class CMFSolve(GHComponent):
         tree_tree = ET.ElementTree(tree_root)
         tree_tree.write(self.case_path + '/' + 'trees.xml', xml_declaration=True)
 
+        files_written.append('trees.xml')
+
         # Process outputs
         outfile = open(self.case_path + '/outputs.txt', 'w')
 
@@ -694,6 +705,8 @@ class CMFSolve(GHComponent):
             outfile.write(str(key)+'\n')
 
         outfile.close()
+
+        files_written.append('outputs.txt')
 
         # Process stream
         # Add later
@@ -704,7 +717,7 @@ class CMFSolve(GHComponent):
         # SSH commands
         self.ssh_cmd = ssh.get_ssh()
 
-        file_transfer = ['cmf_template.py', 'weather.xml', 'ground.xml', 'trees.xml', 'outputs.txt']
+        file_transfer = files_written
         file_run = ['cmf_template.py']
         file_return = ['results.xml']
 
@@ -717,9 +730,11 @@ class CMFSolve(GHComponent):
 
     def do_case(self):
 
-        # Clean SSH folder
-        ssh.clean_ssh_folder()
         ssh_template = ssh.ssh_path + '/ssh_template.py'
+
+        # Copy files from case folder to ssh folder
+        for file in self.ssh_cmd['file_transfer']:
+            copyfile(self.case_path + '/' + file, ssh.ssh_path + '/' + file)
 
         # Run template
         thread = subprocess.Popen([self.py_exe, ssh_template])
@@ -727,9 +742,12 @@ class CMFSolve(GHComponent):
         thread.kill()
 
     def check_results(self, ghenv):
-        result_path = self.case_path + '/results.csv'
+        ssh_result = ssh.ssh_path + '/results.xml'
+        result_path = self.case_path + '/results.xml'
 
-        if os.path.exists(result_path):
+        if os.path.exists(ssh_result):
+            copyfile(ssh_result, result_path)
+            ssh.clean_ssh_folder()
             return result_path
         else:
             warning = 'Could not find result file. Unknown error occurred'
@@ -812,7 +830,8 @@ class CMFOutputs(GHComponent):
         output_dict = {}
 
         if self.evapo_trans:
-            output_dict['evapotranspiration'] = {}
+            output_dict['evaporation'] = {}
+            output_dict['transpiration'] = {}
         else:
             pass
 
