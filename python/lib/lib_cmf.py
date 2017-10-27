@@ -1,9 +1,6 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -451,62 +448,102 @@ class CMFModel:
                                      self.weather_dict['time_zone'])
         self.connect_weather_to_cells(cmf_project)
 
-    def solve(self, cmf_project, tolerance=1e-9):
+    def config_outputs(self, cmf_project):
+        """Function to set up result gathering dictionary"""
+
+        out_dict = {}
+
+        for cell_index in range(0, len(cmf_project.cells)):
+            cell_name = 'cell_%cell_index' % str(cell_index)
+            out_dict[cell_name] = {}
+
+            for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
+                layer_name = 'layer_%layer_index' % str(layer_index)
+                out_dict[cell_name][layer_name] = {}
+
+                for output in self.outputs:
+                    out_dict[cell_name][layer_name][str(output)] = []
+
+        self.results = out_dict
+
+    def gather_results(self, cmf_project):
+
+        for cell_index in range(0, len(cmf_project.cells)):
+            cell_name = 'cell_%cell_index' % str(cell_index)
+
+            for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
+                layer_name = 'layer_%layer_index' % str(layer_index)
+
+                for out_key in self.results[cell_name][layer_name].keys():
+
+                    if out_key == 'potential':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index][layer_index].potential)
+
+                    elif out_key == 'moisture':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index][layer_index].theta)
+
+                    elif out_key == 'transpiration':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index][layer_index].transpiration)
+
+                    elif out_key == 'evaporation':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index][layer_index].evaporation)
+
+                    elif out_key == 'surface_water':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index][layer_index].surfacewater)
+
+                    else:
+                        print('Unknown result to collect')
+                        pass
+
+    def solve(self, cmf_project, tolerance=1e-8):
         """Solves the model"""
 
-        # Create solver and set time
+        # Create solver, set time and set up results
         solver = cmf.CVodeIntegrator(cmf_project, tolerance)
         solver.t = cmf.Time(1, 1, 2017)
+        self.config_outputs(cmf_project)
 
-        # Save potential and soil moisture for each layer, start with initial conditions
-        potential = []
-        moisture = []
-        potential_hourly = []
-        moisture_hourly = []
+        # Save initial conditions to results
+        self.gather_results(cmf_project)
 
-        for c in cmf_project.cells:
-            potential_hourly.append(c.layers.potential)
-            moisture_hourly.append(c.layers.theta)
-
-        potential.append(potential_hourly)
-        moisture.append(moisture_hourly)
-
-        # Run solver
+        # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
-            potential_hourly = []
-            moisture_hourly = []
-
-            for c in cmf_project.cells:
-                potential.append(c.layers.potential)
-                moisture.append(c.layers.theta)
-            potential.append(potential_hourly)
-            moisture.append(moisture_hourly)
-
-        # Save results
-        self.results['potential'] = potential
-        self.results['moisture'] = moisture
+            self.gather_results(cmf_project)
 
         self.solved = True
         return True
 
     def save_results(self, file_path):
-        """Saves the computed results to a numpy file"""
+        """Saves the computed results to a xml file"""
 
         if not self.solved:
             print('Project not solved!')
             return None
 
         else:
-            paths = []
+            result_root = ET.Element('result')
 
-            for res in self.results.keys():
-                file_path_extension = file_path + '\\' + res
-                np.save(file_path_extension, self.results[res])
-                paths.append(file_path_extension + '.npy')
+            for cell in self.results.keys():
+                cell_tree = ET.SubElement(result_root, str(cell))
 
-            return paths
+                for layer in cell.keys():
+                    layer_tree = ET.SubElement(cell_tree, str(layer))
 
-    def run_model(self):
+                    for result_key in layer.keys():
+                        data = ET.SubElement(layer_tree, str(result_key))
+                        data.text = str(self.results[cell][layer][result_key])
+
+            result_tree = ET.ElementTree(result_root)
+            result_tree.write(file_path, xml_declaration=True)
+
+            return True
+
+    def run_model(self, result_path):
         """Runs the model with everything"""
 
         # Initialize project
@@ -539,7 +576,7 @@ class CMFModel:
         self.solve(project)
 
         # Save the results
-        #self.save_results()
+        self.save_results(result_path)
 
 
 def ground_temperature():
