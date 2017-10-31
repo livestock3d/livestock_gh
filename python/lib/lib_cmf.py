@@ -360,7 +360,7 @@ class CMFModel:
                                                             position=(0, 0, 0),
                                                             latitude=lat,
                                                             longitude=long,
-                                                            timezone=time_zone)
+                                                            tz=time_zone)
         self.meteo.T = weather_series['temp']
         self.meteo.Tmax = self.meteo.T.reduce_max(self.meteo.T.begin, cmf.day)
         self.meteo.Tmin = self.meteo.T.reduce_min(self.meteo.T.begin, cmf.day)
