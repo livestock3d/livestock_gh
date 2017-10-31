@@ -228,7 +228,7 @@ class CMFModel:
         for i in range(0, len(centroids)):
             x, y, z = centroids[i][1]
             a = float(face_area[i])
-            cmf_project.NewCell(float(x), float(y), float(z), a, with_surfacewater=True)
+            cmf_project.NewCell(x=float(x), y=float(y), z=float(z), area=a, with_surfacewater=True)
 
         # Connect cells
         for face in face_index:
