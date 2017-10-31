@@ -548,16 +548,16 @@ class CMFModel:
             self.add_layers_to_cells(project,
                                      self.ground_dict[str(key)]['layers'],
                                      self.ground_dict[str(key)]['retention_curve'],
-                                     self.ground_dict[str(key)]['initialSaturation'],
-                                     self.ground_dict[str(key)]['faceIndices'])
+                                     self.ground_dict[str(key)]['initial_saturation'],
+                                     self.ground_dict[str(key)]['face_indices'])
 
             self.add_surface_properties(project,
-                                        self.ground_dict[str(key)]['surfaceProperties'],
-                                        self.ground_dict[str(key)]['faceIndices'])
+                                        self.ground_dict[str(key)]['surface_properties'],
+                                        self.ground_dict[str(key)]['face_indices'])
 
         for key in self.trees_dict.keys():
             self.add_tree(project,
-                          self.trees_dict[str(key)]['faceIndex'],
+                          self.trees_dict[str(key)]['face_index'],
                           self.trees_dict[str(key)]['property'])
 
         # Create the weather
