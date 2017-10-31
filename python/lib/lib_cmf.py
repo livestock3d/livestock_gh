@@ -356,7 +356,7 @@ class CMFModel:
                                                         Position=(0, 0, 0))
 
         # Add a meteo station to the project
-        self.meteo = cmf_project.meteo_stations.add_station(Name='Meteo Station',
+        self.meteo = cmf_project.meteo_stations.add_station(name='Meteo Station',
                                                             position=(0, 0, 0),
                                                             latitude=lat,
                                                             longitude=long,
