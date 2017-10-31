@@ -547,7 +547,7 @@ class CMFModel:
         """Runs the model with everything"""
 
         # Initialize project
-        project = cmf.project
+        project = cmf.project()
         self.load_cmf_files()
 
         # Add cells and properties to them
