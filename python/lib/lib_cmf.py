@@ -478,15 +478,15 @@ class CMFModel:
 
                     elif out_key == 'transpiration':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].transpiration)
+                            cmf_project.cells[cell_index].layers[layer_index].get_transpiration())
 
                     elif out_key == 'evaporation':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].evaporation)
+                            cmf_project.cells[cell_index].layers[layer_index].get_evaporation())
 
                     elif out_key == 'surface_water':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].surfacewater)
+                            cmf_project.cells[cell_index].layers[layer_index].get_surfacewater())
 
                     else:
                         print('Unknown result to collect')
