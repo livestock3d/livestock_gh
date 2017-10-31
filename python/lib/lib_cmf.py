@@ -547,7 +547,7 @@ class CMFModel:
         for key in self.ground_dict.keys():
             self.add_layers_to_cells(project,
                                      self.ground_dict[str(key)]['layers'],
-                                     self.ground_dict[str(key)]['retentionCurve'],
+                                     self.ground_dict[str(key)]['retention_curve'],
                                      self.ground_dict[str(key)]['initialSaturation'],
                                      self.ground_dict[str(key)]['faceIndices'])
 
