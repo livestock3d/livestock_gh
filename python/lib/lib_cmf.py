@@ -446,11 +446,11 @@ class CMFModel:
         out_dict = {}
 
         for cell_index in range(0, len(cmf_project.cells)):
-            cell_name = 'cell_%cell_index' % str(cell_index)
+            cell_name = 'cell_' + str(cell_index)
             out_dict[cell_name] = {}
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
-                layer_name = 'layer_%layer_index' % str(layer_index)
+                layer_name = 'layer_' + str(layer_index)
                 out_dict[cell_name][layer_name] = {}
 
                 for output in self.outputs:
