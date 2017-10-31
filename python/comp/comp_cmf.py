@@ -672,7 +672,8 @@ class CMFSolve(GHComponent):
             for g in g_keys:
                 data = ET.SubElement(ground, str(g))
                 try:
-                    data.text = str(ground_dict[i][str(g)].c)
+                    data_to_write = ground_dict[i][str(g)].c
+                    data.text = str(dict(data_to_write))
                 except:
                     data.text = str(ground_dict[i][str(g)])
 
@@ -691,7 +692,11 @@ class CMFSolve(GHComponent):
 
             for t in t_keys:
                 data = ET.SubElement(tree, str(t))
-                data.text = str(tree_dict[i][str(t)])
+                data_to_write = tree_dict[i][str(t)]
+                if isinstance(data_to_write, dict):
+                    data.text = str(dict(data_to_write))
+                else:
+                    data.text = str(data_to_write)
 
         tree_tree = ET.ElementTree(tree_root)
         tree_tree.write(self.case_path + '/' + 'trees.xml', xml_declaration=True)
@@ -721,19 +726,22 @@ class CMFSolve(GHComponent):
         file_run = ['cmf_template.py']
         file_return = ['results.xml']
 
-        self.ssh_cmd['file_transfer'] = file_transfer
+        self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
         self.ssh_cmd['file_run'] = file_run
         self.ssh_cmd['file_return'] = file_return
         self.ssh_cmd['template'] = 'cmf'
 
         ssh.write_ssh_commands(self.ssh_cmd)
 
+        self.written = True
+
     def do_case(self):
 
         ssh_template = ssh.ssh_path + '/ssh_template.py'
+        transfer_files = self.ssh_cmd['file_transfer'].split(',')
 
         # Copy files from case folder to ssh folder
-        for file in self.ssh_cmd['file_transfer']:
+        for file in transfer_files:
             copyfile(self.case_path + '/' + file, ssh.ssh_path + '/' + file)
 
         # Run template
@@ -759,12 +767,10 @@ class CMFSolve(GHComponent):
         if self.checks and self.write_case:
             self.write(doc)
 
-        elif self.written and self.run:
+        elif self.checks and self.run:
+            self.write(doc)
             self.do_case()
             self.results = self.check_results(ghenv)
-
-        elif self.written:
-            print('Set Run to True to run case')
 
 
 class CMFResults(GHComponent):

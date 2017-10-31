@@ -112,7 +112,7 @@ def fix_mesh_template(path):
 
 
 def ssh_template(path):
-    file = open(path + '\\sshTemplate.py', 'w')
+    file = open(path + '\\ssh_template.py', 'w')
 
     file.write("# Imports\n")
     file.write("import sys\n")
@@ -122,8 +122,6 @@ def ssh_template(path):
     file.write("# Run function\n")
     file.write("win_ssh.ssh_connection()\n")
 
-    file.write("# Announce that template finished and create out file\n")
-    file.write("print('SSH Template written')")
 
     file.close()
 
@@ -165,12 +163,12 @@ def cmf_template(path):
     file.write("from lib.lib_cmf import CMFModel\n")
 
     file.write("# Run CMF Model\n")
-    file.write("folder = home_user + '/livestock/ssh\n")
+    file.write("folder = home_user + '/livestock/ssh'\n")
     file.write("result_path = folder + '/results.xml'\n")
     file.write("model = CMFModel(folder)\n")
     file.write("model.run_model(result_path)\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
-    file.write("file_obj = open('out.txt', 'w')")
+    file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")

@@ -145,7 +145,7 @@ class CMFModel:
         """
         Takes a mesh and converts it into CMF cells
         :param mesh_path: Path to mesh file
-        :param project: CMF project object
+        :param cmf_project: CMF project object
         :return: True
         """
 
@@ -209,12 +209,12 @@ class CMFModel:
                 return None
 
             # Compute the width of the edge
-            dx = abs(V[0][0]-V[1][0])
-            dy = abs(V[0][1]-V[1][1])
-            dz = abs(V[0][2]-V[1][2])
-            width = np.sqrt(dx**2+dy**2+dz**2)
+            dx = abs(V[0][0] - V[1][0])
+            dy = abs(V[0][1] - V[1][1])
+            dz = abs(V[0][2] - V[1][2])
+            edge_width = np.sqrt(dx**2 + dy**2 + dz**2)
 
-            return width
+            return edge_width
 
         # Construct centroid list
         centroids = []
@@ -227,8 +227,8 @@ class CMFModel:
         # Create cells
         for i in range(0, len(centroids)):
             x, y, z = centroids[i][1]
-            a = face_area[i]
-            cmf_project.NewCell(x, y, z, a, True)
+            a = float(face_area[i])
+            cmf_project.NewCell(float(x), float(y), float(z), a, with_surfacewater=True)
 
         # Connect cells
         for face in face_index:
