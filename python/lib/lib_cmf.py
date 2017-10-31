@@ -461,10 +461,10 @@ class CMFModel:
     def gather_results(self, cmf_project):
 
         for cell_index in range(0, len(cmf_project.cells)):
-            cell_name = 'cell_%cell_index' % str(cell_index)
+            cell_name = 'cell_' + str(cell_index)
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
-                layer_name = 'layer_%layer_index' % str(layer_index)
+                layer_name = 'layer_' + str(layer_index)
 
                 for out_key in self.results[cell_name][layer_name].keys():
 
