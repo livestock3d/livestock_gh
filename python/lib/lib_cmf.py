@@ -293,9 +293,9 @@ class CMFModel:
 
             # Add layers
             for i in range(0, len(depth_of_layers)):
-                print('retention curve:', r_curve)
-                print('depth', (i+1)*depth_of_layers)
-                cmf_project.cells[int(c_i)].add_layer((i + 1) * depth_of_layers, r_curve)
+                #print('retention curve:', r_curve)
+                #print('depth', depth_of_layers)
+                cmf_project.cells[int(c_i)].add_layer(float(depth_of_layers[i]), r_curve)
 
             # Install connections
             cmf_project.cells[int(c_i)].install_connection(cmf.Richards)
