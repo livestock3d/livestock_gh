@@ -240,6 +240,7 @@ class CMFModel:
         cell = cmf_project.cells[int(cell_index)]
         self.set_surface_properties(cell, property_dict)
         n = cell_index
+        print('n:',n)
         cell.add_storage('Canopy_%n' % str(n), 'C')
 
         cmf.Rainfall(cell.canopy, cell, False, True)
