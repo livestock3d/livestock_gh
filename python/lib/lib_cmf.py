@@ -249,15 +249,15 @@ class CMFModel:
         return True
 
     def set_surface_properties(self, cell, property_dict):
-        cell.vegetation.Height = property_dict['height']
-        cell.vegetation.LAI = property_dict['lai']
-        cell.vegetation.albedo = property_dict['albedo']
-        cell.vegetation.CanopyClosure = property_dict['canopy_closure']
-        cell.vegetation.CanopyParExtinction = property_dict['canopy_par']
-        cell.vegetation.CanopyCapacityPerLAI = property_dict['canopy_capacity']
-        cell.vegetation.StomatalResistance = property_dict['stomatal_res']
-        cell.vegetation.RootDepth = property_dict['root_depth']
-        cell.vegetation.fraction_at_rootdepth = property_dict['root_fraction']
+        cell.vegetation.Height = float(property_dict['height'])
+        cell.vegetation.LAI = float(property_dict['lai'])
+        cell.vegetation.albedo = float(property_dict['albedo'])
+        cell.vegetation.CanopyClosure = float(property_dict['canopy_closure'])
+        cell.vegetation.CanopyParExtinction = float(property_dict['canopy_par'])
+        cell.vegetation.CanopyCapacityPerLAI = float(property_dict['canopy_capacity'])
+        cell.vegetation.StomatalResistance = float(property_dict['stomatal_res'])
+        cell.vegetation.RootDepth = float(property_dict['root_depth'])
+        cell.vegetation.fraction_at_rootdepth = float(property_dict['root_fraction'])
 
     def add_surface_properties(self, cmf_project, property_dict, cell_indices):
 
@@ -293,8 +293,6 @@ class CMFModel:
 
             # Add layers
             for i in range(0, len(depth_of_layers)):
-                #print('retention curve:', r_curve)
-                #print('depth', depth_of_layers)
                 cmf_project.cells[int(c_i)].add_layer(float(depth_of_layers[i]), r_curve)
 
             # Install connections

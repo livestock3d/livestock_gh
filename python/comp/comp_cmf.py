@@ -381,14 +381,15 @@ class CMFSurfaceProperties(GHComponent):
         self.load_csv()
         data_list = self.data[self.property_index]
         self.property = collections.OrderedDict([('name', data_list[0]),
-                                                 ('lai', data_list[1]),
-                                                 ('albedo', data_list[2]),
-                                                 ('canopy_closure', data_list[3]),
-                                                 ('canopy_par', data_list[4]),
-                                                 ('canopy_capacity', data_list[5]),
-                                                 ('stomatal_res', data_list[6]),
-                                                 ('root_depth', data_list[7]),
-                                                 ('root_fraction', data_list[8])
+                                                 ('height', data_list[1]),
+                                                 ('lai', data_list[2]),
+                                                 ('albedo', data_list[3]),
+                                                 ('canopy_closure', data_list[4]),
+                                                 ('canopy_par', data_list[5]),
+                                                 ('canopy_capacity', data_list[6]),
+                                                 ('stomatal_res', data_list[7]),
+                                                 ('root_depth', data_list[8]),
+                                                 ('root_fraction', data_list[9])
                                                  ])
 
     def run(self):
