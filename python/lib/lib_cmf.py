@@ -183,35 +183,26 @@ class CMFModel:
             Returns the width of the edge between to faces
             :param face0: Face index
             :param face1: Face index
-            :return: 
+            :return: float value with the edge with
             """
 
             # Get vertices
-            v00, v01, v02 = face_vertices(int(face0))
-            v10, v11, v12 = face_vertices(int(face1))
+            v = []
+            v0 = face_vertices(int(face0))
+            v1 = face_vertices(int(face1))
 
             # Find out which edge is shared
-            com0 = np.equal(v00, [v10, v11, v12])
-            com1 = np.equal(v01, [v10, v11, v12])
-            com2 = np.equal(v02, [v10, v11, v12])
-
-            if np.sum(com0) > 0:
-                V = list(compress([v10, v11, v12], com0)).append(v00)
-
-            elif np.sum(com1) > 0:
-                V = list(compress([v10, v11, v12], com1)).append(v01)
-
-            elif np.sum(com2) > 0:
-                V = list(compress([v10, v11, v12], com2)).append(v02)
-
-            else:
-                # No shared edge
-                return None
+            for vertex in v0:
+                equal = np.equal(vertex, v1)
+                if np.sum(equal) > 0:
+                    v.append(vertex)
+                else:
+                    pass
 
             # Compute the width of the edge
-            dx = abs(V[0][0] - V[1][0])
-            dy = abs(V[0][1] - V[1][1])
-            dz = abs(V[0][2] - V[1][2])
+            dx = abs(v[0][0] - v[1][0])
+            dy = abs(v[0][1] - v[1][1])
+            dz = abs(v[0][2] - v[1][2])
             edge_width = np.sqrt(dx**2 + dy**2 + dz**2)
 
             return edge_width
