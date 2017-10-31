@@ -351,9 +351,9 @@ class CMFModel:
     def create_weather_stations(self, cmf_project, weather_series, lat, long, time_zone):
 
         # Add a rainfall station to the project
-        rain_station = cmf_project.rainfall_stations.add(Name='Rain Station',
+        self.rain_station = cmf_project.rainfall_stations.add(Name='Rain Station',
                                                          Data=weather_series['rain'],
-                                                        Position=(0, 0, 0))
+                                                         Position=(0, 0, 0))
 
         # Add a meteo station to the project
         self.meteo = cmf_project.meteo_stations.add_station(name='Meteo Station',
