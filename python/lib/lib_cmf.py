@@ -500,7 +500,7 @@ class CMFModel:
                         self.results[cell_name][layer_name][out_key].append(
                             cmf_project.cells[cell_index].layers[layer_index].theta)
 
-                    if out_key == '3d_flux':
+                    if out_key == 'three_d_flux':
                         self.results[cell_name][layer_name][out_key].append(
                             cmf_project.cells[cell_index].layers[layer_index].get_3d_flux(time))
 

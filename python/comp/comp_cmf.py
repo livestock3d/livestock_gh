@@ -787,6 +787,74 @@ class CMFResults(GHComponent):
 
     def __init__(self):
         GHComponent.__init__(self)
+        def inputs():
+            return {0: ['Property', '0-1 grasses. 2-6 soils']}
+
+        def outputs():
+            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
+                    1: ['Units', 'Shows the units of the surface values'],
+                    2: ['SurfaceValues', 'Chosen surface properties values'],
+                    3: ['SurfaceProperties', 'Livestock surface properties data']}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 13
+        self.data = None
+        self.units = None
+        self.data_path = r'C:\livestock\data\surfaceData.csv'
+        self.property_index = None
+        self.property = None
+        self.checks = False
+        self.results = None
+
+    def check_inputs(self, ghenv):
+        if self.property_index:
+            self.checks = True
+        else:
+            warning = 'Temperature should be a float'
+            print(warning)
+            w = gh.GH_RuntimeMessageLevel.Warning
+            ghenv.Component.AddRuntimeMessage(w, warning)
+
+    def config(self, ghenv):
+
+        # Generate Component
+        self.config_component(ghenv, self.component_number)
+
+    def run_checks(self, ghenv, property):
+
+        # Gather data
+        self.property_index = property
+
+        # Run checks
+        self.check_inputs(ghenv)
+
+    def load_xml(self):
+
+        load = csv.read_csv(self.data_path)
+        self.units = load[0]
+        self.data = load[1]
+
+    def pick_property(self):
+        self.load_csv()
+        data_list = self.data[self.property_index]
+        self.property = collections.OrderedDict([('name', data_list[0]),
+                                                 ('height', data_list[1]),
+                                                 ('lai', data_list[2]),
+                                                 ('albedo', data_list[3]),
+                                                 ('canopy_closure', data_list[4]),
+                                                 ('canopy_par', data_list[5]),
+                                                 ('canopy_capacity', data_list[6]),
+                                                 ('stomatal_res', data_list[7]),
+                                                 ('root_depth', data_list[8]),
+                                                 ('root_fraction', data_list[9])
+                                                 ])
+
+    def run(self):
+        if self.checks:
+            self.pick_property()
+
+            self.results = gh_misc.PassClass(self.property, 'SurfaceProperty')
 
 
 class CMFOutputs(GHComponent):
@@ -878,7 +946,7 @@ class CMFOutputs(GHComponent):
             output_dict['cell'].append('aerodynamic_resistance')
 
         if self.three_d_flux:
-            output_dict['layer'].append('3d_flux')
+            output_dict['layer'].append('three_d_flux')
 
         if self.potential:
             output_dict['layer'].append('potential')
