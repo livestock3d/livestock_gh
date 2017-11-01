@@ -20,7 +20,7 @@ from itertools import compress
 
 class CMFModel:
 
-    def __init__(self, folder, analysis_length=8760):
+    def __init__(self, folder, analysis_length=24):
         self.folder = folder
         self.mesh_path = None
         self.weather_dict = {}

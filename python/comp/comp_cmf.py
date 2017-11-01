@@ -563,12 +563,13 @@ class CMFSolve(GHComponent):
                     2: ['Weather', 'Input from Livestock CMF_Weather'],
                     3: ['Trees', 'Input from Livestock CMF_Tree'],
                     4: ['Stream', 'Input from Livestock CMF_Stream'],
-                    5: ['Folder', 'Path to folder. Default is Desktop'],
-                    6: ['CaseName', 'Case name as string. Default is CMF'],
-                    7: ['Output', 'Connect Livestock Outputs'],
-                    8: ['Write', 'Boolean to write files'],
-                    9: ['Overwrite', 'If True excising case will be overwritten. Default is set to True'],
-                    10: ['Run', 'Boolean to run analysis'
+                    5: ['AnalysLength', 'Analysis length in hours'],
+                    6: ['Folder', 'Path to folder. Default is Desktop'],
+                    7: ['CaseName', 'Case name as string. Default is CMF'],
+                    8: ['Output', 'Connect Livestock Outputs'],
+                    9: ['Write', 'Boolean to write files'],
+                    10: ['Overwrite', 'If True excising case will be overwritten. Default is set to True'],
+                    11: ['Run', 'Boolean to run analysis'
                                 '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH']}
 
         def outputs():
@@ -583,6 +584,7 @@ class CMFSolve(GHComponent):
         self.weather = None
         self.trees = None
         self.stream = None
+        self.analysis_length = None
         self.folder = None
         self.case_name = None
         self.case_path = None
