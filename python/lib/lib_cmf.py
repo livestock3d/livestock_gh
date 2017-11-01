@@ -120,15 +120,17 @@ class CMFModel:
                 else:
                     pass
 
-            out_list = []
+            output_tree = ET.tostring(ET.parse(output_path).getroot())
+            outputs = xmltodict.parse(output_tree)
+            output_dict = {}
 
-            out_file = open(output_path, 'r')
-            out_data = out_file.readlines()
+            for out in outputs['output'].keys():
+                output_dict[str(out)] = {}
 
-            for line in out_data:
-                out_list.append(line[:-1])
+                for o in outputs['output'][out]:
+                    output_dict[str(out)][str(o)] = eval(outputs['output'][out][o])
 
-            return out_list
+            return output_dict
 
         cmf_files = os.listdir(self.folder)
 
@@ -449,12 +451,17 @@ class CMFModel:
             cell_name = 'cell_' + str(cell_index)
             out_dict[cell_name] = {}
 
+            # Set all cell related outputs
+            for cell_output in self.outputs['cell']:
+                out_dict[cell_name][str(cell_output)] = []
+
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
                 out_dict[cell_name][layer_name] = {}
 
-                for output in self.outputs:
-                    out_dict[cell_name][layer_name][str(output)] = []
+                # Set all layer related outputs
+                for layer_output in self.outputs['layer']:
+                    out_dict[cell_name][layer_name][str(layer_output)] = []
 
         self.results = out_dict
 
@@ -463,30 +470,47 @@ class CMFModel:
         for cell_index in range(0, len(cmf_project.cells)):
             cell_name = 'cell_' + str(cell_index)
 
+            # Collect cell related results
+            if out_key == 'transpiration':
+                self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_transpiration())
+
+            if out_key == 'evaporation':
+                self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_evaporation())
+
+            if out_key == 'surface_water':
+                self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_surfacewater())
+
+            if out_key == 'heat_flux':
+                self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux())
+
+            if out_key == 'aerodynamic_resistance':
+                self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_aerodynamic_resistance())
+
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
 
                 for out_key in self.results[cell_name][layer_name].keys():
 
+                    # Collect layer related results
                     if out_key == 'potential':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].potential)
+                            cmf_project.cells[cell_index].layers[layer_index].get_potential())
 
-                    elif out_key == 'moisture':
+                    if out_key == 'theta':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].theta)
+                            cmf_project.cells[cell_index].layers[layer_index].get_theta())
 
-                    elif out_key == 'transpiration':
+                    if out_key == '3d_flux':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_transpiration())
+                            cmf_project.cells[cell_index].layers[layer_index].get_3d_flux())
 
-                    elif out_key == 'evaporation':
+                    if out_key == 'volume':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_evaporation())
+                            cmf_project.cells[cell_index].layers[layer_index].get_volume())
 
-                    elif out_key == 'surface_water':
+                    if out_key == 'wetness':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_surfacewater())
+                            cmf_project.cells[cell_index].layers[layer_index].get_wetness())
 
                     else:
                         print('Unknown result to collect')

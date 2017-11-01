@@ -653,9 +653,10 @@ class CMFSolve(GHComponent):
             data.text = str(weather_dict[str(k)])
 
         weather_tree = ET.ElementTree(weather_root)
-        weather_tree.write(self.case_path + '/' + 'weather.xml', xml_declaration=True)
+        weather_file = 'weather.xml'
+        weather_tree.write(self.case_path + '/' + weather_file, xml_declaration=True)
 
-        files_written.append('weather.xml')
+        files_written.append(weather_file)
 
         # Save Mesh
         gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
@@ -679,9 +680,10 @@ class CMFSolve(GHComponent):
                     data.text = str(ground_dict[i][str(g)])
 
         ground_tree = ET.ElementTree(ground_root)
-        ground_tree.write(self.case_path + '/' + 'ground.xml', xml_declaration=True)
+        ground_file = 'ground.xml'
+        ground_tree.write(self.case_path + '/' + ground_file, xml_declaration=True)
 
-        files_written.append('ground.xml')
+        files_written.append(ground_file)
 
         # Process trees
         tree_dict = list(tree.c for tree in self.trees)
@@ -700,19 +702,24 @@ class CMFSolve(GHComponent):
                     data.text = str(data_to_write)
 
         tree_tree = ET.ElementTree(tree_root)
-        tree_tree.write(self.case_path + '/' + 'trees.xml', xml_declaration=True)
+        tree_file = 'trees.xml'
+        tree_tree.write(self.case_path + '/' + tree_file, xml_declaration=True)
 
-        files_written.append('trees.xml')
+        files_written.append(tree_file)
 
         # Process outputs
-        outfile = open(self.case_path + '/outputs.txt', 'w')
+        output_dict = self.outputs_config.c
+        output_root = ET.Element('output')
 
-        for key in self.output_config.c.keys():
-            outfile.write(str(key)+'\n')
+        for out_key in output_dict.keys():
+            data = ET.SubElement(output_root, str(out_key))
+            data.text = str(output_dict[out_key])
 
-        outfile.close()
+        output_tree = ET.ElementTree(output_root)
+        output_file = 'outputs.xml'
+        output_tree.write(self.case_path + '/' + output_file, xml_declaration=True)
 
-        files_written.append('outputs.txt')
+        files_written.append(output_file)
 
         # Process stream
         # Add later
@@ -728,8 +735,8 @@ class CMFSolve(GHComponent):
         file_return = ['results.xml']
 
         self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
-        self.ssh_cmd['file_run'] = file_run
-        self.ssh_cmd['file_return'] = file_return
+        self.ssh_cmd['file_run'] = ','.join(file_run)
+        self.ssh_cmd['file_return'] = ','.join(file_return)
         self.ssh_cmd['template'] = 'cmf'
 
         ssh.write_ssh_commands(self.ssh_cmd)
@@ -787,9 +794,14 @@ class CMFOutputs(GHComponent):
 
         def inputs():
             return {0: ['Evapotranspiration', 'Default is set to True'],
-                    1: ['MoistureContent', 'Default is set to True'],
-                    2: ['Potential', 'Default is set to False'],
-                    3: ['SurfaceWaterFlux', 'Default is set to False']
+                    1: ['SurfaceWater', 'Default is set to False'],
+                    2: ['HeatFlux', 'Surface heat flux - Default is set to False'],
+                    3: ['AerodynamicResistance', 'Default is set to False'],
+                    4: ['3DFlux', 'Sum of all flux vectors - Default is set to False'],
+                    5: ['Potential', 'Total potential (Psi_tot = Psi_M + Psi_G - Default is set to False'],
+                    6: ['Theta', 'Volumetric water content of the layer - Default is set to False'],
+                    7: ['Volume', 'Volume of water in the layer - Default is set to True'],
+                    8: ['Wetness', 'Wetness of the soil (V_volume/V_pores) - Default is set to False'],
                     }
 
         def outputs():
@@ -801,9 +813,14 @@ class CMFOutputs(GHComponent):
         self.outputs = outputs()
         self.component_number = 16
         self.evapo_trans = None
-        self.moisture = None
+        self.surface_water = None
+        self.heat_flux = None
+        self.aero_res = None
+        self.three_d_flux = None
         self.potential = None
-        self.surface_flux = None
+        self.theta = None
+        self.volume = None
+        self.wetness = None
         self.checks = False
         self.results = None
 
@@ -821,41 +838,55 @@ class CMFOutputs(GHComponent):
         # Generate Component
         self.config_component(ghenv, self.component_number)
 
-    def run_checks(self, ghenv, evapotranspiration=True, moisture_content=True, potential=False, surface_water_flux=False):
+    def run_checks(self, ghenv, evapotranspiration=True, surface_water=False, heat_flux=True, aero_res=False,
+                   three_d_flux=False, potential=False, theta=False, volume=True, wetness=False):
 
         # Gather data
         self.evapo_trans = evapotranspiration
-        self.moisture = moisture_content
+        self.surface_water = surface_water
+        self.heat_flux = heat_flux
+        self.aero_res = aero_res
+        self.three_d_flux = three_d_flux
         self.potential = potential
-        self.surface_flux = surface_water_flux
+        self.theta = theta
+        self.volume = volume
+        self.wetness = wetness
 
         # Run checks
         self.check_inputs(ghenv)
 
     def set_outputs(self):
 
-        output_dict = {}
+        output_dict = {'cell': [], 'layer': []}
 
         if self.evapo_trans:
-            output_dict['evaporation'] = {}
-            output_dict['transpiration'] = {}
-        else:
-            pass
+            output_dict['cell'].append('evaporation')
+            output_dict['cell'].append('transpiration')
 
-        if self.moisture:
-            output_dict['moisture_content'] = {}
-        else:
-            pass
+        if self.surface_water:
+            output_dict['cell'].append('surface_water')
+
+        if self.heat_flux:
+            output_dict['cell'].append('heat_flux')
+
+        if self.aero_res:
+            output_dict['cell'].append('aerodynamic_resistance')
+
+        if self.three_d_flux:
+            output_dict['layer'].append('3d_flux')
 
         if self.potential:
-            output_dict['potential'] = {}
-        else:
-            pass
+            output_dict['layer'].append('potential')
 
-        if self.surface_flux:
-            output_dict['surface_water_flux'] = {}
-        else:
-            pass
+        if self.theta:
+            output_dict['layer'].append('theta')
+
+        if self.volume:
+            output_dict['layer'].append('volume')
+
+        if self.wetness:
+            output_dict['layer'].append('wetness')
+
 
         return output_dict
 
@@ -866,7 +897,7 @@ class CMFOutputs(GHComponent):
             self.results = gh_misc.PassClass(out_dict, 'Outputs')
 
 
-class CMFOutlet(GHComponent):
+class CMFBoundaryCondition(GHComponent):
 
     def __init__(self):
         GHComponent.__init__(self)
