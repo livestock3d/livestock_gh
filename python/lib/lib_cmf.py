@@ -529,6 +529,7 @@ class CMFModel:
         # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
             self.gather_results(cmf_project, t)
+            print('time:', t)
 
         self.solved = True
         return True
