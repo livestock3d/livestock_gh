@@ -553,12 +553,17 @@ class CMFModel:
             for cell in self.results.keys():
                 cell_tree = ET.SubElement(result_root, str(cell))
 
-                for layer in cell.keys():
-                    layer_tree = ET.SubElement(cell_tree, str(layer))
+                for result_key in self.results[cell].keys():
+                    if result_key.startswith('layer'):
+                        layer_tree = ET.SubElement(cell_tree, str(result_key))
 
-                    for result_key in layer.keys():
-                        data = ET.SubElement(layer_tree, str(result_key))
-                        data.text = str(self.results[cell][layer][result_key])
+                        for layer_result_key in self.results[cell][result_key].keys():
+                            data = ET.SubElement(layer_tree, str(layer_result_key))
+                            data.text = str(self.results[cell][result_key][layer_result_key])
+
+                    else:
+                        data = ET.SubElement(cell_tree, str(result_key))
+                        data.text = str(self.results[cell][result_key])
 
             result_tree = ET.ElementTree(result_root)
             result_tree.write(file_path, xml_declaration=True)
