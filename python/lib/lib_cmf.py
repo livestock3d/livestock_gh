@@ -493,11 +493,11 @@ class CMFModel:
                     # Collect layer related results
                     if out_key == 'potential':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_potential())
+                            cmf_project.cells[cell_index].layers[layer_index].potential)
 
                     if out_key == 'theta':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_theta())
+                            cmf_project.cells[cell_index].layers[layer_index].theta)
 
                     if out_key == '3d_flux':
                         self.results[cell_name][layer_name][out_key].append(
@@ -505,7 +505,7 @@ class CMFModel:
 
                     if out_key == 'volume':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_volume())
+                            cmf_project.cells[cell_index].layers[layer_index].volume)
 
                     if out_key == 'wetness':
                         self.results[cell_name][layer_name][out_key].append(
