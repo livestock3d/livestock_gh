@@ -6,7 +6,8 @@ __version__ = "0.0.1"
 # Imports
 
 import cmf
-from datetime import datetime,timedelta
+from datetime import datetime
+from datetime import timedelta
 import numpy as np
 import xml.etree.ElementTree as ET
 import os
@@ -20,7 +21,7 @@ from itertools import compress
 
 class CMFModel:
 
-    def __init__(self, folder, analysis_length=24):
+    def __init__(self, folder, analysis_length=6):
         self.folder = folder
         self.mesh_path = None
         self.weather_dict = {}
@@ -512,7 +513,7 @@ class CMFModel:
                             cmf_project.cells[cell_index].layers[layer_index].wetness)
 
                     else:
-                        print('Unknown result to collect:', out_key)
+                        #print('Unknown result to collect:', out_key)
                         pass
 
     def solve(self, cmf_project, tolerance=1e-8):
@@ -528,10 +529,13 @@ class CMFModel:
         # Save initial conditions to results
         self.gather_results(cmf_project, solver.t)
 
+        # Set timer
+        start_time = datetime.now()
+
         # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
             self.gather_results(cmf_project, t)
-            print('time:', t)
+            print('Solver Time:', t, '\tElapsed Time:', datetime.now()-start_time)
 
         self.solved = True
         return True
