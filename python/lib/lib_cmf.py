@@ -482,8 +482,8 @@ class CMFModel:
                 if out_key == 'heat_flux':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
 
-                if out_key == 'aerodynamic_resistance':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].aerodynamic_resistance)
+                #if out_key == 'aerodynamic_resistance':
+                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].aerodynamic_resistance)
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
