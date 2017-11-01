@@ -470,11 +470,11 @@ class CMFModel:
             for out_key in self.results[cell_name].keys():
 
                 # Collect cell related results
-                #if out_key == 'transpiration':
-                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_transpiration())
+                if out_key == 'transpiration':
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
 
-                #if out_key == 'evaporation':
-                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_evaporation())
+                if out_key == 'evaporation':
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
 
                 if out_key == 'surface_water':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_surfacewater())
@@ -482,8 +482,8 @@ class CMFModel:
                 if out_key == 'heat_flux':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
 
-                #if out_key == 'aerodynamic_resistance':
-                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_aerodynamic_resistance())
+                if out_key == 'aerodynamic_resistance':
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].aerodynamic_resistance)
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
@@ -512,7 +512,7 @@ class CMFModel:
                             cmf_project.cells[cell_index].layers[layer_index].wetness)
 
                     else:
-                        print('Unknown result to collect')
+                        print('Unknown result to collect:', out_key)
                         pass
 
     def solve(self, cmf_project, tolerance=1e-8):
