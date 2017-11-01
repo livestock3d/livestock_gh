@@ -473,8 +473,8 @@ class CMFModel:
                 if out_key == 'transpiration':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_transpiration())
 
-                if out_key == 'evaporation':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_evaporation())
+                #if out_key == 'evaporation':
+                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_evaporation())
 
                 if out_key == 'surface_water':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_surfacewater())
