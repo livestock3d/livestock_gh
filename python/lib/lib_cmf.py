@@ -523,6 +523,8 @@ class CMFModel:
         solver.t = cmf.Time(1, 1, 2017)
         self.config_outputs(cmf_project)
 
+        print('outputs', self.results)
+
         # Save initial conditions to results
         self.gather_results(cmf_project, solver.t)
 
