@@ -708,7 +708,7 @@ class CMFSolve(GHComponent):
         files_written.append(tree_file)
 
         # Process outputs
-        output_dict = self.outputs_config.c
+        output_dict = self.output_config.c
         output_root = ET.Element('output')
 
         for out_key in output_dict.keys():
@@ -838,19 +838,22 @@ class CMFOutputs(GHComponent):
         # Generate Component
         self.config_component(ghenv, self.component_number)
 
-    def run_checks(self, ghenv, evapotranspiration=True, surface_water=False, heat_flux=True, aero_res=False,
-                   three_d_flux=False, potential=False, theta=False, volume=True, wetness=False):
+    def run_checks(self, ghenv):
+
+        inputs = []
+        for i in ghenv.Component.Params.Input:
+            inputs.append(i)
 
         # Gather data
-        self.evapo_trans = evapotranspiration
-        self.surface_water = surface_water
-        self.heat_flux = heat_flux
-        self.aero_res = aero_res
-        self.three_d_flux = three_d_flux
-        self.potential = potential
-        self.theta = theta
-        self.volume = volume
-        self.wetness = wetness
+        self.evapo_trans = inputs[0]
+        self.surface_water = inputs[1]
+        self.heat_flux = inputs[2]
+        self.aero_res = inputs[3]
+        self.three_d_flux = inputs[4]
+        self.potential = inputs[5]
+        self.theta = inputs[6]
+        self.volume = inputs[7]
+        self.wetness = inputs[8]
 
         # Run checks
         self.check_inputs(ghenv)
@@ -893,6 +896,7 @@ class CMFOutputs(GHComponent):
     def run(self):
         if self.checks:
             out_dict = self.set_outputs()
+            print(out_dict)
 
             self.results = gh_misc.PassClass(out_dict, 'Outputs')
 

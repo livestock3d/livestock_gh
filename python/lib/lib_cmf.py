@@ -125,10 +125,7 @@ class CMFModel:
             output_dict = {}
 
             for out in outputs['output'].keys():
-                output_dict[str(out)] = {}
-
-                for o in outputs['output'][out]:
-                    output_dict[str(out)][str(o)] = eval(outputs['output'][out][o])
+                output_dict[str(out)] = eval(outputs['output'][out])
 
             return output_dict
 
