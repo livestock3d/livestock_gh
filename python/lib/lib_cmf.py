@@ -509,7 +509,7 @@ class CMFModel:
 
                     if out_key == 'wetness':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_wetness())
+                            cmf_project.cells[cell_index].layers[layer_index].wetness)
 
                     else:
                         print('Unknown result to collect')
