@@ -501,7 +501,7 @@ class CMFModel:
 
                     if out_key == '3d_flux':
                         self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_3d_flux())
+                            cmf_project.cells[cell_index].layers[layer_index].get_3d_flux(time))
 
                     if out_key == 'volume':
                         self.results[cell_name][layer_name][out_key].append(
