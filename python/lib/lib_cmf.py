@@ -524,7 +524,7 @@ class CMFModel:
         self.config_outputs(cmf_project)
 
         # Save initial conditions to results
-        self.gather_results(cmf_project)
+        self.gather_results(cmf_project, solver.t)
 
         # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
