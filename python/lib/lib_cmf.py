@@ -470,8 +470,8 @@ class CMFModel:
             for out_key in self.results[cell_name].keys():
 
                 # Collect cell related results
-                if out_key == 'transpiration':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_transpiration())
+                #if out_key == 'transpiration':
+                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_transpiration())
 
                 #if out_key == 'evaporation':
                 #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_evaporation())
