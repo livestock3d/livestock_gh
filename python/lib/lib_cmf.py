@@ -462,7 +462,7 @@ class CMFModel:
 
         self.results = out_dict
 
-    def gather_results(self, cmf_project):
+    def gather_results(self, cmf_project, time):
 
         for cell_index in range(0, len(cmf_project.cells)):
             cell_name = 'cell_' + str(cell_index)
@@ -480,7 +480,7 @@ class CMFModel:
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_surfacewater())
 
                 if out_key == 'heat_flux':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux())
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
 
                 if out_key == 'aerodynamic_resistance':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_aerodynamic_resistance())
@@ -528,7 +528,7 @@ class CMFModel:
 
         # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
-            self.gather_results(cmf_project)
+            self.gather_results(cmf_project, t)
 
         self.solved = True
         return True
