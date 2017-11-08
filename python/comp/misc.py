@@ -11,9 +11,6 @@ __version__ = "0.0.1"
 from comp.component import GHComponent
 
 # Grasshopper imports
-from clr import AddReference
-AddReference('Grasshopper')
-import Grasshopper.Kernel as gh
 import scriptcontext as sc
 
 # -------------------------------------------------------------------------------------------------------------------- #
@@ -22,14 +19,18 @@ import scriptcontext as sc
 
 class PythonExecutor(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['PythonPath', 'Path to python.exe']}
+            return {0: {'name': 'PythonPath',
+                        'description': 'Path to python.exe',
+                        'access': 'item',
+                        'default_value': None}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -39,27 +40,25 @@ class PythonExecutor(GHComponent):
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if isinstance(self.py_exe, str):
             self.checks = True
         else:
             warning = 'Path should be a string'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, py_exe):
+    def run_checks(self, py_exe):
 
         # Gather data
         self.py_exe = py_exe
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def run(self):
         if self.checks:
@@ -70,18 +69,31 @@ class PythonExecutor(GHComponent):
 
 class SSHConnection(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['IP', 'IP Address to connection'],
-                    1: ['Port', 'Port for connection'],
-                    2: ['Username', 'Username for connection'],
-                    3: ['Password', 'Password for connection']
+            return {0: {'name': 'IP',
+                        'description': 'IP Address to connection',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'Port',
+                        'description': 'Port for connection',
+                        'access': 'item',
+                        'default_value': None},
+                    2: {'name': 'Username',
+                        'description': 'Username for connection',
+                        'access': 'item',
+                        'default_value': None},
+                    3: {'name': 'Password',
+                        'description': 'Password for connection',
+                        'access': 'item',
+                        'default_value': None}
                     }
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -94,7 +106,7 @@ class SSHConnection(GHComponent):
         self.checks = [False, False, False, False]
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         warnings = []
 
         if isinstance(self.ip, str):
@@ -119,18 +131,16 @@ class SSHConnection(GHComponent):
 
         if warnings:
             for warn in warnings:
-                print(warn)
-                w = gh.GH_RuntimeMessageLevel.Warning
-                ghenv.Component.AddRuntimeMessage(w, warn)
+                self.add_warning(warn)
         else:
             self.checks = True
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, ip, port, user, pw):
+    def run_checks(self, ip, port, user, pw):
 
         # Gather data
         self.ip = ip
@@ -139,7 +149,7 @@ class SSHConnection(GHComponent):
         self.password = pw
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def run(self):
         if self.checks:
