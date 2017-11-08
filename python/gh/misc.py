@@ -76,8 +76,12 @@ def write_file(text, path, name, file_type='txt'):
 
     # Write text data to file
     # If integer
-    if isinstance(text,int):
+    if isinstance(text, int):
         file_write.write(str(text))
+
+    # If string
+    elif isinstance(text, str):
+        file_write.write(text)
 
     else:
         i = 0
