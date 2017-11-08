@@ -841,7 +841,7 @@ class CMFSolve(GHComponent):
         # Process solver info
         solver_root = ET.Element('solver')
         analysis_length = ET.SubElement(solver_root, 'analysis_length')
-        analysis_length.text = self.analysis_length
+        analysis_length.text = str(self.analysis_length)
 
         solver_tree = ET.ElementTree(solver_root)
         solver_file = 'solver.xml'
