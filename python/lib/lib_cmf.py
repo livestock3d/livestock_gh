@@ -564,7 +564,7 @@ class CMFModel:
               current_time_step_print, '\t',
               estimated_time_left_print)
 
-        return elapsed_time
+        return now
 
     def solve(self, cmf_project, tolerance=1e-8):
         """Solves the model"""
