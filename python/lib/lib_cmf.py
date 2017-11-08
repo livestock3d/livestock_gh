@@ -5,6 +5,7 @@ __version__ = "0.0.1"
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
 
+# Module imports
 import cmf
 from datetime import datetime
 from datetime import timedelta
@@ -13,10 +14,11 @@ import xml.etree.ElementTree as ET
 import os
 import xmltodict
 import pymesh as pm
-from itertools import compress
+
+# Livestock imports
 
 # -------------------------------------------------------------------------------------------------------------------- #
-# Functions and Classes
+# CMF Functions and Classes
 
 
 class CMFModel:
@@ -516,6 +518,15 @@ class CMFModel:
                         #print('Unknown result to collect:', out_key)
                         pass
 
+    def print_solver_time(self, solver_time, start_time, last_time, step):
+        now = datetime.now()
+        solver_timer = 'Solver Time: '+ str(solver_time)
+        elapsed_time = 'Elapsed Time: ' + str(now - start_time)
+        current_time_step = 'Current Time Step: ' + str(now - last_time)
+        estimated_time_left = 'Estimated Time Left: '
+        print(solver_timer, '\t', elapsed_time, '\t', current_time_step, '\t', estimated_time_left)
+        return elapsed_time
+
     def solve(self, cmf_project, tolerance=1e-8):
         """Solves the model"""
 
@@ -524,18 +535,19 @@ class CMFModel:
         solver.t = cmf.Time(1, 1, 2017)
         self.config_outputs(cmf_project)
 
-        #print('outputs', self.results)
-
         # Save initial conditions to results
         self.gather_results(cmf_project, solver.t)
 
         # Set timer
         start_time = datetime.now()
+        step = 0
+        last = start_time
 
         # Run solver and save results at each time step
         for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
             self.gather_results(cmf_project, t)
-            print('Solver Time:', t, '\tElapsed Time:', datetime.now()-start_time)
+            last = self.print_solver_time(t, start_time, last, step)
+            step += 1
 
         self.solved = True
         return True
