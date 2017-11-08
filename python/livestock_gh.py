@@ -15,3 +15,4 @@ __status__ = "Work in Progress"
 from gh.geometry import *
 from gh.misc import *
 from gh.ssh import *
+from gh.xmltodict import *
