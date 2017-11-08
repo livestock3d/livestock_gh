@@ -13,16 +13,14 @@ import subprocess
 from shutil import copyfile
 
 # Livestock imports
-import gh.misc as gh_misc
 import gh.ssh as ssh
 import gh.geometry as gh_geo
 import lib.csv as csv
 from comp.component import GHComponent
 import gh.misc as gh_misc
-import gh.xmltodict as ls_x2d
+from win.templates import pick_template
 
 # Grasshopper imports
-import Grasshopper.Kernel as gh
 import rhinoscriptsyntax as rs
 
 # -------------------------------------------------------------------------------------------------------------------- #
@@ -906,12 +904,16 @@ class CMFSolve(GHComponent):
 
 class CMFResults(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['ResultFilePath', 'Path to result file. Accepts output from Livestock Solve'],
-                    1: ['FetchResult', 'Choose which result should be loaded:'
+            return {0: {'name': 'ResultFilePath',
+                        'description': 'Path to result file. Accepts output from Livestock Solve',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'FetchResult',
+                        'description': 'Choose which result should be loaded:'
                                        '\n0 - Evapotranspiration'
                                        '\n1 - Surface water volume'
                                        '\n2 - Surface water flux'
@@ -921,14 +923,21 @@ class CMFResults(GHComponent):
                                        '\n6 - Soil layer potential'
                                        '\n7 - Soil layer theta'
                                        '\n8 - Soil layer volume'
-                                       '\n9 - Soil layer wetness'
-                        ]}
+                                       '\n9 - Soil layer wetness',
+                        'access': 'item',
+                        'default_value': 0},
+                    2: {'name': 'Run',
+                        'description': 'Run component',
+                        'access': 'item',
+                        'default_value': False}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Units', 'Shows the units of the results'],
-                    2: ['Values', ''],
-                    3: ['', '']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Units',
+                        'description': 'Shows the units of the results'},
+                    2: {'name': 'Values',
+                        'description': 'List with chosen result values'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -936,37 +945,62 @@ class CMFResults(GHComponent):
         self.unit = None
         self.path = None
         self.fetch_result = None
+        self.run_component = None
+        self.py_exe = gh_misc.get_python_exe()
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if self.path:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, path):
+    def run_checks(self, path, fetch_result, run):
 
         # Gather data
         self.path = path
+        self.fetch_result = int(self.add_default_value(fetch_result, 1))
+        self.run_component = self.add_default_value(run, 2)
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
-    def load_xml(self):
+    def process_xml(self):
+        possible_results = ['Evapotranspiration', 'surface_water_volume', 'Surface_water_flux',
+                            'heat_flux', 'aerodynamic_resistance', 'volumetric_flux', 'potential',
+                            'theta', 'volume', 'wetness']
 
-        result_tree = ET.tostring(ET.parse(self.path).getroot())
-        results = ls_x2d.parse(result_tree)
+        # Write lookup file
+        if self.fetch_result == 0 or 1 or 2 or 3 or 4:
+            out = {'cell': possible_results[self.fetch_result]}
+            gh_misc.write_file(str(out), self.path, 'result_lookup')
+        else:
+            out = {'layer': possible_results[self.fetch_result]}
+            gh_misc.write_file(str(out), self.path, 'result_lookup')
 
-        return results
+        # Write template
+        pick_template('cmf_results', self.path)
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, self.path + '/cmf_results_template.py'])
+        thread.wait()
+        thread.kill()
+
+        # Construct csv path
+        csv_path = self.path + '/' + str(possible_results[self.fetch_result]) + '.csv'
+
+        return csv_path
+
+    def load_result_csv(self, path):
+
+        return csv.read_csv(path, False)
 
     def set_units(self):
 
@@ -1001,11 +1035,12 @@ class CMFResults(GHComponent):
             self.unit = '-'
 
     def run(self):
-        if self.checks:
+        if self.checks and self.run_component:
             self.set_units()
-            results = self.load_xml()
 
-            self.results = results
+            results = self.load_result_csv(self.process_xml())
+
+            self.results = gh_misc.list_to_tree(results)
 
 
 class CMFOutputs(GHComponent):
