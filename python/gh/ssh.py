@@ -57,15 +57,15 @@ def write_ssh_commands(ssh_dict):
 
     # Write SSH commands
     gh_misc.write_file([ssh_dict['ip'],
-                   ssh_dict['port'],
-                   ssh_dict['user'],
-                   ssh_dict['password'],
-                   ssh_dict['file_transfer'],
-                   ssh_dict['file_run'],
-                   ssh_dict['file_return']
-                   ],
-                  ssh_path,
-                  'in_data')
+                        ssh_dict['port'],
+                        ssh_dict['user'],
+                        ssh_dict['password'],
+                        ssh_dict['file_transfer'],
+                        ssh_dict['file_run'],
+                        ssh_dict['file_return']
+                        ],
+                        ssh_path,
+                        'in_data')
 
     # Write templates
     ssh_template(ssh_path)
