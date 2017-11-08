@@ -31,19 +31,36 @@ import rhinoscriptsyntax as rs
 
 class CMFGround(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['Layers', 'Soil layers to add to the mesh in m'],
-                    1: ['RetentionCurve', 'Retention curve'],
-                    2: ['SurfaceProperties', 'Input from Livestock CMF SurfaceProperties'],
-                    3: ['InitialSaturation', 'Initial saturation of the soil layers'],
-                    4: ['FaceIndices', 'List of face indices, on where the ground properties are applied.']}
+            return {0: {'name': 'Layers',
+                        'description': 'Soil layers to add to the mesh in m',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'RetentionCurve',
+                        'description': 'Retention curve',
+                        'access': 'item',
+                        'default_value': None},
+                    2: {'name': 'SurfaceProperties',
+                        'description': 'Input from Livestock CMF SurfaceProperties',
+                        'access': 'item',
+                        'default_value': None},
+                    3: {'name': 'InitialSaturation',
+                        'description': 'Initial saturation of the soil layers',
+                        'access': 'item',
+                        'default_value': None},
+                    4: {'name': 'FaceIndices',
+                        'description': 'List of face indices, on where the ground properties are applied.',
+                        'access': 'list',
+                        'default_value': None}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Ground', 'Livestock Ground Data Class']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Ground',
+                        'description': 'Livestock Ground Data Class'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -57,7 +74,7 @@ class CMFGround(GHComponent):
         self.checks = [False, False, False, False, False]
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         warning = []
 
         if self.layers:
@@ -70,7 +87,7 @@ class CMFGround(GHComponent):
         else:
             warning.append('Retention curve is wrong!')
 
-        if isinstance(self.initial_saturation,float):
+        if isinstance(self.initial_saturation, float):
             self.checks[4] = True
         else:
             warning.append('Initial saturation must be float! Input provided was: ' + str(self.initial_saturation))
@@ -82,27 +99,26 @@ class CMFGround(GHComponent):
             else:
                 print(warning)
 
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, str(warning))
+            self.add_warning(warning)
         else:
             self.checks = True
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, layers, retention_curve, surface_properties, initial_saturation, face_indices):
+    def run_checks(self, layers, retention_curve, surface_properties, initial_saturation, face_indices):
 
         # Gather data
-        self.layers = layers
-        self.retention_curve = retention_curve
-        self.surface_properties = surface_properties
-        self.initial_saturation = initial_saturation
-        self.face_indices = face_indices
+        self.layers = self.add_default_value(layers, 0)
+        self.retention_curve = self.add_default_value(retention_curve, 1)
+        self.surface_properties = self.add_default_value(surface_properties, 2)
+        self.initial_saturation = self.add_default_value(initial_saturation, 3)
+        self.face_indices = self.add_default_value(face_indices, 4)
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def run(self):
         if self.checks:
@@ -394,10 +410,10 @@ class CMFSurfaceProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property):
+    def run_checks(self, property_):
 
         # Gather data
-        self.property_index = self.add_default_value(property, 0)
+        self.property_index = self.add_default_value(int(property_), 0)
 
         # Run checks
         self.check_inputs()
@@ -489,8 +505,8 @@ class CMFSyntheticTree(GHComponent):
     def run_checks(self, face_index, tree_type, height):
 
         # Gather data
-        self.face_index = self.add_default_value(face_index, 0)
-        self.tree_type = self.add_default_value(tree_type, 1)
+        self.face_index = self.add_default_value(int(face_index), 0)
+        self.tree_type = self.add_default_value(int(tree_type), 1)
         self.height = self.add_default_value(height, 2)
 
         # Run checks
@@ -507,11 +523,14 @@ class CMFSyntheticTree(GHComponent):
         self.property = collections.OrderedDict([('name', 'Synthetic Deciduous'),
                                                  ('height', self.height),
                                                  ('lai', float(self.data[0][2]) * self.height + float(self.data[1][2])),
-                                                 ('albedo', float(self.data[0][3]) * self.height + float(self.data[1][3])),
+                                                 ('albedo', float(self.data[0][3]) *
+                                                            self.height + float(self.data[1][3])),
                                                  ('canopy_closure', float(self.data[2][4])),
                                                  ('canopy_par', float(self.data[2][5])),
-                                                 ('canopy_capacity', float(self.data[0][6]) * self.height + float(self.data[1][6])),
-                                                 ('stomatal_res', float(self.data[0][7]) * self.height + float(self.data[1][7])),
+                                                 ('canopy_capacity', float(self.data[0][6]) *
+                                                                     self.height + float(self.data[1][6])),
+                                                 ('stomatal_res', float(self.data[0][7]) *
+                                                                  self.height + float(self.data[1][7])),
                                                  ('root_depth', float(self.data[2][8])),
                                                  ('root_fraction', float(self.data[2][9]))
                                                  ])
@@ -573,7 +592,7 @@ class CMFRetentionCurve(GHComponent):
     def run_checks(self, soil_index):
 
         # Gather data
-        self.soil_index = self.add_default_value(soil_index, 0)
+        self.soil_index = self.add_default_value(int(soil_index), 0)
 
         # Run checks
         self.check_inputs()
@@ -648,9 +667,9 @@ class CMFSolve(GHComponent):
                         'access': 'item',
                         'default_value': None},
                     10: {'name': 'Write',
-                        'description': 'Boolean to write files',
-                        'access': 'item',
-                        'default_value': False},
+                         'description': 'Boolean to write files',
+                         'access': 'item',
+                         'default_value': False},
                     11: {'name': 'Overwrite',
                          'description': 'If True excising case will be overwritten. Default is set to True',
                          'access': 'item',
@@ -659,7 +678,7 @@ class CMFSolve(GHComponent):
                          'description': 'Boolean to run analysis'
                          '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
                          'access': 'item',
-                         'default_value': False},}
+                         'default_value': False}}
 
         def outputs():
             return {0: {'name': 'readMe!',
@@ -703,8 +722,8 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh, ground, weather, trees, stream, boundary_condition, folder, analysis_length, name, write, overwrite, output,
-                   run):
+    def run_checks(self, mesh, ground, weather, trees, stream, boundary_condition, folder, analysis_length, name, write,
+                   overwrite, output, run):
 
         # Gather data
         self.mesh = self.add_default_value(mesh, 0)
@@ -862,9 +881,7 @@ class CMFSolve(GHComponent):
             return result_path
         else:
             warning = 'Could not find result file. Unknown error occurred'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
     def run(self, doc):
         if self.checks and self.run:
