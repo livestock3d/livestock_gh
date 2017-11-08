@@ -838,6 +838,17 @@ class CMFSolve(GHComponent):
         # Process stream
         # Add later
 
+        # Process solver info
+        solver_root = ET.Element('solver')
+        analysis_length = ET.SubElement(solver_root, 'analysis_length')
+        analysis_length.text = self.analysis_length
+
+        solver_tree = ET.ElementTree(solver_root)
+        solver_file = 'solver.xml'
+        solver_tree.write(self.case_path + '/' + solver_file, xml_declaration=True)
+
+        files_written.append(solver_file)
+
         # Clean SSH folder
         ssh.clean_ssh_folder()
 
