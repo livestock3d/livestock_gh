@@ -2,51 +2,86 @@ __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
 __version__ = "0.0.1"
 
-#----------------------------------------------------------------------------------------------------------------------#
+# -------------------------------------------------------------------------------------------------------------------- #
 # Imports
-import sys
-sys.path.insert(0, r'C:\livestock\python\classes')
-from clr import AddReference
-AddReference('Grasshopper')
-import Grasshopper.Kernel as gh
-import rhinoscriptsyntax as rs
-import os
 
-#----------------------------------------------------------------------------------------------------------------------#
-# Classes
+# Module imports
+
+# Livestock imports
+
+# Grasshopper imports
+import Grasshopper.Kernel as gh
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Grasshopper Component Class
 
 
 class GHComponent:
 
-    def __init__(self):
+    def __init__(self, ghenv):
         self.outputs = None
         self.inputs = None
         self.description = None
+        self.gh_env = ghenv
 
-    def config_component(self, ghenv, component_number):
+    # COMPONENT STUFF
+    def config_component(self, component_number):
+        """
+        Sets up the component
+        :param component_number: integer with the component number
+        """
+
+        # Load component data
         comp_data = component_data(component_number)
 
         # Generate component data
-        ghenv.Component.Name = comp_data[0]
-        ghenv.Component.NickName = comp_data[1]
-        ghenv.Component.Message = comp_data[2]
-        ghenv.Component.IconDisplayMode = ghenv.Component.IconDisplayMode.application
-        ghenv.Component.Category = comp_data[3]
-        ghenv.Component.SubCategory = comp_data[4]
-        ghenv.Component.Description = self.description
+        self.gh_env.Component.Name = comp_data[0]
+        self.gh_env.Component.NickName = comp_data[1]
+        self.gh_env.Component.Message = comp_data[2]
+        self.gh_env.Component.IconDisplayMode = self.gh_env.Component.IconDisplayMode.application
+        self.gh_env.Component.Category = comp_data[3]
+        self.gh_env.Component.SubCategory = comp_data[4]
+        self.gh_env.Component.Description = self.description
 
         # Generate outputs:
-        for output in range(len(self.outputs)):
-            ghenv.Component.Params.Output[output].NickName = self.outputs[output][0]
-            ghenv.Component.Params.Output[output].Name = self.outputs[output][0]
-            ghenv.Component.Params.Output[output].Description = self.outputs[output][1]
+        for output_ in range(len(self.outputs)):
+            self.add_output_parameter(output_)
 
         # Generate inputs:
-        for input in range(len(self.inputs)):
-            ghenv.Component.Params.Input[input].NickName = self.inputs[input][0]
-            ghenv.Component.Params.Input[input].Name = self.inputs[input][0]
-            ghenv.Component.Params.Input[input].Description = self.inputs[input][1]
+        for input_ in range(len(self.inputs)):
+            self.add_input_parameter(input_)
 
+    def add_warning(self, warning):
+        print(warning)
+        w = gh.GH_RuntimeMessageLevel.Warning
+        self.gh_env.Component.AddRuntimeMessage(w, warning)
+
+    def add_output_parameter(self, output_):
+        self.gh_env.Component.Params.Output[output_].NickName = self.outputs[output_]['name']
+        self.gh_env.Component.Params.Output[output_].Name = self.outputs[output_]['name']
+        self.gh_env.Component.Params.Output[output_].Description = self.outputs[output_]['description']
+
+    def add_input_parameter(self, input_):
+
+        # Set information
+        self.gh_env.Component.Params.Input[input_].NickName = self.inputs[input_]['name']
+        self.gh_env.Component.Params.Input[input_].Name = self.inputs[input_]['name']
+        self.gh_env.Component.Params.Input[input_].Description = self.inputs[input_]['description']
+
+        # Set type access
+        if self.inputs[input_]['access'] == 'item':
+            self.gh_env.Component.Params.Input[input_].Access = gh.GH_ParamAccess.item
+        elif self.inputs[input_]['access'] == 'list':
+            self.gh_env.Component.Params.Input[input_].Access = gh.GH_ParamAccess.list
+        elif self.inputs[input_]['access'] == 'tree':
+            self.gh_env.Component.Params.Input[input_].Access = gh.GH_ParamAccess.tree
+
+    def add_default_value(self, value, param_number):
+
+        if value == None:
+            return self.inputs[param_number]['default_value']
+        else:
+            return value
 
 def component_data(n):
     """Function that reads the grasshopper component list and returns the component data"""
@@ -64,5 +99,5 @@ def component_data(n):
 
 class GroundTemperature(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
