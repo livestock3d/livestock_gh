@@ -603,36 +603,80 @@ class CMFRetentionCurve(GHComponent):
 
 class CMFSolve(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['Mesh', 'Topography as a mesh'],
-                    1: ['Ground', 'Input from Livestock CMF_Ground'],
-                    2: ['Weather', 'Input from Livestock CMF_Weather'],
-                    3: ['Trees', 'Input from Livestock CMF_Tree'],
-                    4: ['Stream', 'Input from Livestock CMF_Stream'],
-                    5: ['AnalysisLength', 'Analysis length in hours'],
-                    6: ['Folder', 'Path to folder. Default is Desktop'],
-                    7: ['CaseName', 'Case name as string. Default is CMF'],
-                    8: ['Output', 'Connect Livestock Outputs'],
-                    9: ['Write', 'Boolean to write files'],
-                    10: ['Overwrite', 'If True excising case will be overwritten. Default is set to True'],
-                    11: ['Run', 'Boolean to run analysis'
-                                '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH']}
+            return {0: {'name': 'Mesh',
+                        'description': 'Topography as a mesh',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'Ground',
+                        'description': 'Input from Livestock CMF_Ground',
+                        'access': 'list',
+                        'default_value': None},
+                    2: {'name': 'Weather',
+                        'description': 'Input from Livestock CMF_Weather',
+                        'access': 'item',
+                        'default_value': None},
+                    3: {'name': 'Trees',
+                        'description': 'Input from Livestock CMF_Tree',
+                        'access': 'list',
+                        'default_value': None},
+                    4: {'name': 'Stream',
+                        'description': 'Input from Livestock CMF_Stream',
+                        'access': 'item',
+                        'default_value': None},
+                    5: {'name': 'BoundaryCondition',
+                        'description': 'Input from Livestock CMF_BoundaryCondition',
+                        'access': 'list',
+                        'default_value': None},
+                    6: {'name': 'AnalysisLength',
+                        'description': 'Analysis length in hours - Default is 24 hours',
+                        'access': 'item',
+                        'default_value': 24},
+                    7: {'name': 'Folder',
+                        'description': 'Path to folder. Default is Desktop',
+                        'access': 'item',
+                        'default_value': r'%systemdrive%\users\%username%\Desktop'},
+                    8: {'name': 'CaseName',
+                        'description': 'Case name as string. Default is CMF',
+                        'access': 'item',
+                        'default_value': 'CMF'},
+                    9: {'name': 'Output',
+                        'description': 'Connect Livestock Outputs',
+                        'access': 'item',
+                        'default_value': None},
+                    10: {'name': 'Write',
+                        'description': 'Boolean to write files',
+                        'access': 'item',
+                        'default_value': False},
+                    11: {'name': 'Overwrite',
+                         'description': 'If True excising case will be overwritten. Default is set to True',
+                         'access': 'item',
+                         'default_value': True},
+                    12: {'name': 'Run',
+                         'description': 'Boolean to run analysis'
+                         '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
+                         'access': 'item',
+                         'default_value': False},}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['ResultPath', 'Path to result files']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'ResultPath',
+                        'description': 'Path to result files'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 14
+        self.description = 'Solves CMF Case'
         self.mesh = None
         self.ground = None
         self.weather = None
         self.trees = None
         self.stream = None
+        self.boundary_condition = None
         self.analysis_length = None
         self.folder = None
         self.case_name = None
@@ -647,40 +691,39 @@ class CMFSolve(GHComponent):
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if self.ground:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, mesh, ground, weather, output, trees=None, stream=None, analysis_length=24,
-                   folder=r'%systemdrive%\users\%username%\Desktop', name='CMF', write=False, overwrite=True, run=False):
+    def run_checks(self, mesh, ground, weather, trees, stream, boundary_condition, folder, analysis_length, name, write, overwrite, output,
+                   run):
 
         # Gather data
-        self.mesh = mesh
-        self.ground = ground
-        self.weather = weather
-        self.trees = trees
-        self.stream = stream
-        self.folder = folder
-        self.analysis_length = analysis_length
-        self.case_name = name
-        self.write_case = write
-        self.overwrite = overwrite
-        self.output_config = output
-        self.run_case = run
+        self.mesh = self.add_default_value(mesh, 0)
+        self.ground = self.add_default_value(ground, 1)
+        self.weather = self.add_default_value(weather, 2)
+        self.trees = self.add_default_value(trees, 3)
+        self.stream = self.add_default_value(stream, 4)
+        self.boundary_condition = self.add_default_value(boundary_condition, 5)
+        self.folder = self.add_default_value(folder, 6)
+        self.analysis_length = self.add_default_value(analysis_length, 7)
+        self.case_name = self.add_default_value(name, 8)
+        self.write_case = self.add_default_value(write, 9)
+        self.overwrite = self.add_default_value(overwrite, 10)
+        self.output_config = self.add_default_value(output, 11)
+        self.run_case = self.add_default_value(run, 12)
         self.update_case_path()
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def update_case_path(self):
         self.case_path = self.folder + '\\' + self.case_name
@@ -809,7 +852,7 @@ class CMFSolve(GHComponent):
         thread.wait()
         thread.kill()
 
-    def check_results(self, ghenv):
+    def check_results(self):
         ssh_result = ssh.ssh_path + '/results.xml'
         result_path = self.case_path + '/results.xml'
 
@@ -823,11 +866,11 @@ class CMFSolve(GHComponent):
             w = gh.GH_RuntimeMessageLevel.Warning
             ghenv.Component.AddRuntimeMessage(w, warning)
 
-    def run(self, ghenv, doc):
+    def run(self, doc):
         if self.checks and self.run:
             self.write(doc)
             self.do_case()
-            self.results = self.check_results(ghenv)
+            self.results = self.check_results()
 
         elif self.checks and self.write_case:
             self.write(doc)
