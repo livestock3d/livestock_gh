@@ -397,7 +397,7 @@ class CMFSurfaceProperties(GHComponent):
     def run_checks(self, property):
 
         # Gather data
-        self.property_index = property
+        self.property_index = self.add_default_value(property, 0)
 
         # Run checks
         self.check_inputs()
@@ -432,27 +432,41 @@ class CMFSurfaceProperties(GHComponent):
 
 class CMFSyntheticTree(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['FaceIndex', 'Mesh face index where tree is placed'],
-                    1: ['TreeType', 'Tree types: 0 - Deciduous, 1 - Coniferous, 2 - Shrubs'],
-                    2: ['Height', 'Height of tree in meters']}
+            return {0: {'name': 'FaceIndex',
+                        'description': 'Mesh face index where tree is placed',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'TreeType',
+                        'description': 'Tree types: 0 - Deciduous, 1 - Coniferous, 2 - Shrubs. Default is deciduous',
+                        'access': 'item',
+                        'default_value': 0},
+                    2: {'name': 'Height',
+                        'description': 'Height of tree in meters. Default is set to 10m',
+                        'access': 'item',
+                        'default_value': 10}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Units', 'Shows the units of the tree values'],
-                    2: ['TreeValues', 'Chosen tree properties values'],
-                    3: ['TreeProperties', 'Livestock tree properties data']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Units',
+                        'description': 'Shows the units of the tree values'},
+                    2: {'name': 'TreeValues',
+                        'description': 'Chosen tree properties values'},
+                    3: {'name': 'TreeProperties',
+                        'description': 'Livestock tree properties data'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.component_number = 13
+        self.component_number = 18
+        self.description = 'Generates a synthetic tree'
         self.data = None
         self.units = None
         self.data_path = [r'C:\livestock\data\syntheticDeciduous.csv', r'C:\livestock\data\syntheticConiferous.csv',
-                         r'C:\livestock\data\syntheticShrubs.csv']
+                          r'C:\livestock\data\syntheticShrubs.csv']
         self.tree_type = None
         self.height = None
         self.property = None
@@ -460,29 +474,27 @@ class CMFSyntheticTree(GHComponent):
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if self.height:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, face_index, tree_type, height):
+    def run_checks(self, face_index, tree_type, height):
 
         # Gather data
-        self.face_index = face_index
-        self.tree_type = tree_type
-        self.height = height
+        self.face_index = self.add_default_value(face_index, 0)
+        self.tree_type = self.add_default_value(tree_type, 1)
+        self.height = self.add_default_value(height, 2)
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def load_csv(self):
 
