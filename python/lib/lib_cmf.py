@@ -496,7 +496,7 @@ class CMFModel:
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
 
                 if out_key == 'surface_water_volume':
-                    volume = cmf_project.cells[cell_index].get_surfacewater().get_volume()
+                    volume = cmf_project.cells[cell_index].get_surfacewater().volume
                     self.results[cell_name][out_key].append(volume)
 
                 if out_key == 'surface_water_flux':
