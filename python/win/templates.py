@@ -28,6 +28,9 @@ def pick_template(template_name, path):
     elif template_name == 'cmf':
         cmf_template(path)
 
+    elif template_name == 'cmf_results':
+        process_cmf_results(path)
+
     else:
         raise NameError('Could not find template: '+str(template_name))
 
@@ -172,3 +175,23 @@ def cmf_template(path):
     file.write("print('Finished with template')\n")
     file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")
+
+
+def process_cmf_results(path):
+    file = open(path + '\\cmf_results_template.py', 'w')
+    file.write("print('Running template process_cmf_results.py')\n")
+
+    file.write("# Imports\n")
+    file.write("import sys\n")
+    file.write("sys.path.insert(0, 'C:\livestock\python')\n")
+    file.write("import win.misc as win_misc\n")
+
+    file.write("# Run function\n")
+    file.write("win_misc.cmf_results(r'" + path + "')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+
+    file.close()
+
+    return True

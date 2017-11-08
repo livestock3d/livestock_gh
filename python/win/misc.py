@@ -36,44 +36,38 @@ def cmf_results(path):
     lookup_dict = eval(line)
 
     for lookup_key in lookup_dict.keys():
-        if lookup_key == 'cell':
+        if lookup_key.startswith('cell'):
             cell_results(lookup_dict[lookup_key], result_path, path)
-        elif lookup_key == 'layer':
+        elif lookup_key.startswith('layer'):
             layer_results(lookup_dict[lookup_key], result_path, path)
         else:
             pass
 
 
-def cell_results(lookup_list, result_file, folder):
+def cell_results(looking_for, result_file, folder):
     """Processes cell results"""
 
     # Initialize
     result_tree = ET.tostring(ET.parse(result_file).getroot())
     results = xmltodict.parse(result_tree)
-    results_to_save = {}
-
-    for result in lookup_list:
-        results_to_save[str(result)] = []
+    results_to_save = []
 
     # Find results
     for cell in results['result'].keys():
 
         for result in results['result'][cell]:
-
-            if result == 'layer':
+            if result.startswith('layer'):
                 pass
 
             else:
-                for looking_for in lookup_list:
-                    if result == looking_for:
-                        results_to_save[str(looking_for)].append(result)
-                    else:
-                        pass
+                if result == looking_for:
+                    results_to_save.append(results['result'][cell][str(result)][1:-1])
+                else:
+                    pass
 
     # Write files
-    for result_name in results_to_save.keys():
-        file_path = folder + '/' + result_name + '.csv'
-        ls_csv.write_csv(file_path, results_to_save[result_name], dimension=2)
+    file_path = folder + '/' + looking_for + '.csv'
+    ls_csv.write_csv(file_path, results_to_save, dimension=1)
 
 
 def layer_results(lookup_list, result_file, folder):
@@ -84,5 +78,3 @@ def layer_results(lookup_list, result_file, folder):
 
     for cell in results['results'].keys():
         pass
-
-#cmf_results(r'C:\Users\Christian\Desktop\test_cmf\test_02')
