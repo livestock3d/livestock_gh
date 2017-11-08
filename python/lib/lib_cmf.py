@@ -23,7 +23,7 @@ import pymesh as pm
 
 class CMFModel:
 
-    def __init__(self, folder, analysis_length=6):
+    def __init__(self, folder):
         self.folder = folder
         self.mesh_path = None
         self.weather_dict = {}
@@ -31,7 +31,7 @@ class CMFModel:
         self.ground_dict = {}
         self.rain_station = None
         self.meteo = None
-        self.analysis_length = analysis_length
+        self.analysis_length = None
         self.outputs = None
         self.solved = False
         self.results = {}
@@ -132,6 +132,21 @@ class CMFModel:
 
             return output_dict
 
+        def load_solver_info(folder, files):
+            solver_path = None
+
+            for f in files:
+                if f.startswith('solver'):
+                    solver_path = folder + '/' + f
+                else:
+                    pass
+
+            solver_tree = ET.tostring(ET.parse(solver_path).getroot())
+            solver = xmltodict.parse(solver_tree)
+            analysis_length = int(solver['solver']['analysis_length'])
+
+            return analysis_length
+
         cmf_files = os.listdir(self.folder)
 
         # Load files and assign data to variables
@@ -140,6 +155,7 @@ class CMFModel:
         self.ground_dict = load_ground(self.folder, cmf_files)
         self.mesh_path = load_mesh(self.folder, cmf_files)
         self.outputs = load_outputs(self.folder, cmf_files)
+        self.analysis_length = load_solver_info(self.folder, cmf_files)
 
         return True
 
@@ -479,8 +495,18 @@ class CMFModel:
                 if out_key == 'evaporation':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
 
-                if out_key == 'surface_water':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_surfacewater())
+                if out_key == 'surface_water_volume':
+                    volume = cmf_project.cells[cell_index].get_surfacewater().get_volume()
+                    self.results[cell_name][out_key].append(volume)
+
+                if out_key == 'surface_water_flux':
+                    water = cmf_project.cells[cell_index].get_surfacewater()
+
+                    flux_and_node = []
+                    for flux, node in water.fluxes(time):
+                        flux_and_node.append((flux, node))
+
+                    self.results[cell_name][out_key].append(flux_and_node)
 
                 if out_key == 'heat_flux':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
@@ -502,9 +528,14 @@ class CMFModel:
                         self.results[cell_name][layer_name][out_key].append(
                             cmf_project.cells[cell_index].layers[layer_index].theta)
 
-                    if out_key == 'three_d_flux':
-                        self.results[cell_name][layer_name][out_key].append(
-                            cmf_project.cells[cell_index].layers[layer_index].get_3d_flux(time))
+                    if out_key == 'volumetric_flux':
+                        layer = cmf_project.cells[cell_index].layers[layer_index]
+
+                        flux_and_node = []
+                        for flux, node in layer.fluxes(time):
+                            flux_and_node.append((flux, node))
+
+                        self.results[cell_name][layer_name][out_key].append(flux_and_node)
 
                     if out_key == 'volume':
                         self.results[cell_name][layer_name][out_key].append(
