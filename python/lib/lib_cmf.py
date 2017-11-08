@@ -551,11 +551,19 @@ class CMFModel:
 
     def print_solver_time(self, solver_time, start_time, last_time, step):
         now = datetime.now()
-        solver_timer = 'Solver Time: '+ str(solver_time)
-        elapsed_time = 'Elapsed Time: ' + str(now - start_time)
-        current_time_step = 'Current Time Step: ' + str(now - last_time)
-        estimated_time_left = 'Estimated Time Left: '
-        print(solver_timer, '\t', elapsed_time, '\t', current_time_step, '\t', estimated_time_left)
+        elapsed_time = now - start_time
+
+        # Print statements:
+
+        solver_timer_print = 'Solver Time: '+ str(solver_time)
+        elapsed_time_print = 'Elapsed Time: ' + str(elapsed_time)
+        current_time_step_print = 'Current Time Step: ' + str(now - last_time)
+        estimated_time_left_print = 'Estimated Time Left: '
+        print(solver_timer_print, '\t',
+              elapsed_time_print, '\t',
+              current_time_step_print, '\t',
+              estimated_time_left_print)
+
         return elapsed_time
 
     def solve(self, cmf_project, tolerance=1e-8):
