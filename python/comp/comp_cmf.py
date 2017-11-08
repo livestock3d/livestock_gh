@@ -48,6 +48,7 @@ class CMFGround(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 11
+        self.description = 'Generates CMF ground'
         self.face_indices = None
         self.layers = None
         self.retention_curve = None
@@ -350,21 +351,29 @@ class CMFStream(GHComponent):
 
 class CMFSurfaceProperties(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['Property', '0-1 grasses. 2-6 soils']}
+            return {0: {'name': 'Property',
+                        'description': '0-1 grasses. 2-6 soils',
+                        'access': 'item',
+                        'default_value': 0}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Units', 'Shows the units of the surface values'],
-                    2: ['SurfaceValues', 'Chosen surface properties values'],
-                    3: ['SurfaceProperties', 'Livestock surface properties data']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Units',
+                        'description': 'Shows the units of the surface values'},
+                    2: {'name': 'SurfaceValues',
+                        'description': 'Chosen surface properties values'},
+                    3: {'name': 'SurfaceProperties',
+                        'description': 'Livestock surface properties data'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 13
+        self.description = 'Generates CMF Surface Properties'
         self.data = None
         self.units = None
         self.data_path = r'C:\livestock\data\surfaceData.csv'
@@ -373,27 +382,25 @@ class CMFSurfaceProperties(GHComponent):
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if self.property_index:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, property):
+    def run_checks(self, property):
 
         # Gather data
         self.property_index = property
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def load_csv(self):
 
