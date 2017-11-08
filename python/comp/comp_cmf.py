@@ -732,7 +732,7 @@ class CMFSolve(GHComponent):
         self.trees = self.add_default_value(trees, 3)
         self.stream = self.add_default_value(stream, 4)
         self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
-        self.analysis_length = self.add_default_value(analysis_length, 6)
+        self.analysis_length = int(self.add_default_value(analysis_length, 6))
         self.folder = self.add_default_value(folder, 7)
         self.case_name = self.add_default_value(name, 8)
         self.output_config = self.add_default_value(outputs, 9)
