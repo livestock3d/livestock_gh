@@ -37,7 +37,7 @@ class CMFGround(GHComponent):
         def inputs():
             return {0: {'name': 'Layers',
                         'description': 'Soil layers to add to the mesh in m',
-                        'access': 'item',
+                        'access': 'list',
                         'default_value': None},
                     1: {'name': 'RetentionCurve',
                         'description': 'Retention curve',
