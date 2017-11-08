@@ -19,10 +19,9 @@ import gh.geometry as gh_geo
 import lib.csv as csv
 from comp.component import GHComponent
 import gh.misc as gh_misc
+import gh.xmltodict as ls_x2d
 
 # Grasshopper imports
-from clr import AddReference
-AddReference('Grasshopper')
 import Grasshopper.Kernel as gh
 import rhinoscriptsyntax as rs
 
@@ -117,26 +116,53 @@ class CMFGround(GHComponent):
 
 class CMFWeather(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['Temperature', 'Temperature in C - List of floats'],
-                    1: ['WindSpeed', 'Wind speed in m/s - List of floats'],
-                    2: ['RelativeHumidity', 'Relative humidity in % - List of floats'],
-                    3: ['CloudCover', 'Cloud cover, unitless between 0 and 1 - list of floats'],
-                    4: ['GlobalRadiation', 'Global Radiation in MJ/(m^2*h) - list of floats'],
-                    5: ['Rain', 'Horizontal precipitation in mm/h - list of floats'],
-                    6: ['GroundTemperature', 'Ground temperature in C - list of floats'],
-                    7: ['Location', 'A Ladybug Tools Location']}
+            return {0: {'name': 'Temperature',
+                        'description': 'Temperature in C - List of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    1: {'name': 'WindSpeed',
+                        'description': 'Wind speed in m/s - List of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    2: {'name': 'RelativeHumidity',
+                        'description': 'Relative humidity in % - List of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    3: {'name': 'CloudCover',
+                        'description': 'Cloud cover, unitless between 0 and 1 - list of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    4: {'name': 'GlobalRadiation',
+                        'description': 'Global Radiation in MJ/(m^2*h) - list of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    5: {'name': 'Rain',
+                        'description': 'Horizontal precipitation in mm/h - list of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    6: {'name': 'GroundTemperature',
+                        'description': 'Ground temperature in C - list of floats',
+                        'access': 'list',
+                        'default_value': None},
+                    7: {'name': 'Location',
+                        'description': 'A Ladybug Tools Location',
+                        'access': 'list',
+                        'default_value': None}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Weather', 'Livestock Weather Data Class']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Weather',
+                        'description': 'Livestock Weather Data Class'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 12
+        self.description = 'Generates CMF weather'
         self.temp = None
         self.wind = None
         self.rel_hum = None
@@ -148,21 +174,19 @@ class CMFWeather(GHComponent):
         self.checks = [False, False, False, False, False, False, False, False]
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if self.temp:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location):
+    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location):
 
         # Gather data
         self.temp = temp
@@ -175,7 +199,7 @@ class CMFWeather(GHComponent):
         self.location = location
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def convert_cloud_cover(self):
 
@@ -563,7 +587,7 @@ class CMFSolve(GHComponent):
                     2: ['Weather', 'Input from Livestock CMF_Weather'],
                     3: ['Trees', 'Input from Livestock CMF_Tree'],
                     4: ['Stream', 'Input from Livestock CMF_Stream'],
-                    5: ['AnalysLength', 'Analysis length in hours'],
+                    5: ['AnalysisLength', 'Analysis length in hours'],
                     6: ['Folder', 'Path to folder. Default is Desktop'],
                     7: ['CaseName', 'Case name as string. Default is CMF'],
                     8: ['Output', 'Connect Livestock Outputs'],
@@ -612,7 +636,7 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(ghenv, self.component_number)
 
-    def run_checks(self, ghenv, mesh, ground, weather, output, trees=None, stream=None,
+    def run_checks(self, ghenv, mesh, ground, weather, output, trees=None, stream=None, analysis_length=24,
                    folder=r'%systemdrive%\users\%username%\Desktop', name='CMF', write=False, overwrite=True, run=False):
 
         # Gather data
@@ -622,6 +646,7 @@ class CMFSolve(GHComponent):
         self.trees = trees
         self.stream = stream
         self.folder = folder
+        self.analysis_length = analysis_length
         self.case_name = name
         self.write_case = write
         self.overwrite = overwrite
@@ -774,41 +799,52 @@ class CMFSolve(GHComponent):
             ghenv.Component.AddRuntimeMessage(w, warning)
 
     def run(self, ghenv, doc):
-        if self.checks and self.write_case:
-            self.write(doc)
-
-        elif self.checks and self.run:
+        if self.checks and self.run:
             self.write(doc)
             self.do_case()
             self.results = self.check_results(ghenv)
+
+        elif self.checks and self.write_case:
+            self.write(doc)
 
 
 class CMFResults(GHComponent):
 
     def __init__(self):
         GHComponent.__init__(self)
+
         def inputs():
-            return {0: ['Property', '0-1 grasses. 2-6 soils']}
+            return {0: ['ResultFilePath', 'Path to result file. Accepts output from Livestock Solve'],
+                    1: ['FetchResult', 'Choose which result should be loaded:'
+                                       '\n0 - Evapotranspiration'
+                                       '\n1 - Surface water volume'
+                                       '\n2 - Surface water flux'
+                                       '\n3 - Heat flux'
+                                       '\n4 - Aerodynamic resistance'
+                                       '\n5 - Soil layer water flux'
+                                       '\n6 - Soil layer potential'
+                                       '\n7 - Soil layer theta'
+                                       '\n8 - Soil layer volume'
+                                       '\n9 - Soil layer wetness'
+                        ]}
 
         def outputs():
             return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Units', 'Shows the units of the surface values'],
-                    2: ['SurfaceValues', 'Chosen surface properties values'],
-                    3: ['SurfaceProperties', 'Livestock surface properties data']}
+                    1: ['Units', 'Shows the units of the results'],
+                    2: ['Values', ''],
+                    3: ['', '']}
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.component_number = 13
-        self.data = None
-        self.units = None
-        self.data_path = r'C:\livestock\data\surfaceData.csv'
-        self.property_index = None
-        self.property = None
+        self.component_number = 17
+        self.unit = None
+        self.path = None
+        self.fetch_result = None
         self.checks = False
         self.results = None
 
     def check_inputs(self, ghenv):
-        if self.property_index:
+        if self.path:
             self.checks = True
         else:
             warning = 'Temperature should be a float'
@@ -821,62 +857,113 @@ class CMFResults(GHComponent):
         # Generate Component
         self.config_component(ghenv, self.component_number)
 
-    def run_checks(self, ghenv, property):
+    def run_checks(self, ghenv, path):
 
         # Gather data
-        self.property_index = property
+        self.path = path
 
         # Run checks
         self.check_inputs(ghenv)
 
     def load_xml(self):
 
-        load = csv.read_csv(self.data_path)
-        self.units = load[0]
-        self.data = load[1]
+        result_tree = ET.tostring(ET.parse(self.path).getroot())
+        results = ls_x2d.parse(result_tree)
 
-    def pick_property(self):
-        self.load_csv()
-        data_list = self.data[self.property_index]
-        self.property = collections.OrderedDict([('name', data_list[0]),
-                                                 ('height', data_list[1]),
-                                                 ('lai', data_list[2]),
-                                                 ('albedo', data_list[3]),
-                                                 ('canopy_closure', data_list[4]),
-                                                 ('canopy_par', data_list[5]),
-                                                 ('canopy_capacity', data_list[6]),
-                                                 ('stomatal_res', data_list[7]),
-                                                 ('root_depth', data_list[8]),
-                                                 ('root_fraction', data_list[9])
-                                                 ])
+        return results
+
+    def set_units(self):
+
+        if self.fetch_result == 0:
+            self.unit = 'm3'
+
+        elif self.fetch_result == 1:
+            self.unit = 'm3'
+
+        elif self.fetch_result == 2:
+            self.unit = 'm3/(m2s)'
+
+        elif self.fetch_result == 3:
+            self.unit = 'W/m2'
+
+        elif self.fetch_result == 4:
+            self.unit = 's/m'
+
+        elif self.fetch_result == 5:
+            self.unit = 'm3/(m2s)'
+
+        elif self.fetch_result == 6:
+            self.unit = 'm'
+
+        elif self.fetch_result == 7:
+            self.unit = 'm3'
+
+        elif self.fetch_result == 8:
+            self.unit = 'm3'
+
+        elif self.fetch_result == 9:
+            self.unit = '-'
 
     def run(self):
         if self.checks:
-            self.pick_property()
+            self.set_units()
+            results = self.load_xml()
 
-            self.results = gh_misc.PassClass(self.property, 'SurfaceProperty')
+            self.results = results
 
 
 class CMFOutputs(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['Evapotranspiration', 'Default is set to True'],
-                    1: ['SurfaceWater', 'Default is set to False'],
-                    2: ['HeatFlux', 'Surface heat flux - Default is set to False'],
-                    3: ['AerodynamicResistance', 'Default is set to False'],
-                    4: ['3DFlux', 'Sum of all flux vectors - Default is set to False'],
-                    5: ['Potential', 'Total potential (Psi_tot = Psi_M + Psi_G - Default is set to False'],
-                    6: ['Theta', 'Volumetric water content of the layer - Default is set to False'],
-                    7: ['Volume', 'Volume of water in the layer - Default is set to True'],
-                    8: ['Wetness', 'Wetness of the soil (V_volume/V_pores) - Default is set to False'],
+            return {0: {'name': 'Evapotranspiration',
+                        'description': 'Cell evaporation - default is set to True',
+                        'access': 'item',
+                        'default_value': True},
+                    1: {'name': 'SurfaceWater',
+                        'description': 'Cell surface water. Collects both volumetric flux and volume'
+                                       ' - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    2: {'name': 'HeatFlux',
+                        'description': 'Cell surface heat flux - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    3: {'name': 'AerodynamicResistance',
+                        'description': 'Cell aerodynamic resistance - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    4: {'name': 'VolumetricFlux',
+                        'description': 'Soil layer volumetric flux vectors - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    5: {'name': 'Potential',
+                        'description': 'Soil layer total potential (Psi_tot = Psi_M + Psi_G - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    6: {'name': 'Theta',
+                        'description': 'Soil layer volumetric water content of the layer - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    7: {'name': 'Volume',
+                        'description': 'Soil layer volume of water in the layer - default is set to True',
+                        'access': 'item',
+                        'default_value': True},
+                    8: {'name': 'Wetness',
+                        'description': 'Soil layer wetness of the soil (V_volume/V_pores) - default is set to False',
+                        'access': 'item',
+                        'default_value': False}
                     }
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Outputs', 'Livestock Output Data']
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'ChosenOutputs',
+                        'description': 'Shows the chosen outputs'},
+                    2: {'name': 'Outputs',
+                        'description': 'Livestock Output Data'}
                     }
 
         self.inputs = inputs()
@@ -892,41 +979,33 @@ class CMFOutputs(GHComponent):
         self.volume = None
         self.wetness = None
         self.checks = False
+        self.output_dict = None
         self.results = None
 
-    def check_inputs(self, ghenv):
-        if self.evapo_trans:
-            self.checks = True
-        else:
-            warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+    def check_inputs(self):
+        self.checks = True
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv):
-
-        inputs = []
-        for i in ghenv.Component.Params.Input:
-            inputs.append(i)
+    def run_checks(self, evapo_trans, surface_water, heat_flux, aero_res, three_d_flux, potential,
+                   theta, volume, wetness):
 
         # Gather data
-        self.evapo_trans = inputs[0]
-        self.surface_water = inputs[1]
-        self.heat_flux = inputs[2]
-        self.aero_res = inputs[3]
-        self.three_d_flux = inputs[4]
-        self.potential = inputs[5]
-        self.theta = inputs[6]
-        self.volume = inputs[7]
-        self.wetness = inputs[8]
+        self.evapo_trans = self.add_default_value(evapo_trans, 0)
+        self.surface_water = self.add_default_value(surface_water, 1)
+        self.heat_flux = self.add_default_value(heat_flux, 2)
+        self.aero_res = self.add_default_value(aero_res, 3)
+        self.three_d_flux = self.add_default_value(three_d_flux, 4)
+        self.potential = self.add_default_value(potential, 5)
+        self.theta = self.add_default_value(theta, 6)
+        self.volume = self.add_default_value(volume, 7)
+        self.wetness = self.add_default_value(wetness, 8)
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def set_outputs(self):
 
@@ -937,7 +1016,8 @@ class CMFOutputs(GHComponent):
             output_dict['cell'].append('transpiration')
 
         if self.surface_water:
-            output_dict['cell'].append('surface_water')
+            output_dict['cell'].append('surface_water_volume')
+            output_dict['cell'].append('surface_water_flux')
 
         if self.heat_flux:
             output_dict['cell'].append('heat_flux')
@@ -946,7 +1026,7 @@ class CMFOutputs(GHComponent):
             output_dict['cell'].append('aerodynamic_resistance')
 
         if self.three_d_flux:
-            output_dict['layer'].append('three_d_flux')
+            output_dict['layer'].append('volumetric_flux')
 
         if self.potential:
             output_dict['layer'].append('potential')
@@ -960,14 +1040,12 @@ class CMFOutputs(GHComponent):
         if self.wetness:
             output_dict['layer'].append('wetness')
 
-
         return output_dict
 
     def run(self):
         if self.checks:
             out_dict = self.set_outputs()
-            print(out_dict)
-
+            self.output_dict = out_dict
             self.results = gh_misc.PassClass(out_dict, 'Outputs')
 
 
