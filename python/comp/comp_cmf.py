@@ -167,7 +167,7 @@ class CMFWeather(GHComponent):
                         'default_value': None},
                     7: {'name': 'Location',
                         'description': 'A Ladybug Tools Location',
-                        'access': 'list',
+                        'access': 'item',
                         'default_value': None}}
 
         def outputs():
@@ -646,7 +646,7 @@ class CMFSolve(GHComponent):
                         'description': 'Input from Livestock CMF_Stream',
                         'access': 'item',
                         'default_value': None},
-                    5: {'name': 'BoundaryCondition',
+                    5: {'name': 'BoundaryConditions',
                         'description': 'Input from Livestock CMF_BoundaryCondition',
                         'access': 'list',
                         'default_value': None},
@@ -662,7 +662,7 @@ class CMFSolve(GHComponent):
                         'description': 'Case name as string. Default is CMF',
                         'access': 'item',
                         'default_value': 'CMF'},
-                    9: {'name': 'Output',
+                    9: {'name': 'Outputs',
                         'description': 'Connect Livestock Outputs',
                         'access': 'item',
                         'default_value': None},
@@ -695,7 +695,7 @@ class CMFSolve(GHComponent):
         self.weather = None
         self.trees = None
         self.stream = None
-        self.boundary_condition = None
+        self.boundary_conditions = None
         self.analysis_length = None
         self.folder = None
         self.case_name = None
@@ -722,8 +722,8 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh, ground, weather, trees, stream, boundary_condition, folder, analysis_length, name, write,
-                   overwrite, output, run):
+    def run_checks(self, mesh, ground, weather, trees, stream, boundary_conditions, analysis_length, folder, name,
+                   outputs, write, overwrite, run):
 
         # Gather data
         self.mesh = self.add_default_value(mesh, 0)
@@ -731,13 +731,13 @@ class CMFSolve(GHComponent):
         self.weather = self.add_default_value(weather, 2)
         self.trees = self.add_default_value(trees, 3)
         self.stream = self.add_default_value(stream, 4)
-        self.boundary_condition = self.add_default_value(boundary_condition, 5)
-        self.folder = self.add_default_value(folder, 6)
-        self.analysis_length = self.add_default_value(analysis_length, 7)
+        self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
+        self.analysis_length = self.add_default_value(analysis_length, 6)
+        self.folder = self.add_default_value(folder, 7)
         self.case_name = self.add_default_value(name, 8)
-        self.write_case = self.add_default_value(write, 9)
-        self.overwrite = self.add_default_value(overwrite, 10)
-        self.output_config = self.add_default_value(output, 11)
+        self.output_config = self.add_default_value(outputs, 9)
+        self.write_case = self.add_default_value(write, 10)
+        self.overwrite = self.add_default_value(overwrite, 11)
         self.run_case = self.add_default_value(run, 12)
         self.update_case_path()
 
@@ -884,7 +884,7 @@ class CMFSolve(GHComponent):
             self.add_warning(warning)
 
     def run(self, doc):
-        if self.checks and self.run:
+        if self.checks and self.run_case:
             self.write(doc)
             self.do_case()
             self.results = self.check_results()
