@@ -527,21 +527,29 @@ class CMFSyntheticTree(GHComponent):
 
 class CMFRetentionCurve(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: ['SoilIndex', 'Index for chosing soil type']}
+            return {0: {'name': 'SoilIndex',
+                        'description': 'Index for chosing soil type',
+                        'access': 'item',
+                        'default_value': 0}}
 
         def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Units', 'Shows the units of the curve values'],
-                    2: ['CurveValues','Chosen curve properties values'],
-                    3: ['RetentionCurve','Livestock Retention Curve']}
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Units',
+                        'description': 'Shows the units of the curve values'},
+                    2: {'name': 'CurveValues',
+                        'description': 'Chosen curve properties values'},
+                    3: {'name': 'RetentionCurve',
+                        'description': 'Livestock Retention Curve'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 15
+        self.description = 'Generates retention curve'
         self.data = None
         self.units = None
         self.data_path = r'C:\livestock\data\soilData.csv'
@@ -550,27 +558,25 @@ class CMFRetentionCurve(GHComponent):
         self.checks = False
         self.results = None
 
-    def check_inputs(self, ghenv):
+    def check_inputs(self):
         if isinstance(self.soil_index, int):
             self.checks = True
         else:
             warning = 'soilIndex should be an integer'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, soil_index):
+    def run_checks(self, soil_index):
 
         # Gather data
-        self.soil_index = soil_index
+        self.soil_index = self.add_default_value(soil_index, 0)
 
         # Run checks
-        self.check_inputs(ghenv)
+        self.check_inputs()
 
     def load_csv(self):
 
