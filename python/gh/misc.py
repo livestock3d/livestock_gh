@@ -24,37 +24,49 @@ from Grasshopper.Kernel.Data import GH_Path as Path
 # Functions and Classes
 
 
-def tree_to_list(input, retrieve_base = lambda x: x[0]):
+def tree_to_list(input_, retrieve_base=lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
 
     def extend_at(path, index, simple_input, rest_list):
         target = path[index]
-        if len(rest_list) <= target: rest_list.extend([None]*(target-len(rest_list)+1))
+        if len(rest_list) <= target:
+            rest_list.extend([None] * (target-len(rest_list) + 1))
         if index == path.Length - 1:
             rest_list[target] = list(simple_input)
         else:
-            if rest_list[target] is None: rest_list[target] = []
-            extend_at(path, index+1, simple_input, rest_list[target])
-    all = []
-    for i in range(input.BranchCount):
-        path = input.Path(i)
-        extend_at(path, 0, input.Branch(path), all)
-    return retrieve_base(all)
+            if rest_list[target] is None:
+                rest_list[target] = []
+            extend_at(path, index + 1, simple_input, rest_list[target])
+    all_ = []
+    for i in range(input_.BranchCount):
+        path = input_.Path(i)
+        extend_at(path, 0, input_.Branch(path), all_)
+
+    return retrieve_base(all_)
 
 
-def list_to_tree(input, none_and_holes=True, source=[0]):
+def list_to_tree(input_, none_and_holes=True, source=[0]):
     """Transforms nestings of lists or tuples to a Grasshopper DataTree"""
 
-    def proc(input,tree,track):
+    def proc(input_, tree, track):
         path = Path(Array[int](track))
-        if len(input) == 0 and none_and_holes: tree.EnsurePath(path); return
-        for i,item in enumerate(input):
-            if hasattr(item, '__iter__'): #if list or tuple
-                track.append(i); proc(item,tree,track); track.pop()
+        if len(input_) == 0 and none_and_holes:
+            tree.EnsurePath(path)
+            return
+        for i, item in enumerate(input_):
+            if hasattr(item, '__iter__'):  # if list or tuple
+                track.append(i)
+                proc(item, tree, track)
+                track.pop()
             else:
-                if none_and_holes: tree.Insert(item,path,i)
-                elif item is not None: tree.Add(item,path)
-    if input is not None: t=Tree[object]();proc(input,t,source[:]);return t
+                if none_and_holes:
+                    tree.Insert(item, path, i)
+                elif item is not None:
+                    tree.Add(item, path)
+    if input is not None:
+        t = Tree[object]()
+        proc(input_, t, source[:])
+        return t
 
 
 class PassClass:
