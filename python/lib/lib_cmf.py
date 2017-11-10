@@ -31,7 +31,7 @@ class CMFModel:
         self.ground_dict = {}
         self.rain_station = None
         self.meteo = None
-        self.analysis_length = None
+        self.solver_settings = None
         self.outputs = None
         self.solved = False
         self.results = {}
@@ -143,9 +143,12 @@ class CMFModel:
 
             solver_tree = ET.tostring(ET.parse(solver_path).getroot())
             solver = xmltodict.parse(solver_tree)
-            analysis_length = int(solver['solver']['analysis_length'])
+            solver_dict = {}
 
-            return analysis_length
+            for setting in solver['solver']:
+                solver_dict[setting] = eval(solver['solver'][setting])
+
+            return solver_dict
 
         cmf_files = os.listdir(self.folder)
 
@@ -155,7 +158,7 @@ class CMFModel:
         self.ground_dict = load_ground(self.folder, cmf_files)
         self.mesh_path = load_mesh(self.folder, cmf_files)
         self.outputs = load_outputs(self.folder, cmf_files)
-        self.analysis_length = load_solver_info(self.folder, cmf_files)
+        self.solver_settings = load_solver_info(self.folder, cmf_files)
 
         return True
 
@@ -244,7 +247,7 @@ class CMFModel:
             adjacent_faces = mesh.get_face_adjacent_faces(int(face))
 
             for adj in adjacent_faces:
-                width = face_face_edge(face,adj)
+                width = face_face_edge(face, adj)
                 if width:
                     cmf_project[face].topology.AddNeighbor(cmf_project[adj], width)
                 else:
@@ -575,24 +578,33 @@ class CMFModel:
                         pass
 
     def print_solver_time(self, solver_time, start_time, last_time, step):
-        now = datetime.now()
-        elapsed_time = now - start_time
-        time_per_step = elapsed_time.total_seconds()/(step+1)
-        time_left = timedelta(seconds=(time_per_step * (self.analysis_length-step)))
 
-        # Print statements:
-        solver_timer_print = 'Solver Time: '+ str(solver_time)
-        elapsed_time_print = 'Elapsed Time: ' + str(elapsed_time)
-        current_time_step_print = 'Current Time Step: ' + str(now - last_time)
-        estimated_time_left_print = 'Estimated Time Left: ' + str(time_left)
-        print(solver_timer_print, '\t',
-              elapsed_time_print, '\t',
-              current_time_step_print, '\t',
-              estimated_time_left_print)
+        if self.solver_settings['verbosity']:
+            now = datetime.now()
+            elapsed_time = now - start_time
+            time_per_step = elapsed_time.total_seconds()/(step+1)
+            time_left = timedelta(seconds=(time_per_step * (self.solver_settings['analysis_length'] - step)))
 
-        return now
+            # Print statements:
+            solver_timer_print = 'Solver Time: '+ str(solver_time)
+            elapsed_time_print = 'Elapsed Time: ' + str(elapsed_time)
+            current_time_step_print = 'Current Time Step: ' + str(now - last_time)
+            estimated_time_left_print = 'Estimated Time Left: ' + str(time_left)
+            print(solver_timer_print, '\t',
+                  elapsed_time_print, '\t',
+                  current_time_step_print, '\t',
+                  estimated_time_left_print)
 
-    def solve(self, cmf_project, tolerance=1e-8):
+            return now
+
+        else:
+            if step == 0:
+                print('Simulation started')
+
+            elif step == self.solver_settings['analysis_length']:
+                print('Simulation ended')
+
+    def solve(self, cmf_project, tolerance):
         """Solves the model"""
 
         # Create solver, set time and set up results
@@ -609,7 +621,10 @@ class CMFModel:
         last = start_time
 
         # Run solver and save results at each time step
-        for t in solver.run(solver.t, solver.t + timedelta(hours=self.analysis_length), timedelta(hours=1)):
+        for t in solver.run(solver.t,
+                            solver.t + timedelta(hours=self.solver_settings['analysis_length']),
+                            timedelta(hours=1)):
+
             self.gather_results(cmf_project, t)
             last = self.print_solver_time(t, start_time, last, step)
             step += 1
@@ -677,7 +692,7 @@ class CMFModel:
         self.create_weather(project)
 
         # Run solver
-        self.solve(project)
+        self.solve(project, self.solver_settings['tolerance'])
 
         # Save the results
         self.save_results(result_path)

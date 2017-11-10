@@ -1243,8 +1243,9 @@ class SolverSettings(GHComponent):
 
         def run(self):
             if self.checks:
-                settings_dict = {'analysis_length': self.length,
+                settings_dict = {'analysis_length': int(self.length),
                                  'tolerance': self.tolerance,
-                                 'verbosity': self.verbosity}
+                                 'verbosity': int(self.verbosity)}
 
+                print(settings_dict.items())
                 self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
