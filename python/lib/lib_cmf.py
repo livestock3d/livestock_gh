@@ -493,15 +493,17 @@ class CMFModel:
             for out_key in self.results[cell_name].keys():
 
                 # Collect cell related results
-                if out_key == 'transpiration':
-                    # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
-                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
-
                 if out_key == 'evaporation':
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
                     sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
+                    sw.refresh(time)
+
                     evap_sum = sw.AIR + sw.GER + sw.GIR
                     self.results[cell_name][out_key].append(evap_sum)
+
+                if out_key == 'transpiration':
+                    # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
+                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
 
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
@@ -560,14 +562,15 @@ class CMFModel:
 
     def print_solver_time(self, solver_time, start_time, last_time, step):
         now = datetime.now()
-        elapsed_time = now - start_time
+        elapsed_time = timedelta(now - start_time)
+        time_per_step = elapsed_time.total_seconds()/step
+        time_left = timedelta(seconds=(time_per_step * (self.analysis_length-step)))
 
         # Print statements:
-
         solver_timer_print = 'Solver Time: '+ str(solver_time)
         elapsed_time_print = 'Elapsed Time: ' + str(elapsed_time)
         current_time_step_print = 'Current Time Step: ' + str(now - last_time)
-        estimated_time_left_print = 'Estimated Time Left: '
+        estimated_time_left_print = 'Estimated Time Left: ' + time_left
         print(solver_timer_print, '\t',
               elapsed_time_print, '\t',
               current_time_step_print, '\t',
