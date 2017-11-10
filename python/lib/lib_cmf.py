@@ -286,7 +286,10 @@ class CMFModel:
             self.set_surface_properties(cell, property_dict)
 
             # Install Penman & Monteith method to calculate EvapoTranspiration_potential
-            cell.install_connection(cmf.PenmanMonteithET)
+            #cell.install_connection(cmf.PenmanMonteithET)
+
+            # Install Shuttleworth-Wallace method to calculate evapotranspiration
+            cmf.ShuttleworthWallace().use_for_cell(cell)
 
         return True
 
@@ -490,10 +493,10 @@ class CMFModel:
 
                 # Collect cell related results
                 if out_key == 'transpiration':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transp_from_layer(time))
 
                 if out_key == 'evaporation':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evap_from_layer(time))
 
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
@@ -511,8 +514,8 @@ class CMFModel:
                 if out_key == 'heat_flux':
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
 
-                #if out_key == 'aerodynamic_resistance':
-                #    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].aerodynamic_resistance)
+                if out_key == 'aerodynamic_resistance':
+                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_aerodynamic_resistance(time))
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
