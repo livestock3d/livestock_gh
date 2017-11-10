@@ -494,16 +494,30 @@ class CMFModel:
 
                 # Collect cell related results
                 if out_key == 'evaporation':
-                    # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
-                    sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
-                    sw.refresh(time)
+                    evap = cmf_project.cells[cell_index].evaporation
 
-                    evap_sum = sw.AIR + sw.GER + sw.GIR
-                    self.results[cell_name][out_key].append(evap_sum)
+                    flux_and_node = []
+                    for flux, node in evap.fluxes(time):
+                        flux_and_node.append((flux, node))
+
+                    self.results[cell_name][out_key].append(flux_and_node)
+
+                    #sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
+                    #sw.refresh(time)
+
+                    #evap_sum = sw.AIR + sw.GER + sw.GIR
+                    #self.results[cell_name][out_key].append(evap_sum)
 
                 if out_key == 'transpiration':
+                    transp = cmf_project.cells[cell_index].transpiration
+
+                    flux_and_node = []
+                    for flux, node in transp.fluxes(time):
+                        flux_and_node.append((flux, node))
+
+                    self.results[cell_name][out_key].append(flux_and_node)
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
-                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
+                    #self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
 
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
