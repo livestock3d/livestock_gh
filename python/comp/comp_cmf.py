@@ -1142,10 +1142,6 @@ class CMFOutputs(GHComponent):
 
         output_dict = {'cell': [], 'layer': []}
 
-        if self.evapo_trans:
-            output_dict['cell'].append('evaporation')
-            output_dict['cell'].append('transpiration')
-
         if self.surface_water:
             output_dict['cell'].append('surface_water_volume')
             output_dict['cell'].append('surface_water_flux')
@@ -1155,6 +1151,10 @@ class CMFOutputs(GHComponent):
 
         if self.aero_res:
             output_dict['cell'].append('aerodynamic_resistance')
+
+        if self.evapo_trans:
+            output_dict['layer'].append('evaporation')
+            output_dict['layer'].append('transpiration')
 
         if self.three_d_flux:
             output_dict['layer'].append('volumetric_flux')

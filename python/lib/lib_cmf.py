@@ -492,12 +492,6 @@ class CMFModel:
             for out_key in self.results[cell_name].keys():
 
                 # Collect cell related results
-                if out_key == 'transpiration':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transp_from_layer(time))
-
-                if out_key == 'evaporation':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evap_from_layer(time))
-
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
                     self.results[cell_name][out_key].append(volume)
@@ -523,6 +517,14 @@ class CMFModel:
                 for out_key in self.results[cell_name][layer_name].keys():
 
                     # Collect layer related results
+                    if out_key == 'transpiration':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index].layers[layer_index].transp_from_layer(time))
+
+                    if out_key == 'evaporation':
+                        self.results[cell_name][layer_name][out_key].append(
+                            cmf_project.cells[cell_index].layers[layer_index].evap_from_layer(time))
+
                     if out_key == 'potential':
                         self.results[cell_name][layer_name][out_key].append(
                             cmf_project.cells[cell_index].layers[layer_index].potential)
