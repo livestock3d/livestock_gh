@@ -495,7 +495,7 @@ class CMFModel:
                 # Collect cell related results
                 if out_key == 'transpiration':
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
-                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]))
+                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).AIR)
 
                 #if out_key == 'evaporation':
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
