@@ -499,11 +499,11 @@ class CMFModel:
                 if out_key == 'evaporation':
                     evap = cmf_project.cells[cell_index].evaporation
 
-                    flux_and_node = []
+                    flux_at_time = 0
                     for flux, node in evap.fluxes(time):
-                        flux_and_node.append((flux, node))
+                        flux_at_time += flux
 
-                    self.results[cell_name][out_key].append(flux_and_node)
+                    self.results[cell_name][out_key].append(flux_at_time)
 
                     #sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
                     #sw.refresh(time)
@@ -514,11 +514,11 @@ class CMFModel:
                 if out_key == 'transpiration':
                     transp = cmf_project.cells[cell_index].transpiration
 
-                    flux_and_node = []
+                    flux_at_time = 0
                     for flux, node in transp.fluxes(time):
-                        flux_and_node.append((flux, node))
+                        flux_at_time += flux
 
-                    self.results[cell_name][out_key].append(flux_and_node)
+                    self.results[cell_name][out_key].append(flux_at_time)
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
                     #self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
 
