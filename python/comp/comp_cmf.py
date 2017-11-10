@@ -928,7 +928,11 @@ class CMFResults(GHComponent):
                                        '\n9 - Soil layer wetness',
                         'access': 'item',
                         'default_value': 0},
-                    2: {'name': 'Run',
+                    2: {'name': 'SaveCSV',
+                        'description': 'Save the values as a csv file - Default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    3: {'name': 'Run',
                         'description': 'Run component',
                         'access': 'item',
                         'default_value': False}}
@@ -939,7 +943,9 @@ class CMFResults(GHComponent):
                     1: {'name': 'Units',
                         'description': 'Shows the units of the results'},
                     2: {'name': 'Values',
-                        'description': 'List with chosen result values'}}
+                        'description': 'List with chosen result values'},
+                    3: {'name': 'CSVPath',
+                        'description': 'Path to csv file.'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -947,6 +953,7 @@ class CMFResults(GHComponent):
         self.unit = None
         self.path = None
         self.fetch_result = None
+        self.save_csv = None
         self.run_component = None
         self.py_exe = gh_misc.get_python_exe()
         self.checks = False
@@ -964,18 +971,19 @@ class CMFResults(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, path, fetch_result, run):
+    def run_checks(self, path, fetch_result, save, run):
 
         # Gather data
         self.path = path
         self.fetch_result = int(self.add_default_value(fetch_result, 1))
-        self.run_component = self.add_default_value(run, 2)
+        self.save_csv = self.add_default_value(save, 2)
+        self.run_component = self.add_default_value(run, 3)
 
         # Run checks
         self.check_inputs()
 
     def process_xml(self):
-        possible_results = ['Evapotranspiration', 'surface_water_volume', 'Surface_water_flux',
+        possible_results = ['evapotranspiration', 'surface_water_volume', 'Surface_water_flux',
                             'heat_flux', 'aerodynamic_resistance', 'volumetric_flux', 'potential',
                             'theta', 'volume', 'wetness']
 
@@ -1004,10 +1012,19 @@ class CMFResults(GHComponent):
 
         return csv.read_csv(path, False)
 
+    def delete_files(self, csv_path):
+        os.remove(self.path + '/cmf_results_template.py')
+        os.remove(self.path + '/result_lookup.txt')
+
+        if not self.save_csv:
+            os.remove(csv_path)
+        else:
+            pass
+
     def set_units(self):
 
         if self.fetch_result == 0:
-            self.unit = 'm3'
+            self.unit = 'm3/h'
 
         elif self.fetch_result == 1:
             self.unit = 'm3'
@@ -1038,9 +1055,11 @@ class CMFResults(GHComponent):
 
     def run(self):
         if self.checks and self.run_component:
-            self.set_units()
 
-            results = self.load_result_csv(self.process_xml())
+            self.set_units()
+            csv_file_path = self.process_xml()
+            results = self.load_result_csv(csv_file_path)
+            self.delete_files(csv_file_path)
 
             self.results = gh_misc.list_to_tree(results)
 

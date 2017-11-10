@@ -55,22 +55,28 @@ def cell_results(looking_for, result_file, folder):
 
     # Find results
     for cell in results['result'].keys():
+        if looking_for == 'evapotranspiration':
+            evapo = np.array(eval(results['result'][cell]['evaporation']))
+            transp = np.array(eval(results['result'][cell]['transpiration']))
+            evapotransp = evapo + transp
+            results_to_save.append(list(evapotransp))
 
-        for result in results['result'][cell]:
-            if result.startswith('layer'):
-                pass
-
-            elif result == 'evapotranspiration':
-                evapo = np.array(eval(results['result'][cell]['evaporation']))
-                transp = np.array(eval(results['result'][cell]['transpiration']))
-                evapotransp = evapo + transp
-                results_to_save.append(list(evapotransp))
-
-            else:
-                if result == looking_for:
-                    results_to_save.append(results['result'][cell][str(result)][1:-1])
-                else:
+        else:
+            for result in results['result'][cell]:
+                if result.startswith('layer'):
                     pass
+
+                else:
+                    if result == looking_for:
+                        if result == 'heat_flux':
+                            # Covert heat flux from MJ/(m2*day) to W/m2h
+                            flux_MJ = np.array(eval(results['result'][cell][str(result)]))
+                            flux_Wm2 = flux_MJ/86.4
+                            results_to_save.append(list(flux_Wm2))
+                        else:
+                            results_to_save.append(results['result'][cell][str(result)][1:-1])
+                    else:
+                        pass
 
     # Write files
     file_path = folder + '/' + looking_for + '.csv'
