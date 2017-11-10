@@ -18,3 +18,4 @@ from comp.component import *
 from comp.geometry import *
 from comp.misc import *
 from comp.rain import *
+from comp.vegetation import *
