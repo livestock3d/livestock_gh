@@ -397,11 +397,8 @@ class CMFSurfaceProperties(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        if self.property_index:
-            self.checks = True
-        else:
-            warning = 'Temperature should be a float'
-            self.add_warning(warning)
+        self.checks = True
+
 
     def config(self):
 
