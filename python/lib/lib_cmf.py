@@ -494,10 +494,11 @@ class CMFModel:
 
                 # Collect cell related results
                 if out_key == 'transpiration':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration.ATR_sum)
+                    # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
+                    self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]))
 
-                if out_key == 'evaporation':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation.AIR)
+                #if out_key == 'evaporation':
+                    # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].evaporation)
 
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
