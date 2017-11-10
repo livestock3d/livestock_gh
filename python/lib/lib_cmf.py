@@ -289,7 +289,7 @@ class CMFModel:
             #cell.install_connection(cmf.PenmanMonteithET)
 
             # Install Shuttleworth-Wallace method to calculate evapotranspiration
-            cmf.ShuttleworthWallace(cell).use_for_cell(cell)
+            cell.install_connection(cmf.ShuttleworthWallace)
 
         return True
 
