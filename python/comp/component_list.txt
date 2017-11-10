@@ -19,3 +19,4 @@ Livestock CMF Results;CMF Results;VER 0.0.1 | November 2017;Livestock;2 | Rain a
 Livestock Synthetic Tree;Synthetic Tree;VER 0.0.1 | November 2017;Livestock;3 | Vegetation
 Livestock Stomatal Resistance; Stomatal Resistance; VER 0.0.1 | November 2017; Livestock;3 | Vegetation
 Livestock Leaf Temperature; Leaf Temperature; VER 0.0.1 | November 2017; Livestock;3 | Vegetation
+Livestock CMF Solver Settings;CMF Solver Settings;VER 0.0.1 | November 2017;Livestock;2 | Rain and Flow

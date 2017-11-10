@@ -628,29 +628,29 @@ class CMFSolve(GHComponent):
                         'access': 'item',
                         'default_value': None},
                     1: {'name': 'Ground',
-                        'description': 'Input from Livestock CMF_Ground',
+                        'description': 'Input from Livestock CMF Ground',
                         'access': 'list',
                         'default_value': None},
                     2: {'name': 'Weather',
-                        'description': 'Input from Livestock CMF_Weather',
+                        'description': 'Input from Livestock CMF Weather',
                         'access': 'item',
                         'default_value': None},
                     3: {'name': 'Trees',
-                        'description': 'Input from Livestock CMF_Tree',
+                        'description': 'Input from Livestock CMF Tree',
                         'access': 'list',
                         'default_value': None},
                     4: {'name': 'Stream',
-                        'description': 'Input from Livestock CMF_Stream',
+                        'description': 'Input from Livestock CMF Stream',
                         'access': 'item',
                         'default_value': None},
                     5: {'name': 'BoundaryConditions',
-                        'description': 'Input from Livestock CMF_BoundaryCondition',
+                        'description': 'Input from Livestock CMF Boundary Condition',
                         'access': 'list',
                         'default_value': None},
-                    6: {'name': 'AnalysisLength',
-                        'description': 'Analysis length in hours - Default is 24 hours',
+                    6: {'name': 'SolverSettings',
+                        'description': 'Input from Livestock CMF Solver Settings',
                         'access': 'item',
-                        'default_value': 24},
+                        'default_value': None},
                     7: {'name': 'Folder',
                         'description': 'Path to folder. Default is Desktop',
                         'access': 'item',
@@ -693,7 +693,7 @@ class CMFSolve(GHComponent):
         self.trees = None
         self.stream = None
         self.boundary_conditions = None
-        self.analysis_length = None
+        self.solver_settings = None
         self.folder = None
         self.case_name = None
         self.case_path = None
@@ -719,7 +719,7 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh, ground, weather, trees, stream, boundary_conditions, analysis_length, folder, name,
+    def run_checks(self, mesh, ground, weather, trees, stream, boundary_conditions, solver_settings, folder, name,
                    outputs, write, overwrite, run):
 
         # Gather data
@@ -729,7 +729,7 @@ class CMFSolve(GHComponent):
         self.trees = self.add_default_value(trees, 3)
         self.stream = self.add_default_value(stream, 4)
         self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
-        self.analysis_length = int(self.add_default_value(analysis_length, 6))
+        self.solver_settings = int(self.add_default_value(solver_settings, 6))
         self.folder = self.add_default_value(folder, 7)
         self.case_name = self.add_default_value(name, 8)
         self.output_config = self.add_default_value(outputs, 9)
@@ -837,8 +837,11 @@ class CMFSolve(GHComponent):
 
         # Process solver info
         solver_root = ET.Element('solver')
-        analysis_length = ET.SubElement(solver_root, 'analysis_length')
-        analysis_length.text = str(self.analysis_length)
+        solver_dict = self.solver_settings.c
+
+        for solver_key in solver_dict.keys():
+            data = ET.SubElement(solver_root, str(solver_key))
+            data.text = str(solver_dict[solver_key])
 
         solver_tree = ET.ElementTree(solver_root)
         solver_file = 'solver.xml'
@@ -1183,3 +1186,65 @@ class CMFBoundaryCondition(GHComponent):
 
     def __init__(self):
         GHComponent.__init__(self)
+
+
+class SolverSettings(GHComponent):
+
+        def __init__(self, ghenv):
+            GHComponent.__init__(self, ghenv)
+
+            def inputs():
+                return {0: {'name': 'AnalysisLength',
+                            'description': 'Analysis length in hours - Default is 24 hours',
+                            'access': 'item',
+                            'default_value': 24},
+                        1: {'name': 'SolverTolerance',
+                            'description': 'Solver tolerance - Default is 1e-8',
+                            'access': 'item',
+                            'default_value': 10**-8},
+                        2: {'name': 'Verbosity',
+                            'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
+                                           '0 - Prints only at start and end of simulation.\n'
+                                           '1 - Prints at every time step.',
+                            'access': 'item',
+                            'default_value': 1}}
+
+            def outputs():
+                return {0: {'name': 'readMe!',
+                            'description': 'In case of any errors, it will be shown here.'},
+                        1: {'name': 'LeafTemperature',
+                            'description': 'Leaf temperature in C'}}
+
+            self.inputs = inputs()
+            self.outputs = outputs()
+            self.component_number = 21
+            self.description = 'Sets the solver settings for CMF Solve'
+            self.length = None
+            self.tolerance = None
+            self.verbosity = None
+            self.checks = [False, False, False, False]
+            self.results = None
+
+        def check_inputs(self):
+            self.checks = True
+
+        def config(self):
+            # Generate Component
+            self.config_component(self.component_number)
+
+        def run_checks(self, length, tolerance, verbosity):
+            # Gather data
+            self.length = self.add_default_value(length, 0)
+            self.tolerance = self.add_default_value(tolerance, 1)
+            self.verbosity = self.add_default_value(verbosity, 2)
+
+            # Run checks
+            self.check_inputs()
+
+        def run(self):
+            if self.checks:
+                settings_dict = {'analysis_length': self.length,
+                                 'tolerance': self.tolerance,
+                                 'verbosity': self.verbosity}
+
+                self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
