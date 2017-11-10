@@ -434,7 +434,8 @@ class CMFSurfaceProperties(GHComponent):
                                                  ('canopy_capacity', data_list[6]),
                                                  ('stomatal_res', data_list[7]),
                                                  ('root_depth', data_list[8]),
-                                                 ('root_fraction', data_list[9])
+                                                 ('root_fraction', data_list[9]),
+                                                 ('leaf_width', 0.005)
                                                  ])
 
     def run(self):
@@ -530,7 +531,8 @@ class CMFSyntheticTree(GHComponent):
                                                  ('stomatal_res', float(self.data[0][7]) *
                                                                   self.height + float(self.data[1][7])),
                                                  ('root_depth', float(self.data[2][8])),
-                                                 ('root_fraction', float(self.data[2][9]))
+                                                 ('root_fraction', float(self.data[2][9])),
+                                                 ('leaf_width', 0.05)
                                                  ])
 
     def run(self):

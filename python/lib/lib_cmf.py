@@ -277,6 +277,7 @@ class CMFModel:
         cell.vegetation.StomatalResistance = float(property_dict['stomatal_res'])
         cell.vegetation.RootDepth = float(property_dict['root_depth'])
         cell.vegetation.fraction_at_rootdepth = float(property_dict['root_fraction'])
+        cell.vegetation.LeafWidth = float(property_dict['leaf_width'])
 
     def add_surface_properties(self, cmf_project, property_dict, cell_indices):
 
