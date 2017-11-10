@@ -729,7 +729,7 @@ class CMFSolve(GHComponent):
         self.trees = self.add_default_value(trees, 3)
         self.stream = self.add_default_value(stream, 4)
         self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
-        self.solver_settings = int(self.add_default_value(solver_settings, 6))
+        self.solver_settings = self.add_default_value(solver_settings, 6)
         self.folder = self.add_default_value(folder, 7)
         self.case_name = self.add_default_value(name, 8)
         self.output_config = self.add_default_value(outputs, 9)
@@ -1188,7 +1188,7 @@ class CMFBoundaryCondition(GHComponent):
         GHComponent.__init__(self)
 
 
-class SolverSettings(GHComponent):
+class CMFSolverSettings(GHComponent):
 
         def __init__(self, ghenv):
             GHComponent.__init__(self, ghenv)
@@ -1212,8 +1212,8 @@ class SolverSettings(GHComponent):
             def outputs():
                 return {0: {'name': 'readMe!',
                             'description': 'In case of any errors, it will be shown here.'},
-                        1: {'name': 'LeafTemperature',
-                            'description': 'Leaf temperature in C'}}
+                        1: {'name': 'SolverSettings',
+                            'description': 'Livestock Solver Settings'}}
 
             self.inputs = inputs()
             self.outputs = outputs()

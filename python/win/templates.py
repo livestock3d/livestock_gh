@@ -184,10 +184,10 @@ def process_cmf_results(path):
     file.write("# Imports\n")
     file.write("import sys\n")
     file.write("sys.path.insert(0, 'C:\livestock\python')\n")
-    file.write("import win.misc as win_misc\n")
+    file.write("import win.win_cmf as win_cmf\n")
 
     file.write("# Run function\n")
-    file.write("win_misc.cmf_results(r'" + path + "')\n")
+    file.write("win_cmf.cmf_results(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
