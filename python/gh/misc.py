@@ -27,8 +27,9 @@ from Grasshopper.Kernel.Data import GH_Path as Path
 def tree_to_list(input_, retrieve_base=lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
 
-    def extend_at(path, index, simple_input, rest_list):
+    def extend_at(path_, index, simple_input, rest_list):
         target = path[index]
+
         if len(rest_list) <= target:
             rest_list.extend([None] * (target-len(rest_list) + 1))
         if index == path.Length - 1:
@@ -36,7 +37,8 @@ def tree_to_list(input_, retrieve_base=lambda x: x[0]):
         else:
             if rest_list[target] is None:
                 rest_list[target] = []
-            extend_at(path, index + 1, simple_input, rest_list[target])
+            extend_at(path_, index + 1, simple_input, rest_list[target])
+
     all_ = []
     for i in range(input_.BranchCount):
         path = input_.Path(i)
@@ -63,6 +65,7 @@ def list_to_tree(input_, none_and_holes=True, source=[0]):
                     tree.Insert(item, path, i)
                 elif item is not None:
                     tree.Add(item, path)
+
     if input is not None:
         t = Tree[object]()
         proc(input_, t, source[:])
