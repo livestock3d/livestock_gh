@@ -45,10 +45,11 @@ class CMFGround(GHComponent):
                         'description': 'Input from Livestock CMF SurfaceProperties',
                         'access': 'item',
                         'default_value': None},
-                    3: {'name': 'InitialSaturation',
-                        'description': 'Initial saturation of the soil layers',
+                    3: {'name': 'SaturatedDepth',
+                        'description': 'Initial saturated depth in m. It is depth where the groundwater is located'
+                                       ' - Default is set to 3m',
                         'access': 'item',
-                        'default_value': None},
+                        'default_value': 3},
                     4: {'name': 'FaceIndices',
                         'description': 'List of face indices, on where the ground properties are applied.',
                         'access': 'list',
@@ -68,7 +69,7 @@ class CMFGround(GHComponent):
         self.layers = None
         self.retention_curve = None
         self.surface_properties = None
-        self.initial_saturation = None
+        self.saturated_depth = None
         self.checks = [False, False, False, False, False]
         self.results = None
 
@@ -85,10 +86,10 @@ class CMFGround(GHComponent):
         else:
             warning.append('Retention curve is wrong!')
 
-        if isinstance(self.initial_saturation, float):
+        if isinstance(self.saturated_depth, float):
             self.checks[4] = True
         else:
-            warning.append('Initial saturation must be float! Input provided was: ' + str(self.initial_saturation))
+            warning.append('Initial saturation must be float! Input provided was: ' + str(self.saturated_depth))
 
         if warning:
             if isinstance(warning, list):
@@ -106,13 +107,13 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, surface_properties, initial_saturation, face_indices):
+    def run_checks(self, layers, retention_curve, surface_properties, saturated_depth, face_indices):
 
         # Gather data
         self.layers = self.add_default_value(layers, 0)
         self.retention_curve = self.add_default_value(retention_curve, 1)
         self.surface_properties = self.add_default_value(surface_properties, 2)
-        self.initial_saturation = self.add_default_value(initial_saturation, 3)
+        self.saturated_depth = self.add_default_value(saturated_depth, 3)
         self.face_indices = self.add_default_value(face_indices, 4)
 
         # Run checks
@@ -124,7 +125,7 @@ class CMFGround(GHComponent):
                            'layers': self.layers,
                            'retention_curve': self.retention_curve,
                            'surface_properties': self.surface_properties,
-                           'initial_saturation': self.initial_saturation}
+                           'saturated_depth': self.saturated_depth}
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
 
@@ -136,35 +137,46 @@ class CMFWeather(GHComponent):
 
         def inputs():
             return {0: {'name': 'Temperature',
-                        'description': 'Temperature in C - List of floats',
-                        'access': 'list',
+                        'description': 'Temperature in C. Either a list or a tree where the number of branches is equal'
+                                       ' to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     1: {'name': 'WindSpeed',
-                        'description': 'Wind speed in m/s - List of floats',
-                        'access': 'list',
+                        'description': 'Wind speed in m/s. Either a list or a tree where the number of branches is'
+                                       ' equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     2: {'name': 'RelativeHumidity',
-                        'description': 'Relative humidity in % - List of floats',
-                        'access': 'list',
+                        'description': 'Relative humidity in %. Either a list or a tree where the number of branches is'
+                                       ' equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     3: {'name': 'CloudCover',
-                        'description': 'Cloud cover, unitless between 0 and 1 - list of floats',
-                        'access': 'list',
+                        'description': 'Cloud cover, unitless between 0 and 1. Either a list or a tree where the number'
+                                       ' of branches is equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     4: {'name': 'GlobalRadiation',
-                        'description': 'Global Radiation in MJ/(m^2*h) - list of floats',
-                        'access': 'list',
+                        'description': 'Global Radiation in W/m2. Either a list or a tree where the number of branches'
+                                       ' is equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     5: {'name': 'Rain',
-                        'description': 'Horizontal precipitation in mm/h - list of floats',
-                        'access': 'list',
+                        'description': 'Horizontal precipitation in mm/h. Either a list or a tree where the number of'
+                                       ' branches is equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     6: {'name': 'GroundTemperature',
-                        'description': 'Ground temperature in C - list of floats',
-                        'access': 'list',
+                        'description': 'Ground temperature in C. Either a list or a tree where the number of branches'
+                                       ' is equal to the number of mesh faces.',
+                        'access': 'tree',
                         'default_value': None},
                     7: {'name': 'Location',
                         'description': 'A Ladybug Tools Location',
+                        'access': 'item',
+                        'default_value': None},
+                    8: {'name': 'MeshFaceCount',
+                        'description': 'Number of faces in the ground mesh',
                         'access': 'item',
                         'default_value': None}}
 
@@ -186,54 +198,132 @@ class CMFWeather(GHComponent):
         self.rain = None
         self.ground_temp = None
         self.location = None
+        self.face_count = None
         self.checks = [False, False, False, False, False, False, False, False]
         self.results = None
 
     def check_inputs(self):
-        if self.temp:
-            self.checks = True
-        else:
-            warning = 'Temperature should be a float'
-            self.add_warning(warning)
+        self.checks = True
 
     def config(self):
 
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location):
+    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location, face_count):
 
         # Gather data
-        self.temp = temp
-        self.wind = wind
-        self.rel_hum = rel_hum
-        self.cloud_cover = cloud_cover
-        self.global_radiation = global_radiation
-        self.rain = rain
-        self.ground_temp = ground_temp
+        self.face_count = int(face_count)
+        self.temp = self.match_cell_count(temp)
+        self.wind = self.match_cell_count(wind)
+        self.rel_hum = self.match_cell_count(rel_hum)
+        self.cloud_cover = self.match_cell_count(cloud_cover)
+        self.global_radiation = self.match_cell_count(global_radiation)
+        self.rain = self.match_cell_count(rain)
+        self.ground_temp = self.match_cell_count(ground_temp)
         self.location = location
 
         # Run checks
         self.check_inputs()
 
     def convert_cloud_cover(self):
+        # Converts cloud cover to sun shine
 
-        sun_shine = []
-        for cc in self.cloud_cover:
-            sun_shine.append(1-float(cc))
+        sun_shine = {}
+
+        for cloud_key in self.cloud_cover.keys():
+            sun_shine[cloud_key] = []
+            for cc in self.cloud_cover[cloud_key]:
+                sun_shine[cloud_key].append(1-float(cc))
 
         return sun_shine
+
+    def convert_radiation_unit(self):
+        # converts W/m2 to MJ/(m2*day)
+        # 1 W/m2 => 60s*60min*24hours/10^6 => MJ/(m2*day)
+        # 1 W/m2 = 0.0864 MJ/(m2*day)
+
+        converted_radiation = {}
+
+        for radiation_key in self.global_radiation.keys():
+            converted_radiation[radiation_key] = []
+            for rad in self.global_radiation[radiation_key]:
+                converted_radiation[radiation_key].append(float(rad)*0.0864)
+
+        self.global_radiation = converted_radiation
+
+    def convert_rain_unit(self):
+        # Converts rain from mm/h to mm/day
+        # 1 mm/h = 24 mm/day
+
+        converted_rain = {}
+
+        for rain_key in self.rain.keys():
+            converted_rain[rain_key] = []
+            for rain in self.rain[rain_key]:
+                converted_rain[rain_key].append(float(rain) * 24)
+
+        self.rain = converted_rain
 
     def convert_location(self):
         location_name, lat, long, time_zone, elevation = gh_misc.decompose_ladybug_location(self.location)
         return lat, long, time_zone
 
+    def match_cell_count(self, weather_parameter):
+
+        def find_list(weather_list_):
+            cleaned_list = []
+
+            for element in weather_list_:
+                if isinstance(element, list):
+                    cleaned_list.append(element)
+                else:
+                    pass
+
+            if len(cleaned_list) == 1:
+                return cleaned_list
+            else:
+                return cleaned_list
+
+        weather_list = gh_misc.tree_to_list(weather_parameter)
+        clean_weather_list = find_list(weather_list)
+        weather_dict = {}
+
+        if len(clean_weather_list) == 1:
+            weather_dict['all'] = clean_weather_list[0]
+
+        elif len(weather_list) == self.face_count:
+            for i in range(0, len(weather_list)):
+                cell_number = 'cell_' + str(i)
+                weather_dict[cell_number] = weather_list[i]
+
+        return weather_dict
+
+    def print_weather_lengths(self):
+
+        def printer(parameter_name, parameter):
+            print(str(parameter_name) + ' includes: ' + str(len(parameter.keys())) + ' lists')
+
+        printer('Temperature', self.temp)
+        printer('Wind Speed', self.wind)
+        printer('Relative Humidity', self.rel_hum)
+        printer('Sun Shine', self.cloud_cover)  # are converted from cloud cover to sun later, but have same length.
+        printer('Global Radiation', self.global_radiation)
+        printer('Rain', self.rain)
+        printer('Ground Temperature', self.ground_temp)
+
     def run(self):
         if self.checks:
+            # Make print statement
+            self.print_weather_lengths()
 
+            # Convertions
             sun = self.convert_cloud_cover()
+            self.convert_rain_unit()
+            self.convert_radiation_unit()
             latitude, longitude, time_zone = self.convert_location()
 
+            # Construct dict
             weather_dict = {'temp': self.temp,
                             'wind': self.wind,
                             'rel_hum': self.rel_hum,
