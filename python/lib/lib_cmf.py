@@ -427,6 +427,8 @@ class CMFModel:
                     cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['all']
                 except KeyError:
                     cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['cell_' + str(cell_id)]
+                except TypeError:
+                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]
 
             # Convert to time series
             time_for_weather = create_time_series()
