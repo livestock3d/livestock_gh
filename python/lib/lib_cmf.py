@@ -423,9 +423,9 @@ class CMFModel:
 
             # Find weather matching cell ID
             for weather_types in project_weather_dict.keys():
-                if project_weather_dict[weather_types]['all']:
+                try:
                     cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['all']
-                else:
+                except KeyError:
                     cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['cell_' + str(cell_id)]
 
             # Convert to time series
