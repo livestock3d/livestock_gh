@@ -422,13 +422,19 @@ class CMFModel:
             cell_weather_dict_ = {}
 
             # Find weather matching cell ID
-            for weather_types in project_weather_dict.keys():
+            for weather_type in project_weather_dict.keys():
+                # Try for weather type having the same weather for all cells
                 try:
-                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['all']
+                    cell_weather_dict_[weather_type] = project_weather_dict[weather_type]['all']
+
+                # Accept that some have one for each cell
                 except KeyError:
-                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['cell_' + str(cell_id)]
+                    cell_weather_dict_[weather_type] = project_weather_dict[weather_type]['cell_' + str(cell_id)]
+
+                # Accept latitude, longitude and time zone
                 except TypeError:
-                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]
+                    print('weather_type:', weather_type)
+                    cell_weather_dict_[weather_type] = project_weather_dict[weather_type]
 
             # Convert to time series
             time_for_weather = create_time_series()
