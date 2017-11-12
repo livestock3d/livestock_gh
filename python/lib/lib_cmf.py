@@ -461,9 +461,9 @@ class CMFModel:
 
             return rain_station, meteo_station
 
-        def connect_weather_to_cells(cell, rain_station, meteo_station):
-            rain_station.use_for_cell(cell)
-            meteo_station.use_for_cell(cell)
+        def connect_weather_to_cells(cell_, rain_station, meteo_station):
+            rain_station.use_for_cell(cell_)
+            meteo_station.use_for_cell(cell_)
 
         # Run create weather helper functions
         for cell_index in range(0, len(cmf_project.cells)):
