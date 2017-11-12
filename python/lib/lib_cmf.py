@@ -50,14 +50,22 @@ class CMFModel:
             weather_dict = {}
 
             for w_key in weather['weather'].keys():
-                for sub_w_key in weather['weather'][w_key].keys():
-                    lst0 = eval(weather['weather'][w_key][sub_w_key])
-                    try:
-                        lst1 = [float(i) for i in lst0]
-                    except TypeError:
-                        lst1 = lst0
+                lst0 = eval(weather['weather'][w_key])
+                if isinstance(lst0, dict):
+                    lst1 = {}
+                    for dict_key in lst0.keys():
+                        lst1[dict_key] = [float(i) for i in lst0[dict_key]]
+                else:
+                    lst1 = lst0
 
-                    weather_dict[w_key][sub_w_key] = lst1
+                """
+                try:
+                    lst1 = [float(i) for i in lst0]
+                except TypeError:
+                    lst1 = lst0
+                """
+
+                weather_dict[w_key] = lst1
 
             return weather_dict
 
