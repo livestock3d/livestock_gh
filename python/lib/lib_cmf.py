@@ -29,8 +29,6 @@ class CMFModel:
         self.weather_dict = {}
         self.trees_dict = {}
         self.ground_dict = {}
-        self.rain_station = None
-        self.meteo = None
         self.solver_settings = None
         self.outputs = None
         self.solved = False
@@ -309,7 +307,7 @@ class CMFModel:
 
         return r
 
-    def add_layers_to_cells(self, cmf_project, depth_of_layers, r_curve, initial_saturation, cell_indices):
+    def add_layers_to_cells(self, cmf_project, depth_of_layers, r_curve, saturated_depth, cell_indices):
         """Adds 'depth' to the cells"""
 
         # Convert retention curve parameters into CMF retention curve
@@ -326,7 +324,7 @@ class CMFModel:
             cmf_project.cells[int(c_i)].install_connection(cmf.GreenAmptInfiltration)
 
             # Set initial saturation
-            cmf_project.cells[int(c_i)].saturated_depth = initial_saturation
+            cmf_project.cells[int(c_i)].saturated_depth = saturated_depth
 
         # Connect fluxes
         cmf.connect_cells_with_flux(cmf_project, cmf.Darcy)
@@ -373,61 +371,15 @@ class CMFModel:
         else:
             return None
 
-    def create_weather_stations(self, cmf_project, weather_series, lat, long, time_zone):
-
-        # Add a rainfall station to the project
-        self.rain_station = cmf_project.rainfall_stations.add(Name='Rain Station',
-                                                         Data=weather_series['rain'],
-                                                         Position=(0, 0, 0))
-
-        # Add a meteo station to the project
-        self.meteo = cmf_project.meteo_stations.add_station(name='Meteo Station',
-                                                            position=(0, 0, 0),
-                                                            latitude=lat,
-                                                            longitude=long,
-                                                            tz=time_zone)
-        self.meteo.T = weather_series['temp']
-        self.meteo.Tmax = self.meteo.T.reduce_max(self.meteo.T.begin, cmf.day)
-        self.meteo.Tmin = self.meteo.T.reduce_min(self.meteo.T.begin, cmf.day)
-        self.meteo.Windspeed = weather_series['wind']
-        self.meteo.rHmean = weather_series['rel_hum']
-        self.meteo.Sunshine = weather_series['sun']
-        self.meteo.Rs = weather_series['rad']
-        self.meteo.Tground = weather_series['ground_temp']
-
-    def connect_weather_to_cells(self, cmf_project):
-        for c in cmf_project.cells:
-            self.rain_station.use_for_cell(c)
-            self.meteo.use_for_cell(c)
-
     def create_weather(self, cmf_project):
         """Creates weather for the project"""
 
-        def convert_weather_units(weather_dict):
-
-            # covert rain from mm/h to mm/day,
-            converted_rain = [val * 24 for val in weather_dict['rain']]
-            weather_dict['rain'] = converted_rain
-
-            # convert global radiation from w/m2 to MJ/(m2*day)
-            con = 3600*24/10**6
-            converted_rad = [val*con for val in weather_dict['rad']]
-            weather_dict['rad'] = converted_rad
-
-            return weather_dict
-
+        # Helper functions
         def create_time_series(timeStep=1.0):
 
-            # Start date is the 1st of January 2010 at 00:00
-            start = cmf.Time(1, 1, 2010, 0, 0)
+            # Start date is the 1st of January 2017 at 00:00
+            start = cmf.Time(1, 1, 2017, 0, 0)
             step = cmf.h * timeStep
-
-            # Type of interpolation between values
-            # 0 - Nearest neighbor,
-            # 1 - Linear,
-            # 2 - Squared,
-            # 3 - Cubic, etc.
-            interpolation = 1
 
             # Create time series
             return cmf.timeseries(begin=start, step=step)
@@ -456,14 +408,58 @@ class CMFModel:
             return {'temp': t_series, 'wind': w_series, 'rel_hum': rh_series, 'sun': sun_series, 'rad': rad_series,
                     'rain': rain_series, 'ground_temp': ground_temp_series}
 
-        time = create_time_series()
-        weather_series = weather_to_time_series(self.weather_dict, time)
-        self.create_weather_stations(cmf_project,
-                                     weather_series,
-                                     self.weather_dict['latitude'],
-                                     self.weather_dict['longitude'],
-                                     self.weather_dict['time_zone'])
-        self.connect_weather_to_cells(cmf_project)
+        def get_weather_for_cell(cell_id, project_weather_dict):
+            # Initialize
+            cell_weather_dict_ = {}
+
+            # Find weather matching cell ID
+            for weather_types in project_weather_dict.keys():
+                if project_weather_dict[weather_types]['all']:
+                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['all']
+                else:
+                    cell_weather_dict_[weather_types] = project_weather_dict[weather_types]['cell_' + str(cell_id)]
+
+            # Convert to time series
+            time_for_weather = create_time_series()
+            cell_weather_series = weather_to_time_series(cell_weather_dict, time_for_weather)
+
+            return cell_weather_series
+
+        def create_weather_station(cmf_project, cell_id, weather):
+
+            # Add cell rainfall station to the project
+            rain_station = cmf_project.rainfall_stations.add(Name='cell_' + str(cell_id) + ' rain',
+                                                                  Data=weather['rain'],
+                                                                  Position=(0, 0, 0))
+
+            # Add cell meteo station to the project
+            meteo_station = cmf_project.meteo_stations.add_station(name='cell_' + str(cell_id) + ' weather',
+                                                                   position=(0, 0, 0),
+                                                                   latitude=weather['latitude'],
+                                                                   longitude=weather['longitude'],
+                                                                   tz=weather['time_zone'])
+
+            meteo_station.T = weather_series['temp']
+            meteo_station.Tmax = meteo_station.T.reduce_max(meteo_station.T.begin, cmf.day)
+            meteo_station.Tmin = meteo_station.T.reduce_min(meteo_station.T.begin, cmf.day)
+            meteo_station.Windspeed = weather_series['wind']
+            meteo_station.rHmean = weather_series['rel_hum']
+            meteo_station.Sunshine = weather_series['sun']
+            meteo_station.Rs = weather_series['rad']
+            meteo_station.Tground = weather_series['ground_temp']
+
+            return rain_station, meteo_station
+
+        def connect_weather_to_cells(cell, rain_station, meteo_station):
+            rain_station.use_for_cell(cell)
+            meteo_station.use_for_cell(cell)
+
+        # Run create weather helper functions
+        for cell_index in range(0, len(cmf_project.cells)):
+            cell = cmf_project.cells
+            cell_weather_dict = get_weather_for_cell(cell_index, self.weather_dict)
+            cell_rain, cell_meteo = create_weather_station(cell_index, cell_weather_dict)
+            connect_weather_to_cells(cell, cell_rain, cell_meteo)
 
     def config_outputs(self, cmf_project):
         """Function to set up result gathering dictionary"""
@@ -505,11 +501,11 @@ class CMFModel:
 
                     self.results[cell_name][out_key].append(flux_at_time)
 
-                    #sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
-                    #sw.refresh(time)
+                    # sw = cmf.ShuttleworthWallace(cmf_project.cells[cell_index])
+                    # sw.refresh(time)
 
-                    #evap_sum = sw.AIR + sw.GER + sw.GIR
-                    #self.results[cell_name][out_key].append(evap_sum)
+                    # evap_sum = sw.AIR + sw.GER + sw.GIR
+                    # self.results[cell_name][out_key].append(evap_sum)
 
                 if out_key == 'transpiration':
                     transp = cmf_project.cells[cell_index].transpiration
@@ -520,7 +516,7 @@ class CMFModel:
 
                     self.results[cell_name][out_key].append(flux_at_time)
                     # self.results[cell_name][out_key].append(cmf_project.cells[cell_index].transpiration)
-                    #self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
+                    # self.results[cell_name][out_key].append(cmf.ShuttleworthWallace(cmf_project.cells[cell_index]).ATR_sum)
 
                 if out_key == 'surface_water_volume':
                     volume = cmf_project.cells[cell_index].get_surfacewater().volume
@@ -539,7 +535,8 @@ class CMFModel:
                     self.results[cell_name][out_key].append(cmf_project.cells[cell_index].heat_flux(time))
 
                 if out_key == 'aerodynamic_resistance':
-                    self.results[cell_name][out_key].append(cmf_project.cells[cell_index].get_aerodynamic_resistance(time))
+                    self.results[cell_name][out_key].append(
+                        cmf_project.cells[cell_index].get_aerodynamic_resistance(time))
 
             for layer_index in range(0, len(cmf_project.cells[cell_index].layers)):
                 layer_name = 'layer_' + str(layer_index)
@@ -574,7 +571,7 @@ class CMFModel:
                             cmf_project.cells[cell_index].layers[layer_index].wetness)
 
                     else:
-                        #print('Unknown result to collect:', out_key)
+                        # print('Unknown result to collect:', out_key)
                         pass
 
     def print_solver_time(self, solver_time, start_time, last_time, step):
@@ -586,7 +583,7 @@ class CMFModel:
             time_left = timedelta(seconds=(time_per_step * (self.solver_settings['analysis_length'] - step)))
 
             # Print statements:
-            solver_timer_print = 'Solver Time: '+ str(solver_time)
+            solver_timer_print = 'Solver Time: ' + str(solver_time)
             elapsed_time_print = 'Elapsed Time: ' + str(elapsed_time)
             current_time_step_print = 'Current Time Step: ' + str(now - last_time)
             estimated_time_left_print = 'Estimated Time Left: ' + str(time_left)
@@ -676,7 +673,7 @@ class CMFModel:
             self.add_layers_to_cells(project,
                                      self.ground_dict[str(key)]['layers'],
                                      self.ground_dict[str(key)]['retention_curve'],
-                                     self.ground_dict[str(key)]['initial_saturation'],
+                                     self.ground_dict[str(key)]['saturated_depth'],
                                      self.ground_dict[str(key)]['face_indices'])
 
             self.add_surface_properties(project,
@@ -696,10 +693,3 @@ class CMFModel:
 
         # Save the results
         self.save_results(result_path)
-
-
-def ground_temperature():
-    return None
-
-
-
