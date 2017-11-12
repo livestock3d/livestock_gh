@@ -432,32 +432,32 @@ class CMFModel:
 
             # Convert to time series
             time_for_weather = create_time_series()
-            cell_weather_series = weather_to_time_series(cell_weather_dict, time_for_weather)
+            cell_weather_series = weather_to_time_series(cell_weather_dict_, time_for_weather)
 
             return cell_weather_series
 
-        def create_weather_station(cmf_project, cell_id, weather):
+        def create_weather_station(cmf_project_, cell_id, weather):
 
             # Add cell rainfall station to the project
-            rain_station = cmf_project.rainfall_stations.add(Name='cell_' + str(cell_id) + ' rain',
-                                                                  Data=weather['rain'],
-                                                                  Position=(0, 0, 0))
+            rain_station = cmf_project_.rainfall_stations.add(Name='cell_' + str(cell_id) + ' rain',
+                                                              Data=weather['rain'],
+                                                              Position=(0, 0, 0))
 
             # Add cell meteo station to the project
-            meteo_station = cmf_project.meteo_stations.add_station(name='cell_' + str(cell_id) + ' weather',
-                                                                   position=(0, 0, 0),
-                                                                   latitude=weather['latitude'],
-                                                                   longitude=weather['longitude'],
-                                                                   tz=weather['time_zone'])
+            meteo_station = cmf_project_.meteo_stations.add_station(name='cell_' + str(cell_id) + ' weather',
+                                                                    position=(0, 0, 0),
+                                                                    latitude=weather['latitude'],
+                                                                    longitude=weather['longitude'],
+                                                                    tz=weather['time_zone'])
 
-            meteo_station.T = weather_series['temp']
+            meteo_station.T = weather['temp']
             meteo_station.Tmax = meteo_station.T.reduce_max(meteo_station.T.begin, cmf.day)
             meteo_station.Tmin = meteo_station.T.reduce_min(meteo_station.T.begin, cmf.day)
-            meteo_station.Windspeed = weather_series['wind']
-            meteo_station.rHmean = weather_series['rel_hum']
-            meteo_station.Sunshine = weather_series['sun']
-            meteo_station.Rs = weather_series['rad']
-            meteo_station.Tground = weather_series['ground_temp']
+            meteo_station.Windspeed = weather['wind']
+            meteo_station.rHmean = weather['rel_hum']
+            meteo_station.Sunshine = weather['sun']
+            meteo_station.Rs = weather['rad']
+            meteo_station.Tground = weather['ground_temp']
 
             return rain_station, meteo_station
 
@@ -469,7 +469,7 @@ class CMFModel:
         for cell_index in range(0, len(cmf_project.cells)):
             cell = cmf_project.cells
             cell_weather_dict = get_weather_for_cell(cell_index, self.weather_dict)
-            cell_rain, cell_meteo = create_weather_station(cell_index, cell_weather_dict)
+            cell_rain, cell_meteo = create_weather_station(cmf_project, cell_index, cell_weather_dict)
             connect_weather_to_cells(cell, cell_rain, cell_meteo)
 
     def config_outputs(self, cmf_project):
