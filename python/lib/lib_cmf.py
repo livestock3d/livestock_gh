@@ -434,7 +434,6 @@ class CMFModel:
 
                 # Accept latitude, longitude and time zone
                 except TypeError:
-                    print('weather_type:', weather_type)
                     location_dict[weather_type] = project_weather_dict[weather_type]
 
             # Convert to time series
