@@ -474,7 +474,8 @@ class CMFModel:
 
         # Run create weather helper functions
         for cell_index in range(0, len(cmf_project.cells)):
-            cell = cmf_project.cells
+            cell = cmf_project.cells[cell_index]
+
             cell_weather_dict, project_location = get_weather_for_cell(cell_index, self.weather_dict)
             cell_rain, cell_meteo = create_weather_station(cmf_project, cell_index, cell_weather_dict, project_location)
             connect_weather_to_cells(cell, cell_rain, cell_meteo)
