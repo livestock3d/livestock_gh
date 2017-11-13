@@ -420,6 +420,7 @@ class CMFModel:
         def get_weather_for_cell(cell_id, project_weather_dict):
             # Initialize
             cell_weather_dict_ = {}
+            location_dict = {}
 
             # Find weather matching cell ID
             for weather_type in project_weather_dict.keys():
@@ -434,15 +435,15 @@ class CMFModel:
                 # Accept latitude, longitude and time zone
                 except TypeError:
                     print('weather_type:', weather_type)
-                    cell_weather_dict_[weather_type] = project_weather_dict[weather_type]
+                    location_dict[weather_type] = project_weather_dict[weather_type]
 
             # Convert to time series
             time_for_weather = create_time_series()
             cell_weather_series = weather_to_time_series(cell_weather_dict_, time_for_weather)
 
-            return cell_weather_series
+            return cell_weather_series, location_dict
 
-        def create_weather_station(cmf_project_, cell_id, weather):
+        def create_weather_station(cmf_project_, cell_id, weather, location):
 
             # Add cell rainfall station to the project
             rain_station = cmf_project_.rainfall_stations.add(Name='cell_' + str(cell_id) + ' rain',
@@ -452,9 +453,9 @@ class CMFModel:
             # Add cell meteo station to the project
             meteo_station = cmf_project_.meteo_stations.add_station(name='cell_' + str(cell_id) + ' weather',
                                                                     position=(0, 0, 0),
-                                                                    latitude=weather['latitude'],
-                                                                    longitude=weather['longitude'],
-                                                                    tz=weather['time_zone'])
+                                                                    latitude=location['latitude'],
+                                                                    longitude=location['longitude'],
+                                                                    tz=location['time_zone'])
 
             meteo_station.T = weather['temp']
             meteo_station.Tmax = meteo_station.T.reduce_max(meteo_station.T.begin, cmf.day)
@@ -474,8 +475,8 @@ class CMFModel:
         # Run create weather helper functions
         for cell_index in range(0, len(cmf_project.cells)):
             cell = cmf_project.cells
-            cell_weather_dict = get_weather_for_cell(cell_index, self.weather_dict)
-            cell_rain, cell_meteo = create_weather_station(cmf_project, cell_index, cell_weather_dict)
+            cell_weather_dict, project_location = get_weather_for_cell(cell_index, self.weather_dict)
+            cell_rain, cell_meteo = create_weather_station(cmf_project, cell_index, cell_weather_dict, project_location)
             connect_weather_to_cells(cell, cell_rain, cell_meteo)
 
     def config_outputs(self, cmf_project):
