@@ -71,7 +71,7 @@ def cell_results(looking_for, result_file, folder):
                         if result == 'heat_flux':
                             # Covert heat flux from MJ/(m2*day) to W/m2h
                             flux_MJ = np.array(eval(results['result'][cell][str(result)]))
-                            flux_Wm2 = flux_MJ/86.4
+                            flux_Wm2 = flux_MJ/0.0864
                             results_to_save.append(list(flux_Wm2))
                         else:
                             results_to_save.append(results['result'][cell][str(result)][1:-1])
