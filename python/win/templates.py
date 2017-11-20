@@ -40,7 +40,7 @@ def pick_template(template_name, path):
 
 def drain_mesh_template(path):
     file = open(path + '/drain_mesh_template.py', 'w')
-    file.write("print('Running template DrainMeshTemplate.py')\n")
+    file.write("print('Running template drain_mesh_template.py')\n")
 
     file.write("# Imports\n")
     file.write("from pathlib import Path\n")
@@ -50,7 +50,7 @@ def drain_mesh_template(path):
     file.write("from lib.rain import drain_mesh_paths\n")
 
     file.write("# Run function\n")
-    file.write("drain_mesh_paths(home_user + '/livestock/shh')\n")
+    file.write("drain_mesh_paths(home_user + '/livestock/ssh')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")

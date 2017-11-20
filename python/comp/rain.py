@@ -84,8 +84,10 @@ class MeshDrainPaths(GHComponent):
     def write(self, doc_):
 
         # Initialize
+        ssh.clean_ssh_folder()
         files_written = []
         file_run = ['drain_mesh_template.py']
+        files_written.append('drain_mesh_template.py')
 
         # Export mesh
         gh_geo.bake_export_delete(self.mesh, self.ssh_path, 'drain_mesh', '.obj', doc_)
