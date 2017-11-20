@@ -31,32 +31,31 @@ def pick_template(template_name, path):
     elif template_name == 'cmf_results':
         process_cmf_results(path)
 
+    elif template_name == 'cfd_ssh':
+        cfd_ssh_template(path)
+
     else:
-        raise NameError('Could not find template: '+str(template_name))
+        raise NameError('Could not find template: ' + str(template_name))
 
 
 def drain_mesh_template(path):
-    file = open('DrainMeshTemplate.py','w')
+    file = open(path + '/drain_mesh_template.py', 'w')
     file.write("print('Running template DrainMeshTemplate.py')\n")
 
-    #file.write("# Get user\n")
     file.write("# Imports\n")
     file.write("from pathlib import Path\n")
     file.write("import sys\n")
-    file.write("homeUser = str(Path.home())\n")
-    file.write("sys.path.insert(0, homeUser + '/livestock/classes')\n")
-    file.write("from RainClasses import drainMeshPaths\n")
-
-    file.write("# Get files\n")
-    file.write("meshPath = homeUser + '/livestock/templates/drainMesh.obj'\n")
-    file.write("cpu = open(homeUser + '/livestock/templates/cpu.txt','r').readline()\n")
+    file.write("home_user = str(Path.home())\n")
+    file.write("sys.path.insert(0, home_user + '/livestock')\n")
+    file.write("from lib.rain import drain_mesh_paths\n")
 
     file.write("# Run function\n")
-    file.write("warn = drainMeshPaths(meshPath, int(cpu))\n")
-    file.write("print(warn)\n")
+    file.write("drain_mesh_paths(home_user + '/livestock/shh')\n")
 
-    file.write("# Annouce that template finished and create out file\n")
+    file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')\n")
+    file.write("file_obj.close()")
 
     return True
 
@@ -195,3 +194,7 @@ def process_cmf_results(path):
     file.close()
 
     return True
+
+
+def cfd_ssh_template(path):
+    """ """

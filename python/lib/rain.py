@@ -1,88 +1,100 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
-#----------------------------------------------------------------------------------------------------------------------#
-#Functions and Classes
+# -------------------------------------------------------------------------------------------------------------------- #
+# Imports
 
-def drainMeshPaths(meshPath,cpus):
+# Module imports
+import threading
+import queue
+import pymesh as pm
+import numpy as np
+
+# Livestock imports
+import lib.geometry as ls_geo
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Livestock Rain and Flow Library
+
+
+def drain_mesh_paths(files_path):
     """ Estimates the trail of a drainage path on a mesh. """
 
-    import threading
-    import queue
-    import pymesh as pm
-    import GeometryClasses as gc
-    from numpy import array, allclose
+    # Get files
+    mesh_path = files_path + '/drain_mesh.obj'
+    cpus = open(files_path + '/cpu.txt', 'r').readline()
 
     # Load mesh
-    mesh = pm.load_mesh(meshPath)
+    mesh = pm.load_mesh(mesh_path)
     mesh.enable_connectivity()
 
     # Result list
-    drainPoints = []
-    drainFaces = []
+    drain_points = []
+    drain_faces = []
 
-    # Initilize mesh data
+    # Initialize mesh data
     mesh.add_attribute('face_centroid')
     mesh.add_attribute('face_index')
-    startPts = mesh.get_attribute('face_centroid')
-    centerZ = []
-    faceIndex = mesh.get_attribute('face_index')
+    start_pts = mesh.get_attribute('face_centroid')
+    center_z = []
+    face_index = mesh.get_attribute('face_index')
     faces = mesh.faces
     vertices = mesh.vertices
-    faceDestination = []
-    rayPoints = []
-
+    face_destination = []
+    ray_points = []
 
     # Construct start point list
-    startPoints = []
+    start_points = []
     i = 0
-    while i < len(startPts):
-        for j in range(0,len(faceIndex)):
-            startPoints.append([faceIndex[j],array([startPts[i],startPts[i+1],startPts[i+2]])])
-            centerZ.append(startPts[i+2])
+    while i < len(start_pts):
+        for j in range(0, len(face_index)):
+            start_points.append([face_index[j], np.array([start_pts[i], start_pts[i+1], start_pts[i+2]])])
+            center_z.append(start_pts[i + 2])
             i += 3
 
-    def faceVertices(faceIndex):
-        face = faces[int(faceIndex)]
+    # Helper functions
+    def face_vertices(face_index_):
+        face = faces[int(face_index_)]
         v0 = vertices[face[0]]
         v1 = vertices[face[1]]
         v2 = vertices[face[2]]
         return v0, v1, v2
 
-    def overEdge(point):
-        for i in range(0,len(faceIndex)):
-            if centerZ[i] >= point[2]:
+    def over_edge(point):
+        """Handles when paths goes over the edge."""
+
+        for k in range(0, len(face_index)):
+            if center_z[k] >= point[2]:
                 pass
 
-            elif centerZ[i] <= point[2]:
+            elif center_z[k] <= point[2]:
                 # check to see if a similar point has already been processed
-                for j in range(0,len(rayPoints)):
-                    if allclose(point,rayPoints[j]):
-                        return faceDestination[j]
+
+                for j_ in range(0, len(ray_points)):
+                    if np.allclose(point, ray_points[j_]):
+                        return face_destination[j_]
 
                 # if not shoot ray
-                V = faceVertices(i)
-                intersect = gc.ray_triangle_intersection(point, array([0,0,-1]),V)
+                v = face_vertices(k)
+                intersect = ls_geo.ray_triangle_intersection(point, np.array([0, 0, -1]), v)
+
                 if intersect[0]:
-                    rayPoints.append(point)
-                    faceDestination.append(i)
-                    return i
+                    ray_points.append(point)
+                    face_destination.append(k)
+                    return k
+
                 else:
                     pass
 
             else:
-                print('Error in overEdge function!')
-                print('centerZ:', centerZ[i])
+                print('Error in over_edge function!')
+                print('centerZ:', center_z[k])
                 print('point:', point)
                 return None
 
-
     # Task function
-    def drainPath():
+    def drain_path():
 
         while 1:
             # Get job from queue
@@ -92,92 +104,99 @@ def drainMeshPaths(meshPath,cpus):
 
             particles = []
             particles.append(pt)
-            faceIndices = []
-            faceIndices.append(int(index))
+            face_indices = []
+            face_indices.append(int(index))
             run = True
             # print('index:',index)
             # print('point:',pt)
 
             while run:
-                # Get adjacents faces
-                adjacents = mesh.get_face_adjacent_faces(int(index))
+                # Get adjacent faces
+                adjacent_faces = mesh.get_face_adjacent_faces(int(index))
 
-
-                # Check if center points of adjacents faces have a lower Z-value
+                # Check if center points of adjacent faces have a lower Z-value
                 z = None
-                for ad in adjacents:
-                    if z == None:
-                        z = centerZ[ad]
+
+                for ad in adjacent_faces:
+                    if not z:
+                        z = center_z[ad]
                         i = ad
-                    elif z > centerZ[ad]:
-                        z = centerZ[ad]
+
+                    elif z > center_z[ad]:
+                        z = center_z[ad]
                         i = ad
 
                 if z > pt[2]:
-                    v0, v1, v2 = faceVertices(index)
-                    pt = gc.lowestFaceVertex(v0, v1, v2)
-                    if len(adjacents) < 3:
-                        over = overEdge(pt)
+                    v0, v1, v2 = face_vertices(index)
+                    pt = ls_geo.lowest_face_vertex(v0, v1, v2)
+
+                    if len(adjacent_faces) < 3:
+                        over = over_edge(pt)
+
                         if over:
                             particles.append(pt)
                             index = over
-                            pt = startPoints[index][1]
+                            pt = start_points[index][1]
+
                         else:
                             run = False
+
                     else:
                         run = False
 
                 else:
-                    index = startPoints[i][0]
-                    pt = startPoints[i][1]
+                    index = start_points[i][0]
+                    pt = start_points[i][1]
 
                 particles.append(pt)
-                faceIndices.append(int(index))
+                face_indices.append(int(index))
             #print('particles:',particles)
             #print(len(particles))
 
             # End task
-            drainPoints.append(particles)
-            drainFaces.append(faceIndices)
+            drain_points.append(particles)
+            drain_faces.append(face_indices)
             q.task_done()
 
     # Call task function
     q = queue.Queue()
-    for i in range(cpus):
-        t = threading.Thread(target=drainPath)
+
+    for i in range(int(cpus)):
+        t = threading.Thread(target=drain_path)
         t.setDaemon(True)
         t.start()
 
     # Put jobs in queue
-    for pts in startPoints:
+    for pts in start_points:
         q.put(pts)
 
     # Wait until all tasks in the queue have been processed
     q.join()
 
     # Open file, which the points should be written to
-    ptFile = open('drainPoints.txt', 'w')
-    faceFile = open('drainFaces.txt', 'w')
+    pt_file = open('drain_points.txt', 'w')
+    face_file = open('drain_faces.txt', 'w')
 
     # Write points to file
-    for particles in drainPoints:
+    for particles in drain_points:
         for pt in particles:
-            ptFile.write(str(pt[0]) + ',' + str(pt[1]) + ',' + str(pt[2]) + '\t')
-        ptFile.write('\n')
+            pt_file.write(str(pt[0]) + ',' + str(pt[1]) + ',' + str(pt[2]) + '\t')
+        pt_file.write('\n')
 
     # Write face indices to file
-    for curves in drainFaces:
+    for curves in drain_faces:
         for index in curves:
-            faceFile.write(str(index) + '\t')
-        faceFile.write('\n')
+            face_file.write(str(index) + '\t')
+        face_file.write('\n')
 
 
     #Close outfiles and save mesh
-    ptFile.close()
-    faceFile.close()
-    pm.save_mesh('newDrainMesh.obj',mesh)
+    pt_file.close()
+    face_file.close()
+    pm.save_mesh('new_drain_mesh.obj', mesh)
 
     return True
+
 
 def drainPools(path):
     import pymesh as pm
@@ -615,6 +634,7 @@ def drainPools(path):
     else:
         return None
 
+
 class simpleRain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
         self.prec = precipitation
@@ -821,40 +841,6 @@ class simpleRain():
 
             self.yzAngles.append(yz_tmp)
 
-def evaporationRate(T, R, W, P, z0, RH):
-    """
-    :param T: Temperature in C 
-    :param R: Radiation in kWh
-    :param W: Wind speed in m/s
-    :param P: Pressure in Pa
-    :param z0: Roughness height in m
-    :param RH: Relative humidity unitless
-    :return: 
-    """
-
-    from math import log, exp
-
-    #Evaporation based on the energy balance
-    lv = (2500-2.36*T)*1000 #j/kg
-    rhoWater = 1000 #kg/m3
-    Er = R/(lv*rhoWater) #m/s
-
-    #Evaporation based on aerodynamics
-    rhoAir = 1.2 #kg/m3
-    eas = 611*exp(17.27*T/(237.3+T)) #Pa
-    ea = RH*eas #Pa
-    k = 0.4 #Unknown unit
-    B = 0.622*k**2*rhoAir*W/(P*rhoWater*(log(10/z0))**2) #Unknown unit
-    Ea = B*(eas-ea) #m/s
-
-    #Combine the two methods
-    Cp = 1005 #Unknown unit
-    delta = 4098*eas/(273.3+T)**2 #Unknown unit
-    gamma = Cp*P/(0.622*lv) #Unknown unit
-    E = delta/(delta+gamma)*Er + gamma/(delta+gamma)*Ea #m/s
-    E = E*3600 #m/h
-
-    return E
 
 def topographicIndex(meshPath, drainCurvesPath):
     import numpy as np
