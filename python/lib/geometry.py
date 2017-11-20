@@ -8,7 +8,7 @@ __version__ = "0.0.1"
 # Module imports
 import pandas as pd
 import numpy as np
-import pyshp as ps
+#import pyshp as ps
 from numpy.linalg import norm
 import pymesh
 
@@ -247,6 +247,6 @@ def obj_to_panda(obj_file):
 
 def obj_to_shp(obj_file, shp_file):
     """Convert a obj file into a shape file"""
-    ps.shapefile.Writer()
+    shapefile.Writer()
 
     return True
