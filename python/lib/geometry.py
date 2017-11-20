@@ -1,36 +1,49 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
-#----------------------------------------------------------------------------------------------------------------------#
-#Functions and Classes
+# -------------------------------------------------------------------------------------------------------------------- #
+# Imports
+
+# Module imports
+import pandas as pd
+import numpy as np
+import pyshp as ps
+from numpy.linalg import norm
+import pymesh
+
+# Livestock imports
+
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Livestock Geometry Functions
 
 def fix_mesh(mesh, detail="normal"):
-    from numpy.linalg import norm
-    import pymesh
 
     bbox_min, bbox_max = mesh.bbox
     diag_len = norm(bbox_max - bbox_min)
+
     if detail == "normal":
         target_len = diag_len * 1e-2
+
     elif detail == "high":
         target_len = diag_len * 5e-3
+
     elif detail == "low":
         target_len = diag_len * 0.03
+
     print("Target resolution: {} mm".format(target_len))
 
     count = 0
     mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
     mesh, __ = pymesh.split_long_edges(mesh, target_len)
     num_vertices = mesh.num_vertices
+
     while True:
         mesh, __ = pymesh.collapse_short_edges(mesh, 1e-6)
-        mesh, __ = pymesh.collapse_short_edges(mesh, target_len,
-                preserve_feature=True)
+        mesh, __ = pymesh.collapse_short_edges(mesh, target_len, preserve_feature=True)
         mesh, __ = pymesh.remove_obtuse_triangles(mesh, 150.0, 100)
+
         if mesh.num_vertices == num_vertices:
             break
 
@@ -55,7 +68,6 @@ def ray_triangle_intersection(ray_near, ray_dir, V):
     Möller–Trumbore intersection algorithm in pure python
     Based on http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
     """
-    import numpy as np
 
     v1 = V[0]
     v2 = V[1]
@@ -87,8 +99,7 @@ def ray_triangle_intersection(ray_near, ray_dir, V):
     return True, t
 
 
-def lowestFaceVertex(v0, v1, v2):
-    from numpy import array
+def lowest_face_vertex(v0, v1, v2):
 
     V = [v0, v1, v2]
     x0 = v0[0]
@@ -108,7 +119,7 @@ def lowestFaceVertex(v0, v1, v2):
     Zsort = sorted(Z)
 
     if Zsort[0] == Zsort[2]:
-        return array([sum(X)/3, sum(Y)/3, sum(Z)/3])
+        return np.array([sum(X)/3, sum(Y)/3, sum(Z)/3])
 
     elif Zsort[0] < Zsort[1]:
         i = Z.index(Zsort[0])
@@ -119,7 +130,7 @@ def lowestFaceVertex(v0, v1, v2):
         i1 = Z.index(Zsort[1])
         x = 0.5*(X[i0] + X[i1])
         y = 0.5*(Y[i0] + Y[i1])
-        return array([x, y, Zsort[0]])
+        return np.array([x, y, Zsort[0]])
 
     else:
         print('Error finding lowest point!')
@@ -129,54 +140,54 @@ def lowestFaceVertex(v0, v1, v2):
         return None
 
 
-def angleBetweenVectors(v1, v2, forceAngle = None):
+def angle_between_vectors(v1, v2, force_angle=None):
     """
     Computes the angle between two vectors.
     :param v1: Vector1 as numpy array
     :param v2: Vector2 as numpy array
-    :param forceAngle: Default is None. Use to force angle into acute or obtuse.
+    :param force_angle: Default is None. Use to force angle into acute or obtuse.
     :return: Angle in radians and its angle type.
     """
 
-    # Import
-    from numpy import dot, sqrt, arccos, pi
-
     # Dot product
-    dot_v1v2 = dot(v1, v2)
+    dot_v1v2 = np.dot(v1, v2)
 
     # Determine angle type
     if dot_v1v2 > 0:
-        angleType = 'acute'
+        angle_type = 'acute'
+
     elif dot_v1v2 == 0:
-        return pi/2, 'perpendicular'
+        return np.pi/2, 'perpendicular'
+
     else:
-        angleType = 'obtuse'
+        angle_type = 'obtuse'
 
     # Vector magnitudes and compute angle
-    magV1 = sqrt(v1.dot(v1))
-    magV2 = sqrt(v2.dot(v2))
-    angle = arccos(abs(dot_v1v2 / (magV1 * magV2)))
+    mag_v1 = np.sqrt(v1.dot(v1))
+    mag_v2 = np.sqrt(v2.dot(v2))
+    angle = np.arccos(abs(dot_v1v2 / (mag_v1 * mag_v2)))
 
     # Compute desired angle type
-    if forceAngle == None:
-        return angle, angleType
+    if not force_angle:
+        return angle, angle_type
 
-    elif forceAngle == 'acute':
-        if angleType == 'acute':
+    elif force_angle == 'acute':
+        if angle_type == 'acute':
             return angle, 'acute'
         else:
-            angle = pi - angle
+            angle = np.pi - angle
             return angle, 'acute'
 
-    elif forceAngle == 'obtuse':
-        if angle > pi/2:
+    elif force_angle == 'obtuse':
+        if angle > np.pi/2:
             return angle, 'obtuse'
         else:
-            angle = pi - angle
+            angle = np.pi - angle
             return angle, 'obtuse'
     else:
-        print('forceAngle has to be defined as None, acute or obtuse. forceAngle was:', str(forceAngle))
+        print('force_angle has to be defined as None, acute or obtuse. force_angle was:', str(force_angle))
         return None, None
+
 
 def line_intersection(p1, p2, p3, p4):
     """
@@ -188,17 +199,54 @@ def line_intersection(p1, p2, p3, p4):
     :return: Numpy array. Intersection point
     """
 
-    # Imports
-    from numpy import cross
-    from numpy.linalg import norm
-
     # Direction vectors
     v1 = (p2 - p1)
     v2 = (p4 - p3)
 
     # Cross-products and vector norm
-    cv12 = cross(v1, v2)
-    cpv = cross((p1 - p3), v2)
+    cv12 = np.cross(v1, v2)
+    cpv = np.cross((p1 - p3), v2)
     t = norm(cpv) / norm(cv12)
 
     return p1 + t * v1
+
+
+def obj_to_panda(obj_file):
+    """Convert a obj file into a panda data frame"""
+
+    # Initialization
+    vertices = []
+    normals = []
+    faces = []
+    file = open(obj_file, 'r')
+    lines = file.readlines()
+    file.close()
+
+    # Find data
+    for line in lines:
+        if line.startswith('v'):
+            data = line.split(' ')
+            vertices.append([data[1], data[2], data[3]])
+
+        elif line.startswith('vn'):
+            data = line.split(' ')
+            normals.append([data[1], data[2], data[3]])
+
+        elif line.startswith('f'):
+            data = line.split(' ')
+            d = []
+            for elem in data:
+                d.append(elem.split('/'))
+            faces.append(d)
+
+        else:
+            pass
+
+    return vertices, normals, faces
+
+
+def obj_to_shp(obj_file, shp_file):
+    """Convert a obj file into a shape file"""
+    ps.shapefile.Writer()
+
+    return True

@@ -74,6 +74,7 @@ def bake_export_delete(geo, file_path, file_name, file_type, doc):
     g = bake(geo,doc)
     export([g, ], file_path, file_name, file_type, doc)
 
+
 def import_obj(path):
     """
     Reads a .obj file and converts it into a Rhino Mesh
@@ -246,6 +247,7 @@ def clean_and_coerce_list(brep_list):
                 outputBrep.append(geo)
 
     return outputMesh, outputBrep
+
 
 def join_mesh(mesh_list):
     """Ladybug - joinMesh"""
