@@ -9,11 +9,11 @@ __version__ = "0.0.1"
 
 
 # Livestock imports
-import gh.grasshopper as ls
 from win.templates import *
 
 # Grasshopper imports
-import scriptcontext as sc
+import Rhino.Geometry as rg
+import os
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
@@ -124,21 +124,20 @@ def import_obj(path):
 
 
 def load_points(path_and_file):
-    from Rhino.Geometry import Point3d
-    from os import remove
+    """Loads a text file containing points"""
 
     points = []
-    file_obj = open(path_and_file,'r')
+    file_obj = open(path_and_file, 'r')
     for l in file_obj.readlines():
         line = l.split("\t")[:-1]
         pts = []
         for p in line:
             pt = p.split(',')
-            pts.append(Point3d(float(pt[0]),float(pt[1]),float(pt[2])))
+            pts.append(rg.Point3d(float(pt[0]), float(pt[1]), float(pt[2])))
         points.append(pts)
 
     file_obj.close()
-    remove(path_and_file)
+    os.remove(path_and_file)
     return points
 
 

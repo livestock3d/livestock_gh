@@ -105,6 +105,8 @@ class MeshDrainPaths(GHComponent):
         ssh_cmd['template'] = 'drain_mesh'
         ssh.write_ssh_commands(ssh_cmd)
 
+        return True
+
     def do_case(self):
 
         # Python executor
@@ -138,7 +140,7 @@ class MeshDrainPaths(GHComponent):
 
         # Get the results
         self.results['new_mesh'] = gh_geo.import_obj(self.ssh_path + '\\new_drain_mesh.obj')
-        pts = gh_geo.load_points(self.ssh_path + '\\drainPoints.txt')
+        pts = gh_geo.load_points(self.ssh_path + '\\drain_points.txt')
         self.results['drain_curves'], self.results['end_points'] = gh_geo.make_curves_from_points(pts)
         self.results['drain_faces'] = gh_misc.list_to_tree(drain_faces())
 
