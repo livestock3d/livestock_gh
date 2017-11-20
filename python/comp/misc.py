@@ -6,9 +6,12 @@ __version__ = "0.0.1"
 # Imports
 
 # Module imports
+import os
 
 # Livestock imports
 from comp.component import GHComponent
+from win.templates import pick_template
+import gh.misc as gh_misc
 
 # Grasshopper imports
 import scriptcontext as sc
@@ -97,7 +100,8 @@ class SSHConnection(GHComponent):
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.description = 'Setup SSH connection'
+        self.description = 'Setup SSH connection.\n' \
+                           'Icon based on art from Arthur Shlain from the Noun Project.'
         self.component_number = 1
         self.ip = None
         self.port = None
@@ -162,3 +166,75 @@ class SSHConnection(GHComponent):
                   '\nsudo service ssh --full-restart')
 
             sc.sticky['SSH'] = {'ip': self.ip, 'port': self.port, 'user': self.user, 'password': self.password}
+
+
+class CFDonSSH(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Directory',
+                        'description': 'Directory where the OpenFoam files are located',
+                        'access': 'item',
+                        'default_value': None},
+                    1: {'name': 'Commands',
+                        'description': 'OpenFoam Commands to run',
+                        'access': 'item',
+                        'default_value': None},
+                    2: {'name': 'Run',
+                        'description': 'Runs the component',
+                        'access': 'item',
+                        'default_value': False}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'}}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.description = 'Setup SSH connection'
+        self.component_number = 22
+        self.directory = None
+        self.commands = None
+        self.run_component = None
+        self.checks = [False, False]
+        self.results = None
+
+    def check_inputs(self):
+        self.checks = True
+
+    def config(self):
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, directory, commands, run):
+
+        # Gather data
+        self.directory = directory
+        self.commands = commands
+        self.run_component = self.add_default_values(run, 2)
+
+        # Run checks
+        self.check_inputs()
+
+
+    def collect_directory_contents(self):
+        os.listdir(self.directory)
+
+
+    def run_template(self):
+
+        data = []
+        livestock_ssh_path = r'C:\livestock\python\ssh'
+
+        gh_misc.write_file(data, livestock_ssh_path, 'cfd_data')
+
+        pick_template('cfd', livestock_ssh_path)
+
+
+    def run(self):
+        if self.checks and self.run_component:
+            self.run_template()
