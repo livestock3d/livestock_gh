@@ -7,10 +7,12 @@ __version__ = "0.0.1"
 
 # Module imports
 import os
+import shutil
+import subprocess
 
 # Livestock imports
 from comp.component import GHComponent
-from win.templates import pick_template
+import win.ssh as ssh
 import gh.misc as gh_misc
 
 # Grasshopper imports
@@ -180,9 +182,13 @@ class CFDonSSH(GHComponent):
                         'default_value': None},
                     1: {'name': 'Commands',
                         'description': 'OpenFoam Commands to run',
-                        'access': 'item',
+                        'access': 'list',
                         'default_value': None},
-                    2: {'name': 'Run',
+                    2: {'name': 'CPUs',
+                        'description': 'Number of CPUs to perform each command on',
+                        'access': 'list',
+                        'default_value': None},
+                    3: {'name': 'Run',
                         'description': 'Runs the component',
                         'access': 'item',
                         'default_value': False}
@@ -198,8 +204,10 @@ class CFDonSSH(GHComponent):
         self.component_number = 22
         self.directory = None
         self.commands = None
+        self.cpus = None
         self.run_component = None
-        self.checks = [False, False]
+        self.ssh_path = ssh.ssh_path
+        self.checks = [False, False, False]
         self.results = None
 
     def check_inputs(self):
@@ -210,31 +218,56 @@ class CFDonSSH(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, directory, commands, run):
+    def run_checks(self, directory, commands, cpus, run):
 
         # Gather data
         self.directory = directory
         self.commands = commands
+        self.cpus = cpus
         self.run_component = self.add_default_values(run, 2)
 
         # Run checks
         self.check_inputs()
 
+    def write(self):
 
-    def collect_directory_contents(self):
-        os.listdir(self.directory)
+        # Initialize
+        ssh.clean_ssh_folder()
+        files_written = []
+        file_run = ['cfd_ssh_template.py']
+        files_written.append('cfd_ssh_template.py')
 
+        # Write commands file
+        gh_misc.write_file([self.commands, self.cpus], self.ssh_path, 'cfd_commands')
+        files_written.append('cfd_commands.txt')
+
+        # Zip and move case files
+        shutil.make_archive(self.ssh_path + '/cfd_case', 'zip', self.directory)
+
+        # SSH commands
+        ssh_cmd = ssh.get_ssh()
+        ssh_cmd['file_transfer'] = ','.join(files_written)
+        ssh_cmd['file_run'] = ','.join(file_run)
+        ssh_cmd['file_return'] = 'solved_cfd_case.zip'
+        ssh_cmd['template'] = 'cfd_ssh'
+        ssh.write_ssh_commands(ssh_cmd)
+
+        return True
 
     def run_template(self):
 
-        data = []
-        livestock_ssh_path = r'C:\livestock\python\ssh'
+        # Python executor
+        py_exe = gh_misc.get_python_exe()
 
-        gh_misc.write_file(data, livestock_ssh_path, 'cfd_data')
+        # SSH template path
+        ssh_template = ssh.ssh_path + '/ssh_template.py'
 
-        pick_template('cfd', livestock_ssh_path)
-
+        # Run template
+        thread = subprocess.Popen([py_exe, ssh_template])
+        thread.wait()
+        thread.kill()
 
     def run(self):
         if self.checks and self.run_component:
+            self.write()
             self.run_template()

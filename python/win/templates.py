@@ -38,6 +38,16 @@ def pick_template(template_name, path):
         raise NameError('Could not find template: ' + str(template_name))
 
 
+def print_template_header(template):
+    print('---------------------------------------------------')
+    print('')
+    print('                     LIVESTOCK                    ')
+    print('                  Running Template:')
+    print('                       ' + str(template))
+    print('')
+    print('---------------------------------------------------')
+
+
 def drain_mesh_template(path):
     file = open(path + '/drain_mesh_template.py', 'w')
     file.write("print('Running template drain_mesh_template.py')\n")
@@ -198,4 +208,22 @@ def process_cmf_results(path):
 
 
 def cfd_ssh_template(path):
-    """ """
+    file_name = r'/cfd_ssh_template.py'
+    file = open(path + file_name, 'w')
+    print_template_header(file_name)
+
+    file.write("# Imports\n")
+    file.write("from pathlib import Path\n")
+    file.write("import sys\n")
+    file.write("home_user = str(Path.home())\n")
+    file.write("sys.path.insert(0, home_user + '/livestock')\n")
+    file.write("from lib.misc import run_cfd\n")
+
+    file.write("# Run function\n")
+    file.write("run_cfd(home_user + '/livestock/ssh')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')\n")
+    file.write("file_obj.close()")
+

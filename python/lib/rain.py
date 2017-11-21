@@ -198,7 +198,7 @@ def drain_mesh_paths(files_path):
     return True
 
 
-def drainPools(path):
+def drain_pools(path):
     import pymesh as pm
     from numpy import array, allclose
     from numpy import sum as npsum
@@ -635,7 +635,7 @@ def drainPools(path):
         return None
 
 
-class simpleRain():
+class simple_rain():
     def __init__(self, cpus, precipitation, windSpeed, windDirection, testPoints, testVectors, context, temperature, k):
         self.prec = precipitation
         self.windSpeed = windSpeed
@@ -842,7 +842,7 @@ class simpleRain():
             self.yzAngles.append(yz_tmp)
 
 
-def topographicIndex(meshPath, drainCurvesPath):
+def topographic_index(meshPath, drainCurvesPath):
     import numpy as np
     import GeometryClasses as gc
     import pymesh as pm
