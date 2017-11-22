@@ -9,11 +9,9 @@ __version__ = "0.0.1"
 
 
 # Livestock imports
-from win.templates import *
 
 # Grasshopper imports
 import Rhino.Geometry as rg
-import os
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions

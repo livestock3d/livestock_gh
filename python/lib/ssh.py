@@ -9,8 +9,7 @@ __version__ = "0.0.1"
 
 
 # Livestock imports
-import gh.misc as gh_misc
-from win.templates import *
+import misc as gh_misc
 
 # Grasshopper imports
 import scriptcontext as sc

@@ -8,9 +8,8 @@ __version__ = "0.0.1"
 # Module imports
 
 # Livestock imports
-import lib.plant as plant
-from comp.component import GHComponent
-import gh.misc as gh_misc
+import livestock.lib.plant as plant
+from component import GHComponent
 
 # Grasshopper imports
 
