@@ -60,6 +60,8 @@ def drain_mesh_template(path):
     file.write("print('Running template drain_mesh_template.py')\n")
 
     file.write("# Imports\n")
+    file.write("from pathlib import Path\n")
+    file.write("home_user = str(Path.home())\n")
     file.write("from livestock_linux.rain import drain_mesh_paths\n")
 
     file.write("# Run function\n")

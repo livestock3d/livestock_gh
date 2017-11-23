@@ -6,20 +6,23 @@ __version__ = "0.0.1"
 # Imports
 
 # Module imports
-
+import os
 
 # Livestock imports
 
 # Grasshopper imports
 import Rhino.Geometry as rg
+import scriptcontext as sc
+import rhinoscriptsyntax as rs
+import Rhino as rc
+from System.Threading.Tasks.Parallel import ForEach
+from Rhino.Geometry.Brep import JoinBreps
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
 
+
 def bake(geo, doc):
-    import scriptcontext as sc
-    import rhinoscriptsyntax as rs
-    import Rhino as rc
 
     # we create or use some geometry
     geo_id = geo
@@ -27,7 +30,6 @@ def bake(geo, doc):
     # we obtain the reference in the Rhino doc
     sc.doc = doc
     doc_object = rs.coercerhinoobject(geo_id)
-
 
     attributes = doc_object.Attributes
     geometry = doc_object.Geometry
@@ -42,10 +44,8 @@ def bake(geo, doc):
     sc.doc = doc
     return rhino_line
 
+
 def export(ids, file_path, file_name, file_type, doc):
-    import scriptcontext as sc
-    import rhinoscriptsyntax as rs
-    import Rhino as rc
 
     sel_ids = ""
     for i in range(len(ids)):
@@ -68,8 +68,9 @@ def export(ids, file_path, file_name, file_type, doc):
     else:
         return False
 
+
 def bake_export_delete(geo, file_path, file_name, file_type, doc):
-    g = bake(geo,doc)
+    g = bake(geo, doc)
     export([g, ], file_path, file_name, file_type, doc)
 
 
@@ -80,44 +81,57 @@ def import_obj(path):
     :return: Rhino Mesh
     """
 
-    import Rhino.Geometry as rg
-
-    # Initilize mesh
+    # Initialize mesh
     mesh = rg.Mesh()
 
     # Open File
-    file = open(path)
-    lines = file.readlines()
+    file_ = open(path)
+    lines = file_.readlines()
+    file_.close()
 
     # Check if file is generated with PyMesh
     if lines[0].startswith('# Generated with PyMesh'):
         print('Generated with PyMesh')
         for line in lines:
             if line.find("v") == 0:
-                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]), float((line.split(' '))[2]), float((line.split(' '))[3])))
+                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
+                                             float((line.split(' '))[2]),
+                                             float((line.split(' '))[3])
+                                             )
+                                  )
 
             if line.find("f") == 0:
                 line = line[:-2]
                 if len(line.split(' ')) == 4:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1, int(line.split(' ')[2]) - 1, int(line.split(' ')[3]) - 1))
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
+                                                   int(line.split(' ')[2]) - 1,
+                                                   int(line.split(' ')[3]) - 1)
+                                       )
 
                 elif len(line.split(' ')) == 5:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1, int(line.split(' ')[2]) - 1, int(line.split(' ')[3]) - 1, int(line.split(' ')[4]) - 1))
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
+                                                   int(line.split(' ')[2]) - 1,
+                                                   int(line.split(' ')[3]) - 1,
+                                                   int(line.split(' ')[4]) - 1)
+                                       )
     else:
         for line in lines:
-            if line.find("v")==0 and line.find("n")==-1 and line.find("t")==-1:
-                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),float((line.split(' '))[2]),float((line.split(' '))[3])))
+            if line.find("v") == 0 and line.find("n") == -1 and line.find("t") == -1:
+                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
+                                             float((line.split(' '))[2]),
+                                             float((line.split(' '))[3])
+                                             )
+                                  )
 
-            if line.find("f")==0:
+            if line.find("f") == 0:
                 if len(line.split(' ')) == 4:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1].split('/')[0])-1,int(line.split(' ')[2].split('/')[0])-1,int(line.split(' ')[3].split('/')[0])-1))
-
-                #if line.split(' ').Count==5:
-                    #mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1].split('/')[0])-1,int(line.split(' ')[2].split('/')[0])-1,int(line.split(' ')[3].split('/')[0])-1,int(line.split(' ')[4].split('/')[0])-1))
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1].split('/')[0])-1,
+                                                   int(line.split(' ')[2].split('/')[0])-1,
+                                                   int(line.split(' ')[3].split('/')[0])-1)
+                                       )
 
     mesh.Normals.ComputeNormals()
     mesh.Compact()
-    file.close()
     return mesh
 
 
@@ -140,31 +154,27 @@ def load_points(path_and_file):
 
 
 def make_curves_from_points(points):
-    from Rhino import Geometry as rc
 
     curves = []
-    endPoints = []
+    end_points = []
     for pts in points:
-        if len(pts)==1:
-            endPoints.append(pts[0])
+        if len(pts) == 1:
+            end_points.append(pts[0])
         else:
-            crv = rc.Curve.CreateControlPointCurve(pts,5)
+            crv = rc.Curve.CreateControlPointCurve(pts, 5)
             if crv:
                 curves.append(crv)
-                endPoints.append(pts[-1])
+                end_points.append(pts[-1])
 
-    return curves, endPoints
+    return curves, end_points
 
 
 def parallel_make_context_mesh(brep, parallel=False):
     """Ladybug - mesh breps parallel"""
 
-    import Rhino.Geometry as rc
-    from System.Threading.Tasks.Parallel import ForEach
-
-    def makeMeshFromSrf(i):
+    def make_mesh_from_srf(i):
         try:
-            mesh[i] = rc.Mesh.CreateFromBrep(brep[i], meshParam)
+            mesh[i] = rc.Mesh.CreateFromBrep(brep[i], mesh_param)
             brep[i].Dispose()
         except:
             print('Error in converting Brep to Mesh...')
@@ -174,26 +184,23 @@ def parallel_make_context_mesh(brep, parallel=False):
     mesh = [None] * len(brep)
 
     # set-up mesh parameters for each surface based on surface size
-    meshParam = rc.MeshingParameters.Default  # Coarse
-    rc.MeshingParameters.GridMaxCount.__set__(meshParam, 1)
-    rc.MeshingParameters.SimplePlanes.__set__(meshParam, True)
-    rc.MeshingParameters.GridAmplification.__set__(meshParam, 1.5)
+    mesh_param = rc.MeshingParameters.Default  # Coarse
+    rc.MeshingParameters.GridMaxCount.__set__(mesh_param, 1)
+    rc.MeshingParameters.SimplePlanes.__set__(mesh_param, True)
+    rc.MeshingParameters.GridAmplification.__set__(mesh_param, 1.5)
 
-    ## Call the mesh function
+    # Call the mesh function
     if parallel:
-        ForEach(xrange(len(brep)), makeMeshFromSrf)
+        ForEach(xrange(len(brep)), make_mesh_from_srf)
     else:
         for i in range(len(mesh)):
-            makeMeshFromSrf(i)
+            make_mesh_from_srf(i)
 
     return mesh
 
 
 def clean_and_coerce_list(brep_list):
     """ Ladybug - This definition cleans the list and adds them to RhinoCommon"""
-
-    from Rhino.Geometry.Brep import JoinBreps
-    import rhinoscriptsyntax as rs
 
     outputMesh = []
     outputBrep = []
@@ -249,9 +256,7 @@ def clean_and_coerce_list(brep_list):
 def join_mesh(mesh_list):
     """Ladybug - joinMesh"""
 
-    from Rhino.Geometry import Mesh
-
-    joined_mesh = Mesh()
+    joined_mesh = rg.Mesh()
     for m in mesh_list: joined_mesh.Append(m)
 
     return joined_mesh
@@ -260,29 +265,26 @@ def join_mesh(mesh_list):
 def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
     """Ladybug - RayTrace"""
 
-    import Rhino.Geometry as rc
-    import scriptcontext as sc
-
     # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
     if len(context) != 0:
         ## clean the geometry and bring them to rhinoCommon separated as mesh and Brep
-        contextMesh, contextBrep = cleanAndCoerceList(context)
+        contextMesh, contextBrep = clean_and_coerce_list(context)
         ## mesh Brep
-        contextMeshedBrep = parallel_makeContextMesh(contextBrep)
+        contextMeshedBrep = parallel_make_context_mesh(contextBrep)
 
         ## Flatten the list of surfaces
-        contextMeshedBrep = flattenList(contextMeshedBrep)
+        contextMeshedBrep = flatten_list(contextMeshedBrep)
         contextSrfs = contextMesh + contextMeshedBrep
-        joinedContext = joinMesh(contextSrfs)
+        joinedContext = join_mesh(contextSrfs)
 
     # Get rid of trimmed parts
-    cleanBrep = rc.Brep.CreateFromMesh(joinedContext, False)
+    cleanBrep = rg.Brep.CreateFromMesh(joinedContext, False)
 
     rays = []
     for testPt in startPts:
         for vector in startVectors:
             vector.Unitize()
-            ray = rc.Geometry.Ray3d(testPt, vector)
+            ray = rg.Ray3d(testPt, vector)
             if numOfBounce > 0:
                 intPts = rc.Intersect.Intersection.RayShoot(ray, [cleanBrep], numOfBounce)
                 # print intPts
@@ -325,20 +327,17 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
     return rays
 
 
-def rayShoot(startPt, vector, context, numOfBounce = 1):
+def ray_shoot(start_pt, vector, context, num_of_bounce=1):
     """Build on: Ladybug - RayTrace"""
 
-    from Rhino.Geometry.Intersect.Intersection import RayShoot
-    from Rhino.Geometry import Ray3d
+    ray = rg.Ray3d(start_pt, vector)
+    print('ray', ray)
 
-    ray = Ray3d(startPt, vector)
-    print('ray',ray)
+    if num_of_bounce > 0:
+        int_pt = rg.RayShoot(ray, [context], num_of_bounce)
+        print('intPt:', int_pt)
 
-    if numOfBounce > 0:
-        intPt = RayShoot(ray, [context], numOfBounce)
-        print('intPt:',intPt)
-
-        if intPt:
+        if int_pt:
             print('Intersection!')
             return True
         else:
@@ -351,7 +350,6 @@ def rayShoot(startPt, vector, context, numOfBounce = 1):
 
 
 def load_mesh_data(path):
-    import os.path
 
     path = path.split('.')[0] + '_Data.txt'
 
