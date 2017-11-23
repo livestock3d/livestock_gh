@@ -1,6 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -157,11 +157,12 @@ def make_curves_from_points(points):
 
     curves = []
     end_points = []
+
     for pts in points:
         if len(pts) == 1:
             end_points.append(pts[0])
         else:
-            crv = rc.Curve.CreateControlPointCurve(pts, 5)
+            crv = rg.Curve.CreateControlPointCurve(pts, 5)
             if crv:
                 curves.append(crv)
                 end_points.append(pts[-1])
