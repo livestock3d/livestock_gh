@@ -5,10 +5,8 @@ __version__ = "0.0.1"
 
 #----------------------------------------------------------------------------------------------------------------------#
 # Imports
-from clr import AddReference
-AddReference('Grasshopper')
 import Grasshopper.Kernel as gh
-from comp.component import GHComponent
+from component import GHComponent
 
 #----------------------------------------------------------------------------------------------------------------------#
 # Comfort Classes

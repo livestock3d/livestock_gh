@@ -1,9 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "GPL"
 __version__ = "0.0.1"
-__maintainer__ = "Christian Kongsgaard"
-__email__ = "ocni@dtu.dk"
-__status__ = "Work in Progress"
 
 #----------------------------------------------------------------------------------------------------------------------#
 #Functions and Classes
