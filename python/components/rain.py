@@ -1,6 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -9,10 +9,10 @@ __version__ = "0.0.1"
 import subprocess
 
 # Livestock imports
-import gh.ssh as ssh
-import gh.geometry as gh_geo
-from comp.component import GHComponent
-import gh.misc as gh_misc
+import livestock.lib.ssh as ssh
+import livestock.lib.geometry as gh_geo
+from component import GHComponent
+import livestock.lib.misc as gh_misc
 
 # Grasshopper imports
 

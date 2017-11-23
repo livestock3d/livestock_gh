@@ -1,6 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -13,12 +13,12 @@ import subprocess
 from shutil import copyfile
 
 # Livestock imports
-import gh.ssh as ssh
-import gh.geometry as gh_geo
-import lib.csv as csv
-from comp.component import GHComponent
-import gh.misc as gh_misc
-from win.templates import pick_template
+import livestock.lib.ssh as ssh
+import livestock.lib.geometry as gh_geo
+import livestock.lib.csv as csv
+from component import GHComponent
+import livestock.lib.misc as gh_misc
+from livestock.lib.templates import pick_template
 
 # Grasshopper imports
 import rhinoscriptsyntax as rs

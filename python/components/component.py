@@ -1,11 +1,12 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
+import os
 
 # Livestock imports
 
@@ -86,7 +87,8 @@ class GHComponent:
 def component_data(n):
     """Function that reads the grasshopper component list and returns the component data"""
 
-    component_file = r'C:\livestock\python\comp\component_list.txt'
+    appdata = os.getenv('APPDATA')
+    component_file = appdata + '/McNeel\Rhinoceros/5.0/scripts/livestock/components/component_list.txt'
 
     read = open(component_file, 'r')
     lines = read.readlines()

@@ -1,6 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -9,8 +9,8 @@ __version__ = "0.0.1"
 
 
 # Livestock imports
-import gh.misc as gh_misc
-from win.templates import *
+import misc as gh_misc
+import templates
 
 # Grasshopper imports
 import scriptcontext as sc
@@ -68,7 +68,7 @@ def write_ssh_commands(ssh_dict):
                         'in_data')
 
     # Write templates
-    ssh_template(ssh_path)
-    pick_template(ssh_dict['template'], ssh_path)
+    templates.ssh_template(ssh_path)
+    templates.pick_template(ssh_dict['template'], ssh_path)
 
     return True

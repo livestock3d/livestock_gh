@@ -1,252 +1,370 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
-import pandas as pd
-import numpy as np
-#import pyshp as ps
-from numpy.linalg import norm
-import pymesh
+import os
 
 # Livestock imports
 
+# Grasshopper imports
+import Rhino.Geometry as rg
+import scriptcontext as sc
+import rhinoscriptsyntax as rs
+import Rhino as rc
+from System.Threading.Tasks.Parallel import ForEach
+from Rhino.Geometry.Brep import JoinBreps
 
 # -------------------------------------------------------------------------------------------------------------------- #
-# Livestock Geometry Functions
+# Livestock Grasshopper Geometry Classes and Functions
 
-def fix_mesh(mesh, detail="normal"):
 
-    bbox_min, bbox_max = mesh.bbox
-    diag_len = norm(bbox_max - bbox_min)
+def bake(geo, doc):
 
-    if detail == "normal":
-        target_len = diag_len * 1e-2
+    # we create or use some geometry
+    geo_id = geo
 
-    elif detail == "high":
-        target_len = diag_len * 5e-3
+    # we obtain the reference in the Rhino doc
+    sc.doc = doc
+    doc_object = rs.coercerhinoobject(geo_id)
 
-    elif detail == "low":
-        target_len = diag_len * 0.03
+    attributes = doc_object.Attributes
+    geometry = doc_object.Geometry
 
-    print("Target resolution: {} mm".format(target_len))
+    # we change the scriptcontext
+    sc.doc = rc.RhinoDoc.ActiveDoc
 
-    count = 0
-    mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
-    mesh, __ = pymesh.split_long_edges(mesh, target_len)
-    num_vertices = mesh.num_vertices
+    # we add both the geometry and the attributes to the Rhino doc
+    rhino_line = sc.doc.Objects.Add(geometry, attributes)
 
-    while True:
-        mesh, __ = pymesh.collapse_short_edges(mesh, 1e-6)
-        mesh, __ = pymesh.collapse_short_edges(mesh, target_len, preserve_feature=True)
-        mesh, __ = pymesh.remove_obtuse_triangles(mesh, 150.0, 100)
+    # we put back the original Grasshopper document as default
+    sc.doc = doc
+    return rhino_line
 
-        if mesh.num_vertices == num_vertices:
-            break
 
-        num_vertices = mesh.num_vertices
-        print("#v: {}".format(num_vertices))
-        count += 1
-        if count > 10:
-            break
+def export(ids, file_path, file_name, file_type, doc):
 
-    mesh = pymesh.resolve_self_intersection(mesh)
-    mesh, __ = pymesh.remove_duplicated_faces(mesh)
-    mesh = pymesh.compute_outer_hull(mesh)
-    mesh, __ = pymesh.remove_duplicated_faces(mesh)
-    mesh, __ = pymesh.remove_obtuse_triangles(mesh, 179.0, 5)
-    mesh, __ = pymesh.remove_isolated_vertices(mesh)
+    sel_ids = ""
+    for i in range(len(ids)):
+        sel_ids += "_SelId %s " % ids[i]
+
+    file_name_and_type = file_name + file_type
+    final_path = chr(34) + file_path + '\\' + file_name_and_type + chr(34)
+
+    command_string = "_-Export " + sel_ids + "_Enter " + final_path + " _Enter _Enter _Enter"
+    echo = False
+    done = rs.Command(command_string, echo)
+
+    sc.doc = rc.RhinoDoc.ActiveDoc
+    rs.SelectObject(ids)
+    rs.Command("_Delete", True)
+    sc.doc = doc
+
+    if done:
+        return True
+    else:
+        return False
+
+
+def bake_export_delete(geo, file_path, file_name, file_type, doc):
+    g = bake(geo, doc)
+    export([g, ], file_path, file_name, file_type, doc)
+
+
+def import_obj(path):
+    """
+    Reads a .obj file and converts it into a Rhino Mesh
+    :param path: path including file name and file extension (.obj)
+    :return: Rhino Mesh
+    """
+
+    # Initialize mesh
+    mesh = rg.Mesh()
+
+    # Open File
+    file_ = open(path)
+    lines = file_.readlines()
+    file_.close()
+
+    # Check if file is generated with PyMesh
+    if lines[0].startswith('# Generated with PyMesh'):
+        print('Generated with PyMesh')
+        for line in lines:
+            if line.find("v") == 0:
+                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
+                                             float((line.split(' '))[2]),
+                                             float((line.split(' '))[3])
+                                             )
+                                  )
+
+            if line.find("f") == 0:
+                line = line[:-2]
+                if len(line.split(' ')) == 4:
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
+                                                   int(line.split(' ')[2]) - 1,
+                                                   int(line.split(' ')[3]) - 1)
+                                       )
+
+                elif len(line.split(' ')) == 5:
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
+                                                   int(line.split(' ')[2]) - 1,
+                                                   int(line.split(' ')[3]) - 1,
+                                                   int(line.split(' ')[4]) - 1)
+                                       )
+    else:
+        for line in lines:
+            if line.find("v") == 0 and line.find("n") == -1 and line.find("t") == -1:
+                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
+                                             float((line.split(' '))[2]),
+                                             float((line.split(' '))[3])
+                                             )
+                                  )
+
+            if line.find("f") == 0:
+                if len(line.split(' ')) == 4:
+                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1].split('/')[0])-1,
+                                                   int(line.split(' ')[2].split('/')[0])-1,
+                                                   int(line.split(' ')[3].split('/')[0])-1)
+                                       )
+
+    mesh.Normals.ComputeNormals()
+    mesh.Compact()
+    return mesh
+
+
+def load_points(path_and_file):
+    """Loads a text file containing points"""
+
+    points = []
+    file_obj = open(path_and_file, 'r')
+    for l in file_obj.readlines():
+        line = l.split("\t")[:-1]
+        pts = []
+        for p in line:
+            pt = p.split(',')
+            pts.append(rg.Point3d(float(pt[0]), float(pt[1]), float(pt[2])))
+        points.append(pts)
+
+    file_obj.close()
+    os.remove(path_and_file)
+    return points
+
+
+def make_curves_from_points(points):
+
+    curves = []
+    end_points = []
+
+    for pts in points:
+        if len(pts) == 1:
+            end_points.append(pts[0])
+        else:
+            crv = rg.Curve.CreateControlPointCurve(pts, 5)
+            if crv:
+                curves.append(crv)
+                end_points.append(pts[-1])
+
+    return curves, end_points
+
+
+def parallel_make_context_mesh(brep, parallel=False):
+    """Ladybug - mesh breps parallel"""
+
+    def make_mesh_from_srf(i):
+        try:
+            mesh[i] = rc.Mesh.CreateFromBrep(brep[i], mesh_param)
+            brep[i].Dispose()
+        except:
+            print('Error in converting Brep to Mesh...')
+            pass
+
+    # prepare bulk list for each surface
+    mesh = [None] * len(brep)
+
+    # set-up mesh parameters for each surface based on surface size
+    mesh_param = rc.MeshingParameters.Default  # Coarse
+    rc.MeshingParameters.GridMaxCount.__set__(mesh_param, 1)
+    rc.MeshingParameters.SimplePlanes.__set__(mesh_param, True)
+    rc.MeshingParameters.GridAmplification.__set__(mesh_param, 1.5)
+
+    # Call the mesh function
+    if parallel:
+        ForEach(xrange(len(brep)), make_mesh_from_srf)
+    else:
+        for i in range(len(mesh)):
+            make_mesh_from_srf(i)
 
     return mesh
 
 
-def ray_triangle_intersection(ray_near, ray_dir, V):
-    """
-    Möller–Trumbore intersection algorithm in pure python
-    Based on http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
-    """
+def clean_and_coerce_list(brep_list):
+    """ Ladybug - This definition cleans the list and adds them to RhinoCommon"""
 
-    v1 = V[0]
-    v2 = V[1]
-    v3 = V[2]
-    eps = 0.000001
-    edge1 = v2 - v1
-    edge2 = v3 - v1
-    pvec = np.cross(ray_dir, edge2)
-    det = edge1.dot(pvec)
+    outputMesh = []
+    outputBrep = []
 
-    if abs(det) < eps:
-        return False, None
+    for id in brep_list:
+        if rs.IsMesh(id):
+            geo = rs.coercemesh(id)
+            if geo is not None:
+                outputMesh.append(geo)
+                try:
+                    rs.DeleteObject(id)
+                except:
+                    pass
 
-    inv_det = 1. / det
-    tvec = ray_near - v1
-    u = tvec.dot(pvec) * inv_det
-    if u < 0. or u > 1.:
-        return False, None
+        elif rs.IsBrep(id):
+            geo = rs.coercebrep(id)
+            if geo is not None:
+                outputBrep.append(geo)
+                try:
+                    rs.DeleteObject(id)
+                except:
+                    pass
 
-    qvec = np.cross(tvec, edge1)
-    v = ray_dir.dot(qvec) * inv_det
-    if v < 0. or u + v > 1.:
-        return False, None
+            else:
+                # the idea was to remove the problematice surfaces
+                # not all the geometry which is not possible since
+                # badGeometries won't pass rs.IsBrep()
+                tempBrep = []
+                surfaces = rs.ExplodePolysurfaces(id)
 
-    t = edge2.dot(qvec) * inv_det
-    if t < eps:
-        return False, None
+                for surface in surfaces:
+                    geo = rs.coercesurface(surface)
+                    if geo is not None:
+                        tempBrep.append(geo)
+                        try:
+                            rs.DeleteObject(surface)
+                        except:
+                            pass
 
-    return True, t
+                geo = JoinBreps(tempBrep, 0.01)
 
+                for Brep in tempBrep:
+                    Brep.Dispose()
+                    try:
+                        rs.DeleteObject(id)
+                    except:
+                        pass
+                outputBrep.append(geo)
 
-def lowest_face_vertex(v0, v1, v2):
-
-    V = [v0, v1, v2]
-    x0 = v0[0]
-    y0 = v0[1]
-    z0 = v0[2]
-    x1 = v1[0]
-    y1 = v1[1]
-    z1 = v1[2]
-    x2 = v2[0]
-    y2 = v2[1]
-    z2 = v2[2]
-    X = [x0, x1, x2]
-    Y = [y0, y1, y2]
-    Z = [z0, z1, z2]
+    return outputMesh, outputBrep
 
 
-    Zsort = sorted(Z)
+def join_mesh(mesh_list):
+    """Ladybug - joinMesh"""
 
-    if Zsort[0] == Zsort[2]:
-        return np.array([sum(X)/3, sum(Y)/3, sum(Z)/3])
+    joined_mesh = rg.Mesh()
+    for m in mesh_list: joined_mesh.Append(m)
 
-    elif Zsort[0] < Zsort[1]:
-        i = Z.index(Zsort[0])
-        return V[i]
+    return joined_mesh
 
-    elif Zsort[0] == Zsort[1]:
-        i0 = Z.index(Zsort[0])
-        i1 = Z.index(Zsort[1])
-        x = 0.5*(X[i0] + X[i1])
-        y = 0.5*(Y[i0] + Y[i1])
-        return np.array([x, y, Zsort[0]])
+
+def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
+    """Ladybug - RayTrace"""
+
+    # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
+    if len(context) != 0:
+        ## clean the geometry and bring them to rhinoCommon separated as mesh and Brep
+        contextMesh, contextBrep = clean_and_coerce_list(context)
+        ## mesh Brep
+        contextMeshedBrep = parallel_make_context_mesh(contextBrep)
+
+        ## Flatten the list of surfaces
+        contextMeshedBrep = flatten_list(contextMeshedBrep)
+        contextSrfs = contextMesh + contextMeshedBrep
+        joinedContext = join_mesh(contextSrfs)
+
+    # Get rid of trimmed parts
+    cleanBrep = rg.Brep.CreateFromMesh(joinedContext, False)
+
+    rays = []
+    for testPt in startPts:
+        for vector in startVectors:
+            vector.Unitize()
+            ray = rg.Ray3d(testPt, vector)
+            if numOfBounce > 0:
+                intPts = rc.Intersect.Intersection.RayShoot(ray, [cleanBrep], numOfBounce)
+                # print intPts
+                if intPts:
+                    ptList = [testPt]
+                    ptList.extend(intPts)
+                    ray = rc.Polyline(ptList).ToNurbsCurve()
+
+                    try:
+                        # create last ray
+                        # calculate plane at intersection
+                        intNormal = cleanBrep.ClosestPoint(intPts[-1], sc.doc.ModelAbsoluteTolerance)[5]
+
+                        lastVector = rc.Vector3d(ptList[-2] - ptList[-1])
+                        lastVector.Unitize()
+
+                        crossProductNormal = rc.Vector3d.CrossProduct(intNormal, lastVector)
+
+                        plane = rc.Plane(intPts[-1], intNormal, crossProductNormal)
+
+                        mirrorT = rc.Transform.Mirror(intPts[-1], plane.Normal)
+
+                        lastRay = rc.Line(intPts[-1], lastBounceLen * lastVector).ToNurbsCurve()
+                        lastRay.Transform(mirrorT)
+
+                        ray = rc.Curve.JoinCurves([ray, lastRay])[0]
+                    except:
+                        pass
+
+                    rays.append(ray)
+                else:
+                    # no bounce so let's just create a line form the point
+                    firstRay = rc.Line(testPt, lastBounceLen * vector).ToNurbsCurve()
+                    rays.append(firstRay)
+
+    if len(rays) == 0:
+        print("No reflection!")
+        return False
+
+    return rays
+
+
+def ray_shoot(start_pt, vector, context, num_of_bounce=1):
+    """Build on: Ladybug - RayTrace"""
+
+    ray = rg.Ray3d(start_pt, vector)
+    print('ray', ray)
+
+    if num_of_bounce > 0:
+        int_pt = rg.RayShoot(ray, [context], num_of_bounce)
+        print('intPt:', int_pt)
+
+        if int_pt:
+            print('Intersection!')
+            return True
+        else:
+            print('No intersection!')
+            return False
 
     else:
-        print('Error finding lowest point!')
-        print('v0:',v0)
-        print('v1:', v1)
-        print('v2:', v2)
-        return None
+        print("No reflection!")
+        return False
 
 
-def angle_between_vectors(v1, v2, force_angle=None):
-    """
-    Computes the angle between two vectors.
-    :param v1: Vector1 as numpy array
-    :param v2: Vector2 as numpy array
-    :param force_angle: Default is None. Use to force angle into acute or obtuse.
-    :return: Angle in radians and its angle type.
-    """
+def load_mesh_data(path):
 
-    # Dot product
-    dot_v1v2 = np.dot(v1, v2)
+    path = path.split('.')[0] + '_Data.txt'
 
-    # Determine angle type
-    if dot_v1v2 > 0:
-        angle_type = 'acute'
+    # Check if file exists
+    exists = os.path.isfile(path)
+    if exists:
+        data = []
+        file_obj = open(path, 'r')
+        lines = file_obj.readlines()
+        for l in lines:
+            data.append(l[:-1])
 
-    elif dot_v1v2 == 0:
-        return np.pi/2, 'perpendicular'
+        print('Mesh loaded with data')
+        return data
 
     else:
-        angle_type = 'obtuse'
-
-    # Vector magnitudes and compute angle
-    mag_v1 = np.sqrt(v1.dot(v1))
-    mag_v2 = np.sqrt(v2.dot(v2))
-    angle = np.arccos(abs(dot_v1v2 / (mag_v1 * mag_v2)))
-
-    # Compute desired angle type
-    if not force_angle:
-        return angle, angle_type
-
-    elif force_angle == 'acute':
-        if angle_type == 'acute':
-            return angle, 'acute'
-        else:
-            angle = np.pi - angle
-            return angle, 'acute'
-
-    elif force_angle == 'obtuse':
-        if angle > np.pi/2:
-            return angle, 'obtuse'
-        else:
-            angle = np.pi - angle
-            return angle, 'obtuse'
-    else:
-        print('force_angle has to be defined as None, acute or obtuse. force_angle was:', str(force_angle))
-        return None, None
-
-
-def line_intersection(p1, p2, p3, p4):
-    """
-    Computes the intersection between two lines given 4 points on those lines.
-    :param p1: Numpy array. First point on line 1
-    :param p2: Numpy array. Second point on line 1
-    :param p3: Numpy array. First point on line 2
-    :param p4: Numpy array. Second point on line 2
-    :return: Numpy array. Intersection point
-    """
-
-    # Direction vectors
-    v1 = (p2 - p1)
-    v2 = (p4 - p3)
-
-    # Cross-products and vector norm
-    cv12 = np.cross(v1, v2)
-    cpv = np.cross((p1 - p3), v2)
-    t = norm(cpv) / norm(cv12)
-
-    return p1 + t * v1
-
-
-def obj_to_panda(obj_file):
-    """Convert a obj file into a panda data frame"""
-
-    # Initialization
-    vertices = []
-    normals = []
-    faces = []
-    file = open(obj_file, 'r')
-    lines = file.readlines()
-    file.close()
-
-    # Find data
-    for line in lines:
-        if line.startswith('v'):
-            data = line.split(' ')
-            vertices.append([data[1], data[2], data[3]])
-
-        elif line.startswith('vn'):
-            data = line.split(' ')
-            normals.append([data[1], data[2], data[3]])
-
-        elif line.startswith('f'):
-            data = line.split(' ')
-            d = []
-            for elem in data:
-                d.append(elem.split('/'))
-            faces.append(d)
-
-        else:
-            pass
-
-    return vertices, normals, faces
-
-
-def obj_to_shp(obj_file, shp_file):
-    """Convert a obj file into a shape file"""
-    shapefile.Writer()
-
-    return True
+        print("Mesh don't have any associated data")
