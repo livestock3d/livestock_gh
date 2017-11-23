@@ -638,7 +638,7 @@ class CMFRetentionCurve(GHComponent):
 
         def inputs():
             return {0: {'name': 'SoilIndex',
-                        'description': 'Index for chosing soil type',
+                        'description': 'Index for choosing soil type. Index from 0-4',
                         'access': 'item',
                         'default_value': 0}}
 
