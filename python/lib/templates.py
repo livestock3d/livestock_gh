@@ -1,6 +1,6 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Templates Functions
@@ -14,16 +14,19 @@ def pick_template(template_name, path):
         drain_mesh_template(path)
 
     elif template_name == 'drain_pools':
-        drain_pools_template(path)
+        pass
+        # drain_pools_template(path)
 
     elif template_name == 'fix_mesh':
-        fix_mesh_template(path)
+        pass
+        # fix_mesh_template(path)
 
     elif template_name == 'ssh':
         ssh_template(path)
 
     elif template_name == 'topographic_index':
-        topographic_index_template(path)
+        pass
+        # topographic_index_template(path)
 
     elif template_name == 'cmf':
         cmf_template(path)
@@ -32,7 +35,8 @@ def pick_template(template_name, path):
         process_cmf_results(path)
 
     elif template_name == 'cfd_ssh':
-        cfd_ssh_template(path)
+        pass
+        # cfd_ssh_template(path)
 
     else:
         raise NameError('Could not find template: ' + str(template_name))
@@ -49,15 +53,14 @@ def print_template_header(template):
 
 
 def drain_mesh_template(path):
-    file = open(path + '/drain_mesh_template.py', 'w')
+    file_name = r'/drain_mesh_template.py'
+    print_template_header(file_name)
+    file = open(path + file_name, 'w')
+
     file.write("print('Running template drain_mesh_template.py')\n")
 
     file.write("# Imports\n")
-    file.write("from pathlib import Path\n")
-    file.write("import sys\n")
-    file.write("home_user = str(Path.home())\n")
-    file.write("sys.path.insert(0, home_user + '/livestock')\n")
-    file.write("from lib.rain import drain_mesh_paths\n")
+    file.write("from livestock_linux.rain import drain_mesh_paths\n")
 
     file.write("# Run function\n")
     file.write("drain_mesh_paths(home_user + '/livestock/ssh')\n")
@@ -70,7 +73,7 @@ def drain_mesh_template(path):
 
     return True
 
-
+"""
 def drain_pools_template(path):
     file = open('DrainPoolsTemplate.py', 'w')
     file.write("print('Running template DrainPoolsTemplate.py')")
@@ -94,8 +97,8 @@ def drain_pools_template(path):
     file.write("print('Finished with template')")
 
     return True
-
-
+"""
+"""
 def fix_mesh_template(path):
     file = open('FixMeshTemplate.py', 'w')
     file.write("print('Running template FixMeshTemplate.py')")
@@ -122,25 +125,25 @@ def fix_mesh_template(path):
     file.write("# Annouce that template finished and create out file")
     file.write("print('Finished with template')")
     file.write("file_obj = open('out.txt', 'w')")
-
+"""
 
 def ssh_template(path):
-    file = open(path + '\\ssh_template.py', 'w')
+    file_name = r'/ssh_template.py'
+    print_template_header(file_name)
+    file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
     file.write("import sys\n")
-    file.write("sys.path.insert(0, 'C:\livestock\python')\n")
-    file.write("import win.ssh as win_ssh\n")
+    file.write("import livestock_win.ssh as win_ssh\n")
 
     file.write("# Run function\n")
     file.write("win_ssh.ssh_connection()\n")
-
 
     file.close()
 
     return True
 
-
+"""
 def topographic_index_template(path):
     file = open(path + '\\topographicIndexTemplate.py', 'w')
     file.write("print('Running template topographicIndexTemplate.py')\n")
@@ -162,18 +165,17 @@ def topographic_index_template(path):
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
     file.write("file_obj = open('out.txt', 'w')")
-
+"""
 
 def cmf_template(path):
-    file = open(path + '\\cmf_template.py', 'w')
-    file.write("print('Running Template: cmf_template.py')\n")
+    file_name = r'/cmf_template.py'
+    print_template_header(file_name)
+    file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
     file.write("from pathlib import Path\n")
-    file.write("import sys\n")
     file.write("home_user = str(Path.home())\n")
-    file.write("sys.path.insert(0, home_user + '/livestock')\n")
-    file.write("from lib.lib_cmf import CMFModel\n")
+    file.write("from livestock_linux.lib.lib_cmf import CMFModel\n")
 
     file.write("# Run CMF Model\n")
     file.write("folder = home_user + '/livestock/ssh'\n")
@@ -188,13 +190,12 @@ def cmf_template(path):
 
 
 def process_cmf_results(path):
-    file = open(path + '\\cmf_results_template.py', 'w')
-    file.write("print('Running template process_cmf_results.py')\n")
+    file_name = r'/cmf_results_template.py'
+    print_template_header(file_name)
+    file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import sys\n")
-    file.write("sys.path.insert(0, 'C:\livestock\python')\n")
-    file.write("import win.win_cmf as win_cmf\n")
+    file.write("import livestock_win.win_cmf as win_cmf\n")
 
     file.write("# Run function\n")
     file.write("win_cmf.cmf_results(r'" + path + "')\n")
@@ -206,7 +207,7 @@ def process_cmf_results(path):
 
     return True
 
-
+"""
 def cfd_ssh_template(path):
     file_name = r'/cfd_ssh_template.py'
     file = open(path + file_name, 'w')
@@ -226,4 +227,4 @@ def cfd_ssh_template(path):
     file.write("print('Finished with template')\n")
     file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")
-
+"""
