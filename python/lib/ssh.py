@@ -6,7 +6,8 @@ __version__ = "0.1.0"
 # Imports
 
 # Module imports
-
+import shutil
+import os
 
 # Livestock imports
 import misc as gh_misc
@@ -34,16 +35,12 @@ def get_ssh():
 
 
 def clean_ssh_folder():
-    from shutil import rmtree
-    from os import listdir, mkdir
-    from os.path import isdir
 
-    if isdir(ssh_path):
-        if not listdir(ssh_path) == []:
-            rmtree(ssh_path)
-            mkdir(ssh_path)
+    if os.path.isdir(ssh_path):
+        for file in os.listdir(ssh_path):
+            os.remove(ssh_path + '/' + file)
     else:
-        mkdir(ssh_path)
+        os.mkdir(ssh_path)
 
 
 def write_ssh_commands(ssh_dict):

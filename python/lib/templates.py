@@ -41,6 +41,8 @@ def pick_template(template_name, path):
     else:
         raise NameError('Could not find template: ' + str(template_name))
 
+    return True
+
 
 def print_template_header(template):
     print('---------------------------------------------------')
@@ -177,7 +179,7 @@ def cmf_template(path):
     file.write("# Imports\n")
     file.write("from pathlib import Path\n")
     file.write("home_user = str(Path.home())\n")
-    file.write("from livestock_linux.lib.lib_cmf import CMFModel\n")
+    file.write("from livestock_linux.lib_cmf import CMFModel\n")
 
     file.write("# Run CMF Model\n")
     file.write("folder = home_user + '/livestock/ssh'\n")
@@ -190,10 +192,11 @@ def cmf_template(path):
     file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")
 
+    return True
+
 
 def process_cmf_results(path):
     file_name = r'/cmf_results_template.py'
-    print_template_header(file_name)
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
