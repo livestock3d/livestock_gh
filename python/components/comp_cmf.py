@@ -15,7 +15,7 @@ from shutil import copyfile
 # Livestock imports
 import livestock.lib.ssh as ssh
 import livestock.lib.geometry as gh_geo
-import livestock.lib.csv as csv
+import livestock.lib.livestock_csv as csv
 from component import GHComponent
 import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
@@ -90,6 +90,13 @@ class CMFGround(GHComponent):
             self.checks[4] = True
         else:
             warning.append('Initial saturation must be float! Input provided was: ' + str(self.saturated_depth))
+
+        if self.face_indices:
+            indices = []
+            for index in self.face_indices:
+                indices.append(int(float(index)))
+
+            self.face_indices = indices
 
         if warning:
             if isinstance(warning, list):
@@ -887,26 +894,27 @@ class CMFSolve(GHComponent):
         files_written.append(ground_file)
 
         # Process trees
-        tree_dict = list(tree.c for tree in self.trees)
-        tree_root = ET.Element('tree')
+        if self.trees:
+            tree_dict = list(tree.c for tree in self.trees)
+            tree_root = ET.Element('tree')
 
-        for i in range(0, len(tree_dict)):
-            tree = ET.SubElement(tree_root, 'tree_%i' % i)
-            t_keys = tree_dict[i].keys()
+            for i in range(0, len(tree_dict)):
+                tree = ET.SubElement(tree_root, 'tree_%i' % i)
+                t_keys = tree_dict[i].keys()
 
-            for t in t_keys:
-                data = ET.SubElement(tree, str(t))
-                data_to_write = tree_dict[i][str(t)]
-                if isinstance(data_to_write, dict):
-                    data.text = str(dict(data_to_write))
-                else:
-                    data.text = str(data_to_write)
+                for t in t_keys:
+                    data = ET.SubElement(tree, str(t))
+                    data_to_write = tree_dict[i][str(t)]
+                    if isinstance(data_to_write, dict):
+                        data.text = str(dict(data_to_write))
+                    else:
+                        data.text = str(data_to_write)
 
-        tree_tree = ET.ElementTree(tree_root)
-        tree_file = 'trees.xml'
-        tree_tree.write(self.case_path + '/' + tree_file, xml_declaration=True)
+            tree_tree = ET.ElementTree(tree_root)
+            tree_file = 'trees.xml'
+            tree_tree.write(self.case_path + '/' + tree_file, xml_declaration=True)
 
-        files_written.append(tree_file)
+            files_written.append(tree_file)
 
         # Process outputs
         output_dict = self.output_config.c
@@ -949,7 +957,7 @@ class CMFSolve(GHComponent):
         file_run = ['cmf_template.py']
         file_return = ['results.xml']
 
-        self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
+        self.ssh_cmd['file_transfer'] = ','.join(file_transfer) + ',cmf_template.py'
         self.ssh_cmd['file_run'] = ','.join(file_run)
         self.ssh_cmd['file_return'] = ','.join(file_return)
         self.ssh_cmd['template'] = 'cmf'
@@ -1073,12 +1081,12 @@ class CMFResults(GHComponent):
         self.check_inputs()
 
     def process_xml(self):
-        possible_results = ['evapotranspiration', 'surface_water_volume', 'Surface_water_flux',
+        possible_results = ['evapotranspiration', 'surface_water_volume', 'surface_water_flux',
                             'heat_flux', 'aerodynamic_resistance', 'volumetric_flux', 'potential',
                             'theta', 'volume', 'wetness']
 
         # Write lookup file
-        if self.fetch_result == 0 or 1 or 2 or 3 or 4:
+        if 0 <= self.fetch_result <= 4:
             out = {'cell': possible_results[self.fetch_result]}
             gh_misc.write_file(str(out), self.path, 'result_lookup')
         else:
@@ -1096,11 +1104,23 @@ class CMFResults(GHComponent):
         # Construct csv path
         csv_path = self.path + '/' + str(possible_results[self.fetch_result]) + '.csv'
 
-        return csv_path
+        return csv_path, out.keys()[0]
 
-    def load_result_csv(self, path):
+    def load_result_csv(self, path, out):
+        if out == 'cell':
+            return csv.read_csv(path, False)
+        else:
+            csv_obj = csv.read_csv(path, False)
+            results = []
+            cell_result = []
+            for line in csv_obj:
+                if line[0].startswith('cell'):
+                    results.append(cell_result)
+                    cell_result = []
+                else:
+                    cell_result.append(line)
 
-        return csv.read_csv(path, False)
+            return results
 
     def delete_files(self, csv_path):
         os.remove(self.path + '/cmf_results_template.py')
@@ -1108,8 +1128,6 @@ class CMFResults(GHComponent):
 
         if not self.save_csv:
             os.remove(csv_path)
-        else:
-            pass
 
     def set_units(self):
 
@@ -1147,8 +1165,8 @@ class CMFResults(GHComponent):
         if self.checks and self.run_component:
 
             self.set_units()
-            csv_file_path = self.process_xml()
-            results = self.load_result_csv(csv_file_path)
+            csv_file_path, cell_or_layer = self.process_xml()
+            results = self.load_result_csv(csv_file_path, cell_or_layer)
             self.delete_files(csv_file_path)
 
             self.results = gh_misc.list_to_tree(results)
@@ -1164,36 +1182,39 @@ class CMFOutputs(GHComponent):
                         'description': 'Cell evaporation - default is set to True',
                         'access': 'item',
                         'default_value': True},
-                    1: {'name': 'SurfaceWater',
-                        'description': 'Cell surface water. Collects both volumetric flux and volume'
-                                       ' - default is set to False',
+                    1: {'name': 'SurfaceWaterVolume',
+                        'description': 'Cell surface water - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    2: {'name': 'HeatFlux',
+                    2: {'name': 'SurfaceWaterFlux',
+                        'description': 'Cell surface water flux - default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+                    3: {'name': 'HeatFlux',
                         'description': 'Cell surface heat flux - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    3: {'name': 'AerodynamicResistance',
+                    4: {'name': 'AerodynamicResistance',
                         'description': 'Cell aerodynamic resistance - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    4: {'name': 'VolumetricFlux',
+                    5: {'name': 'VolumetricFlux',
                         'description': 'Soil layer volumetric flux vectors - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    5: {'name': 'Potential',
+                    6: {'name': 'Potential',
                         'description': 'Soil layer total potential (Psi_tot = Psi_M + Psi_G - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    6: {'name': 'Theta',
+                    7: {'name': 'Theta',
                         'description': 'Soil layer volumetric water content of the layer - default is set to False',
                         'access': 'item',
                         'default_value': False},
-                    7: {'name': 'Volume',
+                    8: {'name': 'Volume',
                         'description': 'Soil layer volume of water in the layer - default is set to True',
                         'access': 'item',
                         'default_value': True},
-                    8: {'name': 'Wetness',
+                    9: {'name': 'Wetness',
                         'description': 'Soil layer wetness of the soil (V_volume/V_pores) - default is set to False',
                         'access': 'item',
                         'default_value': False}
@@ -1212,7 +1233,8 @@ class CMFOutputs(GHComponent):
         self.outputs = outputs()
         self.component_number = 16
         self.evapo_trans = None
-        self.surface_water = None
+        self.surface_water_volume = None
+        self.surface_water_flux = None
         self.heat_flux = None
         self.aero_res = None
         self.three_d_flux = None
@@ -1232,19 +1254,20 @@ class CMFOutputs(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, evapo_trans, surface_water, heat_flux, aero_res, three_d_flux, potential,
+    def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux, heat_flux, aero_res, three_d_flux, potential,
                    theta, volume, wetness):
 
         # Gather data
         self.evapo_trans = self.add_default_value(evapo_trans, 0)
-        self.surface_water = self.add_default_value(surface_water, 1)
-        self.heat_flux = self.add_default_value(heat_flux, 2)
-        self.aero_res = self.add_default_value(aero_res, 3)
-        self.three_d_flux = self.add_default_value(three_d_flux, 4)
-        self.potential = self.add_default_value(potential, 5)
-        self.theta = self.add_default_value(theta, 6)
-        self.volume = self.add_default_value(volume, 7)
-        self.wetness = self.add_default_value(wetness, 8)
+        self.surface_water_volume = self.add_default_value(surface_water_volume, 1)
+        self.surface_water_flux = self.add_default_value(surface_water_flux, 2)
+        self.heat_flux = self.add_default_value(heat_flux, 3)
+        self.aero_res = self.add_default_value(aero_res, 4)
+        self.three_d_flux = self.add_default_value(three_d_flux, 5)
+        self.potential = self.add_default_value(potential, 6)
+        self.theta = self.add_default_value(theta, 7)
+        self.volume = self.add_default_value(volume, 8)
+        self.wetness = self.add_default_value(wetness, 9)
 
         # Run checks
         self.check_inputs()
@@ -1257,8 +1280,10 @@ class CMFOutputs(GHComponent):
             output_dict['cell'].append('evaporation')
             output_dict['cell'].append('transpiration')
 
-        if self.surface_water:
+        if self.surface_water_volume:
             output_dict['cell'].append('surface_water_volume')
+
+        if self.surface_water_flux:
             output_dict['cell'].append('surface_water_flux')
 
         if self.heat_flux:
