@@ -22,6 +22,7 @@ from livestock.lib.templates import pick_template
 
 # Grasshopper imports
 import rhinoscriptsyntax as rs
+import Rhino.Geometry as rg
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Classes
@@ -1104,11 +1105,47 @@ class CMFResults(GHComponent):
         # Construct csv path
         csv_path = self.path + '/' + str(possible_results[self.fetch_result]) + '.csv'
 
-        return csv_path, out.keys()[0]
+        return csv_path
 
-    def load_result_csv(self, path, out):
-        if out == 'cell':
+    def load_result_csv(self, path):
+
+        def convert_file_to_points(csv_file):
+            point_list = []
+            for line in csv_file:
+                point_list.append(convert_line_to_points(line))
+
+            return point_list
+
+        def convert_line_to_points(line_):
+            points_ = []
+            for element in line_:
+                x, y, z = element.split(' ')
+                points_.append(rg.Point3d(float(x), float(y), float(z)))
+
+            return points_
+
+        if self.fetch_result == 2:
+                # fetch_result 2 contains points
+                csv_obj = csv.read_csv(path, False)
+                return convert_file_to_points(csv_obj)
+
+        elif 0 <= self.fetch_result <= 4:
             return csv.read_csv(path, False)
+
+        elif self.fetch_result == 5:
+            # fetch 5 contains points
+            csv_obj = csv.read_csv(path, False)
+            results = []
+            cell_result = []
+            for line in csv_obj:
+                if line[0].startswith('cell'):
+                    results.append(cell_result)
+                    cell_result = []
+                else:
+                    cell_result.append(convert_line_to_points(line))
+
+            return results
+
         else:
             csv_obj = csv.read_csv(path, False)
             results = []
@@ -1132,41 +1169,51 @@ class CMFResults(GHComponent):
     def set_units(self):
 
         if self.fetch_result == 0:
-            self.unit = 'm3/h'
+            # evapotranspiration
+            self.unit = 'm3/day'
 
         elif self.fetch_result == 1:
+            # surface_water_volume
             self.unit = 'm3'
 
         elif self.fetch_result == 2:
-            self.unit = 'm3/(m2s)'
+            # surface_water_flux
+            self.unit = 'm3/day'
 
         elif self.fetch_result == 3:
+            # heat_flux
             self.unit = 'W/m2'
 
         elif self.fetch_result == 4:
+            # aerodynamic_resistance
             self.unit = 's/m'
 
         elif self.fetch_result == 5:
-            self.unit = 'm3/(m2s)'
+            # volumetric_flux
+            self.unit = 'm3/day'
 
         elif self.fetch_result == 6:
+            # potential
             self.unit = 'm'
 
         elif self.fetch_result == 7:
+            # theta
             self.unit = 'm3'
 
         elif self.fetch_result == 8:
+            # volume
             self.unit = 'm3'
 
         elif self.fetch_result == 9:
+            # wetness
             self.unit = '-'
 
     def run(self):
         if self.checks and self.run_component:
 
             self.set_units()
-            csv_file_path, cell_or_layer = self.process_xml()
-            results = self.load_result_csv(csv_file_path, cell_or_layer)
+            csv_file_path = self.process_xml()
+            results = self.load_result_csv(csv_file_path)
             self.delete_files(csv_file_path)
 
             self.results = gh_misc.list_to_tree(results)
