@@ -21,7 +21,6 @@ import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
 
 # Grasshopper imports
-import rhinoscriptsyntax as rs
 import Rhino.Geometry as rg
 
 # -------------------------------------------------------------------------------------------------------------------- #
@@ -274,8 +273,8 @@ class CMFWeather(GHComponent):
         self.rain = converted_rain
 
     def convert_location(self):
-        location_name, lat, long, time_zone, elevation = gh_misc.decompose_ladybug_location(self.location)
-        return lat, long, time_zone
+        location_name, lat, long_, time_zone, elevation = gh_misc.decompose_ladybug_location(self.location)
+        return lat, long_, time_zone
 
     def match_cell_count(self, weather_parameter):
 
@@ -346,6 +345,7 @@ class CMFWeather(GHComponent):
             self.results = gh_misc.PassClass(weather_dict, 'Weather')
 
 
+"""
 class CMFStream(GHComponent):
 
     def __init__(self):
@@ -459,6 +459,7 @@ class CMFStream(GHComponent):
                            'initial_saturation': self.initial_saturation}
 
             self.results = gh_misc.PassClass(ground_dict, 'CMF_Ground')
+"""
 
 
 class CMFSurfaceProperties(GHComponent):
@@ -496,7 +497,6 @@ class CMFSurfaceProperties(GHComponent):
 
     def check_inputs(self):
         self.checks = True
-
 
     def config(self):
 
@@ -618,13 +618,13 @@ class CMFSyntheticTree(GHComponent):
                                                  ('height', self.height),
                                                  ('lai', float(self.data[0][2]) * self.height + float(self.data[1][2])),
                                                  ('albedo', float(self.data[0][3]) *
-                                                            self.height + float(self.data[1][3])),
+                                                  self.height + float(self.data[1][3])),
                                                  ('canopy_closure', float(self.data[2][4])),
                                                  ('canopy_par', float(self.data[2][5])),
                                                  ('canopy_capacity', float(self.data[0][6]) *
-                                                                     self.height + float(self.data[1][6])),
+                                                  self.height + float(self.data[1][6])),
                                                  ('stomatal_res', float(self.data[0][7]) *
-                                                                  self.height + float(self.data[1][7])),
+                                                  self.height + float(self.data[1][7])),
                                                  ('root_depth', float(self.data[2][8])),
                                                  ('root_fraction', float(self.data[2][9])),
                                                  ('leaf_width', 0.05)
@@ -934,6 +934,33 @@ class CMFSolve(GHComponent):
         # Process stream
         # Add later
 
+        # Process boundary conditions
+        if self.boundary_conditions:
+            boundary_conditions_dict = list(bc.c for bc in self.boundary_conditions)
+            boundary_conditions_root = ET.Element('boundary_conditions')
+
+            for i in range(0, len(boundary_conditions_dict)):
+                boundary_condition = ET.SubElement(boundary_conditions_root, 'boundary_condition_%i' % i)
+
+                bc_type = ET.SubElement(boundary_condition, 'type')
+                bc_type.text = boundary_conditions_dict[i]['type']
+
+                bc_cell = ET.SubElement(boundary_condition, 'cell')
+                bc_cell.text = boundary_conditions_dict[i]['cell']
+
+                bc_layer = ET.SubElement(boundary_condition, 'layer')
+                bc_layer.text = boundary_conditions_dict[i]['layer']
+
+                if boundary_conditions_dict[i]['type'] == 'inlet':
+                    bc_flux = ET.SubElement(boundary_condition, 'flux')
+                    bc_flux.text = boundary_conditions_dict[i]['flux']
+
+            boundary_conditions_tree = ET.ElementTree(boundary_conditions_root)
+            boundary_condition_file = 'boundary_condition.xml'
+            boundary_conditions_tree.write(self.case_path + '/' + boundary_condition_file, xml_declaration=True)
+
+            files_written.append(boundary_condition_file)
+
         # Process solver info
         solver_root = ET.Element('solver')
         solver_dict = self.solver_settings.c
@@ -973,8 +1000,8 @@ class CMFSolve(GHComponent):
         transfer_files = self.ssh_cmd['file_transfer'].split(',')
 
         # Copy files from case folder to ssh folder
-        for file in transfer_files:
-            copyfile(self.case_path + '/' + file, ssh.ssh_path + '/' + file)
+        for file_ in transfer_files:
+            copyfile(self.case_path + '/' + file_, ssh.ssh_path + '/' + file_)
 
         # Run template
         thread = subprocess.Popen([self.py_exe, ssh_template])
@@ -1111,8 +1138,8 @@ class CMFResults(GHComponent):
 
         def convert_file_to_points(csv_file):
             point_list = []
-            for line in csv_file:
-                point_list.append(convert_line_to_points(line))
+            for line_ in csv_file:
+                point_list.append(convert_line_to_points(line_))
 
             return point_list
 
@@ -1301,8 +1328,8 @@ class CMFOutputs(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux, heat_flux, aero_res, three_d_flux, potential,
-                   theta, volume, wetness):
+    def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux, heat_flux, aero_res, three_d_flux,
+                   potential, theta, volume, wetness):
 
         # Gather data
         self.evapo_trans = self.add_default_value(evapo_trans, 0)
@@ -1365,8 +1392,86 @@ class CMFOutputs(GHComponent):
 
 class CMFBoundaryCondition(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'InletOrOutlet',
+                        'description': '0 is inlet. 1 is outlet - default is set to 0',
+                        'access': 'item',
+                        'default_value': 0},
+                    1: {'name': 'ConnectedCell',
+                        'description': 'Cell to connect to. Default is set to first cell',
+                        'access': 'item',
+                        'default_value': 0},
+                    2: {'name': 'ConnectedLayer',
+                        'description': 'Layer of cell to connect to. 0 is surface water. '
+                                       '1 is first layer of cell and so on. Default is set to 0 - surface water',
+                        'access': 'item',
+                        'default_value': 0},
+                    3: {'name': 'InletFlux',
+                        'description': 'If inlet, then set flux in m3/day',
+                        'access': 'item',
+                        'default_value': False}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'}}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.description = 'CMF Boundary connection'
+        self.component_number = 23
+        self.inlet_or_outlet = None
+        self.cell = None
+        self.layer = None
+        self.inlet_flux = None
+        self.checks = False
+        self.results = None
+
+    def check_inputs(self):
+        self.checks = True
+
+    def config(self):
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, inlet_outlet, cell, layer, inlet_flux):
+
+        # Gather data
+        self.inlet_or_outlet = self.add_default_value(inlet_outlet, 0)
+        self.cell = self.add_default_value(cell, 1)
+        self.layer = self.add_default_value(layer, 2)
+        self.inlet_flux = self.add_default_value(inlet_flux, 3)
+
+        # Run checks
+        self.check_inputs()
+
+    def set_inlet(self):
+        self.results = gh_misc.PassClass({'type': 'inlet',
+                                          'cell': self.cell,
+                                          'layer': self.layer,
+                                          'flux': self.inlet_flux
+                                          },
+                                         'BoundaryCondition')
+
+    def set_outlet(self):
+        self.results = gh_misc.PassClass({'type': 'outlet',
+                                          'cell': self.cell,
+                                          'layer': self.layer
+                                          },
+                                         'BoundaryCondition')
+
+    def run(self):
+        if self.checks:
+            if self.inlet_or_outlet == 0:
+                self.set_inlet()
+            elif self.set_inlet() == 1:
+                self.set_outlet()
+            else:
+                raise ValueError('InletOrOutlet has to be either 0 or 1. Value given was: ' + str(self.inlet_or_outlet))
 
 
 class CMFSolverSettings(GHComponent):
