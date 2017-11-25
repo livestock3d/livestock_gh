@@ -943,17 +943,17 @@ class CMFSolve(GHComponent):
                 boundary_condition = ET.SubElement(boundary_conditions_root, 'boundary_condition_%i' % i)
 
                 bc_type = ET.SubElement(boundary_condition, 'type')
-                bc_type.text = boundary_conditions_dict[i]['type']
+                bc_type.text = str(boundary_conditions_dict[i]['type'])
 
                 bc_cell = ET.SubElement(boundary_condition, 'cell')
-                bc_cell.text = boundary_conditions_dict[i]['cell']
+                bc_cell.text = str(boundary_conditions_dict[i]['cell'])
 
                 bc_layer = ET.SubElement(boundary_condition, 'layer')
-                bc_layer.text = boundary_conditions_dict[i]['layer']
+                bc_layer.text = str(boundary_conditions_dict[i]['layer'])
 
                 if boundary_conditions_dict[i]['type'] == 'inlet':
                     bc_flux = ET.SubElement(boundary_condition, 'flux')
-                    bc_flux.text = boundary_conditions_dict[i]['flux']
+                    bc_flux.text = str(boundary_conditions_dict[i]['flux'])
 
             boundary_conditions_tree = ET.ElementTree(boundary_conditions_root)
             boundary_condition_file = 'boundary_condition.xml'
@@ -1417,7 +1417,10 @@ class CMFBoundaryCondition(GHComponent):
 
         def outputs():
             return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'}}
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'BoundaryCondition',
+                        'description': 'Livestock Boundary Condition'}
+                    }
 
         self.inputs = inputs()
         self.outputs = outputs()
@@ -1441,9 +1444,9 @@ class CMFBoundaryCondition(GHComponent):
     def run_checks(self, inlet_outlet, cell, layer, inlet_flux):
 
         # Gather data
-        self.inlet_or_outlet = self.add_default_value(inlet_outlet, 0)
-        self.cell = self.add_default_value(cell, 1)
-        self.layer = self.add_default_value(layer, 2)
+        self.inlet_or_outlet = self.add_default_value(int(inlet_outlet), 0)
+        self.cell = self.add_default_value(int(cell), 1)
+        self.layer = self.add_default_value(int(layer), 2)
         self.inlet_flux = self.add_default_value(inlet_flux, 3)
 
         # Run checks
@@ -1468,7 +1471,7 @@ class CMFBoundaryCondition(GHComponent):
         if self.checks:
             if self.inlet_or_outlet == 0:
                 self.set_inlet()
-            elif self.set_inlet() == 1:
+            elif self.inlet_or_outlet == 1:
                 self.set_outlet()
             else:
                 raise ValueError('InletOrOutlet has to be either 0 or 1. Value given was: ' + str(self.inlet_or_outlet))
