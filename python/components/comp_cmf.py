@@ -947,6 +947,9 @@ class CMFSolve(GHComponent):
         # Process stream
         # Add later
 
+        # template
+        pick_template('cmf', self.case_path)
+
         # Process boundary conditions
         if self.boundary_conditions:
             boundary_conditions_dict = list(bc.c for bc in self.boundary_conditions)
