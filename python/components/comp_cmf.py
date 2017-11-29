@@ -955,6 +955,13 @@ class CMFSolve(GHComponent):
                     bc_flux = ET.SubElement(boundary_condition, 'flux')
                     bc_flux.text = str(boundary_conditions_dict[i]['flux'])
 
+                elif boundary_conditions_dict[i]['type'] == 'outlet':
+                    bc_flux = ET.SubElement(boundary_condition, 'flow_width')
+                    bc_flux.text = str(boundary_conditions_dict[i]['flow_width'])
+
+                    bc_flux = ET.SubElement(boundary_condition, 'location')
+                    bc_flux.text = str(boundary_conditions_dict[i]['location'])
+
             boundary_conditions_tree = ET.ElementTree(boundary_conditions_root)
             boundary_condition_file = 'boundary_condition.xml'
             boundary_conditions_tree.write(self.case_path + '/' + boundary_condition_file, xml_declaration=True)
@@ -1400,24 +1407,38 @@ class CMFBoundaryCondition(GHComponent):
                         'description': '0 is inlet. 1 is outlet - default is set to 0',
                         'access': 'item',
                         'default_value': 0},
+
                     1: {'name': 'ConnectedCell',
                         'description': 'Cell to connect to. Default is set to first cell',
                         'access': 'item',
                         'default_value': 0},
+
                     2: {'name': 'ConnectedLayer',
                         'description': 'Layer of cell to connect to. 0 is surface water. '
                                        '1 is first layer of cell and so on. Default is set to 0 - surface water',
                         'access': 'item',
                         'default_value': 0},
+
                     3: {'name': 'InletFlux',
                         'description': 'If inlet, then set flux in m3/day',
+                        'access': 'list',
+                        'default_value': False},
+
+                    4: {'name': 'FlowWidth',
+                        'description': 'Width of the connection from cell to outlet in meters.',
                         'access': 'item',
-                        'default_value': False}
+                        'default_value': None},
+
+                    5: {'name': 'OutletLocation',
+                        'description': 'Location of the outlet in x, y and z coordinates.',
+                        'access': 'list',
+                        'default_value': None}
                     }
 
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'BoundaryCondition',
                         'description': 'Livestock Boundary Condition'}
                     }
@@ -1430,6 +1451,8 @@ class CMFBoundaryCondition(GHComponent):
         self.cell = None
         self.layer = None
         self.inlet_flux = None
+        self.width = None
+        self.location = None
         self.checks = False
         self.results = None
 
@@ -1441,13 +1464,15 @@ class CMFBoundaryCondition(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, inlet_outlet, cell, layer, inlet_flux):
+    def run_checks(self, inlet_outlet, cell, layer, inlet_flux, width, location):
 
         # Gather data
         self.inlet_or_outlet = self.add_default_value(int(inlet_outlet), 0)
         self.cell = self.add_default_value(int(cell), 1)
         self.layer = self.add_default_value(int(layer), 2)
         self.inlet_flux = self.add_default_value(inlet_flux, 3)
+        self.width = width
+        self.location = location
 
         # Run checks
         self.check_inputs()
@@ -1456,14 +1481,18 @@ class CMFBoundaryCondition(GHComponent):
         self.results = gh_misc.PassClass({'type': 'inlet',
                                           'cell': self.cell,
                                           'layer': self.layer,
-                                          'flux': self.inlet_flux
+                                          'flux': ','.join(str(elem)
+                                                           for elem in self.inlet_flux)
                                           },
                                          'BoundaryCondition')
 
     def set_outlet(self):
         self.results = gh_misc.PassClass({'type': 'outlet',
                                           'cell': self.cell,
-                                          'layer': self.layer
+                                          'layer': self.layer,
+                                          'flow_width': self.width,
+                                          'location': ','.join(str(elem)
+                                                               for elem in self.location)
                                           },
                                          'BoundaryCondition')
 
