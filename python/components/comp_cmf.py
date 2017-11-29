@@ -471,7 +471,13 @@ class CMFSurfaceProperties(GHComponent):
             return {0: {'name': 'Property',
                         'description': '0-1 grasses. 2-6 soils',
                         'access': 'item',
-                        'default_value': 0}}
+                        'default_value': 0},
+                    1: {'name': 'Manning',
+                        'description': 'Set Manning roughness. '
+                                       '\nIf not set CMF calculates it from the above given values.',
+                        'access': 'item',
+                        'default_value': None}
+                    }
 
         def outputs():
             return {0: {'name': 'readMe!',
@@ -489,8 +495,9 @@ class CMFSurfaceProperties(GHComponent):
         self.description = 'Generates CMF Surface Properties'
         self.data = None
         self.units = None
-        self.data_path = r'C:\livestock\data\surfaceData.csv'
+        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\surfaceData.csv'
         self.property_index = None
+        self.manning = None
         self.property = None
         self.checks = False
         self.results = None
@@ -503,10 +510,11 @@ class CMFSurfaceProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_):
+    def run_checks(self, property_, manning_):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
+        self.manning = self.add_default_value(manning_, 1)
 
         # Run checks
         self.check_inputs()
@@ -530,7 +538,8 @@ class CMFSurfaceProperties(GHComponent):
                                                  ('stomatal_res', data_list[7]),
                                                  ('root_depth', data_list[8]),
                                                  ('root_fraction', data_list[9]),
-                                                 ('leaf_width', 0.005)
+                                                 ('leaf_width', 0.005),
+                                                 ('manning', self.manning)
                                                  ])
 
     def run(self):
@@ -575,8 +584,12 @@ class CMFSyntheticTree(GHComponent):
         self.description = 'Generates a synthetic tree'
         self.data = None
         self.units = None
-        self.data_path = [r'C:\livestock\data\syntheticDeciduous.csv', r'C:\livestock\data\syntheticConiferous.csv',
-                          r'C:\livestock\data\syntheticShrubs.csv']
+        self.data_path = [os.getenv('APPDATA') +
+                          r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\syntheticDeciduous.csv',
+                          os.getenv('APPDATA') +
+                          r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\syntheticConiferous.csv',
+                          os.getenv('APPDATA') +
+                          r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\syntheticShrubs.csv']
         self.tree_type = None
         self.height = None
         self.property = None
@@ -666,7 +679,7 @@ class CMFRetentionCurve(GHComponent):
         self.description = 'Generates retention curve'
         self.data = None
         self.units = None
-        self.data_path = r'C:\livestock\data\soilData.csv'
+        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\soilData.csv'
         self.property = None
         self.soil_index = None
         self.checks = False
