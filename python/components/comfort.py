@@ -10,9 +10,6 @@ import os
 
 # Rhino and Grasshopper imports
 import rhinoscriptsyntax as rs
-import clr
-clr.AddReference("RhinoCommon")
-import Rhino
 
 # Livestock imports
 from component import GHComponent
@@ -89,7 +86,7 @@ class NewAirConditions(GHComponent):
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.component_number = 0
+        self.component_number = 24
         self.mesh = None
         self.evapotranspiration = None
         self.heat_flux = None
@@ -103,7 +100,7 @@ class NewAirConditions(GHComponent):
         self.ssh_cmd = ssh.get_ssh()
         self.folder = r'C:\livestock\python\ssh'
         self.checks = [False, False, False, False, False, False, False]
-        self.results = None
+        self.results = {'temperature': [], 'relative_humidity': []}
 
     def check_inputs(self):
         self.checks = True
@@ -266,7 +263,7 @@ class NewAirConditions(GHComponent):
         self.results['relative_humidity'] = relhum_data
 
     def run(self):
-        if self.checks:
+        if self.checks and self.run_component:
             self.convert_units()
             self.get_mesh_data()
             temp, relhum = self.write_files()
