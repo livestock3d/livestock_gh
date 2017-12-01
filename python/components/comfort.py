@@ -2,20 +2,281 @@ __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
 __version__ = "0.0.1"
 
-
-#----------------------------------------------------------------------------------------------------------------------#
+# -------------------------------------------------------------------------------------------------------------------- #
 # Imports
-import Grasshopper.Kernel as gh
-from component import GHComponent
 
-#----------------------------------------------------------------------------------------------------------------------#
-# Comfort Classes
+# Module imports
+import os
+
+# Rhino and Grasshopper imports
+import rhinoscriptsyntax as rs
+import clr
+clr.AddReference("RhinoCommon")
+import Rhino
+
+# Livestock imports
+from component import GHComponent
+import livestock.lib.misc as gh_misc
+import livestock.lib.ssh as ssh
+import livestock.lib.geometry as gh_geo
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Livestock Comfort Classes and Functions
+
+
+class NewAirConditions(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Mesh',
+                        'description': 'Ground Mesh',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'Evapotranspiration',
+                        'description': 'Evapotranspiration in m^3/day. '
+                                       '\nEach tree branch should represent one time unit, with all the cell values to '
+                                       'that time.',
+                        'access': 'tree',
+                        'default_value': None},
+
+                    2: {'name': 'HeatFlux',
+                        'description': 'HeatFlux in MJ/m^2day. '
+                                       '\nEach tree branch should represent one time unit, with all the cell values to '
+                                       'that time.',
+                        'access': 'tree',
+                        'default_value': None},
+
+                    3: {'name': 'AirTemperature',
+                        'description': 'Air temperature in C',
+                        'access': 'list',
+                        'default_value': None},
+
+                    4: {'name': 'AirRelativeHumidity',
+                        'description': 'Relative Humidity in -',
+                        'access': 'list',
+                        'default_value': None},
+
+                    5: {'name': 'AirBoundaryHeight',
+                        'description': 'Top of the air column in m. '
+                                       '\nDefault is set to 10m',
+                        'access': 'item',
+                        'default_value': 10},
+
+                    6: {'name': 'InvestigationHeight',
+                        'description': 'Height at which the new air temperature and relative humidity should be '
+                                       'calculated. '
+                                       '\nDefault is set to 1.1m',
+                        'access': 'item',
+                        'default_value': 1.1},
+
+                    7: {'name': 'Run',
+                        'description': 'Run the component',
+                        'access': 'item',
+                        'default_value': False}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+                    2: {'name': 'NewRelativeHumidity',
+                        'description': 'New relative humidity in -.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 0
+        self.mesh = None
+        self.evapotranspiration = None
+        self.heat_flux = None
+        self.air_temperature = None
+        self.air_relhum = None
+        self.boundary_height = None
+        self.investigation_height = None
+        self.run_component = None
+        self.area = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.ssh_cmd = ssh.get_ssh()
+        self.folder = r'C:\livestock\python\ssh'
+        self.checks = [False, False, False, False, False, False, False]
+        self.results = None
+
+    def check_inputs(self):
+        self.checks = True
+
+    def config(self):
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, mesh, evapotranspiration, heat_flux, temperature, relhum, boundary_height,
+                   investigation_height, run):
+
+        # Gather data
+        self.mesh = mesh
+        self.evapotranspiration = gh_misc.tree_to_list(evapotranspiration)
+        self.heat_flux = gh_misc.tree_to_list(heat_flux)
+        self.air_temperature = temperature
+        self.air_relhum = relhum
+        self.boundary_height = self.add_default_value(boundary_height, 5)
+        self.investigation_height = self.add_default_value(investigation_height, 6)
+        self.run_component = self.add_default_value(run, 7)
+
+        # Run checks
+        self.check_inputs()
+
+    def convert_units(self):
+
+        def convert_heat_flux(heat_list):
+
+            def converter(value, area):
+                # MJ/m2day -> J/h
+                # 24 h/day, 1e6 J/MJ, multiply by area
+                new_value = value*area*24/10**6
+                return new_value
+
+            converted_list = [converter(heat_list[i], self.area[i])
+                              for i in range(0, len(heat_list))]
+
+            return converted_list
+
+        def convert_vapour_flux(vapour_list):
+
+            def converter(value):
+                # m^3/day -> kg/s
+                # 24h*60min*60s = 86400 s/day, 998.2 kg/m^3 at 20C
+                new_value = value * 86400 * 998.2
+                return new_value
+
+            converted_list = [converter(vapour)
+                              for vapour in vapour_list]
+
+            return converted_list
+
+        self.evapotranspiration = convert_vapour_flux(self.evapotranspiration)
+        self.heat_flux = convert_heat_flux(self.heat_flux)
+
+    def get_mesh_data(self):
+        mesh_faces = gh_geo.get_mesh_faces(self.mesh)
+
+        self.area = [rs.MeshArea(face)[1]
+                     for face in mesh_faces]
+
+    def write_files(self):
+        ssh.clean_ssh_folder()
+        files_written = []
+
+        # evapotranspiration
+        vapour_file = 'vapour_flux.txt'
+        vapour_obj = open(self.folder + '/' + vapour_file, 'w')
+        for row in self.evapotranspiration:
+            vapour_obj.write(','.join(str(element)
+                                      for element in row)
+                             + '\n'
+                             )
+        vapour_obj.close()
+        files_written.append(vapour_file)
+
+        # heat_flux
+        heat_file = 'heat_flux.txt'
+        heat_obj = open(self.folder + '/' + heat_file, 'w')
+        for row in self.heat_flux:
+            heat_obj.write(','.join(str(element)
+                                    for element in row)
+                           + '\n'
+                           )
+        heat_obj.close()
+        files_written.append(heat_file)
+
+        # temperature
+        temp_file = 'temperature.txt'
+        temp_obj = open(self.folder + '/' + temp_file, 'w')
+        temp_obj.write(','.join(str(elem)
+                                for elem in self.air_temperature))
+        temp_obj.close()
+        files_written.append(temp_file)
+
+        # relhum
+        relhum_file = 'relative_humidity.txt'
+        relhum_obj = open(self.folder + '/' + relhum_file, 'w')
+        relhum_obj.write(','.join(str(elem)
+                                  for elem in self.air_relhum))
+        relhum_obj.close()
+        files_written.append(relhum_file)
+
+        # boundary_height and investigation_height
+        height_file = 'heights.txt'
+        height_obj = open(self.folder + '/' + height_file, 'w')
+        height_obj.write(str(self.boundary_height) + '\n'
+                         + str(self.investigation_height))
+        height_obj.close()
+        files_written.append(height_file)
+
+        # area
+        area_file = 'area.txt'
+        area_obj = open(self.folder + '/', 'w')
+        area_obj.write(','.join(str(elem)
+                                for elem in self.area))
+        area_obj.close()
+        files_written.append(area_file)
+
+        # SSH
+        temp_results = 'temperature_results.txt'
+        relhum_results = 'relative_humidity_results.txt'
+
+        file_run = ['air_template.py']
+        file_transfer = files_written + file_run
+        file_return = [temp_results, relhum_results]
+
+        self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
+        self.ssh_cmd['file_run'] = ','.join(file_run)
+        self.ssh_cmd['file_return'] = ','.join(file_return)
+        self.ssh_cmd['template'] = 'air'
+
+        ssh.write_ssh_commands(self.ssh_cmd)
+
+        return True
+
+    def load_results(self, temp_results, relhum_results):
+
+        # Temperature
+        new_temp = open(self.folder + '/' + temp_results, 'r')
+        temp_data = []
+        for line in new_temp.readlines():
+            temp_data.append(float(element)
+                             for element in line[:-1].split(',')
+                             )
+        new_temp.close()
+        os.remove(self.folder + '/' + temp_results)
+        self.results['temperature'] = temp_data
+
+        # Relative Humidity
+        new_relhum = open(self.folder + '/' + relhum_results, 'r')
+        relhum_data = []
+        for line in new_relhum.readlines():
+            relhum_data.append(float(element)
+                               for element in line[:-1].split(',')
+                               )
+        new_relhum.close()
+        os.remove(self.folder + '/' + relhum_results)
+        self.results['relative_humidity'] = relhum_data
+
+    def run(self):
+        if self.checks:
+            self.convert_units()
+            self.get_mesh_data()
+            temp, relhum = self.write_files()
+            self.load_results(temp, relhum)
 
 
 class AdaptiveClothing(GHComponent):
 
-    def __init__(self):
-        GHComponent.__init__(self)
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
         def inputs():
             return {0: ['Temperature', 'Temperature in C']}
@@ -27,49 +288,52 @@ class AdaptiveClothing(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 10
-        self.T = None
+        self.description = 'Computes the clothing values'
+        self.temperature = None
         self.checks = False
         self.results = None
 
-
-    def check_inputs(self, ghenv):
-        if isinstance(self.T, float):
+    def check_inputs(self):
+        if isinstance(self.temperature, float):
             self.checks = True
         else:
             warning = 'Temperature should be a float'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
+            self.add_warning(warning)
 
-    def I_cl(self, ghenv):
-        minI = 0.1
-        maxI = 1.43
-        i = 1.372 - 0.01866 * self.T - 0.0004849 * self.T ** 2 - 0.000009333 * self.T ** 3
+    def insulation_clothing(self):
+        min_insulation = 0.1
+        max_insulation = 1.43
+        insulation = 1.372 \
+                     - 0.01866 * self.temperature \
+                     - 0.0004849 * self.temperature ** 2 \
+                     - 0.000009333 * self.temperature ** 3
 
-        if minI < i < maxI:
-            return i
-        elif i < minI:
-            return minI
-        elif i > maxI:
-            return maxI
+        if min_insulation < insulation < max_insulation:
+            return insulation
+
+        elif insulation < min_insulation:
+            return min_insulation
+
+        elif insulation > max_insulation:
+            return max_insulation
+
         else:
             warning = 'Something went wring in the clothing function'
-            print(warning)
-            w = gh.GH_RuntimeMessageLevel.Warning
-            ghenv.Component.AddRuntimeMessage(w, warning)
-            return False
+            self.add_warning(warning)
 
-    def config(self, ghenv):
+    def config(self):
 
         # Generate Component
-        self.config_component(ghenv, self.component_number)
+        self.config_component(self.component_number)
 
-    def run_checks(self, ghenv, t):
+    def run_checks(self, temp):
+
         # Gather data
-        self.T = t
-        # Run checks
-        self.check_inputs(ghenv)
+        self.temperature = temp
 
-    def run(self, ghenv):
+        # Run checks
+        self.check_inputs()
+
+    def run(self):
         if self.checks:
-            self.results = self.I_cl(ghenv)
+            self.results = self.insulation_clothing()

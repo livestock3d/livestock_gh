@@ -8,7 +8,7 @@ Livestock Rebuild Mesh;ReMesh;VER 0.0.1 | August 2017;Livestock;1 | Geometry;Rem
 Livestock Save Mesh;Save Mesh;VER 0.1.0 | November 2017;Livestock	1 | Geometry;Save a mesh with or without additional data
 Livestock Load Mesh;Load Mesh;VER 0.1.0 | November 2017;Livestock;1 | Geometry;Load a mesh with or without additional data
 Livestock Topological Index;Topological Index;VER 0.0.1 | September 2017;Livestock;2 | Rain and Flow;Computes the topological index of the mesh
-Livestock Adaptive Clothing;Adaptive Clothing	VER 0.0.1 | September 2017;Livestock;3 | Comfort;Computes the clothing values
+Livestock Adaptive Clothing;Adaptive Clothing	VER 0.0.1 | September 2017;Livestock;4 | Comfort
 Livestock CMF Ground;CMF Ground;VER 0.1.0 | November 2017;Livestock;3 | CMF
 Livestock CMF Weather;CMF Weather;VER 0.1.0 | November 2017;Livestock;3 | CMF
 Livestock CMF Surface Properties;CMF Surface Properties;VER 0.1.0 | November 2017;Livestock;3 | CMF
@@ -22,3 +22,4 @@ Livestock Leaf Temperature; Leaf Temperature; VER 0.0.1 | November 2017; Livesto
 Livestock CMF Solver Settings;CMF Solver Settings;VER 0.1.0 | November 2017;Livestock;3 | CMF
 Livestock CFD through SSH;CFD through SSH;VER 0.0.1 | November 2017;Livestock;0 | Miscellaneous
 Livestock CMF Boundary Condition;CMF Boundary Condition;VER 0.1.0 | November 2017;Livestock;3 | CMF
+Livestock New Air Conditions;New Air Conditions;VER 0.1.0 | December 2017;Livestock;4 | Comfort
