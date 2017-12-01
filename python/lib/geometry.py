@@ -368,3 +368,21 @@ def load_mesh_data(path):
 
     else:
         print("Mesh don't have any associated data")
+
+
+def get_mesh_faces(mesh):
+    """
+    Takes a mesh and convert its faces into individual meshes
+    :param mesh: mesh
+    :return: list of "face" meshes
+    """
+    mesh_faces = rs.MeshFaces(mesh)
+    faces = []
+
+    for i in range(0, len(mesh_faces), 4):
+        vertices = [mesh_faces[i], mesh_faces[i + 1], mesh_faces[i + 2], mesh_faces[i + 3]]
+        added_mesh = rs.AddMesh(vertices, [[0, 1, 2, 3]])
+        faces.append(added_mesh)
+
+    return faces
+
