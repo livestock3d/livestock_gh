@@ -36,7 +36,7 @@ class CMFGround(GHComponent):
             return {0: {'name': 'Layers',
                         'description': 'Soil layers to add to the mesh in m',
                         'access': 'list',
-                        'default_value': None},
+                        'default_value': 0},
                     1: {'name': 'RetentionCurve',
                         'description': 'Retention curve',
                         'access': 'item',
@@ -75,11 +75,6 @@ class CMFGround(GHComponent):
 
     def check_inputs(self):
         warning = []
-
-        if self.layers:
-            self.checks[1] = True
-        else:
-            warning.append('Layer values must be float or list of floats! Input provided was: ' + str(self.layers))
 
         if self.retention_curve:
             self.checks[2] = True
