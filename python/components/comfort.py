@@ -128,16 +128,19 @@ class NewAirConditions(GHComponent):
 
     def convert_units(self):
 
-        def convert_heat_flux(heat_list):
+        def convert_heat_flux(heat_list, area):
 
-            def converter(value, area):
+            def converter(value, area_):
+                print('value' + str(value))
+                print('area' + str(area))
                 # MJ/m2day -> J/h
                 # 24 h/day, 1e6 J/MJ, multiply by area
-                new_value = value*area*24/10**6
+                new_value = float(value) * float(area_) * 24/10**6
                 return new_value
 
-            converted_list = [converter(heat_list[i], self.area[i])
-                              for i in range(0, len(heat_list))]
+            converted_list = [converter(heat_list[i], area[i])
+                              for heat_row in heat_list
+                              for i in range(0, len(heat_row))]
 
             return converted_list
 
@@ -146,16 +149,17 @@ class NewAirConditions(GHComponent):
             def converter(value):
                 # m^3/day -> kg/s
                 # 24h*60min*60s = 86400 s/day, 998.2 kg/m^3 at 20C
-                new_value = value * 86400 * 998.2
+                new_value = float(value) * 86400.0 * 998.2
                 return new_value
 
             converted_list = [converter(vapour)
-                              for vapour in vapour_list]
+                              for vapour_row in vapour_list
+                              for vapour in vapour_row]
 
             return converted_list
 
         self.evapotranspiration = convert_vapour_flux(self.evapotranspiration)
-        self.heat_flux = convert_heat_flux(self.heat_flux)
+        self.heat_flux = convert_heat_flux(self.heat_flux, self.area)
 
     def get_mesh_data(self):
         mesh_faces = gh_geo.get_mesh_faces(self.mesh)
@@ -264,8 +268,8 @@ class NewAirConditions(GHComponent):
 
     def run(self):
         if self.checks and self.run_component:
-            self.convert_units()
             self.get_mesh_data()
+            self.convert_units()
             temp, relhum = self.write_files()
             self.load_results(temp, relhum)
 
