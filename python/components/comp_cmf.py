@@ -733,50 +733,62 @@ class CMFSolve(GHComponent):
                         'description': 'Topography as a mesh',
                         'access': 'item',
                         'default_value': None},
+
                     1: {'name': 'Ground',
                         'description': 'Input from Livestock CMF Ground',
                         'access': 'list',
                         'default_value': None},
+
                     2: {'name': 'Weather',
                         'description': 'Input from Livestock CMF Weather',
                         'access': 'item',
                         'default_value': None},
+
                     3: {'name': 'Trees',
                         'description': 'Input from Livestock CMF Tree',
                         'access': 'list',
                         'default_value': None},
+
                     4: {'name': 'Stream',
                         'description': 'Input from Livestock CMF Stream',
                         'access': 'item',
                         'default_value': None},
+
                     5: {'name': 'BoundaryConditions',
                         'description': 'Input from Livestock CMF Boundary Condition',
                         'access': 'list',
                         'default_value': None},
+
                     6: {'name': 'SolverSettings',
                         'description': 'Input from Livestock CMF Solver Settings',
                         'access': 'item',
                         'default_value': None},
+
                     7: {'name': 'Folder',
                         'description': 'Path to folder. Default is Desktop',
                         'access': 'item',
                         'default_value': r'%systemdrive%\users\%username%\Desktop'},
+
                     8: {'name': 'CaseName',
                         'description': 'Case name as string. Default is CMF',
                         'access': 'item',
                         'default_value': 'CMF'},
+
                     9: {'name': 'Outputs',
                         'description': 'Connect Livestock Outputs',
                         'access': 'item',
                         'default_value': None},
+
                     10: {'name': 'Write',
                          'description': 'Boolean to write files',
                          'access': 'item',
                          'default_value': False},
+
                     11: {'name': 'Overwrite',
                          'description': 'If True excising case will be overwritten. Default is set to True',
                          'access': 'item',
                          'default_value': True},
+
                     12: {'name': 'Run',
                          'description': 'Boolean to run analysis'
                          '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
@@ -1524,14 +1536,23 @@ class CMFSolverSettings(GHComponent):
 
             def inputs():
                 return {0: {'name': 'AnalysisLength',
-                            'description': 'Analysis length in hours - Default is 24 hours',
+                            'description': 'Number of time steps to be taken - Default is 24',
                             'access': 'item',
                             'default_value': 24},
-                        1: {'name': 'SolverTolerance',
+
+                        1: {'name': 'TimeStep',
+                            'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
+                                           '\n24 is a time step of one day. '
+                                           '\nDefault is 1 hour',
+                            'access': 'item',
+                            'default_value': 1},
+
+                        2: {'name': 'SolverTolerance',
                             'description': 'Solver tolerance - Default is 1e-8',
                             'access': 'item',
                             'default_value': 10**-8},
-                        2: {'name': 'Verbosity',
+
+                        3: {'name': 'Verbosity',
                             'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
                                            '0 - Prints only at start and end of simulation.\n'
                                            '1 - Prints at every time step.',
@@ -1541,6 +1562,7 @@ class CMFSolverSettings(GHComponent):
             def outputs():
                 return {0: {'name': 'readMe!',
                             'description': 'In case of any errors, it will be shown here.'},
+
                         1: {'name': 'SolverSettings',
                             'description': 'Livestock Solver Settings'}}
 
@@ -1549,6 +1571,7 @@ class CMFSolverSettings(GHComponent):
             self.component_number = 21
             self.description = 'Sets the solver settings for CMF Solve'
             self.length = None
+            self.time_step = None
             self.tolerance = None
             self.verbosity = None
             self.checks = [False, False, False, False]
@@ -1561,11 +1584,12 @@ class CMFSolverSettings(GHComponent):
             # Generate Component
             self.config_component(self.component_number)
 
-        def run_checks(self, length, tolerance, verbosity):
+        def run_checks(self, length, time_step, tolerance, verbosity):
             # Gather data
             self.length = self.add_default_value(length, 0)
-            self.tolerance = self.add_default_value(tolerance, 1)
-            self.verbosity = self.add_default_value(verbosity, 2)
+            self.time_step = self.add_default_value(time_step, 1)
+            self.tolerance = self.add_default_value(tolerance, 2)
+            self.verbosity = self.add_default_value(verbosity, 3)
 
             # Run checks
             self.check_inputs()
@@ -1573,6 +1597,7 @@ class CMFSolverSettings(GHComponent):
         def run(self):
             if self.checks:
                 settings_dict = {'analysis_length': int(self.length),
+                                 'time_step': float(self.time_step),
                                  'tolerance': self.tolerance,
                                  'verbosity': int(self.verbosity)}
 
