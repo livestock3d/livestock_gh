@@ -467,20 +467,29 @@ class CMFSurfaceProperties(GHComponent):
                         'description': '0-1 grasses. 2-6 soils',
                         'access': 'item',
                         'default_value': 0},
+
                     1: {'name': 'Manning',
                         'description': 'Set Manning roughness. '
                                        '\nIf not set CMF calculates it from the above given values.',
                         'access': 'item',
-                        'default_value': None}
+                        'default_value': None},
+
+                    2: {'name': 'PuddleDepth',
+                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.',
+                        'access': 'item',
+                        'default_value': 0.01}
                     }
 
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Units',
                         'description': 'Shows the units of the surface values'},
+
                     2: {'name': 'SurfaceValues',
                         'description': 'Chosen surface properties values'},
+
                     3: {'name': 'SurfaceProperties',
                         'description': 'Livestock surface properties data'}}
 
@@ -493,6 +502,7 @@ class CMFSurfaceProperties(GHComponent):
         self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\surfaceData.csv'
         self.property_index = None
         self.manning = None
+        self.puddle = None
         self.property = None
         self.checks = False
         self.results = None
@@ -505,11 +515,12 @@ class CMFSurfaceProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_, manning_):
+    def run_checks(self, property_, manning_, puddle):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
         self.manning = self.add_default_value(manning_, 1)
+        self.puddle = self.add_default_value(puddle, 2)
 
         # Run checks
         self.check_inputs()
@@ -534,7 +545,8 @@ class CMFSurfaceProperties(GHComponent):
                                                  ('root_depth', data_list[8]),
                                                  ('root_fraction', data_list[9]),
                                                  ('leaf_width', 0.005),
-                                                 ('manning', self.manning)
+                                                 ('manning', self.manning),
+                                                 ('puddle_depth', self.puddle)
                                                  ])
 
     def run(self):
@@ -798,6 +810,7 @@ class CMFSolve(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'ResultPath',
                         'description': 'Path to result files'}}
 
