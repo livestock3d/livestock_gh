@@ -37,23 +37,36 @@ class CMFGround(GHComponent):
                         'description': 'Soil layers to add to the mesh in m',
                         'access': 'list',
                         'default_value': 0},
+
                     1: {'name': 'RetentionCurve',
                         'description': 'Retention curve',
                         'access': 'item',
                         'default_value': None},
+
                     2: {'name': 'SurfaceProperties',
                         'description': 'Input from Livestock CMF SurfaceProperties',
                         'access': 'item',
                         'default_value': None},
+
                     3: {'name': 'SaturatedDepth',
                         'description': 'Initial saturated depth in m. It is depth where the groundwater is located'
                                        ' - Default is set to 3m',
                         'access': 'item',
                         'default_value': 3},
+
                     4: {'name': 'FaceIndices',
                         'description': 'List of face indices, on where the ground properties are applied.',
                         'access': 'list',
-                        'default_value': None}}
+                        'default_value': None},
+
+                    5: {'name': 'ETMethod',
+                        'description': 'Set method to calculate evapotranspiration.\n'
+                                       '0: Penman-Monteith\n'
+                                       '1: Shuttleworth-Wallace\n'
+                                       'Default is set to Shuttleworth-Wallace',
+                        'access': 'item',
+                        'default_value': 1}
+                    }
 
         def outputs():
             return {0: {'name': 'readMe!',
@@ -70,6 +83,7 @@ class CMFGround(GHComponent):
         self.retention_curve = None
         self.surface_properties = None
         self.saturated_depth = None
+        self.et_number = None
         self.checks = [False, False, False, False, False]
         self.results = None
 
@@ -109,7 +123,7 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, surface_properties, saturated_depth, face_indices):
+    def run_checks(self, layers, retention_curve, surface_properties, saturated_depth, face_indices, et_method):
 
         # Gather data
         self.layers = self.add_default_value(layers, 0)
@@ -117,9 +131,19 @@ class CMFGround(GHComponent):
         self.surface_properties = self.add_default_value(surface_properties, 2)
         self.saturated_depth = self.add_default_value(saturated_depth, 3)
         self.face_indices = self.add_default_value(face_indices, 4)
+        self.et_number = self.add_default_value(et_method, 5)
 
         # Run checks
         self.check_inputs()
+
+    def convert_et_number_to_method(self):
+        if self.et_number == 0:
+            return 'penman_monteith'
+        elif self.et_number == 1:
+            return 'shuttleworth_wallace'
+        else:
+            w = 'ETMethod has to be 0 or 1. Input was: ' + str(self.et_number)
+            self.add_warning(w)
 
     def run(self):
         if self.checks:
@@ -127,7 +151,9 @@ class CMFGround(GHComponent):
                            'layers': self.layers,
                            'retention_curve': self.retention_curve,
                            'surface_properties': self.surface_properties,
-                           'saturated_depth': self.saturated_depth}
+                           'saturated_depth': self.saturated_depth,
+                           'et_method': self.convert_et_number_to_method()
+                           }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
 
