@@ -669,7 +669,7 @@ class CMFRetentionCurve(GHComponent):
                         'description': 'Index for choosing soil type. Index from 0-5.\n'
                                        'Default is set to 0, which is the default CMF retention curve.',
                         'access': 'item',
-                        'default_value': None},
+                        'default_value': 0},
 
                     1: {'name': 'K_sat',
                         'description': 'Saturated conductivity in m/day',
