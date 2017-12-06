@@ -666,9 +666,41 @@ class CMFRetentionCurve(GHComponent):
 
         def inputs():
             return {0: {'name': 'SoilIndex',
-                        'description': 'Index for choosing soil type. Index from 0-4',
+                        'description': 'Index for choosing soil type. Index from 0-5.\n'
+                                       'Default is set to 0, which is the default CMF retention curve.',
                         'access': 'item',
-                        'default_value': 0}}
+                        'default_value': None},
+
+                    1: {'name': 'K_sat',
+                        'description': 'Saturated conductivity in m/day',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'Phi',
+                        'description': 'Porosity in m3/m3',
+                        'access': 'item',
+                        'default_value': None},
+
+                    3: {'name': 'Alpha',
+                        'description': 'Inverse of water entry potential in 1/cm',
+                        'access': 'item',
+                        'default_value': None},
+
+                    4: {'name': 'N',
+                        'description': 'Pore size distribution parameter is unitless',
+                        'access': 'item',
+                        'default_value': None},
+
+                    5: {'name': 'M',
+                        'description': 'VanGenuchten m (if negative, 1-1/n is used) is unitless',
+                        'access': 'item',
+                        'default_value': None},
+
+                    6: {'name': 'L',
+                        'description': 'Mualem tortoisivity is unitless',
+                        'access': 'item',
+                        'default_value': None}
+                    }
 
         def outputs():
             return {0: {'name': 'readMe!',
@@ -686,28 +718,36 @@ class CMFRetentionCurve(GHComponent):
         self.description = 'Generates retention curve'
         self.data = None
         self.units = None
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\soilData.csv'
+        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
         self.property = None
         self.soil_index = None
+        self.k_sat = None
+        self.phi = None
+        self.alpha = None
+        self.n = None
+        self.m = None
+        self.l = None
         self.checks = False
         self.results = None
 
     def check_inputs(self):
-        if isinstance(self.soil_index, int):
-            self.checks = True
-        else:
-            warning = 'soilIndex should be an integer'
-            self.add_warning(warning)
+        self.checks = True
 
     def config(self):
 
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, soil_index):
+    def run_checks(self, soil_index, k_sat, phi, alpha, n, m, l):
 
         # Gather data
         self.soil_index = self.add_default_value(int(soil_index), 0)
+        self.k_sat = self.add_default_value(k_sat, 1)
+        self.phi = self.add_default_value(phi, 2)
+        self.alpha = self.add_default_value(alpha, 3)
+        self.n = self.add_default_value(n, 4)
+        self.m = self.add_default_value(m, 5)
+        self.l = self.add_default_value(l, 6)
 
         # Run checks
         self.check_inputs()
@@ -728,6 +768,27 @@ class CMFRetentionCurve(GHComponent):
                                                  ('m', float(self.data[self.soil_index][5])),
                                                  ('l', float(self.data[self.soil_index][6]))
                                                  ])
+
+        # Set modified properties
+        if self.k_sat:
+            self.property['K_sat'] = self.k_sat
+
+        if self.phi:
+            self.property['phi'] = self.phi
+
+        if self.alpha:
+            self.property['alpha'] = self.alpha
+
+        if self.n:
+            self.property['n'] = self.n
+
+        if self.m:
+            self.property['m'] = self.m
+
+        if self.l:
+            self.property['l'] = self.l
+
+        return True
 
     def run(self):
         if self.checks:
