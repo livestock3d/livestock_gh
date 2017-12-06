@@ -1003,8 +1003,6 @@ class CMFSolve(GHComponent):
 
             return tree_file
 
-            files_written.append(tree_file)
-
         def write_outputs(output_dict_, folder):
             # Process outputs
             output_dict = output_dict_.c
