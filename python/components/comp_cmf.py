@@ -767,7 +767,7 @@ class CMFSolve(GHComponent):
                     7: {'name': 'Folder',
                         'description': 'Path to folder. Default is Desktop',
                         'access': 'item',
-                        'default_value': r'%systemdrive%\users\%username%\Desktop'},
+                        'default_value': os.path.join(os.environ["HOMEPATH"], "Desktop")},
 
                     8: {'name': 'CaseName',
                         'description': 'Case name as string. Default is CMF',
