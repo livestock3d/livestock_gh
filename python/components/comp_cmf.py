@@ -519,7 +519,7 @@ class CMFVegetationProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_, manning_, puddle):
+    def run_checks(self, property_):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
