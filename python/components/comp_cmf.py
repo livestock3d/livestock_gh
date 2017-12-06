@@ -39,12 +39,12 @@ class CMFGround(GHComponent):
                         'default_value': 0},
 
                     1: {'name': 'RetentionCurve',
-                        'description': 'Retention curve',
+                        'description': 'Livestock CMF Retention Curve',
                         'access': 'item',
                         'default_value': None},
 
-                    2: {'name': 'SurfaceProperties',
-                        'description': 'Input from Livestock CMF SurfaceProperties',
+                    2: {'name': 'VegetationProperties',
+                        'description': 'Input from Livestock CMF Vegetation Properties',
                         'access': 'item',
                         'default_value': None},
 
@@ -65,12 +65,24 @@ class CMFGround(GHComponent):
                                        '1: Shuttleworth-Wallace\n'
                                        'Default is set to Shuttleworth-Wallace',
                         'access': 'item',
-                        'default_value': 1}
+                        'default_value': 1},
+
+                    6: {'name': 'Manning',
+                        'description': 'Set Manning roughness. '
+                                       '\nIf not set CMF calculates it from the above given values.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    7: {'name': 'PuddleDepth',
+                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.',
+                        'access': 'item',
+                        'default_value': 0.01}
                     }
 
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Ground',
                         'description': 'Livestock Ground Data Class'}}
 
@@ -81,57 +93,34 @@ class CMFGround(GHComponent):
         self.face_indices = None
         self.layers = None
         self.retention_curve = None
-        self.surface_properties = None
+        self.vegetation_properties = None
         self.saturated_depth = None
         self.et_number = None
+        self.manning = None
+        self.puddle = None
         self.checks = [False, False, False, False, False]
         self.results = None
 
     def check_inputs(self):
-        warning = []
-
-        if self.retention_curve:
-            self.checks[2] = True
-        else:
-            warning.append('Retention curve is wrong!')
-
-        if isinstance(self.saturated_depth, float):
-            self.checks[4] = True
-        else:
-            warning.append('Initial saturation must be float! Input provided was: ' + str(self.saturated_depth))
-
-        if self.face_indices:
-            indices = []
-            for index in self.face_indices:
-                indices.append(int(float(index)))
-
-            self.face_indices = indices
-
-        if warning:
-            if isinstance(warning, list):
-                for w in warning:
-                    print(w + '\n')
-            else:
-                print(warning)
-
-            self.add_warning(warning)
-        else:
-            self.checks = True
+        self.checks = True
 
     def config(self):
 
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, surface_properties, saturated_depth, face_indices, et_method):
+    def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, face_indices, et_method,
+                   manning_, puddle):
 
         # Gather data
         self.layers = self.add_default_value(layers, 0)
         self.retention_curve = self.add_default_value(retention_curve, 1)
-        self.surface_properties = self.add_default_value(surface_properties, 2)
+        self.vegetation_properties = self.add_default_value(vegetation_properties, 2)
         self.saturated_depth = self.add_default_value(saturated_depth, 3)
         self.face_indices = self.add_default_value(face_indices, 4)
         self.et_number = self.add_default_value(et_method, 5)
+        self.manning = self.add_default_value(manning_, 6)
+        self.puddle = self.add_default_value(puddle, 7)
 
         # Run checks
         self.check_inputs()
@@ -150,9 +139,11 @@ class CMFGround(GHComponent):
             ground_dict = {'face_indices': self.face_indices,
                            'layers': self.layers,
                            'retention_curve': self.retention_curve,
-                           'surface_properties': self.surface_properties,
+                           'vegetation_properties': self.vegetation_properties,
                            'saturated_depth': self.saturated_depth,
-                           'et_method': self.convert_et_number_to_method()
+                           'et_method': self.convert_et_number_to_method(),
+                           'manning': self.manning,
+                           'puddle_depth': self.puddle
                            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
@@ -483,7 +474,7 @@ class CMFStream(GHComponent):
 """
 
 
-class CMFSurfaceProperties(GHComponent):
+class CMFVegetationProperties(GHComponent):
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -492,18 +483,7 @@ class CMFSurfaceProperties(GHComponent):
             return {0: {'name': 'Property',
                         'description': '0-1 grasses. 2-6 soils',
                         'access': 'item',
-                        'default_value': 0},
-
-                    1: {'name': 'Manning',
-                        'description': 'Set Manning roughness. '
-                                       '\nIf not set CMF calculates it from the above given values.',
-                        'access': 'item',
-                        'default_value': None},
-
-                    2: {'name': 'PuddleDepth',
-                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.',
-                        'access': 'item',
-                        'default_value': 0.01}
+                        'default_value': 0}
                     }
 
         def outputs():
@@ -513,22 +493,20 @@ class CMFSurfaceProperties(GHComponent):
                     1: {'name': 'Units',
                         'description': 'Shows the units of the surface values'},
 
-                    2: {'name': 'SurfaceValues',
+                    2: {'name': 'VegetationValues',
                         'description': 'Chosen surface properties values'},
 
-                    3: {'name': 'SurfaceProperties',
+                    3: {'name': 'VegetationProperties',
                         'description': 'Livestock surface properties data'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 13
-        self.description = 'Generates CMF Surface Properties'
+        self.description = 'Generates CMF Vegetation Properties'
         self.data = None
         self.units = None
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\surfaceData.csv'
+        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
         self.property_index = None
-        self.manning = None
-        self.puddle = None
         self.property = None
         self.checks = False
         self.results = None
@@ -545,8 +523,6 @@ class CMFSurfaceProperties(GHComponent):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
-        self.manning = self.add_default_value(manning_, 1)
-        self.puddle = self.add_default_value(puddle, 2)
 
         # Run checks
         self.check_inputs()
@@ -570,16 +546,14 @@ class CMFSurfaceProperties(GHComponent):
                                                  ('stomatal_res', data_list[7]),
                                                  ('root_depth', data_list[8]),
                                                  ('root_fraction', data_list[9]),
-                                                 ('leaf_width', 0.005),
-                                                 ('manning', self.manning),
-                                                 ('puddle_depth', self.puddle)
+                                                 ('leaf_width', 0.005)
                                                  ])
 
     def run(self):
         if self.checks:
             self.pick_property()
 
-            self.results = gh_misc.PassClass(self.property, 'SurfaceProperty')
+            self.results = gh_misc.PassClass(self.property, 'VegetationProperty')
 
 
 class CMFSyntheticTree(GHComponent):
