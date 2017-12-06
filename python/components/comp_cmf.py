@@ -832,7 +832,6 @@ class CMFSolve(GHComponent):
         self.overwrite = True
         self.output_config = None
         self.run_case = None
-        self.ssh_cmd = None
         self.py_exe = gh_misc.get_python_exe()
         self.written = False
         self.checks = False
@@ -877,59 +876,49 @@ class CMFSolve(GHComponent):
 
     def write(self, doc):
 
-        # check if folder exists
-        if os.path.exists(self.case_path):
-            self.written = True
-        else:
-            os.mkdir(self.folder + '/' + self.case_name)
+        # Helper functions
+        def write_weather(weather_dict_, folder):
+            weather_dict = weather_dict_.c
+            weather_root = ET.Element('weather')
+            weather_keys = weather_dict.keys()
 
-        files_written = []
+            for k in weather_keys:
+                data = ET.SubElement(weather_root, str(k))
+                data.text = str(weather_dict[str(k)])
 
-        # Process weather
-        weather_dict = self.weather.c
-        weather_root = ET.Element('weather')
-        weather_keys = weather_dict.keys()
+            weather_tree = ET.ElementTree(weather_root)
+            weather_file = 'weather.xml'
+            weather_tree.write(folder + '/' + weather_file, xml_declaration=True)
 
-        for k in weather_keys:
-            data = ET.SubElement(weather_root, str(k))
-            data.text = str(weather_dict[str(k)])
+            return weather_file
 
-        weather_tree = ET.ElementTree(weather_root)
-        weather_file = 'weather.xml'
-        weather_tree.write(self.case_path + '/' + weather_file, xml_declaration=True)
+        def write_ground(ground_dict_, folder):
+            # Process ground
+            ground_dict = list(ground.c for ground in ground_dict_)
+            ground_root = ET.Element('ground')
 
-        files_written.append(weather_file)
+            for i in range(0, len(ground_dict)):
+                ground = ET.SubElement(ground_root, 'ground_%i' % i)
+                g_keys = ground_dict[i].keys()
 
-        # Save Mesh
-        gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
+                for g in g_keys:
+                    data = ET.SubElement(ground, str(g))
+                    try:
+                        data_to_write = ground_dict[i][str(g)].c
+                        data.text = str(dict(data_to_write))
+                    except:
+                        data.text = str(ground_dict[i][str(g)])
 
-        files_written.append('mesh.obj')
+            ground_tree = ET.ElementTree(ground_root)
+            ground_file = 'ground.xml'
+            ground_tree.write(folder + '/' + ground_file, xml_declaration=True)
 
-        # Process ground
-        ground_dict = list(ground.c for ground in self.ground)
-        ground_root = ET.Element('ground')
+            return ground_file
 
-        for i in range(0, len(ground_dict)):
-            ground = ET.SubElement(ground_root, 'ground_%i' % i)
-            g_keys = ground_dict[i].keys()
+        def write_trees(tree_dict_, folder):
+            # Process trees
 
-            for g in g_keys:
-                data = ET.SubElement(ground, str(g))
-                try:
-                    data_to_write = ground_dict[i][str(g)].c
-                    data.text = str(dict(data_to_write))
-                except:
-                    data.text = str(ground_dict[i][str(g)])
-
-        ground_tree = ET.ElementTree(ground_root)
-        ground_file = 'ground.xml'
-        ground_tree.write(self.case_path + '/' + ground_file, xml_declaration=True)
-
-        files_written.append(ground_file)
-
-        # Process trees
-        if self.trees:
-            tree_dict = list(tree.c for tree in self.trees)
+            tree_dict = list(tree.c for tree in tree_dict_)
             tree_root = ET.Element('tree')
 
             for i in range(0, len(tree_dict)):
@@ -946,33 +935,33 @@ class CMFSolve(GHComponent):
 
             tree_tree = ET.ElementTree(tree_root)
             tree_file = 'trees.xml'
-            tree_tree.write(self.case_path + '/' + tree_file, xml_declaration=True)
+            tree_tree.write(folder + '/' + tree_file, xml_declaration=True)
+
+            return tree_file
 
             files_written.append(tree_file)
 
-        # Process outputs
-        output_dict = self.output_config.c
-        output_root = ET.Element('output')
+        def write_outputs(output_dict_, folder):
+            # Process outputs
+            output_dict = output_dict_.c
+            output_root = ET.Element('output')
 
-        for out_key in output_dict.keys():
-            data = ET.SubElement(output_root, str(out_key))
-            data.text = str(output_dict[out_key])
+            for out_key in output_dict.keys():
+                data = ET.SubElement(output_root, str(out_key))
+                data.text = str(output_dict[out_key])
 
-        output_tree = ET.ElementTree(output_root)
-        output_file = 'outputs.xml'
-        output_tree.write(self.case_path + '/' + output_file, xml_declaration=True)
+            output_tree = ET.ElementTree(output_root)
+            output_file = 'outputs.xml'
+            output_tree.write(folder + '/' + output_file, xml_declaration=True)
 
-        files_written.append(output_file)
+            return output_file
 
-        # Process stream
-        # Add later
+        def write_stream(stream_dict_, folder):
+            pass
 
-        # template
-        pick_template('cmf', self.case_path)
-
-        # Process boundary conditions
-        if self.boundary_conditions:
-            boundary_conditions_dict = list(bc.c for bc in self.boundary_conditions)
+        def write_boundary_conditions(boundary_dict_, folder):
+            # Process boundary conditions
+            boundary_conditions_dict = list(bc.c for bc in boundary_dict_)
             boundary_conditions_root = ET.Element('boundary_conditions')
 
             for i in range(0, len(boundary_conditions_dict)):
@@ -1000,47 +989,85 @@ class CMFSolve(GHComponent):
 
             boundary_conditions_tree = ET.ElementTree(boundary_conditions_root)
             boundary_condition_file = 'boundary_condition.xml'
-            boundary_conditions_tree.write(self.case_path + '/' + boundary_condition_file, xml_declaration=True)
+            boundary_conditions_tree.write(folder + '/' + boundary_condition_file, xml_declaration=True)
 
-            files_written.append(boundary_condition_file)
+            return boundary_condition_file
 
-        # Process solver info
-        solver_root = ET.Element('solver')
-        solver_dict = self.solver_settings.c
+        def write_solver_info(solver_dict_, folder):
+            # Process solver info
+            solver_root = ET.Element('solver')
+            solver_dict = solver_dict_.c
 
-        for solver_key in solver_dict.keys():
-            data = ET.SubElement(solver_root, str(solver_key))
-            data.text = str(solver_dict[solver_key])
+            for solver_key in solver_dict.keys():
+                data = ET.SubElement(solver_root, str(solver_key))
+                data.text = str(solver_dict[solver_key])
 
-        solver_tree = ET.ElementTree(solver_root)
-        solver_file = 'solver.xml'
-        solver_tree.write(self.case_path + '/' + solver_file, xml_declaration=True)
+            solver_tree = ET.ElementTree(solver_root)
+            solver_file = 'solver.xml'
+            solver_tree.write(folder + '/' + solver_file, xml_declaration=True)
 
-        files_written.append(solver_file)
+            return solver_file
 
-        # Clean SSH folder
-        ssh.clean_ssh_folder()
+        def write_ssh_files(files_written_):
+            # Clean SSH folder
+            ssh.clean_ssh_folder()
 
-        # SSH commands
-        self.ssh_cmd = ssh.get_ssh()
+            # SSH commands
+            ssh_command = ssh.get_ssh()
 
-        file_transfer = files_written
-        file_run = ['cmf_template.py']
-        file_return = ['results.xml']
+            file_transfer = files_written_
+            file_run = ['cmf_template.py']
+            file_return = ['results.xml']
 
-        self.ssh_cmd['file_transfer'] = ','.join(file_transfer) + ',cmf_template.py'
-        self.ssh_cmd['file_run'] = ','.join(file_run)
-        self.ssh_cmd['file_return'] = ','.join(file_return)
-        self.ssh_cmd['template'] = 'cmf'
+            ssh_command['file_transfer'] = ','.join(file_transfer) + ',cmf_template.py'
+            ssh_command['file_run'] = ','.join(file_run)
+            ssh_command['file_return'] = ','.join(file_return)
+            ssh_command['template'] = 'cmf'
 
-        ssh.write_ssh_commands(self.ssh_cmd)
+            ssh.write_ssh_commands(ssh_command)
 
+            return ssh_command
+
+        # check if folder exists
+        if os.path.exists(self.case_path):
+            self.written = True
+        else:
+            os.mkdir(self.folder + '/' + self.case_name)
+
+        files_written = []
+
+        # Save Mesh
+        gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
+
+        # Append to files written
+        files_written.append('mesh.obj')
+        files_written.append(write_weather(self.weather, self.case_path))
+        files_written.append(write_ground(self.ground, self.case_path))
+        files_written.append(write_outputs(self.output_config, self.case_path))
+        files_written.append(write_solver_info(self.solver_settings, self.case_path))
+
+        if self.trees:
+            files_written.append(write_trees(self.trees, self.case_path))
+
+        if self.boundary_conditions:
+            files_written.append(write_boundary_conditions(self.boundary_conditions, self.case_path))
+
+        if self.stream:
+            files_written.append(write_stream(self.stream, self.case_path))
+
+        # template
+        pick_template('cmf', self.case_path)
+
+        # ssh
+        ssh_cmd = write_ssh_files(files_written)
         self.written = True
 
-    def do_case(self):
+        return ssh_cmd
+
+    def do_case(self, ssh_cmd_):
 
         ssh_template = ssh.ssh_path + '/ssh_template.py'
-        transfer_files = self.ssh_cmd['file_transfer'].split(',')
+        transfer_files = ssh_cmd_['file_transfer'].split(',')
 
         # Copy files from case folder to ssh folder
         for file_ in transfer_files:
@@ -1059,14 +1086,15 @@ class CMFSolve(GHComponent):
             copyfile(ssh_result, result_path)
             ssh.clean_ssh_folder()
             return result_path
+
         else:
             warning = 'Could not find result file. Unknown error occurred'
             self.add_warning(warning)
 
     def run(self, doc):
         if self.checks and self.run_case:
-            self.write(doc)
-            self.do_case()
+            ssh_cmd = self.write(doc)
+            self.do_case(ssh_cmd)
             self.results = self.check_results()
 
         elif self.checks and self.write_case:
