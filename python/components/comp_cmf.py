@@ -61,11 +61,12 @@ class CMFGround(GHComponent):
 
                     5: {'name': 'ETMethod',
                         'description': 'Set method to calculate evapotranspiration.\n'
-                                       '0: Penman-Monteith\n'
-                                       '1: Shuttleworth-Wallace\n'
+                                       '0: No evapotranspiration\n'
+                                       '1: Penman-Monteith\n'
+                                       '2: Shuttleworth-Wallace\n'
                                        'Default is set to Shuttleworth-Wallace',
                         'access': 'item',
-                        'default_value': 1},
+                        'default_value': 0},
 
                     6: {'name': 'Manning',
                         'description': 'Set Manning roughness. '
@@ -127,11 +128,13 @@ class CMFGround(GHComponent):
 
     def convert_et_number_to_method(self):
         if self.et_number == 0:
-            return 'penman_monteith'
+            return None
         elif self.et_number == 1:
+            return 'penman_monteith'
+        elif self.et_number == 2:
             return 'shuttleworth_wallace'
         else:
-            w = 'ETMethod has to be 0 or 1. Input was: ' + str(self.et_number)
+            w = 'ETMethod has to between 0 and 2. Input was: ' + str(self.et_number)
             self.add_warning(w)
 
     def run(self):
