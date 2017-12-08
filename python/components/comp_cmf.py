@@ -1125,21 +1125,24 @@ class CMFSolve(GHComponent):
         ssh_cmd = write_ssh_files(files_written)
         self.written = True
 
-        return ssh_cmd
-
-    def do_case(self, ssh_cmd_):
-
-        ssh_template = ssh.ssh_path + '/ssh_template.py'
-        transfer_files = ssh_cmd_['file_transfer'].split(',')
+        transfer_files = ssh_cmd['file_transfer'].split(',')
 
         # Copy files from case folder to ssh folder
         for file_ in transfer_files:
             copyfile(self.case_path + '/' + file_, ssh.ssh_path + '/' + file_)
 
+        return True
+
+    def do_case(self):
+
+        ssh_template = ssh.ssh_path + '/ssh_template.py'
+
         # Run template
         thread = subprocess.Popen([self.py_exe, ssh_template])
         thread.wait()
         thread.kill()
+
+        return True
 
     def check_results(self):
         ssh_result = ssh.ssh_path + '/results.xml'
@@ -1155,13 +1158,14 @@ class CMFSolve(GHComponent):
             self.add_warning(warning)
 
     def run(self, doc):
+        if self.checks and self.write_case:
+            self.write(doc)
+
         if self.checks and self.run_case:
-            ssh_cmd = self.write(doc)
-            self.do_case(ssh_cmd)
+            self.do_case()
             self.results = self.check_results()
 
-        elif self.checks and self.write_case:
-            self.write(doc)
+
 
 
 class CMFResults(GHComponent):
