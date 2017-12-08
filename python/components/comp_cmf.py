@@ -22,6 +22,7 @@ from livestock.lib.templates import pick_template
 
 # Grasshopper imports
 import Rhino.Geometry as rg
+import rhinoscriptsyntax as rs
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Classes
@@ -1706,3 +1707,192 @@ class CMFSolverSettings(GHComponent):
 
                 print(settings_dict.items())
                 self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
+
+
+class CMFSurfaceFluxResult(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'ResultFilePath',
+                        'description': 'Path to result file. Accepts output from Livestock Solve',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'Mesh',
+                        'description': 'Mesh of the case',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'IncludeRunOff',
+                        'description': 'Include surface run-off into the surface flux vector? '
+                                       '\nDefault is set to True',
+                        'access': 'item',
+                        'default_value': True},
+
+                    3: {'name': 'IncludeRain',
+                        'description': 'Include rain into the surface flux vector?'
+                                       '\nDefault is False.',
+                        'access': 'item',
+                        'default_value': False},
+
+                    4: {'name': 'IncludeEvapotranspiration',
+                        'description': 'Include evapotranspiration into the surface flux vector? '
+                                       '\nDefault is set to False',
+                        'access': 'item',
+                        'default_value': False},
+
+                    5: {'name': 'IncludeInfiltration',
+                        'description': 'Include infiltration into the surface flux vector? '
+                                       '\nDefault is set to False',
+                        'access': 'item',
+                        'default_value': False},
+
+                    6: {'name': 'SaveResult',
+                        'description': 'Save the values as a text file - Default is set to False',
+                        'access': 'item',
+                        'default_value': False},
+
+                    7: {'name': 'Run',
+                        'description': 'Run component',
+                        'access': 'item',
+                        'default_value': False}}
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'Unit',
+                        'description': 'Shows the units of the results'},
+
+                    2: {'name': 'SurfaceFluxVectors',
+                        'description': 'Tree with the surface flux vectors'},
+
+                    3: {'name': 'CSVPath',
+                        'description': 'Path to csv file.'}}
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 25
+        self.unit = 'm3/day'
+        self.mesh = None
+        self.path = None
+        self.run_off = None
+        self.rain = None
+        self.evapo = None
+        self.infiltration = None
+        self.save_result = None
+        self.run_component = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.checks = False
+        self.results = None
+        self.result_path = None
+
+    def check_inputs(self):
+        if self.path:
+            self.checks = True
+        else:
+            warning = 'Insert result path'
+            self.add_warning(warning)
+
+    def config(self):
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save, run):
+
+        # Gather data
+        self.path = path
+        self.mesh = mesh
+        self.run_off = self.add_default_value(run_off, 2)
+        self.rain = self.add_default_value(rain, 3)
+        self.evapo = self.add_default_value(evapo, 4)
+        self.infiltration = self.add_default_value(infiltration, 5)
+        self.save_result = self.add_default_value(save, 6)
+        self.run_component = self.add_default_value(run, 7)
+        self.result_path = self.path + '/surface_flux_result.txt'
+
+        # Run checks
+        self.check_inputs()
+
+    def run_template(self):
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, self.path + '/cmf_surface_results_template.py'])
+        thread.wait()
+        thread.kill()
+
+    def write(self):
+
+        # helper functions
+        def process_mesh(mesh_, path_):
+            points = rs.MeshFaceCenters(mesh_)
+
+            point_obj = open(path_ + '/center_points.txt', 'w')
+            for point in points:
+                point_obj.write(','.join(str(element)
+                                         for element in point) + '\n'
+                                )
+
+            point_obj.close()
+
+            return True
+
+        def flux_config(path_, run_off, rain, evapo, infiltration):
+
+            flux_obj = open(path_ + '/flux_config.txt', 'w')
+            flux_obj.write(str(run_off) + '\n')
+            flux_obj.write(str(rain) + '\n')
+            flux_obj.write(str(evapo) + '\n')
+            flux_obj.write(str(infiltration) + '\n')
+            flux_obj.close()
+
+            return True
+
+        process_mesh(self.mesh, self.path)
+        flux_config(self.path, self.run_off, self.rain, self.evapo, self.infiltration)
+        # Write template
+        pick_template('cmf_surface_results', self.path)
+
+        return True
+
+    def load_result(self):
+
+        # Helper functions
+        def convert_file_to_points(file_lines):
+            point_list = []
+            for line_ in file_lines:
+                point_list.append(convert_line_to_points(line_.strip()))
+
+            return point_list
+
+        def convert_line_to_points(line_):
+            points_ = []
+            for element in line_.split('\t'):
+                x, y, z = element.split(',')
+                points_.append(rg.Point3d(float(x), float(y), float(z)))
+
+            return points_
+
+        result_obj = open(self.result_path, 'r')
+        result_lines = result_obj.readlines()
+        results = convert_file_to_points(result_lines)
+
+        return results
+
+    def delete_files(self):
+        os.remove(self.path + '/cmf_surface_results_template.py')
+        os.remove(self.path + '/flux_config.txt')
+        os.remove(self.path + '/center_points.txt')
+
+        if not self.save_result:
+            os.remove(self.result_path)
+
+    def run(self):
+        if self.checks and self.run_component:
+            self.write()
+            self.run_template()
+            self.results = gh_misc.list_to_tree(self.load_result())
+            #self.delete_files()

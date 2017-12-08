@@ -38,6 +38,9 @@ def pick_template(template_name, path):
         pass
         # cfd_ssh_template(path)
 
+    elif template_name == 'cmf_surface_results':
+        process_cmf_surface_results(path)
+
     else:
         raise NameError('Could not find template: ' + str(template_name))
 
@@ -204,6 +207,24 @@ def process_cmf_results(path):
 
     file.write("# Run function\n")
     file.write("win_cmf.cmf_results(r'" + path + "')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+
+    file.close()
+
+    return True
+
+
+def process_cmf_surface_results(path):
+    file_name = r'/cmf_surface_results_template.py'
+    file = open(path + file_name, 'w')
+
+    file.write("# Imports\n")
+    file.write("import livestock_win.win_cmf as win_cmf\n")
+
+    file.write("# Run function\n")
+    file.write("win_cmf.surface_flux_results(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
