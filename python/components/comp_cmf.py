@@ -164,40 +164,48 @@ class CMFWeather(GHComponent):
                                        ' to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     1: {'name': 'WindSpeed',
                         'description': 'Wind speed in m/s. Either a list or a tree where the number of branches is'
                                        ' equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     2: {'name': 'RelativeHumidity',
                         'description': 'Relative humidity in %. Either a list or a tree where the number of branches is'
                                        ' equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     3: {'name': 'CloudCover',
                         'description': 'Cloud cover, unitless between 0 and 1. Either a list or a tree where the number'
                                        ' of branches is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     4: {'name': 'GlobalRadiation',
                         'description': 'Global Radiation in W/m2. Either a list or a tree where the number of branches'
                                        ' is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     5: {'name': 'Rain',
                         'description': 'Horizontal precipitation in mm/h. Either a list or a tree where the number of'
                                        ' branches is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     6: {'name': 'GroundTemperature',
                         'description': 'Ground temperature in C. Either a list or a tree where the number of branches'
                                        ' is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
+
                     7: {'name': 'Location',
                         'description': 'A Ladybug Tools Location',
                         'access': 'item',
                         'default_value': None},
+
                     8: {'name': 'MeshFaceCount',
                         'description': 'Number of faces in the ground mesh',
                         'access': 'item',
@@ -206,6 +214,7 @@ class CMFWeather(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Weather',
                         'description': 'Livestock Weather Data Class'}}
 
@@ -1164,8 +1173,6 @@ class CMFSolve(GHComponent):
         if self.checks and self.run_case:
             self.do_case()
             self.results = self.check_results()
-
-
 
 
 class CMFResults(GHComponent):
