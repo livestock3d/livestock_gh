@@ -891,7 +891,8 @@ class CMFSolve(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 14
-        self.description = 'Solves CMF Case'
+        self.description = 'Solves CMF Case.\n' \
+                           'Icon art based on Vectors Market from the Noun Project.'
         self.mesh = None
         self.ground = None
         self.weather = None
