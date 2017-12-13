@@ -131,16 +131,15 @@ class NewAirConditions(GHComponent):
         def convert_heat_flux(heat_list, area):
 
             def converter(value, area_):
-                print('value' + str(value))
-                print('area' + str(area))
                 # MJ/m2day -> J/h
                 # 24 h/day, 1e6 J/MJ, multiply by area
                 new_value = float(value) * float(area_) * 24/10**6
                 return new_value
 
-            converted_list = [converter(heat_list[i], area[i])
-                              for heat_row in heat_list
-                              for i in range(0, len(heat_row))]
+            converted_list = [[converter(heat_row[i], area[i])
+                               for i in range(0, len(heat_row))]
+                              for heat_row in heat_list]
+
 
             return converted_list
 
@@ -152,9 +151,10 @@ class NewAirConditions(GHComponent):
                 new_value = float(value) * 86400.0 * 998.2
                 return new_value
 
-            converted_list = [converter(vapour)
-                              for vapour_row in vapour_list
-                              for vapour in vapour_row]
+            converted_list = [[converter(vapour)
+                               for vapour in vapour_row]
+                              for vapour_row in vapour_list]
+
 
             return converted_list
 
@@ -219,7 +219,7 @@ class NewAirConditions(GHComponent):
 
         # area
         area_file = 'area.txt'
-        area_obj = open(self.folder + '/', 'w')
+        area_obj = open(self.folder + '/' + area_file, 'w')
         area_obj.write(','.join(str(elem)
                                 for elem in self.area))
         area_obj.close()
