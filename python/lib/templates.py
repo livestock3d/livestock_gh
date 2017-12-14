@@ -41,6 +41,9 @@ def pick_template(template_name, path):
     elif template_name == 'cmf_surface_results':
         process_cmf_surface_results(path)
 
+    elif template_name == 'new_air':
+        new_air_conditions(path)
+
     else:
         raise NameError('Could not find template: ' + str(template_name))
 
@@ -186,9 +189,8 @@ def cmf_template(path):
 
     file.write("# Run CMF Model\n")
     file.write("folder = home_user + '/livestock/ssh'\n")
-    file.write("result_path = folder + '/results.xml'\n")
     file.write("model = CMFModel(folder)\n")
-    file.write("model.run_model(result_path)\n")
+    file.write("model.run_model()\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
@@ -254,3 +256,20 @@ def cfd_ssh_template(path):
     file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")
 """
+
+def new_air_conditions(path):
+    file_name = r'/new_air_conditions_template.py'
+    file = open(path + file_name, 'w')
+
+    file.write("# Imports\n")
+    file.write("import livestock_linux.air as la\n")
+
+    file.write("# Run function\n")
+    file.write("la.NewTemperatureAndRelativeHumidity(r'" + path + "')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+
+    file.close()
+
+    return True
