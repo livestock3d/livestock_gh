@@ -91,7 +91,8 @@ class CMFGround(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 11
-        self.description = 'Generates CMF ground'
+        self.description = 'Generates CMF ground' \
+                           '\nIcon art based created by Ben Davis from the Noun Project.'
         self.face_indices = None
         self.layers = None
         self.retention_curve = None
@@ -221,7 +222,8 @@ class CMFWeather(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 12
-        self.description = 'Generates CMF weather'
+        self.description = 'Generates CMF weather' \
+                           '\nIcon art based created by Adrien Coquet from the Noun Project.'
         self.temp = None
         self.wind = None
         self.rel_hum = None
@@ -515,7 +517,8 @@ class CMFVegetationProperties(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 13
-        self.description = 'Generates CMF Vegetation Properties'
+        self.description = 'Generates CMF Vegetation Properties' \
+                           '\nIcon art based created by Ben Davis from the Noun Project.'
         self.data = None
         self.units = None
         self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
