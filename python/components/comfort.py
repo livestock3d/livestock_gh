@@ -7,6 +7,7 @@ __version__ = "0.0.1"
 
 # Module imports
 import os
+import subprocess
 
 # Rhino and Grasshopper imports
 import rhinoscriptsyntax as rs
@@ -229,49 +230,63 @@ class NewAirConditions(GHComponent):
         temp_results = 'temperature_results.txt'
         relhum_results = 'relative_humidity_results.txt'
 
-        file_run = ['air_template.py']
+        file_run = ['new_air_conditions_template.py']
         file_transfer = files_written + file_run
         file_return = [temp_results, relhum_results]
 
         self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
         self.ssh_cmd['file_run'] = ','.join(file_run)
         self.ssh_cmd['file_return'] = ','.join(file_return)
-        self.ssh_cmd['template'] = 'air'
+        self.ssh_cmd['template'] = 'new_air'
 
         ssh.write_ssh_commands(self.ssh_cmd)
 
         return True
 
-    def load_results(self, temp_results, relhum_results):
+    def do_case(self):
+
+        ssh_template = ssh.ssh_path + '/ssh_template.py'
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, ssh_template])
+        thread.wait()
+        thread.kill()
+
+        return True
+
+    def load_results(self):
+        temp_results = '/temperature_results.txt'
+        relhum_results = '/relative_humidity_results.txt'
 
         # Temperature
-        new_temp = open(self.folder + '/' + temp_results, 'r')
+        new_temp = open(self.folder + temp_results, 'r')
         temp_data = []
         for line in new_temp.readlines():
             temp_data.append(float(element)
                              for element in line[:-1].split(',')
                              )
         new_temp.close()
-        os.remove(self.folder + '/' + temp_results)
+        os.remove(self.folder + temp_results)
         self.results['temperature'] = temp_data
 
         # Relative Humidity
-        new_relhum = open(self.folder + '/' + relhum_results, 'r')
+        new_relhum = open(self.folder + relhum_results, 'r')
         relhum_data = []
         for line in new_relhum.readlines():
             relhum_data.append(float(element)
                                for element in line[:-1].split(',')
                                )
         new_relhum.close()
-        os.remove(self.folder + '/' + relhum_results)
+        os.remove(self.folder + relhum_results)
         self.results['relative_humidity'] = relhum_data
 
     def run(self):
         if self.checks and self.run_component:
             self.get_mesh_data()
             self.convert_units()
-            temp, relhum = self.write_files()
-            self.load_results(temp, relhum)
+            self.do_case()
+            self.write_files()
+            self.load_results()
 
 
 class AdaptiveClothing(GHComponent):
