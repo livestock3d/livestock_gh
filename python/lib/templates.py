@@ -265,7 +265,7 @@ def new_air_conditions(path):
     file.write("import livestock_linux.air as la\n")
 
     file.write("# Run function\n")
-    file.write("la.NewTemperatureAndRelativeHumidity(r'" + path + "')\n")
+    file.write("la.NewTemperatureAndRelativeHumidity(r'" + path + "').run()\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
