@@ -70,7 +70,13 @@ class NewAirConditions(GHComponent):
                         'access': 'item',
                         'default_value': 1.1},
 
-                    7: {'name': 'Run',
+                    7: {'name': 'CPUs',
+                        'description': 'Number of cpus to perform the computation on.'
+                                       '\nDefault is set to 2',
+                        'access': 'item',
+                        'default_value': 2},
+
+                    8: {'name': 'Run',
                         'description': 'Run the component',
                         'access': 'item',
                         'default_value': False}
@@ -95,6 +101,7 @@ class NewAirConditions(GHComponent):
         self.air_relhum = None
         self.boundary_height = None
         self.investigation_height = None
+        self.cpus = None
         self.run_component = None
         self.area = None
         self.py_exe = gh_misc.get_python_exe()
@@ -112,7 +119,7 @@ class NewAirConditions(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, mesh, evapotranspiration, heat_flux, temperature, relhum, boundary_height,
-                   investigation_height, run):
+                   investigation_height, cpus, run):
 
         # Gather data
         self.mesh = mesh
@@ -122,7 +129,8 @@ class NewAirConditions(GHComponent):
         self.air_relhum = relhum
         self.boundary_height = self.add_default_value(boundary_height, 5)
         self.investigation_height = self.add_default_value(investigation_height, 6)
-        self.run_component = self.add_default_value(run, 7)
+        self.cpus = self.add_default_value(cpus, 7)
+        self.run_component = self.add_default_value(run, 8)
 
         # Run checks
         self.check_inputs()
@@ -149,7 +157,7 @@ class NewAirConditions(GHComponent):
             def converter(value):
                 # m^3/day -> kg/s
                 # 24h*60min*60s = 86400 s/day, 998.2 kg/m^3 at 20C
-                new_value = float(value) * 86400.0 * 998.2
+                new_value = float(value) / 86400.0 * 998.2
                 return new_value
 
             converted_list = [[converter(vapour)
@@ -226,6 +234,13 @@ class NewAirConditions(GHComponent):
         area_obj.close()
         files_written.append(area_file)
 
+        # cpu
+        cpu_file = 'cpu.txt'
+        cpu_obj = open(self.folder + '/' + cpu_file, 'w')
+        cpu_obj.write(str(self.cpus))
+        cpu_obj.close()
+        files_written.append(cpu_file)
+
         # SSH
         temp_results = 'temperature_results.txt'
         relhum_results = 'relative_humidity_results.txt'
@@ -284,8 +299,8 @@ class NewAirConditions(GHComponent):
         if self.checks and self.run_component:
             self.get_mesh_data()
             self.convert_units()
-            self.do_case()
             self.write_files()
+            self.do_case()
             self.load_results()
 
 
