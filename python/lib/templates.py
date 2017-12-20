@@ -205,10 +205,10 @@ def process_cmf_results(path):
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import livestock_win.win_cmf as win_cmf\n")
+    file.write("import livestock.hydrology as lh\n")
 
     file.write("# Run function\n")
-    file.write("win_cmf.cmf_results(r'" + path + "')\n")
+    file.write("lh.cmf_results(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
@@ -262,10 +262,11 @@ def new_air_conditions(path):
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import livestock_linux.air as la\n")
+    file.write("import livestock.air as la\n")
 
     file.write("# Run function\n")
-    file.write("la.NewTemperatureAndRelativeHumidity(r'" + path + "').run()\n")
+    file.write("if __name__ == '__main__':\n")
+    file.write("\tla.new_temperature_and_relative_humidity(r'" + path + ")\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
