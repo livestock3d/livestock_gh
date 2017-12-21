@@ -266,7 +266,7 @@ def new_air_conditions(path):
 
     file.write("# Run function\n")
     file.write("if __name__ == '__main__':\n")
-    file.write("\tla.new_temperature_and_relative_humidity(r'" + path + ")\n")
+    file.write("\tla.new_temperature_and_relative_humidity(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")

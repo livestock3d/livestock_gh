@@ -126,7 +126,7 @@ class NewAirConditions(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, mesh, evapotranspiration, heat_flux, temperature, relhum, boundary_height,
-                   investigation_height, cpus, ssh, run):
+                   investigation_height, cpus, ssh_, run):
 
         # Gather data
         self.mesh = mesh
@@ -137,7 +137,7 @@ class NewAirConditions(GHComponent):
         self.boundary_height = self.add_default_value(boundary_height, 5)
         self.investigation_height = self.add_default_value(investigation_height, 6)
         self.cpus = self.add_default_value(cpus, 7)
-        self.thorugh_ssh = self.add_default_value(ssh, 8)
+        self.thorugh_ssh = self.add_default_value(ssh_, 8)
         self.run_component = self.add_default_value(run, 9)
 
         # Run checks
@@ -157,7 +157,6 @@ class NewAirConditions(GHComponent):
                                for i in range(0, len(heat_row))]
                               for heat_row in heat_list]
 
-
             return converted_list
 
         def convert_vapour_flux(vapour_list):
@@ -171,7 +170,6 @@ class NewAirConditions(GHComponent):
             converted_list = [[converter(vapour)
                                for vapour in vapour_row]
                               for vapour_row in vapour_list]
-
 
             return converted_list
 
@@ -364,18 +362,18 @@ class NewAirConditions(GHComponent):
 
         # Temperature
         new_temp = open(folder + temp_results, 'r')
-        self.results['temperature'] = [[float(element)
-                      for element in line.strip().split(',')]
-                     for line in new_temp.readlines()]
+        self.results['temperature'] = gh_misc.list_to_tree([[float(element)
+                                                             for element in line.strip().split(',')]
+                                                            for line in new_temp.readlines()])
         new_temp.close()
 
         os.remove(folder + temp_results)
 
         # Relative Humidity
         new_relhum = open(folder + relhum_results, 'r')
-        self.results['relative_humidity'] = [[float(element)
-                                              for element in line.strip().split(',')]
-                                             for line in new_relhum.readlines()]
+        self.results['relative_humidity'] = gh_misc.list_to_tree([[float(element)
+                                                                   for element in line.strip().split(',')]
+                                                                  for line in new_relhum.readlines()])
         new_relhum.close()
 
         os.remove(folder + relhum_results)
