@@ -367,8 +367,6 @@ class NewAirConditions(GHComponent):
                                                             for line in new_temp.readlines()])
         new_temp.close()
 
-        os.remove(folder + temp_results)
-
         # Relative Humidity
         new_relhum = open(folder + relhum_results, 'r')
         self.results['relative_humidity'] = gh_misc.list_to_tree([[float(element)
@@ -376,7 +374,10 @@ class NewAirConditions(GHComponent):
                                                                   for line in new_relhum.readlines()])
         new_relhum.close()
 
-        os.remove(folder + relhum_results)
+        if self.thorugh_ssh:
+            ssh.clean_ssh_folder()
+        else:
+            ssh.clean_local_folder()
 
         return True
 
