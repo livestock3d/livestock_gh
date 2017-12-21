@@ -20,8 +20,8 @@ import scriptcontext as sc
 # -------------------------------------------------------------------------------------------------------------------- #
 # Grasshopper SSH functions
 
-ssh_path = r'C:\livestock\python\ssh'
-
+ssh_path = r'C:\livestock\ssh'
+local_path = r'C:\livestock\local'
 
 def get_ssh():
     ip = str(sc.sticky["SSH"]['ip'])
@@ -69,3 +69,12 @@ def write_ssh_commands(ssh_dict):
     templates.pick_template(ssh_dict['template'], ssh_path)
 
     return True
+
+
+def clean_local_folder():
+
+    if os.path.isdir(local_path):
+        for file in os.listdir(local_path):
+            os.remove(local_path + '/' + file)
+    else:
+        os.mkdir(local_path)

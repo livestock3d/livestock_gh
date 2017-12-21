@@ -42,7 +42,7 @@ def pick_template(template_name, path):
         process_cmf_surface_results(path)
 
     elif template_name == 'new_air':
-        new_air_conditions(path)
+        return new_air_conditions(path)
 
     else:
         raise NameError('Could not find template: ' + str(template_name))
@@ -273,4 +273,4 @@ def new_air_conditions(path):
 
     file.close()
 
-    return True
+    return file_name
