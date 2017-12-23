@@ -11,12 +11,12 @@ import os
 # Livestock imports
 
 # Grasshopper imports
-import Rhino.Geometry as rg
-import scriptcontext as sc
-import rhinoscriptsyntax as rs
-import Rhino as rc
-from System.Threading.Tasks.Parallel import ForEach
-from Rhino.Geometry.Brep import JoinBreps
+#import Rhino.Geometry as rg
+#import scriptcontext as sc
+#import rhinoscriptsyntax as rs
+#import Rhino as rc
+#from System.Threading.Tasks.Parallel import ForEach
+#from Rhino.Geometry.Brep import JoinBreps
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
