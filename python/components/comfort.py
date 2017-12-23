@@ -6,7 +6,6 @@ __version__ = "0.0.1"
 # Imports
 
 # Module imports
-import os
 import subprocess
 
 # Rhino and Grasshopper imports
@@ -118,15 +117,36 @@ class NewAirConditions(GHComponent):
         self.results = {'temperature': [], 'relative_humidity': []}
 
     def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
         self.checks = True
 
     def config(self):
+        """
+        Generates the Grasshopper component.
+        """
 
         # Generate Component
         self.config_component(self.component_number)
 
     def run_checks(self, mesh, evapotranspiration, heat_flux, temperature, relhum, boundary_height,
                    investigation_height, cpus, ssh_, run):
+
+        """
+        Gathers the inputs and checks them.
+        :param mesh: Surfacce mesh.
+        :param evapotranspiration: Vapour flux
+        :param heat_flux: Heat flux
+        :param temperature: Outdoor temperature
+        :param relhum: Relative humidity
+        :param boundary_height: Height of the air columns.
+        :param investigation_height: Investigation height
+        :param cpus: Number of CPUs
+        :param ssh_: If computation should be done over SSH.
+        :param run: Whether or not to run the component.
+        """
 
         # Gather data
         self.mesh = mesh
@@ -144,6 +164,9 @@ class NewAirConditions(GHComponent):
         self.check_inputs()
 
     def convert_units(self):
+        """
+        Converts heat and vapour flux to the correct units.
+        """
 
         def convert_heat_flux(heat_list, area):
 
@@ -177,12 +200,20 @@ class NewAirConditions(GHComponent):
         self.heat_flux = convert_heat_flux(self.heat_flux, self.area)
 
     def get_mesh_data(self):
+        """
+        Extracts the data needed from the mesh.
+        """
+
         mesh_faces = gh_geo.get_mesh_faces(self.mesh)
 
         self.area = [rs.MeshArea(face)[1]
                      for face in mesh_faces]
 
     def write_files(self):
+        """
+        Write the files.
+        """
+
         if self.thorugh_ssh:
             # Write SSH case
             write_folder = ssh.ssh_path
@@ -338,6 +369,9 @@ class NewAirConditions(GHComponent):
         return True
 
     def do_case(self):
+        """
+        Runs the case. Spawns a subprocess to run either the local or ssh template.
+        """
 
         if self.thorugh_ssh:
             template_to_run = ssh.ssh_path + '/ssh_template.py'
@@ -352,6 +386,10 @@ class NewAirConditions(GHComponent):
         return True
 
     def load_results(self):
+        """
+        Loads the results from the results files and adds them to self.results.
+        """
+
         temp_results = '/temperature_results.txt'
         relhum_results = '/relative_humidity_results.txt'
 
@@ -382,6 +420,16 @@ class NewAirConditions(GHComponent):
         return True
 
     def run(self):
+        """
+        In case all the checks have passed and run is True the component runs.
+        The following functions are run - in this order.
+        get_mesh_data()
+        convert_units()
+        write_files()
+        do_case()
+        load_results()
+        """
+
         if self.checks and self.run_component:
             self.get_mesh_data()
             self.convert_units()
@@ -411,6 +459,10 @@ class AdaptiveClothing(GHComponent):
         self.results = None
 
     def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
         if isinstance(self.temperature, float):
             self.checks = True
         else:
@@ -418,6 +470,11 @@ class AdaptiveClothing(GHComponent):
             self.add_warning(warning)
 
     def insulation_clothing(self):
+        """
+        Calculates the clothing isolation in clo for a given outdoor temperature.
+        Source: Havenith et al. - 2012 - "The UTCI-clothing model"
+        """
+
         min_insulation = 0.1
         max_insulation = 1.43
         insulation = 1.372 \
@@ -439,11 +496,18 @@ class AdaptiveClothing(GHComponent):
             self.add_warning(warning)
 
     def config(self):
+        """
+        Generates the Grasshopper component.
+        """
 
         # Generate Component
         self.config_component(self.component_number)
 
     def run_checks(self, temp):
+        """
+        Gathers the inputs and checks them.
+        :param temp: Outdoor temperature.
+        """
 
         # Gather data
         self.temperature = temp
@@ -452,5 +516,10 @@ class AdaptiveClothing(GHComponent):
         self.check_inputs()
 
     def run(self):
+        """
+        In case all the checks have passed and run is True the component runs.
+        It runs the insulation_clothing() function.
+        """
+
         if self.checks:
             self.results = self.insulation_clothing()
