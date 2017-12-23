@@ -6,15 +6,14 @@ __version__ = "0.1.0"
 # Imports
 
 # Module imports
-import shutil
 import os
 
 # Livestock imports
-import misc as gh_misc
-import templates
+import livestock.lib.misc as gh_misc
+import livestock.lib.templates as templates
 
 # Grasshopper imports
-import scriptcontext as sc
+#import scriptcontext as sc
 
 
 # -------------------------------------------------------------------------------------------------------------------- #

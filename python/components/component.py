@@ -11,7 +11,7 @@ import os
 # Livestock imports
 
 # Grasshopper imports
-import Grasshopper.Kernel as gh
+#import Grasshopper.Kernel as gh
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Grasshopper Component Class
@@ -33,7 +33,7 @@ class GHComponent:
         - Generate component data
         - Generate outputs
         - Generate inputs
-        :param component_number: integer with the component number
+        :param component_number: Integer with the component number
         """
 
         # Load component data
