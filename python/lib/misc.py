@@ -72,6 +72,8 @@ def list_to_tree(input_, none_and_holes=True, source=[0]):
 
 
 class PassClass:
+    """Pass a class from one Grasshopper component to another."""
+
     def __init__(self, pyClass, name):
         self.c = pyClass
         self.n = name
@@ -81,6 +83,13 @@ class PassClass:
 
 
 def write_file(text, path, name, file_type='txt'):
+    """
+    Writes a text file.
+    :param text: Text to write.
+    :param path: Directory to save it to.
+    :param name: File name.
+    :param file_type: File extension.
+    """
 
     # Make file path name with extension
     file_path = os.path.join(path, name + "." + str(file_type))
@@ -117,6 +126,12 @@ def flatten_list(l):
 
 
 def decompose_ladybug_location(_location):
+    """
+    Decompose a Ladybug Tools location in to a tuple.
+    :param _location: Ladybug Location.
+    :return: Tuple with location values.
+    """
+
     location_str = _location.split('\n')
     new_loc_str = ""
 
@@ -138,6 +153,11 @@ def decompose_ladybug_location(_location):
 
 
 def get_python_exe():
+    """
+    Collects the python.exe path from a sticky.
+    :return: The python path.
+    """
+
     py = str(sc.sticky["PythonExe"])
 
     return py

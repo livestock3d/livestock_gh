@@ -7,6 +7,11 @@ __version__ = "0.1.0"
 
 
 def pick_template(template_name, path):
+    """
+    Writes a template given a template name and path to write it to.
+    :param template_name: Template name.
+    :param path: Path to save it to.
+    """
 
     template_name = str(template_name)
 
@@ -61,6 +66,11 @@ def print_template_header(template):
 
 
 def drain_mesh_template(path):
+    """
+    Writes the template for the drain mesh function.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/drain_mesh_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -138,6 +148,11 @@ def fix_mesh_template(path):
 """
 
 def ssh_template(path):
+    """
+    Writes the ssh template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/ssh_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -178,6 +193,11 @@ def topographic_index_template(path):
 """
 
 def cmf_template(path):
+    """
+    Writes the CMF template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -201,6 +221,11 @@ def cmf_template(path):
 
 
 def process_cmf_results(path):
+    """
+    Writes the CMF result lookup template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_results_template.py'
     file = open(path + file_name, 'w')
 
@@ -219,6 +244,11 @@ def process_cmf_results(path):
 
 
 def process_cmf_surface_results(path):
+    """
+    Writes the CMF surface result template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_surface_results_template.py'
     file = open(path + file_name, 'w')
 
@@ -258,6 +288,11 @@ def cfd_ssh_template(path):
 """
 
 def new_air_conditions(path):
+    """
+    Writes the new air condition template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/new_air_conditions_template.py'
     file = open(path + file_name, 'w')
 

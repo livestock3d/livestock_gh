@@ -34,6 +34,9 @@ def get_ssh():
 
 
 def clean_ssh_folder():
+    """
+    Cleans the livestock/ssh folder on the C drive.
+    """
 
     if os.path.isdir(ssh_path):
         for file in os.listdir(ssh_path):
@@ -71,6 +74,9 @@ def write_ssh_commands(ssh_dict):
 
 
 def clean_local_folder():
+    """
+    Cleans the livestock/local folder on the C drive.
+    """
 
     if os.path.isdir(local_path):
         for file in os.listdir(local_path):
