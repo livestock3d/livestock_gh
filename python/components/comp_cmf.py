@@ -914,12 +914,20 @@ class CMFRetentionCurve(GHComponent):
         self.check_inputs()
 
     def load_csv(self):
+        """
+        Loads a csv file with the retention curve data.
+        """
 
         load = csv.read_csv(self.data_path)
         self.units = load[0]
         self.data = load[1]
 
     def load_retention_curve(self):
+        """
+        Loads the retention curve data and converts it into a order dict.
+        If any property is to be overwritten it is also done in this function.
+        """
+
         self.load_csv()
         self.property = collections.OrderedDict([('type', str(self.data[self.soil_index][0])),
                                                  ('K_sat', float(self.data[self.soil_index][1])),
@@ -954,8 +962,9 @@ class CMFRetentionCurve(GHComponent):
     def run(self):
         """
         In case all the checks have passed the component runs.
-        :return:
+        Loads the retention curve data and passes it on with PassClass.
         """
+
         if self.checks:
             self.load_retention_curve()
             self.results = gh_misc.PassClass(self.property, 'RetentionCurve')
@@ -1122,9 +1131,15 @@ class CMFSolve(GHComponent):
         self.check_inputs()
 
     def update_case_path(self):
+        """Updates the case folder path."""
+
         self.case_path = self.folder + '\\' + self.case_name
 
     def write(self, doc):
+        """
+        Writes the needed files.
+        :param doc: Grasshopper document.
+        """
 
         # Helper functions
         def write_weather(weather_dict_, folder):
@@ -1319,6 +1334,9 @@ class CMFSolve(GHComponent):
         return True
 
     def do_case(self):
+        """
+        Spawns a new subprocess, that runs the ssh template.
+        """
 
         ssh_template = ssh.ssh_path + '/ssh_template.py'
 
@@ -1330,6 +1348,11 @@ class CMFSolve(GHComponent):
         return True
 
     def check_results(self):
+        """
+        Checks if the result files exists and then copies them form the ssh folder to the case folder.
+        If not then a warning is raised.
+        """
+
         ssh_result = ssh.ssh_path + '/results.xml'
         result_path = self.case_path + '/results.xml'
 
@@ -1344,10 +1367,10 @@ class CMFSolve(GHComponent):
 
     def run(self, doc):
         """
-        In case all the checks have passed the component runs.
-        :param doc:
-        :return:
+        In case all the checks have passed and write_case is True the component writes the case files.
+        If all checks have passed and run_case is True the simulation is started.
         """
+
         if self.checks and self.write_case:
             self.write(doc)
 
@@ -1449,6 +1472,11 @@ class CMFResults(GHComponent):
         self.check_inputs()
 
     def process_xml(self):
+        """
+        Processes the xml result file and extracts the wanted information and saves it as a csv file.
+        :return: csv file path.
+        """
+
         possible_results = ['evapotranspiration', 'surface_water_volume', 'surface_water_flux',
                             'heat_flux', 'aerodynamic_resistance', 'volumetric_flux', 'potential',
                             'theta', 'volume', 'wetness']
@@ -1475,6 +1503,11 @@ class CMFResults(GHComponent):
         return csv_path
 
     def load_result_csv(self, path):
+        """
+        Loads the csv file containing the wanted results.
+        :param path: Csv file path
+        :return: The results
+        """
 
         def convert_file_to_points(csv_file):
             point_list = []
@@ -1527,6 +1560,7 @@ class CMFResults(GHComponent):
             return results
 
     def delete_files(self, csv_path):
+        """Delete the helper files."""
         os.remove(self.path + '/cmf_results_template.py')
         os.remove(self.path + '/result_lookup.txt')
 
@@ -1534,6 +1568,7 @@ class CMFResults(GHComponent):
             os.remove(csv_path)
 
     def set_units(self):
+        """Function to organize the output units."""
 
         if self.fetch_result == 0:
             # evapotranspiration
@@ -1577,8 +1612,13 @@ class CMFResults(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        :return:
+        In case all the checks have passed and run is True the component runs.
+        Following functions are run:
+        set_units()
+        process_xml()
+        load_result_csv()
+        delete_files()
+        The results are converted into a Grasshopper Tree structure.
         """
         if self.checks and self.run_component:
 
@@ -1711,6 +1751,10 @@ class CMFOutputs(GHComponent):
         self.check_inputs()
 
     def set_outputs(self):
+        """
+        Convertes the wanted outputs into a dict
+        :return: output dict.
+        """
 
         output_dict = {'cell': [], 'layer': []}
 
@@ -1750,8 +1794,9 @@ class CMFOutputs(GHComponent):
     def run(self):
         """
         In case all the checks have passed the component runs.
-        :return:
+        set_outputs() are run and passed on with PassClass.
         """
+
         if self.checks:
             out_dict = self.set_outputs()
             self.output_dict = out_dict
@@ -1856,6 +1901,8 @@ class CMFBoundaryCondition(GHComponent):
         self.check_inputs()
 
     def set_inlet(self):
+        """Constructs a dict with inlet information."""
+
         self.results = gh_misc.PassClass({'type': 'inlet',
                                           'cell': self.cell,
                                           'layer': self.layer,
@@ -1865,6 +1912,8 @@ class CMFBoundaryCondition(GHComponent):
                                          'BoundaryCondition')
 
     def set_outlet(self):
+        """Constructs a dict with outlet information."""
+
         self.results = gh_misc.PassClass({'type': 'outlet',
                                           'cell': self.cell,
                                           'layer': self.layer,
@@ -1877,8 +1926,9 @@ class CMFBoundaryCondition(GHComponent):
     def run(self):
         """
         In case all the checks have passed the component runs.
-        :return:
+        It runs either set_inlet() or set_outlet() depending on what is wanted.
         """
+
         if self.checks:
             if self.inlet_or_outlet == 0:
                 self.set_inlet()
@@ -1972,8 +2022,9 @@ class CMFSolverSettings(GHComponent):
         def run(self):
             """
             In case all the checks have passed the component runs.
-            :return:
+            Constructs a solver settings dict, prints it and passes it on with PassClass.
             """
+
             if self.checks:
                 settings_dict = {'analysis_length': int(self.length),
                                  'time_step': float(self.time_step),
@@ -2111,6 +2162,7 @@ class CMFSurfaceFluxResult(GHComponent):
         self.check_inputs()
 
     def run_template(self):
+        """Spawns a subprocess that runs the template."""
 
         # Run template
         thread = subprocess.Popen([self.py_exe, self.path + '/cmf_surface_results_template.py'])
@@ -2118,6 +2170,7 @@ class CMFSurfaceFluxResult(GHComponent):
         thread.kill()
 
     def write(self):
+        """Writes the wanted information from the mesh and the flux configurations."""
 
         # helper functions
         def process_mesh(mesh_, path_):
@@ -2152,6 +2205,7 @@ class CMFSurfaceFluxResult(GHComponent):
         return True
 
     def load_result(self):
+        """Loads the results."""
 
         # Helper functions
         def convert_file_to_points(file_lines):
@@ -2176,6 +2230,8 @@ class CMFSurfaceFluxResult(GHComponent):
         return results
 
     def delete_files(self):
+        """Deletes the helper files."""
+
         os.remove(self.path + '/cmf_surface_results_template.py')
         os.remove(self.path + '/flux_config.txt')
         os.remove(self.path + '/center_points.txt')
@@ -2186,8 +2242,14 @@ class CMFSurfaceFluxResult(GHComponent):
     def run(self):
         """
         In case all the checks have passed the component runs.
-        :return:
+        The following functions are run:
+        write()
+        run_template()
+        load_results()
+        delete_files()
+        The results are converted into a Grasshopper Tree structure.
         """
+
         if self.checks and self.run_component:
             self.write()
             self.run_template()
