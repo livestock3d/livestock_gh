@@ -77,7 +77,7 @@ class NewAirConditions(GHComponent):
                         'default_value': 2},
 
                     8: {'name': 'ThroughSSH',
-                        'description': 'Number of cpus to perform the computation on.'
+                        'description': 'If the computation should be run through SSH.'
                                        '\nDefault is set to False',
                         'access': 'item',
                         'default_value': False},

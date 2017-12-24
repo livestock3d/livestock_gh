@@ -11,6 +11,7 @@ Welcome to Livestock_GH's documentation!
    :caption: Contents:
 
    components
+   component classes
    lib
 
 Indices and tables

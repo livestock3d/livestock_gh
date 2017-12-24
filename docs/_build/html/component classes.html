@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Livestock Grasshopper Component Classes &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Livestock Grasshopper Lib" href="lib.html" />
+    <link rel="prev" title="Livestock Grasshopper Components" href="components.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="livestock-grasshopper-component-classes">
+<h1>Livestock Grasshopper Component Classes<a class="headerlink" href="#livestock-grasshopper-component-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-livestock.components.component">
+<span id="superclass"></span><h2>SuperClass<a class="headerlink" href="#module-livestock.components.component" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="livestock.components.component.GHComponent">
+<em class="property">class </em><code class="descclassname">livestock.components.component.</code><code class="descname">GHComponent</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.component.GHComponent.add_default_value">
+<code class="descname">add_default_value</code><span class="sig-paren">(</span><em>parameter</em>, <em>param_number</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent.add_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a default value to a parameter.
+:param parameter: Parameter to add default value to
+:param param_number: Parameter number
+:return: Parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.component.GHComponent.add_input_parameter">
+<code class="descname">add_input_parameter</code><span class="sig-paren">(</span><em>input_</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent.add_input_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an input to the Grasshopper component.
+:param <a href="#id1"><span class="problematic" id="id2">input_</span></a>: Input index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.component.GHComponent.add_output_parameter">
+<code class="descname">add_output_parameter</code><span class="sig-paren">(</span><em>output_</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent.add_output_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an output to the Grasshopper component.
+:param <a href="#id3"><span class="problematic" id="id4">output_</span></a>: Output index.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.component.GHComponent.add_warning">
+<code class="descname">add_warning</code><span class="sig-paren">(</span><em>warning</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent.add_warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a Grasshopper warning to the component.
+:param warning: Warning text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.component.GHComponent.config_component">
+<code class="descname">config_component</code><span class="sig-paren">(</span><em>component_number</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.component.GHComponent.config_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the component, with the following steps:
+- Load component data
+- Generate component data
+- Generate outputs
+- Generate inputs
+:param component_number: Integer with the component number</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-livestock.components.misc">
+<span id="miscellaneous"></span><h2>0 | Miscellaneous<a class="headerlink" href="#module-livestock.components.misc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="livestock.components.misc.PythonExecutor">
+<em class="property">class </em><code class="descclassname">livestock.components.misc.</code><code class="descname">PythonExecutor</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.PythonExecutor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.misc.PythonExecutor.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.PythonExecutor.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.PythonExecutor.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.PythonExecutor.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.PythonExecutor.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.PythonExecutor.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+It prints the python.exe path and creates a scriptcontext.sticky with the path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.PythonExecutor.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>py_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.PythonExecutor.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param py_exe: Path to python.exe</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.misc.SSHConnection">
+<em class="property">class </em><code class="descclassname">livestock.components.misc.</code><code class="descname">SSHConnection</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.SSHConnection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.misc.SSHConnection.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.SSHConnection.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.SSHConnection.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.SSHConnection.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.SSHConnection.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.SSHConnection.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+It prints out the IP, Port and Username and creates a
+scriptcontext.sticky all four inputs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.misc.SSHConnection.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>ip</em>, <em>port</em>, <em>user</em>, <em>pw</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.misc.SSHConnection.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param ip: IP for SSH connection
+:param port: Port for SSH connection
+:param user: Username for SSH connection
+:param pw: Password for SSH connection</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-livestock.components.geometry">
+<span id="geometry"></span><h2>1 | Geometry<a class="headerlink" href="#module-livestock.components.geometry" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="livestock.components.geometry.LoadMesh">
+<em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">LoadMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and Load is True the component runs.
+It loads the .obj file and its data if there is any.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>load</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param path: Path where the mesh is saved.
+:param load: Load the mesh or not</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.geometry.SaveMesh">
+<em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">SaveMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and save is True the component runs.
+It saves the .obj file and its data if there is any.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>data</em>, <em>dir_</em>, <em>name</em>, <em>save</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param mesh: Mesh that should be saved.
+:param data: Mesh data that should be saved.
+:param <a href="#id5"><span class="problematic" id="id6">dir_</span></a>: Directory where the files should be saved.
+:param name: Name for mesh.
+:param save: Whether to save or not.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-livestock.components.comp_cmf">
+<span id="cmf"></span><h2>3 | CMF<a class="headerlink" href="#module-livestock.components.comp_cmf" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFGround">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFGround</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.convert_et_number_to_method">
+<code class="descname">convert_et_number_to_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.convert_et_number_to_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a number into a ET method.
+:return: ET method name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+The component puts all the inputs into a dict and uses PassClass to pass it on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>layers</em>, <em>retention_curve</em>, <em>vegetation_properties</em>, <em>saturated_depth</em>, <em>face_indices</em>, <em>et_method</em>, <em>manning_</em>, <em>puddle</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param layers: Depth of layers.
+:param retention_curve: Livestock retention curve dict.
+:param vegetation_properties: Livestock vegetation properties dict.
+:param saturated_depth: Saturated depth of the cell.
+:param face_indices: Face indices where the properties should be applied to.
+:param et_method: Evapotranspriation calculation method.
+:param <a href="#id7"><span class="problematic" id="id8">manning_</span></a>: Manning roughness.
+:param puddle: Puddle depth.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFWeather">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFWeather</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.convert_cloud_cover">
+<code class="descname">convert_cloud_cover</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_cloud_cover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts cloud cover to sun shine fraction.
+sun shine = 1 - cloud cover
+:return: list with sun shine fractions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.convert_location">
+<code class="descname">convert_location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts information from a Ladybug Tools location
+:return: Latitude, longitude and time zone</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.convert_radiation_unit">
+<code class="descname">convert_radiation_unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_radiation_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts radiation from W/m2 to MJ/(m2*day)
+1 W/m2 =&gt; 60s*60min*24hours/10^6 =&gt; MJ/(m2*day)
+1 W/m2 = 0.0864 MJ/(m2*day)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.convert_rain_unit">
+<code class="descname">convert_rain_unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_rain_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts rain from mm/h to mm/day
+1 mm/h = 24 mm/day</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.match_cell_count">
+<code class="descname">match_cell_count</code><span class="sig-paren">(</span><em>weather_parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.match_cell_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a whether a weather parameter has the correct number of sublists,
+so they matches the number of cells. Then converts it into a dict with a list for each cell.
+:param weather_parameter: Weather parameter to check.
+:return: Corrected weather parameter as dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.print_weather_lengths">
+<code class="descname">print_weather_lengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.print_weather_lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the length of each weather parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+The following functions are run:
+print_weather_lengths()
+convert_cloud_cover()
+convert_radiation_unit()
+convert_location()
+A weather dict is created an passes on with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFWeather.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>temp</em>, <em>wind</em>, <em>rel_hum</em>, <em>cloud_cover</em>, <em>global_radiation</em>, <em>rain</em>, <em>ground_temp</em>, <em>location</em>, <em>face_count</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param temp: Temperature
+:param wind: Wind speed
+:param rel_hum: Relative humidity
+:param cloud_cover: Cloud cover
+:param global_radiation: Global radiation
+:param rain: Rain
+:param ground_temp: Ground temperature.
+:param location: Ladybug Tool location
+:param face_count: Number of mesh faces in project</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFVegetationProperties</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.load_csv">
+<code class="descname">load_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.load_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a csv file with the vegetation properties.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.pick_property">
+<code class="descname">pick_property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.pick_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects the correct vegetation property. And stores it as a ordered dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+It run pick_properties()
+And passes on the property dict with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFVegetationProperties.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>property_</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param <a href="#id9"><span class="problematic" id="id10">property_</span></a>: Property index.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSyntheticTree</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.compute_tree">
+<code class="descname">compute_tree</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.compute_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects the correct tree property. It computes the property information and stores it as a ordered dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.load_csv">
+<code class="descname">load_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.load_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a csv file with the tree properties.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+It runs the function compute_tree. Creates a dict and passes it on with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSyntheticTree.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>face_index</em>, <em>tree_type</em>, <em>height</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param face_index: Mesh face index.
+:param tree_type: Tree type.
+:param height: Tree height.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFRetentionCurve</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.load_csv">
+<code class="descname">load_csv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.load_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a csv file with the retention curve data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.load_retention_curve">
+<code class="descname">load_retention_curve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.load_retention_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the retention curve data and converts it into a order dict.
+If any property is to be overwritten it is also done in this function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+Loads the retention curve data and passes it on with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFRetentionCurve.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>soil_index</em>, <em>k_sat</em>, <em>phi</em>, <em>alpha</em>, <em>n</em>, <em>m</em>, <em>l</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param soil_index: Soil index.
+:param k_sat: Ksat
+:param phi: Phi
+:param alpha: Alpha
+:param n: N
+:param m: M
+:param l: L</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFSolve">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSolve</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.check_results">
+<code class="descname">check_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.check_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the result files exists and then copies them form the ssh folder to the case folder.
+If not then a warning is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.do_case">
+<code class="descname">do_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.do_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawns a new subprocess, that runs the ssh template.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and write_case is True the component writes the case files.
+If all checks have passed and run_case is True the simulation is started.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>ground</em>, <em>weather</em>, <em>trees</em>, <em>stream</em>, <em>boundary_conditions</em>, <em>solver_settings</em>, <em>folder</em>, <em>name</em>, <em>outputs</em>, <em>write</em>, <em>overwrite</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param mesh: Project Mesh
+:param ground: Livestock Ground dict
+:param weather: Livestock Weather dict
+:param trees: Livestock Tree dict
+:param stream: Livestock Stream dict
+:param boundary_conditions: Livestock Boundary Condition dict
+:param solver_settings: Livestock Solver settings dict
+:param folder: Case folder
+:param name: Case name
+:param outputs: Livestock Outputs dict
+:param write: Whether to write or not
+:param overwrite: Overwirte exsiting files
+:param run: Whether to run or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.update_case_path">
+<code class="descname">update_case_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.update_case_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the case folder path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolve.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the needed files.
+:param doc: Grasshopper document.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFResults">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFResults</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.delete_files">
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>csv_path</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the helper files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.load_result_csv">
+<code class="descname">load_result_csv</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.load_result_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the csv file containing the wanted results.
+:param path: Csv file path
+:return: The results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.process_xml">
+<code class="descname">process_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.process_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the xml result file and extracts the wanted information and saves it as a csv file.
+:return: csv file path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and run is True the component runs.
+Following functions are run:
+set_units()
+process_xml()
+load_result_csv()
+delete_files()
+The results are converted into a Grasshopper Tree structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>fetch_result</em>, <em>save</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param path: Result path
+:param fetch_result: Which result to fetch
+:param save: Whether to save the csv file or not.
+:param run: Whether to run the component or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFResults.set_units">
+<code class="descname">set_units</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.set_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to organize the output units.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFOutputs">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFOutputs</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFOutputs.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFOutputs.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFOutputs.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+set_outputs() are run and passed on with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFOutputs.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>evapo_trans</em>, <em>surface_water_volume</em>, <em>surface_water_flux</em>, <em>heat_flux</em>, <em>aero_res</em>, <em>three_d_flux</em>, <em>potential</em>, <em>theta</em>, <em>volume</em>, <em>wetness</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param evapo_trans: Whether to include evapotranspiration or not.
+:param surface_water_volume: Whether to include surface water volume or not.
+:param surface_water_flux: Whether to include surface water flux or not.
+:param heat_flux: Whether to include surface heat flux or not.
+:param aero_res: Whether to include aerodynamic resistance or not.
+:param three_d_flux: Whether to include soil water flux or not.
+:param potential: Whether to include soil potential or not.
+:param theta: Whether to include soil theta or not.
+:param volume: Whether to include soil water volume or not.
+:param wetness: Whether to include soil wetness or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFOutputs.set_outputs">
+<code class="descname">set_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.set_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convertes the wanted outputs into a dict
+:return: output dict.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFBoundaryCondition</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+It runs either set_inlet() or set_outlet() depending on what is wanted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>inlet_outlet</em>, <em>cell</em>, <em>layer</em>, <em>inlet_flux</em>, <em>width</em>, <em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param inlet_outlet:
+:param cell:
+:param layer:
+:param inlet_flux:
+:param width:
+:param location:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.set_inlet">
+<code class="descname">set_inlet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.set_inlet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a dict with inlet information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFBoundaryCondition.set_outlet">
+<code class="descname">set_outlet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFBoundaryCondition.set_outlet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a dict with outlet information.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFSolverSettings">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSolverSettings</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolverSettings.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolverSettings.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolverSettings.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+Constructs a solver settings dict, prints it and passes it on with PassClass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSolverSettings.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>length</em>, <em>time_step</em>, <em>tolerance</em>, <em>verbosity</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param length: Number of time steps to be taken.
+:param time_step: Size of time step.
+:param tolerance: Solver tolerance.
+:param verbosity: Solver verbosity.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult">
+<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSurfaceFluxResult</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.delete_files">
+<code class="descname">delete_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.delete_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the helper files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.load_result">
+<code class="descname">load_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.load_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed the component runs.
+The following functions are run:
+write()
+run_template()
+load_results()
+delete_files()
+The results are converted into a Grasshopper Tree structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>mesh</em>, <em>run_off</em>, <em>rain</em>, <em>evapo</em>, <em>infiltration</em>, <em>save</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param path: Path for result file.
+:param mesh: Case mesh
+:param run_off: Whether to include run-off or not.
+:param rain: Whether to include rain or not.
+:param evapo: Whether to include evapotranspiration or not.
+:param infiltration: Whether to include infiltration or not.
+:param save: Save result to file or not
+:param run: Run component or not.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run_template">
+<code class="descname">run_template</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawns a subprocess that runs the template.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.write">
+<code class="descname">write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the wanted information from the mesh and the flux configurations.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-livestock.components.comfort">
+<span id="comfort"></span><h2>4 | Comfort<a class="headerlink" href="#module-livestock.components.comfort" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="livestock.components.comfort.NewAirConditions">
+<em class="property">class </em><code class="descclassname">livestock.components.comfort.</code><code class="descname">NewAirConditions</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.convert_units">
+<code class="descname">convert_units</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.convert_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts heat and vapour flux to the correct units.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.do_case">
+<code class="descname">do_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.do_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the case. Spawns a subprocess to run either the local or ssh template.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.get_mesh_data">
+<code class="descname">get_mesh_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.get_mesh_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the data needed from the mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.load_results">
+<code class="descname">load_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.load_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the results from the results files and adds them to self.results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and run is True the component runs.
+The following functions are run - in this order.
+get_mesh_data()
+convert_units()
+write_files()
+do_case()
+load_results()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>evapotranspiration</em>, <em>heat_flux</em>, <em>temperature</em>, <em>relhum</em>, <em>boundary_height</em>, <em>investigation_height</em>, <em>cpus</em>, <em>ssh_</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param mesh: Surfacce mesh.
+:param evapotranspiration: Vapour flux
+:param heat_flux: Heat flux
+:param temperature: Outdoor temperature
+:param relhum: Relative humidity
+:param boundary_height: Height of the air columns.
+:param investigation_height: Investigation height
+:param cpus: Number of CPUs
+:param <a href="#id11"><span class="problematic" id="id12">ssh_</span></a>: If computation should be done over SSH.
+:param run: Whether or not to run the component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.NewAirConditions.write_files">
+<code class="descname">write_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.write_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.comfort.AdaptiveClothing">
+<em class="property">class </em><code class="descclassname">livestock.components.comfort.</code><code class="descname">AdaptiveClothing</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="livestock.components.comfort.AdaptiveClothing.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.AdaptiveClothing.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.AdaptiveClothing.insulation_clothing">
+<code class="descname">insulation_clothing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.insulation_clothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the clothing isolation in clo for a given outdoor temperature.
+Source: Havenith et al. - 2012 - “The UTCI-clothing model”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.AdaptiveClothing.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and run is True the component runs.
+It runs the insulation_clothing() function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.comfort.AdaptiveClothing.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>temp</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param temp: Outdoor temperature.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="components.html" title="previous chapter">Livestock Grasshopper Components</a></li>
+      <li>Next: <a href="lib.html" title="next chapter">Livestock Grasshopper Lib</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/component classes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
