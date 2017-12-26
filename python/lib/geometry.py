@@ -376,6 +376,11 @@ def ray_shoot(start_pt, vector, context, num_of_bounce=1):
 
 
 def load_mesh_data(path):
+    """
+    Load additional data for a mesh.
+    :param path: Path for mesh file.
+    :return: Data
+    """
 
     path = path.split('.')[0] + '_Data.txt'
 

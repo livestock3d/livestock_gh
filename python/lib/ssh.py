@@ -23,6 +23,8 @@ ssh_path = r'C:\livestock\ssh'
 local_path = r'C:\livestock\local'
 
 def get_ssh():
+    """Extracts the SSH information from a stricky"""
+
     ip = str(sc.sticky["SSH"]['ip'])
     port = str(sc.sticky["SSH"]['port'])
     user = str(sc.sticky["SSH"]['user'])
