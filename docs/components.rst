@@ -149,11 +149,12 @@ Livestock Grasshopper Components
 
 **Livestock CMF Retention Curve**
 
-:Description: CMF Boundary connection
+:Description: Generates a retention curve.
 |
 :Inputs:
-    :1.:    :Name: InletOrOutlet
-            :Description: 0 is inlet. 1 is outlet - default is set to 0
+    :1.:    :Name: SoilIndex
+            :Description: Index for choosing soil type. Index from 0-5. Default is set to 0, which is the default CMF
+                          retention curve.
             :Data Access: Item
             :Default Value: 0
 |
@@ -163,6 +164,48 @@ Livestock Grasshopper Components
 
     :2.:    :Name: BoundaryCondition
             :Description: Livestock Boundary Conditions.
+
+
+                    1: {'name': 'K_sat',
+                        'description': 'Saturated conductivity in m/day',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'Phi',
+                        'description': 'Porosity in m3/m3',
+                        'access': 'item',
+                        'default_value': None},
+
+                    3: {'name': 'Alpha',
+                        'description': 'Inverse of water entry potential in 1/cm',
+                        'access': 'item',
+                        'default_value': None},
+
+                    4: {'name': 'N',
+                        'description': 'Pore size distribution parameter is unitless',
+                        'access': 'item',
+                        'default_value': None},
+
+                    5: {'name': 'M',
+                        'description': 'VanGenuchten m (if negative, 1-1/n is used) is unitless',
+                        'access': 'item',
+                        'default_value': None},
+
+                    6: {'name': 'L',
+                        'description': 'Mualem tortoisivity is unitless',
+                        'access': 'item',
+                        'default_value': None}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Units',
+                        'description': 'Shows the units of the curve values'},
+                    2: {'name': 'CurveValues',
+                        'description': 'Chosen curve properties values'},
+                    3: {'name': 'RetentionCurve',
+                        'description': 'Livestock Retention Curve'}}
 
 **Livestock CMF Solve**
 
