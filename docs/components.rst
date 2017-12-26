@@ -6,7 +6,37 @@ Livestock Grasshopper Components
 
 **Livestock Python Executor**
 
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
+
 **Livestock SSH Connection**
+
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
 
 
 1 | Geometry
@@ -14,41 +44,371 @@ Livestock Grasshopper Components
 
 **Livestock Load Mesh**
 
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
+
 **Livestock Save Mesh**
+
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
 
 3 | CMF
 -------
 
 **Livestock CMF Ground**
 
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
+
 **Livestock CMF Weather**
+
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
 
 **Livestock CMF Vegetation Properties**
 
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
+
 **Livestock CMF Synthetic Tree**
+
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
 
 **Livestock CMF Retention Curve**
 
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
+
 **Livestock CMF Solve**
+
+:Description: | Solves CMF Case.
+              | Icon art based on Vectors Market from the Noun Project.
+|
+:Inputs:
+    :1.:    :Name: Mesh
+            :Description: Topography as a mesh.
+            :Data Access: Item
+            :Default Value: None
+
+    :2.:    :Name: Ground
+            :Description: Input from Livestock CMF Ground.
+            :Data Access: List
+            :Default Value: None
+
+    :3.:    :Name: Weather
+            :Description: Input from Livestock CMF Weather.
+            :Data Access: Item
+            :Default Value: None
+
+    :4.:    :Name: Trees
+            :Description: Input from Livestock CMF Tree.
+            :Data Access: List
+            :Default Value: None
+
+    :5.:    :Name: Stream
+            :Description: Input from Livestock CMF Stream. **Currently not working.**
+            :Data Access: Item
+            :Default Value: None
+
+    :6.:    :Name: BoundaryConditions
+            :Description: Input from Livestock CMF Boundary Condition.
+            :Data Access: List
+            :Default Value: None
+
+    :7.:    :Name: SolverSettings
+            :Description: Input from Livestock CMF Solver Settings.
+            :Data Access: Item
+            :Default Value: None
+
+    :8.:    :Name: Folder
+            :Description: Path to folder. Default is Desktop.
+            :Data Access: Item
+            :Default Value: os.path.join(os.environ["HOMEPATH"], "Desktop")}
+
+    :9.:    :Name: CaseName
+            :Description: Case name as string. Default is CMF
+            :Data Access: Item
+            :Default Value: CMF
+
+    :10.:   :Name: Outputs
+            :Description: Connect Livestock Outputs.
+            :Data Access: Item
+            :Default Value: None
+
+    :11.:   :Name: Write
+            :Description: Boolean to write files.
+            :Data Access: Item
+            :Default Value: False
+
+    :12.:   :Name: Overwrite
+            :Description: If True excising case will be overwritten. Default is set to True.
+            :Data Access: Item
+            :Default Value: True
+
+    :13.:   :Name: Run
+            :Description: | Boolean to run analysis.
+                          | Analysis will be ran through SSH. Configure the connection with Livestock SSH.
+            :Data Access: Item
+            :Default Value: False
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: ResultPath
+            :Description: Path to result files.
 
 **Livestock CMF Results**
 
-**Livestock CMFOutputs**
-
-**Livestock CMF Boundary Condition**
-:Description:
-Sets the solver settings for CMF Solve
+:Description: CMF Results
 |
 :Inputs:
-    :1.:    :Name: AnalysisLength
-            :Description: Number of time steps to be taken - Default is 24
+    :1.:    :Name: ResultFilePath
+            :Description: Path to result file. Accepts output from Livestock Solve
             :Data Access: Item
-            :Default Value: 24
+            :Default Value: None
+
+    :2.:    :Name: FetchResult
+            :Description: | Choose which result should be loaded:
+                          | 0 - Evapotranspiration
+                          | 1 - Surface water volume
+                          | 2 - Surface water flux
+                          | 3 - Heat flux
+                          | 4 - Aerodynamic resistance
+                          | 5 - Soil layer water flux
+                          | 6 - Soil layer potential
+                          | 7 - Soil layer theta
+                          | 8 - Soil layer volume
+                          | 9 - Soil layer wetness
+                          | Default is set to 0.
+            :Data Access: Item
+            :Default Value: 0
+
+    :3.:    :Name: SaveCSV
+            :Description: Save the values as a csv file - Default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :4.:    :Name: Run
+            :Description: Run component.
+            :Data Access: Item
+            :Default Value: False
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: Units
+            :Description: Shows the units of the results.
+
+    :3.:    :Name: Values
+            :Description: List with chosen result values.
+
+    :4.:    :Name: CSVPath
+            :Description: Path to csv file.
+
+**Livestock CMF Outputs**
+
+:Description: CMF Outputs
+|
+:Inputs:
+    :1.:    :Name: Evapotranspiration
+            :Description: Cell evaporation - default is set to True.
+            :Data Access: Item
+            :Default Value: True
+
+    :2.:    :Name: SurfaceWaterVolume
+            :Description: Cell surface water - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :3.:    :Name: SurfaceWaterFlux
+            :Description: Cell surface water flux - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :4.:    :Name: HeatFlux
+            :Description: Cell surface heat flux - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :5.:    :Name: AerodynamicResistance
+            :Description: Cell surface water - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :6.:    :Name: SurfaceWaterFlux
+            :Description: Soil layer volumetric flux vectors - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :7.:    :Name: VolumetricFlux
+            :Description: Soil layer volumetric flux vectors - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :8.:    :Name: Potential
+            :Description: Soil layer total potential (Psi\ :sub:`tot`\ = Psi\ :sub:`M`\ + Psi\ :sub:`G`\
+                          - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :9.:    :Name: Theta
+            :Description: Soil layer volumetric water content of the layer - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+
+    :10.:    :Name: Volume
+            :Description: Soil layer volume of water in the layer - default is set to True.
+            :Data Access: Item
+            :Default Value: True
+
+    :10.:    :Name: Wetness
+            :Description: Soil layer wetness of the soil (V\ :sub:`volume`\/V\ :sub:`pores`\) - default is set to False.
+            :Data Access: Item
+            :Default Value: False
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: ChosenOutputs
+            :Description: Shows the chosen outputs.
+
+    :3.:    :Name: Outputs
+            :Description: Livestock Output Data.
+
+**Livestock CMF Boundary Condition**
+
+:Description: CMF Boundary connection
+|
+:Inputs:
+    :1.:    :Name: InletOrOutlet
+            :Description: 0 is inlet. 1 is outlet - default is set to 0
+            :Data Access: Item
+            :Default Value: 0
+
+    :2.:    :Name: ConnectedCell
+            :Description: Cell to connect to. Default is set to first cell.
+            :Data Access: Item
+            :Default Value: 0
+
+    :3.:    :Name: ConnectedLayer
+            :Description: Layer of cell to connect to. 0 is surface water. 1 is first layer of cell and so on.
+                          Default is set to 0 - surface water.
+            :Data Access: Item
+            :Default Value: 0
+
+    :4.:    :Name: InletFlux
+            :Description: If inlet, then set flux in m3/day.
+            :Data Access: List
+            :Default Value: False
+
+    :5.:    :Name: FlowWidth
+            :Description: Width of the connection from cell to outlet in meters.
+            :Data Access: Item
+            :Default Value: None
+
+    :6.:    :Name: OutletLocation
+            :Description: Location of the outlet in x, y and z coordinates.
+            :Data Access: List
+            :Default Value: None
+|
+:Outputs:
+    :1.:    :Name: readMe!
+            :Description: In case of any errors, it will be shown here.
+
+    :2.:    :Name: BoundaryCondition
+            :Description: Livestock Boundary Conditions.
 
 **Livestock CMF Solver Settings**
 
-:Description:
-Sets the solver settings for CMF Solve
+:Description: Sets the solver settings for CMF Solve
 |
 :Inputs:
     :1.:    :Name: AnalysisLength
@@ -83,8 +443,8 @@ Sets the solver settings for CMF Solve
 
 
 **Livestock CMF Surface Flux Result**
-:Description:
 
+:Description:
 |
 :Inputs:
     :1.:    :Name: ResultFilePath
