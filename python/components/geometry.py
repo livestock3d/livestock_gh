@@ -101,18 +101,22 @@ class SaveMesh(GHComponent):
                         'description': 'Mesh to save',
                         'access': 'item',
                         'default_value': None},
+
                     1: {'name': 'Data',
                         'description': 'Additional data if any',
                         'access': 'item',
                         'default_value': None},
+
                     2: {'name': 'Directory',
                         'description': 'File path to save mesh to',
                         'access': 'item',
                         'default_value': None},
+
                     3: {'name': 'Filename',
                         'description': 'File name',
                         'access': 'item',
                         'default_value': None},
+
                     4: {'name': 'Save',
                         'description': 'Activates the component',
                         'access': 'item',

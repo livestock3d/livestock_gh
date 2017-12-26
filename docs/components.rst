@@ -6,75 +6,111 @@ Livestock Grasshopper Components
 
 **Livestock Python Executor**
 
-:Description: CMF Boundary connection
-|
+:Description: | Path to python executor.
+
 :Inputs:
-    :1.:    :Name: InletOrOutlet
-            :Description: 0 is inlet. 1 is outlet - default is set to 0
+    :1.:    :Name: PythonPath
+            :Description: Path to python.exe
             :Data Access: Item
-            :Default Value: 0
-|
+            :Default Value: | None
+
 :Outputs:
     :1.:    :Name: readMe!
-            :Description: In case of any errors, it will be shown here.
+            :Description: | In case of any errors, it will be shown here.
 
     :2.:    :Name: BoundaryCondition
-            :Description: Livestock Boundary Conditions.
+            :Description: | Livestock Boundary Conditions.
 
 **Livestock SSH Connection**
 
-:Description: CMF Boundary connection
-|
+:Description: | Setup SSH connection.
+              | Icon based on art from Arthur Shlain from the Noun Project.
 :Inputs:
-    :1.:    :Name: InletOrOutlet
-            :Description: 0 is inlet. 1 is outlet - default is set to 0
+    :1.:    :Name: IP
+            :Description: IP Address for SSH connection.
             :Data Access: Item
-            :Default Value: 0
-|
+            :Default Value: | None
+
+    :2.:    :Name: Port
+            :Description: Port for SSH connection.
+            :Data Access: Item
+            :Default Value: | None
+
+    :3.:    :Name: Username
+            :Description: Username for SSH connection.
+            :Data Access: Item
+            :Default Value: | None
+
+    :4.:    :Name: Password
+            :Description: Password for SSH connection.
+            :Data Access: Item
+            :Default Value: | None
+
 :Outputs:
     :1.:    :Name: readMe!
-            :Description: In case of any errors, it will be shown here.
-
-    :2.:    :Name: BoundaryCondition
-            :Description: Livestock Boundary Conditions.
-
+            :Description: | In case of any errors, it will be shown here.
 
 1 | Geometry
 ------------
 
 **Livestock Load Mesh**
 
-:Description: CMF Boundary connection
-|
+:Description: Loads a mesh.
+
 :Inputs:
-    :1.:    :Name: InletOrOutlet
-            :Description: 0 is inlet. 1 is outlet - default is set to 0
+    :1.:    :Name: Filename
+            :Description: Directory and file name of mesh.
             :Data Access: Item
-            :Default Value: 0
-|
+            :Default Value: | None
+
+    :2.:    :Name: Load
+            :Description: Activates the component.
+            :Data Access: Item
+            :Default Value: | False
+
 :Outputs:
     :1.:    :Name: readMe!
-            :Description: In case of any errors, it will be shown here.
+            :Description: | In case of any errors, it will be shown here.
 
-    :2.:    :Name: BoundaryCondition
-            :Description: Livestock Boundary Conditions.
+    :2.:    :Name: Mesh
+            :Description: | Loaded mesh.
+
+    :3.:    :Name: MeshData
+            :Description: | Additional data if any.
 
 **Livestock Save Mesh**
 
-:Description: CMF Boundary connection
-|
+:Description: Saves a mesh and additional data
+
 :Inputs:
-    :1.:    :Name: InletOrOutlet
-            :Description: 0 is inlet. 1 is outlet - default is set to 0
+    :1.:    :Name: Mesh
+            :Description: Mesh to save.
             :Data Access: Item
-            :Default Value: 0
-|
+            :Default Value: | None
+
+    :2.:    :Name: Data
+            :Description: Additional data if any.
+            :Data Access: Item
+            :Default Value: | None
+
+    :3.:    :Name: Directory
+            :Description: File path to save mesh to.
+            :Data Access: Item
+            :Default Value: | None
+
+    :4.:    :Name: Filename
+            :Description: File name.
+            :Data Access: Item
+            :Default Value: | None
+
+    :5.:    :Name: Save
+            :Description: Activates the component.
+            :Data Access: Item
+            :Default Value: | False
+
 :Outputs:
     :1.:    :Name: readMe!
-            :Description: In case of any errors, it will be shown here.
-
-    :2.:    :Name: BoundaryCondition
-            :Description: Livestock Boundary Conditions.
+            :Description: | In case of any errors, it will be shown here.
 
 3 | CMF
 -------
@@ -90,28 +126,28 @@ Livestock Grasshopper Components
             :Data Access: Item
             :Default Value: | 0
 
-    :1.:    :Name: RetentionCurve
+    :2.:    :Name: RetentionCurve
             :Description: Livestock CMF Retention Curve.
             :Data Access: Item
             :Default Value: | None
 
-    :1.:    :Name: VegetationProperties
+    :3.:    :Name: VegetationProperties
             :Description: Input from Livestock CMF Vegetation Properties.
             :Data Access: Item
             :Default Value: | None
 
-    :1.:    :Name: SaturatedDepth
+    :4.:    :Name: SaturatedDepth
             :Description: Initial saturated depth in m. It is depth where the groundwater is located. Default is set
                           to 3m.
             :Data Access: Item
             :Default Value: | 3
 
-    :1.:    :Name: FaceIndices
+    :5.:    :Name: FaceIndices
             :Description: List of face indices, on where the ground properties are applied.
             :Data Access: List
             :Default Value: | None
 
-    :1.:    :Name: ETMethod
+    :6.:    :Name: ETMethod
             :Description: | Set method to calculate evapotranspiration.
                           | 0: No evapotranspiration.
                           | 1: Penman-Monteith.
@@ -120,12 +156,12 @@ Livestock Grasshopper Components
             :Data Access: Item
             :Default Value: | 2
 
-    :1.:    :Name: Manning
+    :7.:    :Name: Manning
             :Description: Set Manning roughness. If not set CMF calculates it from the above given values.
             :Data Access: Item
             :Default Value: | None
 
-    :1.:    :Name: PuddleDepth
+    :8.:    :Name: PuddleDepth
             :Description: Set puddle depth. Puddle depth is the height were run-off begins.
             :Data Access: Item
             :Default Value: | 0.01
@@ -161,36 +197,36 @@ Livestock Grasshopper Components
             :Data Access: Tree
             :Default Value: | None
 
-    :1.:    :Name: CloudCover
+    :4.:    :Name: CloudCover
             :Description: Cloud cover, unitless between 0 and 1. Either a list or a tree where the number of branches is equal to the number
                           of mesh faces.
             :Data Access: Tree
             :Default Value: | None
 
-    :2.:    :Name: GlobalRadiation
+    :5.:    :Name: GlobalRadiation
             :Description: Global Radiation in W/m\:sup:`2`\. Either a list or a tree where the number of branches is equal to the number
                           of mesh faces.
             :Data Access: Tree
             :Default Value: | None
 
-    :3.:    :Name: Rain
+    :6.:    :Name: Rain
             :Description: Horizontal precipitation in mm/h. Either a list or a tree where the number of branches is equal to the number
                           of mesh faces.
             :Data Access: Tree
             :Default Value: | None
 
-    :1.:    :Name: GroundTemperature
+    :7.:    :Name: GroundTemperature
             :Description: Ground temperature in C. Either a list or a tree where the number of branches is equal to the number
                           of mesh faces.
             :Data Access: Tree
             :Default Value: | None
 
-    :2.:    :Name: Location
+    :8.:    :Name: Location
             :Description: A Ladybug Tools Locations.
             :Data Access: Item
             :Default Value: | None
 
-    :3.:    :Name: MeshFaceCount
+    :9.:    :Name: MeshFaceCount
             :Description: Number of faces in the ground mesh.
             :Data Access: Item
             :Default Value: | None
@@ -242,7 +278,7 @@ Livestock Grasshopper Components
             :Data Access: Item
             :Default Value: | 0
 
-    :2.:    :Name: Height
+    :3.:    :Name: Height
             :Description: Height of tree in meters. Default is set to 10m
             :Data Access: Item
             :Default Value: | 10
