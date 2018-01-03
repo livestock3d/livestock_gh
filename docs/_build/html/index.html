@@ -1,0 +1,146 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to Livestock_GH’s documentation! &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Livestock Grasshopper Components" href="components.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-livestock-gh-s-documentation">
+<h1>Welcome to Livestock_GH’s documentation!<a class="headerlink" href="#welcome-to-livestock-gh-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Livestock is the name of the library of components that has been developed for this thesis.
+Livestock consists of a series of Grasshopper Python Script components and a underlying collection of Python scripts
+and a PyPI – Python Package Index - (Foundation 2017) package.</p>
+<p>Each component is modelled as a placeholder with the Grasshopper Python Script for a Python class implementation of the
+component. This makes it possible to create and edit the components without having Grasshopper open, thus making it
+possible to use better Python editors than the build-in Grasshopper one – in this case PyCharm (JetBrains 2017) was
+used. Besides easing the workflow of this author, it also solves the problem of updating the components in the future.
+Some Grasshopper plug-ins such as Ladybug Tools (Sadeghipour Roudsari and Pak 2013), have written most of the source
+code directly in the Grasshopper Pythons Script components and every time an update is made or a bug is fixed the
+component has to be replaced with a newer version, which is troublesome. By having the Grasshopper component as a
+placeholder, this can be avoided. The only time a Livestock component should be replaced is when new inputs or outputs
+are added to the component, which is far less often, than when bug fixes are made.</p>
+<p>As stated above Livestock also have a PyPI package – called livestock. At first this might sound a bit strange or as a
+duplicate of the Python scripts imported into Grasshopper – but it is not. The Grasshopper Python Script component runs
+IronPython (Hugunin and Viehland 2008), which is an implementation of Python for the .NET framework. IronPython comes as
+Python 2 and has long been undermaintained and developed. Standard Python or CPython is well maintained currently on
+version 3.6. It goes without saying that CPython has undergone a lot development that IronPython has not and includes
+a whole bunch of new features. Furthermore, are the packages on PyPI mainly targeting CPython and many cannot be used
+in IronPython. This drastically decreases the usability the usability of the IronPython in the opinion of this author
+and very specific CMF cannot be ran from IronPython, therefore a CPython package and scripts are made. The CPython
+Livestock package – from now on mentioned as the Livestock package – is used when ever larger computations or CMF are
+needed.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Livestock Grasshopper Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components.html#miscellaneous">0 | Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#geometry">1 | Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#cmf">3 | CMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#comfort">4 | Comfort</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="component classes.html">Livestock Grasshopper Component Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="component classes.html#module-livestock.components.component">SuperClass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component classes.html#module-livestock.components.misc">0 | Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component classes.html#module-livestock.components.geometry">1 | Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component classes.html#module-livestock.components.comp_cmf">3 | CMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component classes.html#module-livestock.components.comfort">4 | Comfort</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Livestock Grasshopper Lib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-livestock.lib.geometry">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-livestock.lib.misc">Miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-livestock.lib.ssh">SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-livestock.lib.templates">Templates</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="components.html" title="next chapter">Livestock Grasshopper Components</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

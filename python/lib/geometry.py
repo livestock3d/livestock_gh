@@ -11,18 +11,24 @@ import os
 # Livestock imports
 
 # Grasshopper imports
-import Rhino.Geometry as rg
-import scriptcontext as sc
-import rhinoscriptsyntax as rs
-import Rhino as rc
-from System.Threading.Tasks.Parallel import ForEach
-from Rhino.Geometry.Brep import JoinBreps
+#import Rhino.Geometry as rg
+#import scriptcontext as sc
+#import rhinoscriptsyntax as rs
+#import Rhino as rc
+#from System.Threading.Tasks.Parallel import ForEach
+#from Rhino.Geometry.Brep import JoinBreps
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
 
 
 def bake(geo, doc):
+    """
+    Bakes geometry from Grasshopper
+    :param geo: Geometry to bake
+    :param doc: Grasshopper doc
+    :return: Rhino ID
+    """
 
     # we create or use some geometry
     geo_id = geo
@@ -46,6 +52,15 @@ def bake(geo, doc):
 
 
 def export(ids, file_path, file_name, file_type, doc):
+    """
+    Exports Rhino geometry to a file.
+    :param ids: Geometry ID
+    :param file_path: File directory
+    :param file_name: File name
+    :param file_type: File extension
+    :param doc: Grasshopper document
+    :return: True on succes.
+    """
 
     sel_ids = ""
     for i in range(len(ids)):
@@ -70,6 +85,15 @@ def export(ids, file_path, file_name, file_type, doc):
 
 
 def bake_export_delete(geo, file_path, file_name, file_type, doc):
+    """
+    Bakes and exports Grasshopper geometry.
+    :param geo: Grasshopper geometry.
+    :param file_path: File directory
+    :param file_name: File name
+    :param file_type: File extension.
+    :param doc: Grasshopper doument
+    """
+
     g = bake(geo, doc)
     export([g, ], file_path, file_name, file_type, doc)
 
@@ -154,6 +178,7 @@ def load_points(path_and_file):
 
 
 def make_curves_from_points(points):
+    """Converts a list of points to a 5-degree polynomium curve."""
 
     curves = []
     end_points = []
@@ -351,6 +376,11 @@ def ray_shoot(start_pt, vector, context, num_of_bounce=1):
 
 
 def load_mesh_data(path):
+    """
+    Load additional data for a mesh.
+    :param path: Path for mesh file.
+    :return: Data
+    """
 
     path = path.split('.')[0] + '_Data.txt'
 
@@ -376,6 +406,7 @@ def get_mesh_faces(mesh):
     :param mesh: mesh
     :return: list of "face" meshes
     """
+
     mesh_faces = rs.MeshFaces(mesh)
     faces = []
 

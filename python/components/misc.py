@@ -11,12 +11,12 @@ import shutil
 import subprocess
 
 # Livestock imports
-from component import GHComponent
+from livestock.components.component import GHComponent
 import livestock.lib.ssh as ssh
 import livestock.lib.misc as gh_misc
 
 # Grasshopper imports
-import scriptcontext as sc
+#import scriptcontext as sc
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Miscellaneous Components
@@ -46,6 +46,10 @@ class PythonExecutor(GHComponent):
         self.results = None
 
     def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
         if isinstance(self.py_exe, str):
             self.checks = True
         else:
@@ -53,11 +57,17 @@ class PythonExecutor(GHComponent):
             self.add_warning(warning)
 
     def config(self):
+        """
+        Generates the Grasshopper component.
+        """
 
-        # Generate Component
         self.config_component(self.component_number)
 
     def run_checks(self, py_exe):
+        """
+        Gathers the inputs and checks them.
+        :param py_exe: Path to python.exe
+        """
 
         # Gather data
         self.py_exe = py_exe
@@ -66,6 +76,11 @@ class PythonExecutor(GHComponent):
         self.check_inputs()
 
     def run(self):
+        """
+        In case all the checks have passed the component runs.
+        It prints the python.exe path and creates a scriptcontext.sticky with the path.
+        """
+
         if self.checks:
             print('Python Executor is set to: ' + self.py_exe)
 
@@ -79,19 +94,19 @@ class SSHConnection(GHComponent):
 
         def inputs():
             return {0: {'name': 'IP',
-                        'description': 'IP Address to connection',
+                        'description': 'IP Address for SSH connection',
                         'access': 'item',
                         'default_value': None},
                     1: {'name': 'Port',
-                        'description': 'Port for connection',
+                        'description': 'Port for SSH connection',
                         'access': 'item',
                         'default_value': None},
                     2: {'name': 'Username',
-                        'description': 'Username for connection',
+                        'description': 'Username for SSH connection',
                         'access': 'item',
                         'default_value': None},
                     3: {'name': 'Password',
-                        'description': 'Password for connection',
+                        'description': 'Password for SSH connection',
                         'access': 'item',
                         'default_value': None}
                     }
@@ -113,6 +128,10 @@ class SSHConnection(GHComponent):
         self.results = None
 
     def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
         warnings = []
 
         if isinstance(self.ip, str):
@@ -142,11 +161,21 @@ class SSHConnection(GHComponent):
             self.checks = True
 
     def config(self):
+        """
+        Generates the Grasshopper component.
+        """
 
         # Generate Component
         self.config_component(self.component_number)
 
     def run_checks(self, ip, port, user, pw):
+        """
+        Gathers the inputs and checks them.
+        :param ip: IP for SSH connection
+        :param port: Port for SSH connection
+        :param user: Username for SSH connection
+        :param pw: Password for SSH connection
+        """
 
         # Gather data
         self.ip = ip
@@ -158,6 +187,12 @@ class SSHConnection(GHComponent):
         self.check_inputs()
 
     def run(self):
+        """
+        In case all the checks have passed the component runs.
+        It prints out the IP, Port and Username and creates a
+        scriptcontext.sticky all four inputs.
+        """
+
         if self.checks:
             print('SSH connection is set to:'
                   '\nIP: ' + str(self.ip) +

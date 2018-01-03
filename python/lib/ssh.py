@@ -6,24 +6,25 @@ __version__ = "0.1.0"
 # Imports
 
 # Module imports
-import shutil
 import os
 
 # Livestock imports
-import misc as gh_misc
-import templates
+import livestock.lib.misc as gh_misc
+import livestock.lib.templates as templates
 
 # Grasshopper imports
-import scriptcontext as sc
+#import scriptcontext as sc
 
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Grasshopper SSH functions
 
-ssh_path = r'C:\livestock\python\ssh'
-
+ssh_path = r'C:\livestock\ssh'
+local_path = r'C:\livestock\local'
 
 def get_ssh():
+    """Extracts the SSH information from a stricky"""
+
     ip = str(sc.sticky["SSH"]['ip'])
     port = str(sc.sticky["SSH"]['port'])
     user = str(sc.sticky["SSH"]['user'])
@@ -35,6 +36,9 @@ def get_ssh():
 
 
 def clean_ssh_folder():
+    """
+    Cleans the livestock/ssh folder on the C drive.
+    """
 
     if os.path.isdir(ssh_path):
         for file in os.listdir(ssh_path):
@@ -69,3 +73,15 @@ def write_ssh_commands(ssh_dict):
     templates.pick_template(ssh_dict['template'], ssh_path)
 
     return True
+
+
+def clean_local_folder():
+    """
+    Cleans the livestock/local folder on the C drive.
+    """
+
+    if os.path.isdir(local_path):
+        for file in os.listdir(local_path):
+            os.remove(local_path + '/' + file)
+    else:
+        os.mkdir(local_path)

@@ -7,6 +7,11 @@ __version__ = "0.1.0"
 
 
 def pick_template(template_name, path):
+    """
+    Writes a template given a template name and path to write it to.
+    :param template_name: Template name.
+    :param path: Path to save it to.
+    """
 
     template_name = str(template_name)
 
@@ -42,7 +47,7 @@ def pick_template(template_name, path):
         process_cmf_surface_results(path)
 
     elif template_name == 'new_air':
-        new_air_conditions(path)
+        return new_air_conditions(path)
 
     else:
         raise NameError('Could not find template: ' + str(template_name))
@@ -61,6 +66,11 @@ def print_template_header(template):
 
 
 def drain_mesh_template(path):
+    """
+    Writes the template for the drain mesh function.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/drain_mesh_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -138,6 +148,11 @@ def fix_mesh_template(path):
 """
 
 def ssh_template(path):
+    """
+    Writes the ssh template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/ssh_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -178,6 +193,11 @@ def topographic_index_template(path):
 """
 
 def cmf_template(path):
+    """
+    Writes the CMF template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_template.py'
     print_template_header(file_name)
     file = open(path + file_name, 'w')
@@ -201,14 +221,19 @@ def cmf_template(path):
 
 
 def process_cmf_results(path):
+    """
+    Writes the CMF result lookup template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_results_template.py'
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import livestock_win.win_cmf as win_cmf\n")
+    file.write("import livestock.hydrology as lh\n")
 
     file.write("# Run function\n")
-    file.write("win_cmf.cmf_results(r'" + path + "')\n")
+    file.write("lh.cmf_results(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
@@ -219,6 +244,11 @@ def process_cmf_results(path):
 
 
 def process_cmf_surface_results(path):
+    """
+    Writes the CMF surface result template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/cmf_surface_results_template.py'
     file = open(path + file_name, 'w')
 
@@ -258,18 +288,24 @@ def cfd_ssh_template(path):
 """
 
 def new_air_conditions(path):
+    """
+    Writes the new air condition template.
+    :param path: Path to write it to.
+    """
+
     file_name = r'/new_air_conditions_template.py'
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import livestock_linux.air as la\n")
+    file.write("import livestock.air as la\n")
 
     file.write("# Run function\n")
-    file.write("la.NewTemperatureAndRelativeHumidity(r'" + path + "').run()\n")
+    file.write("if __name__ == '__main__':\n")
+    file.write("\tla.new_temperature_and_relative_humidity(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
 
     file.close()
 
-    return True
+    return file_name

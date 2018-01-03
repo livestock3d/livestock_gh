@@ -11,7 +11,7 @@ import os
 # Livestock imports
 
 # Grasshopper imports
-import Grasshopper.Kernel as gh
+#import Grasshopper.Kernel as gh
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Grasshopper Component Class
@@ -28,8 +28,12 @@ class GHComponent:
     # COMPONENT STUFF
     def config_component(self, component_number):
         """
-        Sets up the component
-        :param component_number: integer with the component number
+        Sets up the component, with the following steps:
+        - Load component data
+        - Generate component data
+        - Generate outputs
+        - Generate inputs
+        :param component_number: Integer with the component number
         """
 
         # Load component data
@@ -53,16 +57,30 @@ class GHComponent:
             self.add_input_parameter(input_)
 
     def add_warning(self, warning):
+        """
+        Adds a Grasshopper warning to the component.
+        :param warning: Warning text.
+        """
+
         print(warning)
         w = gh.GH_RuntimeMessageLevel.Warning
         self.gh_env.Component.AddRuntimeMessage(w, warning)
 
     def add_output_parameter(self, output_):
+        """
+        Adds an output to the Grasshopper component.
+        :param output_: Output index.
+        """
+
         self.gh_env.Component.Params.Output[output_].NickName = self.outputs[output_]['name']
         self.gh_env.Component.Params.Output[output_].Name = self.outputs[output_]['name']
         self.gh_env.Component.Params.Output[output_].Description = self.outputs[output_]['description']
 
     def add_input_parameter(self, input_):
+        """
+        Adds an input to the Grasshopper component.
+        :param input_: Input index.
+        """
 
         # Set information
         self.gh_env.Component.Params.Input[input_].NickName = self.inputs[input_]['name']
@@ -77,12 +95,18 @@ class GHComponent:
         elif self.inputs[input_]['access'] == 'tree':
             self.gh_env.Component.Params.Input[input_].Access = gh.GH_ParamAccess.tree
 
-    def add_default_value(self, value, param_number):
+    def add_default_value(self, parameter, param_number):
+        """
+        Adds a default value to a parameter.
+        :param parameter: Parameter to add default value to
+        :param param_number: Parameter number
+        :return: Parameter
+        """
 
-        if value == None:
+        if not parameter:
             return self.inputs[param_number]['default_value']
         else:
-            return value
+            return parameter
 
 def component_data(n):
     """Function that reads the grasshopper component list and returns the component data"""
