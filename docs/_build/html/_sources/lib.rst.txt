@@ -6,7 +6,7 @@ Geometry
 
 .. module:: livestock.lib.geometry
 
-.. autofunction:: bake
+.. autofunction:: livestock.lib.geometry.bake
 
 .. autofunction:: export
 
