@@ -76,7 +76,8 @@ class CMFGround(GHComponent):
                         'default_value': None},
 
                     7: {'name': 'PuddleDepth',
-                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.',
+                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
+                                       'Default is set to 0.01m',
                         'access': 'item',
                         'default_value': 0.01}
                     }
