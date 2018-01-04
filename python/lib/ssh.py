@@ -13,7 +13,7 @@ import livestock.lib.misc as gh_misc
 import livestock.lib.templates as templates
 
 # Grasshopper imports
-#import scriptcontext as sc
+import scriptcontext as sc
 
 
 # -------------------------------------------------------------------------------------------------------------------- #

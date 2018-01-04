@@ -11,7 +11,7 @@ import os
 # Livestock imports
 
 # Grasshopper imports
-#import Grasshopper.Kernel as gh
+import Grasshopper.Kernel as gh
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Grasshopper Component Class

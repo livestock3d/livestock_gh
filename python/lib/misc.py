@@ -6,7 +6,7 @@ __version__ = "0.1.0"
 # Imports
 
 # Module imports
-#from System import Array
+from System import Array
 import os
 from itertools import chain
 
@@ -14,9 +14,9 @@ from itertools import chain
 
 
 # Grasshopper imports
-#import scriptcontext as sc
-#from Grasshopper import DataTree as Tree
-#from Grasshopper.Kernel.Data import GH_Path as Path
+import scriptcontext as sc
+from Grasshopper import DataTree as Tree
+from Grasshopper.Kernel.Data import GH_Path as Path
 
 
 # -------------------------------------------------------------------------------------------------------------------- #

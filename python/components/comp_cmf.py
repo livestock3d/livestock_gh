@@ -21,8 +21,8 @@ import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
 
 # Grasshopper imports
-#import Rhino.Geometry as rg
-#import rhinoscriptsyntax as rs
+import Rhino.Geometry as rg
+import rhinoscriptsyntax as rs
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Classes

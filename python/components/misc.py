@@ -16,7 +16,7 @@ import livestock.lib.ssh as ssh
 import livestock.lib.misc as gh_misc
 
 # Grasshopper imports
-#import scriptcontext as sc
+import scriptcontext as sc
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Miscellaneous Components

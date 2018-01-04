@@ -9,7 +9,7 @@ __version__ = "0.0.1"
 import subprocess
 
 # Rhino and Grasshopper imports
-#import rhinoscriptsyntax as rs
+import rhinoscriptsyntax as rs
 
 # Livestock imports
 from livestock.components.component import GHComponent
