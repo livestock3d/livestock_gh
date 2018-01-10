@@ -205,7 +205,7 @@ def cmf_template(path):
     file.write("# Imports\n")
     file.write("from pathlib import Path\n")
     file.write("home_user = str(Path.home())\n")
-    file.write("from livestock_linux.lib_cmf import CMFModel\n")
+    file.write("from livestock.hydrology import CMFModel\n")
 
     file.write("# Run CMF Model\n")
     file.write("folder = home_user + '/livestock/ssh'\n")
@@ -253,10 +253,10 @@ def process_cmf_surface_results(path):
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("import livestock_win.win_cmf as win_cmf\n")
+    file.write("import livestock.hydrology as hy\n")
 
     file.write("# Run function\n")
-    file.write("win_cmf.surface_flux_results(r'" + path + "')\n")
+    file.write("hy.surface_flux_results(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
