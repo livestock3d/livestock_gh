@@ -2081,7 +2081,12 @@ class CMFSurfaceFluxResult(GHComponent):
                         'access': 'item',
                         'default_value': False},
 
-                    7: {'name': 'Run',
+                    7: {'name': 'Write',
+                        'description': 'Write component files',
+                        'access': 'item',
+                        'default_value': False},
+
+                    8: {'name': 'Run',
                         'description': 'Run component',
                         'access': 'item',
                         'default_value': False}}
@@ -2110,6 +2115,7 @@ class CMFSurfaceFluxResult(GHComponent):
         self.evapo = None
         self.infiltration = None
         self.save_result = None
+        self.write_files = None
         self.run_component = None
         self.py_exe = gh_misc.get_python_exe()
         self.checks = False
@@ -2135,7 +2141,7 @@ class CMFSurfaceFluxResult(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save, run):
+    def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save, write, run):
         """
         Gathers the inputs and checks them.
         :param path: Path for result file.
@@ -2145,6 +2151,7 @@ class CMFSurfaceFluxResult(GHComponent):
         :param evapo: Whether to include evapotranspiration or not.
         :param infiltration: Whether to include infiltration or not.
         :param save: Save result to file or not
+        :param write: Write component files or not
         :param run: Run component or not.
         """
 
@@ -2156,7 +2163,8 @@ class CMFSurfaceFluxResult(GHComponent):
         self.evapo = self.add_default_value(evapo, 4)
         self.infiltration = self.add_default_value(infiltration, 5)
         self.save_result = self.add_default_value(save, 6)
-        self.run_component = self.add_default_value(run, 7)
+        self.write_files = self.add_default_value(write, 7)
+        self.run_component = self.add_default_value(run, 8)
         self.result_path = self.path + '/surface_flux_result.txt'
 
         # Run checks
@@ -2227,21 +2235,28 @@ class CMFSurfaceFluxResult(GHComponent):
         result_obj = open(self.result_path, 'r')
         result_lines = result_obj.readlines()
         results = convert_file_to_points(result_lines)
+        result_obj.close()
 
         return results
 
     def delete_files(self):
         """Deletes the helper files."""
 
-        os.remove(self.path + '/cmf_surface_results_template.py')
-        os.remove(self.path + '/flux_config.txt')
-        os.remove(self.path + '/center_points.txt')
+        if os.path.exists(self.path + '/flux_config.txt'):
+            os.remove(self.path + '/flux_config.txt')
+
+        if os.path.exists(self.path + '/center_points.txt'):
+            os.remove(self.path + '/center_points.txt')
+
+        if os.path.exists(self.path + '/cmf_surface_results_template.py'):
+            os.remove(self.path + '/cmf_surface_results_template.py')
 
         if not self.save_result:
             os.remove(self.result_path)
 
     def run(self):
         """
+        In case all the checks have passed and Write is True the component writes the component files.
         In case all the checks have passed the component runs.
         The following functions are run:
         write()
@@ -2251,8 +2266,10 @@ class CMFSurfaceFluxResult(GHComponent):
         The results are converted into a Grasshopper Tree structure.
         """
 
-        if self.checks and self.run_component:
+        if self.checks and self.write_files:
             self.write()
+
+        if self.checks and self.run_component:
             self.run_template()
             self.results = gh_misc.list_to_tree(self.load_result())
             self.delete_files()
