@@ -41,9 +41,3 @@ def write_csv(pathAndFile, data, header=None, dimension=1):
         raise ValueError('dimension must be 1 or 2. Dimension given was:'+str(dimension))
 
     file_obj.close()
-
-def add_column():
-    return None
-
-def add_row():
-    return None
