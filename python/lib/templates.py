@@ -159,10 +159,10 @@ def ssh_template(path):
 
     file.write("# Imports\n")
     file.write("import sys\n")
-    file.write("import livestock_win.ssh as win_ssh\n")
+    file.write("import livestock.ssh as ssh\n")
 
     file.write("# Run function\n")
-    file.write("win_ssh.ssh_connection()\n")
+    file.write("ssh.ssh_connection()\n")
 
     file.close()
 
