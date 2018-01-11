@@ -79,7 +79,15 @@ class CMFGround(GHComponent):
                         'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
                                        'Default is set to 0.01m',
                         'access': 'item',
-                        'default_value': 0.01}
+                        'default_value': 0.01},
+
+                    8: {'name': 'SurfaceRunOffMethod',
+                        'description': 'Set the method for computing the surface run-off.\n'
+                                       '0 - Kinematic Wave.\n'
+                                       '1 - Diffusive Wave.\n'
+                                       'Default is set 0 - Kinematic Wave.',
+                        'access': 'item',
+                        'default_value': 0}
                     }
 
         def outputs():
@@ -102,6 +110,7 @@ class CMFGround(GHComponent):
         self.et_number = None
         self.manning = None
         self.puddle = None
+        self.surface_run_off_method = None
         self.checks = [False, False, False, False, False]
         self.results = None
 
@@ -121,7 +130,7 @@ class CMFGround(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, face_indices, et_method,
-                   manning_, puddle):
+                   manning_, puddle, surface_run_off_method):
         """
         Gathers the inputs and checks them.
         :param layers: Depth of layers.
@@ -132,6 +141,7 @@ class CMFGround(GHComponent):
         :param et_method: Evapotranspriation calculation method.
         :param manning_: Manning roughness.
         :param puddle: Puddle depth.
+        :param surface_run_off_method: Surface Run-off method.
         """
 
         # Gather data
@@ -143,6 +153,7 @@ class CMFGround(GHComponent):
         self.et_number = self.add_default_value(et_method, 5)
         self.manning = self.add_default_value(manning_, 6)
         self.puddle = self.add_default_value(puddle, 7)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 8)
 
         # Run checks
         self.check_inputs()
@@ -163,6 +174,20 @@ class CMFGround(GHComponent):
             w = 'ETMethod has to between 0 and 2. Input was: ' + str(self.et_number)
             self.add_warning(w)
 
+    def convert_runoff_number_to_method(self):
+        """
+        Converts a number into a surface run-off method.
+        :return: Surface run-off name
+        """
+
+        if self.surface_run_off_method == 0:
+            return 'kinematic'
+        elif self.surface_run_off_method == 1:
+            return 'diffusive'
+        else:
+            w = 'SurfaceRunOffMethod has to between 0 and 1. Input was: ' + str(self.surface_run_off_method)
+            self.add_warning(w)
+
     def run(self):
         """
         In case all the checks have passed the component runs.
@@ -177,7 +202,8 @@ class CMFGround(GHComponent):
                            'saturated_depth': self.saturated_depth,
                            'et_method': self.convert_et_number_to_method(),
                            'manning': self.manning,
-                           'puddle_depth': self.puddle
+                           'puddle_depth': self.puddle,
+                           'runoff_method': self.convert_runoff_number_to_method()
                            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
@@ -1641,38 +1667,47 @@ class CMFOutputs(GHComponent):
                         'description': 'Cell evaporation - default is set to True',
                         'access': 'item',
                         'default_value': True},
+
                     1: {'name': 'SurfaceWaterVolume',
                         'description': 'Cell surface water - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     2: {'name': 'SurfaceWaterFlux',
                         'description': 'Cell surface water flux - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     3: {'name': 'HeatFlux',
                         'description': 'Cell surface heat flux - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     4: {'name': 'AerodynamicResistance',
                         'description': 'Cell aerodynamic resistance - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     5: {'name': 'VolumetricFlux',
                         'description': 'Soil layer volumetric flux vectors - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     6: {'name': 'Potential',
                         'description': 'Soil layer total potential (Psi_tot = Psi_M + Psi_G - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     7: {'name': 'Theta',
                         'description': 'Soil layer volumetric water content of the layer - default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     8: {'name': 'Volume',
                         'description': 'Soil layer volume of water in the layer - default is set to True',
                         'access': 'item',
                         'default_value': True},
+
                     9: {'name': 'Wetness',
                         'description': 'Soil layer wetness of the soil (V_volume/V_pores) - default is set to False',
                         'access': 'item',
@@ -1682,10 +1717,13 @@ class CMFOutputs(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'ChosenOutputs',
                         'description': 'Shows the chosen outputs'},
+
                     2: {'name': 'Outputs',
                         'description': 'Livestock Output Data'}
+
                     }
 
         self.inputs = inputs()
