@@ -1704,9 +1704,9 @@ class CMFOutputs(GHComponent):
                         'default_value': False},
 
                     8: {'name': 'Volume',
-                        'description': 'Soil layer volume of water in the layer - default is set to True',
+                        'description': 'Soil layer volume of water in the layer - default is set to False',
                         'access': 'item',
-                        'default_value': True},
+                        'default_value': False},
 
                     9: {'name': 'Wetness',
                         'description': 'Soil layer wetness of the soil (V_volume/V_pores) - default is set to False',
