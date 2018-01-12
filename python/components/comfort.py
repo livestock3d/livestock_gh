@@ -523,3 +523,108 @@ class AdaptiveClothing(GHComponent):
 
         if self.checks:
             self.results = self.insulation_clothing()
+
+
+class LoadAirResult(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'ResultFolder',
+                        'description': 'Path to result folder.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'LoadResult',
+                        'description': 'Run component',
+                        'access': 'item',
+                        'default_value': False}}
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+
+                    2: {'name': 'NewRelativeHumidity',
+                        'description': 'New relative humidity in -.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 26
+        self.path = None
+        self.load = None
+        self.checks = False
+        self.results = {'temperature': [], 'relative_humidity': []}
+        self.result_path = None
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        if self.path:
+            self.checks = True
+        else:
+            warning = 'Insert result path'
+            self.add_warning(warning)
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, path, load):
+        """
+        Gathers the inputs and checks them.
+        :param path: Path for result file.
+        :param load: Load results files.
+        """
+
+        # Gather data
+        self.path = path
+        self.load = self.add_default_value(load, 1)
+        self.temp_path = self.path + '/temperature_results.txt'
+        self.relhum_path = self.path + '/relative_humidity_results.txt'
+
+        # Run checks
+        self.check_inputs()
+
+    def load_result(self):
+        """
+        Loads the results from the results files and adds them to self.results.
+        """
+
+        # Temperature
+        new_temp = open(self.temp_path, 'r')
+        self.results['temperature'] = gh_misc.list_to_tree([
+                                                           [float(element)
+                                                            for element in line.strip().split(',')]
+                                                           for line in new_temp.readlines()])
+        new_temp.close()
+
+        # Relative Humidity
+        new_relhum = open(self.relhum_path, 'r')
+        self.results['relative_humidity'] = gh_misc.list_to_tree([[float(element)
+                                                                   for element in line.strip().split(',')]
+                                                                  for line in new_relhum.readlines()])
+        new_relhum.close()
+
+        return True
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The following functions are run:
+        load_results()
+        The results are converted into a Grasshopper Tree structure.
+        """
+
+        if self.checks and self.load:
+            self.load_result()
