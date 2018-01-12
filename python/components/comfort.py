@@ -76,9 +76,8 @@ class NewAirConditions(GHComponent):
                         'access': 'item',
                         'default_value': 2},
 
-                    8: {'name': 'ThroughSSH',
-                        'description': 'If the computation should be run through SSH.'
-                                       '\nDefault is set to False',
+                    8: {'name': 'ResultFolder',
+                        'description': 'Folder where the result files should be saved',
                         'access': 'item',
                         'default_value': False},
 
@@ -91,8 +90,10 @@ class NewAirConditions(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'NewTemperature',
                         'description': 'New temperature in C.'},
+
                     2: {'name': 'NewRelativeHumidity',
                         'description': 'New relative humidity in -.'}
                     }
@@ -108,11 +109,10 @@ class NewAirConditions(GHComponent):
         self.boundary_height = None
         self.investigation_height = None
         self.cpus = None
-        self.thorugh_ssh = None
+        self.folder = None
         self.run_component = None
         self.area = None
         self.py_exe = gh_misc.get_python_exe()
-        self.ssh_cmd = ssh.get_ssh()
         self.checks = [False, False, False, False, False, False, False]
         self.results = {'temperature': [], 'relative_humidity': []}
 
@@ -132,7 +132,7 @@ class NewAirConditions(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, mesh, evapotranspiration, heat_flux, temperature, relhum, boundary_height,
-                   investigation_height, cpus, ssh_, run):
+                   investigation_height, cpus, folder, run):
 
         """
         Gathers the inputs and checks them.
@@ -144,7 +144,7 @@ class NewAirConditions(GHComponent):
         :param boundary_height: Height of the air columns.
         :param investigation_height: Investigation height
         :param cpus: Number of CPUs
-        :param ssh_: If computation should be done over SSH.
+        :param folder: Folder where the result files should be saved.
         :param run: Whether or not to run the component.
         """
 
@@ -157,7 +157,7 @@ class NewAirConditions(GHComponent):
         self.boundary_height = self.add_default_value(boundary_height, 5)
         self.investigation_height = self.add_default_value(investigation_height, 6)
         self.cpus = self.add_default_value(cpus, 7)
-        self.thorugh_ssh = self.add_default_value(ssh_, 8)
+        self.folder = self.add_default_value(folder, 8)
         self.run_component = self.add_default_value(run, 9)
 
         # Run checks
@@ -214,157 +214,72 @@ class NewAirConditions(GHComponent):
         Write the files.
         """
 
-        if self.thorugh_ssh:
-            # Write SSH case
-            write_folder = ssh.ssh_path
-            ssh.clean_ssh_folder()
-            files_written = []
+        write_folder = self.folder
+        files_written = []
 
-            # evapotranspiration
-            vapour_file = 'vapour_flux.txt'
-            vapour_obj = open(write_folder + '/' + vapour_file, 'w')
-            for row in self.evapotranspiration:
-                vapour_obj.write(','.join(str(element)
-                                          for element in row)
-                                 + '\n'
-                                 )
-            vapour_obj.close()
-            files_written.append(vapour_file)
+        # evapotranspiration
+        vapour_file = 'vapour_flux.txt'
+        vapour_obj = open(write_folder + '/' + vapour_file, 'w')
+        for row in self.evapotranspiration:
+            vapour_obj.write(','.join(str(element)
+                                      for element in row)
+                             + '\n'
+                             )
+        vapour_obj.close()
+        files_written.append(vapour_file)
 
-            # heat_flux
-            heat_file = 'heat_flux.txt'
-            heat_obj = open(write_folder + '/' + heat_file, 'w')
-            for row in self.heat_flux:
-                heat_obj.write(','.join(str(element)
-                                        for element in row)
-                               + '\n'
-                               )
-            heat_obj.close()
-            files_written.append(heat_file)
+        # heat_flux
+        heat_file = 'heat_flux.txt'
+        heat_obj = open(write_folder + '/' + heat_file, 'w')
+        for row in self.heat_flux:
+            heat_obj.write(','.join(str(element)
+                                    for element in row)
+                           + '\n'
+                           )
+        heat_obj.close()
+        files_written.append(heat_file)
 
-            # temperature
-            temp_file = 'temperature.txt'
-            temp_obj = open(write_folder + '/' + temp_file, 'w')
-            temp_obj.write(','.join(str(elem)
-                                    for elem in self.air_temperature))
-            temp_obj.close()
-            files_written.append(temp_file)
+        # temperature
+        temp_file = 'temperature.txt'
+        temp_obj = open(write_folder + '/' + temp_file, 'w')
+        temp_obj.write(','.join(str(elem)
+                                for elem in self.air_temperature))
+        temp_obj.close()
+        files_written.append(temp_file)
 
-            # relhum
-            relhum_file = 'relative_humidity.txt'
-            relhum_obj = open(write_folder + '/' + relhum_file, 'w')
-            relhum_obj.write(','.join(str(elem)
-                                      for elem in self.air_relhum))
-            relhum_obj.close()
-            files_written.append(relhum_file)
+        # relhum
+        relhum_file = 'relative_humidity.txt'
+        relhum_obj = open(write_folder + '/' + relhum_file, 'w')
+        relhum_obj.write(','.join(str(elem)
+                                  for elem in self.air_relhum))
+        relhum_obj.close()
+        files_written.append(relhum_file)
 
-            # boundary_height and investigation_height
-            height_file = 'heights.txt'
-            height_obj = open(write_folder + '/' + height_file, 'w')
-            height_obj.write(str(self.boundary_height) + '\n'
-                             + str(self.investigation_height))
-            height_obj.close()
-            files_written.append(height_file)
+        # boundary_height and investigation_height
+        height_file = 'heights.txt'
+        height_obj = open(write_folder + '/' + height_file, 'w')
+        height_obj.write(str(self.boundary_height) + '\n'
+                         + str(self.investigation_height))
+        height_obj.close()
+        files_written.append(height_file)
 
-            # area
-            area_file = 'area.txt'
-            area_obj = open(write_folder + '/' + area_file, 'w')
-            area_obj.write(','.join(str(elem)
-                                    for elem in self.area))
-            area_obj.close()
-            files_written.append(area_file)
+        # area
+        area_file = 'area.txt'
+        area_obj = open(write_folder + '/' + area_file, 'w')
+        area_obj.write(','.join(str(elem)
+                                for elem in self.area))
+        area_obj.close()
+        files_written.append(area_file)
 
-            # cpu
-            cpu_file = 'cpu.txt'
-            cpu_obj = open(write_folder + '/' + cpu_file, 'w')
-            cpu_obj.write(str(self.cpus))
-            cpu_obj.close()
-            files_written.append(cpu_file)
+        # cpu
+        cpu_file = 'cpu.txt'
+        cpu_obj = open(write_folder + '/' + cpu_file, 'w')
+        cpu_obj.write(str(self.cpus))
+        cpu_obj.close()
+        files_written.append(cpu_file)
 
-            # SSH
-            temp_results = 'temperature_results.txt'
-            relhum_results = 'relative_humidity_results.txt'
-
-            file_run = ['new_air_conditions_template.py']
-            file_transfer = files_written + file_run
-            file_return = [temp_results, relhum_results]
-
-            self.ssh_cmd['file_transfer'] = ','.join(file_transfer)
-            self.ssh_cmd['file_run'] = ','.join(file_run)
-            self.ssh_cmd['file_return'] = ','.join(file_return)
-            self.ssh_cmd['template'] = 'new_air'
-
-            ssh.write_ssh_commands(self.ssh_cmd)
-
-        else:
-            # Write local case
-            write_folder = ssh.local_path
-            ssh.clean_local_folder()
-            files_written = []
-
-            # evapotranspiration
-            vapour_file = 'vapour_flux.txt'
-            vapour_obj = open(write_folder + '/' + vapour_file, 'w')
-            for row in self.evapotranspiration:
-                vapour_obj.write(','.join(str(element)
-                                          for element in row)
-                                 + '\n'
-                                 )
-            vapour_obj.close()
-            files_written.append(vapour_file)
-
-            # heat_flux
-            heat_file = 'heat_flux.txt'
-            heat_obj = open(write_folder + '/' + heat_file, 'w')
-            for row in self.heat_flux:
-                heat_obj.write(','.join(str(element)
-                                        for element in row)
-                               + '\n'
-                               )
-            heat_obj.close()
-            files_written.append(heat_file)
-
-            # temperature
-            temp_file = 'temperature.txt'
-            temp_obj = open(write_folder + '/' + temp_file, 'w')
-            temp_obj.write(','.join(str(elem)
-                                    for elem in self.air_temperature))
-            temp_obj.close()
-            files_written.append(temp_file)
-
-            # relhum
-            relhum_file = 'relative_humidity.txt'
-            relhum_obj = open(write_folder + '/' + relhum_file, 'w')
-            relhum_obj.write(','.join(str(elem)
-                                      for elem in self.air_relhum))
-            relhum_obj.close()
-            files_written.append(relhum_file)
-
-            # boundary_height and investigation_height
-            height_file = 'heights.txt'
-            height_obj = open(write_folder + '/' + height_file, 'w')
-            height_obj.write(str(self.boundary_height) + '\n'
-                             + str(self.investigation_height))
-            height_obj.close()
-            files_written.append(height_file)
-
-            # area
-            area_file = 'area.txt'
-            area_obj = open(write_folder + '/' + area_file, 'w')
-            area_obj.write(','.join(str(elem)
-                                    for elem in self.area))
-            area_obj.close()
-            files_written.append(area_file)
-
-            # cpu
-            cpu_file = 'cpu.txt'
-            cpu_obj = open(write_folder + '/' + cpu_file, 'w')
-            cpu_obj.write(str(self.cpus))
-            cpu_obj.close()
-            files_written.append(cpu_file)
-
-            # Template
-            files_written.append(template.pick_template('new_air', write_folder))
+        # Template
+        files_written.append(template.pick_template('new_air', write_folder))
 
         return True
 
@@ -373,10 +288,7 @@ class NewAirConditions(GHComponent):
         Runs the case. Spawns a subprocess to run either the local or ssh template.
         """
 
-        if self.thorugh_ssh:
-            template_to_run = ssh.ssh_path + '/ssh_template.py'
-        else:
-            template_to_run = ssh.local_path + '/new_air_conditions_template.py'
+        template_to_run = self.folder + '/new_air_conditions_template.py'
 
         # Run template
         thread = subprocess.Popen([self.py_exe, template_to_run])
@@ -393,29 +305,19 @@ class NewAirConditions(GHComponent):
         temp_results = '/temperature_results.txt'
         relhum_results = '/relative_humidity_results.txt'
 
-        if self.thorugh_ssh:
-            folder = ssh.ssh_path
-        else:
-            folder = ssh.local_path
-
         # Temperature
-        new_temp = open(folder + temp_results, 'r')
+        new_temp = open(self.folder + temp_results, 'r')
         self.results['temperature'] = gh_misc.list_to_tree([[float(element)
                                                              for element in line.strip().split(',')]
                                                             for line in new_temp.readlines()])
         new_temp.close()
 
         # Relative Humidity
-        new_relhum = open(folder + relhum_results, 'r')
+        new_relhum = open(self.folder + relhum_results, 'r')
         self.results['relative_humidity'] = gh_misc.list_to_tree([[float(element)
                                                                    for element in line.strip().split(',')]
                                                                   for line in new_relhum.readlines()])
         new_relhum.close()
-
-        if self.thorugh_ssh:
-            ssh.clean_ssh_folder()
-        else:
-            ssh.clean_local_folder()
 
         return True
 
