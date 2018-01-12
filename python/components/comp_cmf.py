@@ -1412,8 +1412,8 @@ class CMFResults(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'ResultFilePath',
-                        'description': 'Path to result file. Accepts output from Livestock Solve',
+            return {0: {'name': 'ResultFolder',
+                        'description': 'Path to result folder. Accepts output from Livestock Solve',
                         'access': 'item',
                         'default_value': None},
                     1: {'name': 'FetchResult',
@@ -1442,10 +1442,13 @@ class CMFResults(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Units',
                         'description': 'Shows the units of the results'},
+
                     2: {'name': 'Values',
                         'description': 'List with chosen result values'},
+
                     3: {'name': 'CSVPath',
                         'description': 'Path to csv file.'}}
 
@@ -1458,6 +1461,7 @@ class CMFResults(GHComponent):
         self.save_csv = None
         self.run_component = None
         self.py_exe = gh_misc.get_python_exe()
+        self.csv_path = None
         self.checks = False
         self.results = None
 
@@ -1650,9 +1654,9 @@ class CMFResults(GHComponent):
         if self.checks and self.run_component:
 
             self.set_units()
-            csv_file_path = self.process_xml()
-            results = self.load_result_csv(csv_file_path)
-            self.delete_files(csv_file_path)
+            self.csv_path = self.process_xml()
+            results = self.load_result_csv(self.csv_path)
+            self.delete_files(self.csv_path)
 
             self.results = gh_misc.list_to_tree(results)
 
