@@ -93,18 +93,22 @@ class LeafTemperature(GHComponent):
                         'description': 'Temperature of the air in C',
                         'access': 'item',
                         'default_value': None},
+
                     1: {'name': 'RadiativeHeatFluxLeaf',
                         'description': 'Radiative heat flux of leaf W/m2',
                         'access': 'item',
                         'default_value': None},
+
                     2: {'name': 'LatentHeatFluxLeaf',
                         'description': 'Latent heat flux of leaf W/m2',
                         'access': 'item',
                         'default_value': None},
+
                     3: {'name': 'AerodynamicResistanceLeaf',
                         'description': 'Air resistance of leaf s/m',
                         'access': 'item',
-                        'default_value': None}}
+                        'default_value': None}
+                    }
 
         def outputs():
             return {0: {'name': 'readMe!',
