@@ -74,6 +74,6 @@ def leaf_temperature(air_temperature, q_rad_leaf, q_lat_leaf, air_resistance):
     rho = 1.225  # kg/m3
     cp = 1003.5  # J/kgK
     h_ch = 2*rho*cp/air_resistance
-    t_leaf = air_temperature + (q_rad_leaf + q_lat_leaf)/h_ch
+    t_leaf = air_temperature + (q_rad_leaf - q_lat_leaf)/h_ch
 
     return t_leaf
