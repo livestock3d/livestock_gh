@@ -55,12 +55,18 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': 3},
 
-                    4: {'name': 'FaceIndices',
+                    4: {'name': 'SurfaceWaterVolume',
+                        'description': 'Initial surface water volume in m3.'
+                                       ' - Default is set to 0 m3',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    5: {'name': 'FaceIndices',
                         'description': 'List of face indices, on where the ground properties are applied.',
                         'access': 'list',
                         'default_value': None},
 
-                    5: {'name': 'ETMethod',
+                    6: {'name': 'ETMethod',
                         'description': 'Set method to calculate evapotranspiration.\n'
                                        '0: No evapotranspiration\n'
                                        '1: Penman-Monteith\n'
@@ -69,19 +75,19 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': 0},
 
-                    6: {'name': 'Manning',
+                    7: {'name': 'Manning',
                         'description': 'Set Manning roughness. '
                                        '\nIf not set CMF calculates it from the above given values.',
                         'access': 'item',
                         'default_value': None},
 
-                    7: {'name': 'PuddleDepth',
+                    8: {'name': 'PuddleDepth',
                         'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
                                        'Default is set to 0.01m',
                         'access': 'item',
                         'default_value': 0.01},
 
-                    8: {'name': 'SurfaceRunOffMethod',
+                    9: {'name': 'SurfaceRunOffMethod',
                         'description': 'Set the method for computing the surface run-off.\n'
                                        '0 - Kinematic Wave.\n'
                                        '1 - Diffusive Wave.\n'
@@ -107,6 +113,7 @@ class CMFGround(GHComponent):
         self.retention_curve = None
         self.vegetation_properties = None
         self.saturated_depth = None
+        self.surface_water = None
         self.et_number = None
         self.manning = None
         self.puddle = None
@@ -129,14 +136,15 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, face_indices, et_method,
-                   manning_, puddle, surface_run_off_method):
+    def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, surface_water, face_indices,
+                   et_method, manning_, puddle, surface_run_off_method):
         """
         Gathers the inputs and checks them.
         :param layers: Depth of layers.
         :param retention_curve: Livestock retention curve dict.
         :param vegetation_properties: Livestock vegetation properties dict.
         :param saturated_depth: Saturated depth of the cell.
+        :param surface_water: Initial surfacee water volume.
         :param face_indices: Face indices where the properties should be applied to.
         :param et_method: Evapotranspriation calculation method.
         :param manning_: Manning roughness.
@@ -149,11 +157,12 @@ class CMFGround(GHComponent):
         self.retention_curve = self.add_default_value(retention_curve, 1)
         self.vegetation_properties = self.add_default_value(vegetation_properties, 2)
         self.saturated_depth = self.add_default_value(saturated_depth, 3)
-        self.face_indices = self.add_default_value(face_indices, 4)
-        self.et_number = self.add_default_value(et_method, 5)
-        self.manning = self.add_default_value(manning_, 6)
-        self.puddle = self.add_default_value(puddle, 7)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 8)
+        self.surface_water = self.add_default_value(surface_water, 4)
+        self.face_indices = self.add_default_value(face_indices, 5)
+        self.et_number = self.add_default_value(et_method, 6)
+        self.manning = self.add_default_value(manning_, 7)
+        self.puddle = self.add_default_value(puddle, 8)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 9)
 
         # Run checks
         self.check_inputs()
@@ -200,6 +209,7 @@ class CMFGround(GHComponent):
                            'retention_curve': self.retention_curve,
                            'vegetation_properties': self.vegetation_properties,
                            'saturated_depth': self.saturated_depth,
+                           'surface_water_volume': self.surface_water,
                            'et_method': self.convert_et_number_to_method(),
                            'manning': self.manning,
                            'puddle_depth': self.puddle,
