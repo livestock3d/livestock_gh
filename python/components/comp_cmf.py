@@ -1998,7 +1998,7 @@ class CMFSolverSettings(GHComponent):
 
             def inputs():
                 return {0: {'name': 'AnalysisLength',
-                            'description': 'Number of time steps to be taken - Default is 24',
+                            'description': 'Total length of the simulation in hours - default is set to 24 hours.',
                             'access': 'item',
                             'default_value': 24},
 
@@ -2094,8 +2094,8 @@ class CMFSurfaceFluxResult(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'ResultFilePath',
-                        'description': 'Path to result file. Accepts output from Livestock Solve',
+            return {0: {'name': 'ResultFolder',
+                        'description': 'Path to result folder. Accepts output from Livestock Solve',
                         'access': 'item',
                         'default_value': None},
 
