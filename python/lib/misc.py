@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 # Module imports
 from System import Array
 import os
-from itertools import chain
 import math
 
 # Livestock imports
@@ -27,6 +26,7 @@ from Grasshopper.Kernel.Data import GH_Path as Path
 def tree_to_list(input_, retrieve_base=lambda x: x[0]):
     """Returns a list representation of a Grasshopper DataTree"""
 
+    # TODO - Find source
     def extend_at(path_, index, simple_input, rest_list):
         target = path[index]
 
@@ -50,6 +50,7 @@ def tree_to_list(input_, retrieve_base=lambda x: x[0]):
 def list_to_tree(input_, none_and_holes=True, source=[0]):
     """Transforms nestings of lists or tuples to a Grasshopper DataTree"""
 
+    #TODO - Find source
     def proc(input_, tree, track):
         path = Path(Array[int](track))
         if len(input_) == 0 and none_and_holes:
@@ -120,17 +121,14 @@ def write_file(text, path, name, file_type='txt'):
     file_write.close()
 
 
-def flatten_list(l):
-    """Ladybug - flattenList"""
-
-    return list(chain.from_iterable(l))
-
-
 def decompose_ladybug_location(_location):
     """
     Decompose a Ladybug Tools location in to a tuple.
+
     :param _location: Ladybug Location.
+    :type _location: str
     :return: Tuple with location values.
+    :rtype: tuple
     """
 
     location_str = _location.split('\n')
@@ -156,7 +154,9 @@ def decompose_ladybug_location(_location):
 def get_python_exe():
     """
     Collects the python.exe path from a sticky.
+
     :return: The python path.
+    :rtype: str
     """
 
     py = str(sc.sticky["PythonExe"])
@@ -165,6 +165,7 @@ def get_python_exe():
 
 
 def hour_to_date(hour_of_the_year):
+    #TODO - Make better code
 
     month_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
     number_of_days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
