@@ -19,9 +19,21 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../python'))
+from unittest.mock import MagicMock
+#sys.path.insert(0, os.path.abspath('../python'))
 sys.path.insert(0, r'C:\Users\Christian\AppData\Roaming\McNeel\Rhinoceros\5.0\scripts')
-sys.path.insert(0, r'C:\Program Files (x86)\IronPython 2.7')
+#sys.path.insert(0, r'C:\Program Files (x86)\IronPython 2.7')
+
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+            return MagicMock()
+
+
+MOCK_MODULES = ['System', 'Grasshopper', 'Rhino', 'scriptcontext', 'Grasshopper.Kernel', 'Grasshopper.Kernel.Data',
+                'Rhino.Geometry', 'rhinoscriptsyntax', 'System.Threading', 'System.Threading.Tasks.Parallel',
+                'Rhino.Geometry.Brep']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- General configuration ------------------------------------------------
 

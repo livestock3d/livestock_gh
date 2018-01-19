@@ -255,6 +255,13 @@ It saves the .obj file and its data if there is any.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="livestock.components.comp_cmf.CMFGround.convert_runoff_number_to_method">
+<code class="descname">convert_runoff_number_to_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.convert_runoff_number_to_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a number into a surface run-off method.
+:return: Surface run-off name</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>In case all the checks have passed the component runs.
@@ -263,16 +270,18 @@ The component puts all the inputs into a dict and uses PassClass to pass it on.<
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.run_checks">
-<code class="descname">run_checks</code><span class="sig-paren">(</span><em>layers</em>, <em>retention_curve</em>, <em>vegetation_properties</em>, <em>saturated_depth</em>, <em>face_indices</em>, <em>et_method</em>, <em>manning_</em>, <em>puddle</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run_checks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>layers</em>, <em>retention_curve</em>, <em>vegetation_properties</em>, <em>saturated_depth</em>, <em>surface_water</em>, <em>face_indices</em>, <em>et_method</em>, <em>manning_</em>, <em>puddle</em>, <em>surface_run_off_method</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers the inputs and checks them.
 :param layers: Depth of layers.
 :param retention_curve: Livestock retention curve dict.
 :param vegetation_properties: Livestock vegetation properties dict.
 :param saturated_depth: Saturated depth of the cell.
+:param surface_water: Initial surfacee water volume.
 :param face_indices: Face indices where the properties should be applied to.
 :param et_method: Evapotranspriation calculation method.
 :param <a href="#id7"><span class="problematic" id="id8">manning_</span></a>: Manning roughness.
-:param puddle: Puddle depth.</p>
+:param puddle: Puddle depth.
+:param surface_run_off_method: Surface Run-off method.</p>
 </dd></dl>
 
 </dd></dl>
@@ -800,7 +809,8 @@ Constructs a solver settings dict, prints it and passes it on with PassClass.</p
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
+<dd><p>In case all the checks have passed and Write is True the component writes the component files.
+In case all the checks have passed the component runs.
 The following functions are run:
 write()
 run_template()
@@ -811,7 +821,7 @@ The results are converted into a Grasshopper Tree structure.</p>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks">
-<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>mesh</em>, <em>run_off</em>, <em>rain</em>, <em>evapo</em>, <em>infiltration</em>, <em>save</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>mesh</em>, <em>run_off</em>, <em>rain</em>, <em>evapo</em>, <em>infiltration</em>, <em>save</em>, <em>write</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers the inputs and checks them.
 :param path: Path for result file.
 :param mesh: Case mesh
@@ -820,6 +830,7 @@ The results are converted into a Grasshopper Tree structure.</p>
 :param evapo: Whether to include evapotranspiration or not.
 :param infiltration: Whether to include infiltration or not.
 :param save: Save result to file or not
+:param write: Write component files or not
 :param run: Run component or not.</p>
 </dd></dl>
 
@@ -893,7 +904,7 @@ load_results()</p>
 
 <dl class="method">
 <dt id="livestock.components.comfort.NewAirConditions.run_checks">
-<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>evapotranspiration</em>, <em>heat_flux</em>, <em>temperature</em>, <em>relhum</em>, <em>boundary_height</em>, <em>investigation_height</em>, <em>cpus</em>, <em>ssh_</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.run_checks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>evapotranspiration</em>, <em>heat_flux</em>, <em>temperature</em>, <em>relhum</em>, <em>boundary_height</em>, <em>investigation_height</em>, <em>cpus</em>, <em>folder</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.comfort.NewAirConditions.run_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers the inputs and checks them.
 :param mesh: Surfacce mesh.
 :param evapotranspiration: Vapour flux
@@ -903,7 +914,7 @@ load_results()</p>
 :param boundary_height: Height of the air columns.
 :param investigation_height: Investigation height
 :param cpus: Number of CPUs
-:param <a href="#id11"><span class="problematic" id="id12">ssh_</span></a>: If computation should be done over SSH.
+:param folder: Folder where the result files should be saved.
 :param run: Whether or not to run the component.</p>
 </dd></dl>
 
@@ -988,7 +999,7 @@ It runs the insulation_clothing() function.</p>
       &copy;2017, Christian Kongsgaard Nielsen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
