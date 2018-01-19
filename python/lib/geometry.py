@@ -25,6 +25,7 @@ from Rhino.Geometry.Brep import JoinBreps
 def bake(geo, doc):
     """
     Bakes geometry from Grasshopper
+
     :param geo: Geometry to bake
     :param doc: Grasshopper doc
     :return: Rhino ID
@@ -54,6 +55,7 @@ def bake(geo, doc):
 def export(ids, file_path, file_name, file_type, doc):
     """
     Exports Rhino geometry to a file.
+
     :param ids: Geometry ID
     :param file_path: File directory
     :param file_name: File name
@@ -87,6 +89,7 @@ def export(ids, file_path, file_name, file_type, doc):
 def bake_export_delete(geo, file_path, file_name, file_type, doc):
     """
     Bakes and exports Grasshopper geometry.
+
     :param geo: Grasshopper geometry.
     :param file_path: File directory
     :param file_name: File name
@@ -100,7 +103,8 @@ def bake_export_delete(geo, file_path, file_name, file_type, doc):
 
 def import_obj(path):
     """
-    Reads a .obj file and converts it into a Rhino Mesh
+    Reads a .obj file and converts it into a Rhino Mesh.
+
     :param path: path including file name and file extension (.obj)
     :return: Rhino Mesh
     """
@@ -160,7 +164,12 @@ def import_obj(path):
 
 
 def load_points(path_and_file):
-    """Loads a text file containing points"""
+    """
+    Loads a text file containing points
+
+    :param path_and_file:
+    :type path_and_file: object
+    """
 
     points = []
     file_obj = open(path_and_file, 'r')
@@ -402,7 +411,8 @@ def load_mesh_data(path):
 
 def get_mesh_faces(mesh):
     """
-    Takes a mesh and convert its faces into individual meshes
+    Takes a mesh and convert its faces into individual meshes.
+
     :param mesh: mesh
     :return: list of "face" meshes
     """
