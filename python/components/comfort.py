@@ -14,7 +14,7 @@ import rhinoscriptsyntax as rs
 # Livestock imports
 from livestock.components.component import GHComponent
 import livestock.lib.misc as gh_misc
-import livestock.lib.ssh as ssh
+import livestock.lib.ssh as gh_ssh
 import livestock.lib.geometry as gh_geo
 import livestock.lib.templates as template
 
@@ -530,3 +530,186 @@ class LoadAirResult(GHComponent):
 
         if self.checks and self.load:
             self.load_result()
+
+
+class WaterEvaporation(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Volume',
+                        'description': 'Air volume in m3',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'Temperature',
+                        'description': 'Air temperature in C',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'Water',
+                        'description': 'Water to be evaporated in kg',
+                        'access': 'item',
+                        'default_value': None},
+
+                    3: {'name': 'FractionOfEvaporation',
+                        'description': 'Fraction of the introduced about of water, which is evaporated.',
+                        'access': 'item',
+                        'default_value': None}}
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+
+                    2: {'name': 'EnergyOfEvaporation',
+                        'description': 'Energy that is needed to evaporate the introduced water in J.'},
+
+                    3: {'name': 'VapourGain',
+                        'description': 'Vapour gain to the air in m3.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 27
+        self.volume = None
+        self.temperature = None
+        self.water = None
+        self.faction = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.checks = False
+        self.results = dict()
+
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        if self.volume and self.temperature and self.water and self.fracture:
+            self.checks = True
+        else:
+            warning = 'Insert missing values'
+            self.add_warning(warning)
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, volume, temperature, water, fraction):
+        """
+        Gathers the inputs and checks them.
+
+        :param volume:
+        :type volume:
+        :param temperature:
+        :type temperature:
+        :param water:
+        :type water:
+        :param fraction:
+        :type fraction:
+        :return:
+        :rtype:
+        """
+
+        # Gather data
+        self.volume = volume
+        self.temperature = temperature
+        self.water = water
+        self.fraction = fraction
+
+        # Run checks
+        self.check_inputs()
+
+    def write(self):
+        gh_ssh.clean_local_folder()
+
+        # Create volume file
+        volume_file = open(gh_ssh.local_path + '/volume.txt', 'w')
+        volume_file.write(','.join([str(v)
+                                    for v in self.volume]))
+        volume_file.close()
+
+        # Create Temperature file
+        temp_file = open(gh_ssh.local_path + '/temperature.txt', 'w')
+        temp_file.write(','.join([str(t)
+                                  for t in self.temperature]))
+        temp_file.close()
+
+        # Create water file
+        water_file = open(gh_ssh.local_path + '/water.txt', 'w')
+        water_file.write(','.join([str(w)
+                                   for w in self.water]))
+        water_file.close()
+
+        # Create fraction file
+        fraction_file = open(gh_ssh.local_path + '/fraction.txt', 'w')
+        fraction_file.write(','.join([str(f)
+                                      for f in self.faction]))
+        fraction_file.close()
+
+        # create template
+        template.pick_template('water_evaporation', gh_ssh.local_path)
+
+        return True
+
+    def evaluate_water_evaporation(self):
+        """
+        Runs the case. Spawns a subprocess to run either the local template.
+        """
+
+        template_to_run = gh_ssh.local_path + '/water_evaporation_template.py'
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, template_to_run])
+        thread.wait()
+        thread.kill()
+
+        return True
+
+    def load_results(self):
+        # Read Temperature file
+        temp_file = open(gh_ssh.local_path + '/temperature.txt', 'r')
+        temp_lines = temp_file.readlines()
+        temp_file.close()
+        self.results['temperature'] = [float(t.strip())
+                                       for line in temp_lines
+                                       for t in line.split(',')]
+
+        # Read energy file
+        energy_file = open(gh_ssh.local_path + '/energy.txt', 'r')
+        energy_lines = energy_file.readlines()
+        energy_file.close()
+        self.results['energy'] = [float(e.strip())
+                                  for line in energy_lines
+                                  for e in line.split(',')]
+
+        # Read water file
+        vapour_file = open(gh_ssh.local_path + '/vapour.txt', 'r')
+        vapour_lines = vapour_file.readlines()
+        vapour_file.close()
+        self.results['vapour'] = [float(v.strip())
+                                  for line in vapour_lines
+                                  for v in line.split(',')]
+
+        return True
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The following functions are run:
+        load_results()
+        The results are converted into a Grasshopper Tree structure.
+        """
+
+        if self.checks:
+            self.write()
+            self.evaluate_water_evaporation()
+            self.load_results()

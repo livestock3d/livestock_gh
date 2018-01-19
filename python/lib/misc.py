@@ -9,6 +9,7 @@ __version__ = "0.1.0"
 from System import Array
 import os
 from itertools import chain
+import math
 
 # Livestock imports
 
@@ -161,3 +162,38 @@ def get_python_exe():
     py = str(sc.sticky["PythonExe"])
 
     return py
+
+
+def hour_to_date(hour_of_the_year):
+
+    month_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    number_of_days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+    number_of_hours = [24 * days
+                       for days in number_of_days]
+
+    if hour_of_the_year % 8760 == 0:
+        return str(31) + ' ' + 'DEC' + ' 24:00'
+
+    for h in range(len(number_of_hours) - 1):
+        if hour_of_the_year <= number_of_hours[h + 1]:
+            month = month_list[h]
+            break
+    try:
+        month
+    except:
+        month = month_list[h]  # for the last hour of the year
+
+    if (hour_of_the_year) % 24 == 0:
+        day = int((hour_of_the_year - number_of_hours[h]) / 24)
+        time = str(24) + ':00'
+
+    else:
+        day = int((hour_of_the_year - number_of_hours[h]) / 24) + 1
+        minutes = str(int(round((hour_of_the_year - math.floor(hour_of_the_year)) * 60)))
+
+        if len(minutes) == 1:
+            minutes = '0' + minutes
+
+        time = str(int(hour_of_the_year % 24)) + ':' + minutes
+
+    return str(day) + ' ' + str(month) + ' ' + str(time)

@@ -306,3 +306,57 @@ class CFDonSSH(GHComponent):
         if self.checks and self.run_component:
             self.write()
             self.run_template()
+
+
+class HourToDate(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Hour',
+                        'description': 'Hour of the year',
+                        'access': 'item',
+                        'default_value': 0}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'Date',
+                        'description': 'Converted Date.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.description = 'Converts a hour of the year into a date on the format: DD MMM HH:mm'
+        self.component_number = 28
+        self.hour = None
+        self.checks = False
+        self.results = None
+
+    def check_inputs(self):
+        if self.hour:
+            self.checks = True
+
+    def config(self):
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, hour):
+
+        # Gather data
+        self.hour = self.add_default_value(hour, 0)
+
+        # Run checks
+        self.check_inputs()
+
+    def convert_date(self):
+
+        self.results = gh_misc.hour_to_date(self.hour)
+        return True
+
+    def run(self):
+        if self.checks:
+            self.convert_date()
