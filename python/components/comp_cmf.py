@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 import collections
 import subprocess
 from shutil import copyfile
+import pprint
 
 # Livestock imports
 import livestock.lib.ssh as ssh
@@ -1144,7 +1145,7 @@ class CMFSolve(GHComponent):
         :param name: Case name
         :param outputs: Livestock Outputs dict
         :param write: Whether to write or not
-        :param overwrite: Overwirte exsiting files
+        :param overwrite: Overwrite exsiting files
         :param run: Whether to run or not.
         """
 
@@ -1261,7 +1262,9 @@ class CMFSolve(GHComponent):
 
         def write_boundary_conditions(boundary_dict_, folder):
             # Process boundary conditions
-            boundary_conditions_dict = list(bc.c for bc in boundary_dict_)
+            boundary_conditions_dict = list(bc.c
+                                            for bc in boundary_dict_)
+
             boundary_conditions_root = ET.Element('boundary_conditions')
 
             for i in range(0, len(boundary_conditions_dict)):
@@ -1281,8 +1284,13 @@ class CMFSolve(GHComponent):
                     bc_flux.text = str(boundary_conditions_dict[i]['flux'])
 
                 elif boundary_conditions_dict[i]['type'] == 'outlet':
-                    bc_flux = ET.SubElement(boundary_condition, 'flow_width')
-                    bc_flux.text = str(boundary_conditions_dict[i]['flow_width'])
+                    bc_flux = ET.SubElement(boundary_condition, 'outlet_type')
+
+                    outlet_connection = ET.SubElement(bc_flux, 'outlet_connection')
+                    outlet_connection.text = str(boundary_conditions_dict[i]['outlet_type']['connection'])
+
+                    outlet_parameter = ET.SubElement(bc_flux, 'connection_parameter')
+                    outlet_parameter.text = str(boundary_conditions_dict[i]['outlet_type']['connection_parameter'])
 
                     bc_flux = ET.SubElement(boundary_condition, 'location')
                     bc_flux.text = str(boundary_conditions_dict[i]['location'])
@@ -2325,3 +2333,164 @@ class CMFSurfaceFluxResult(GHComponent):
             self.run_template()
             self.results = gh_misc.list_to_tree(self.load_result())
             self.delete_files()
+
+
+class CMFOutlet(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Location',
+                        'description': 'Location of the outlet in x, y and z coordinates.\n'
+                                       'Default is 0,0,0',
+                        'access': 'item',
+                        'default_value': [0, 0, 0]},
+
+                    1: {'name': 'ConnectedCell',
+                        'description': 'Cell to connect to.\n'
+                                       'Default is set to first cell',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    2: {'name': 'ConnectedLayer',
+                        'description': 'Layer of cell to connect to.\n'
+                                       '0 is surface water.\n'
+                                       '1 is first layer of cell and so on.\n'
+                                       'Default is set to 0 - surface water',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    3: {'name': 'OutletType',
+                        'description': 'Set type of outlet connection.\n'
+                                        '1 - Richards.\n'
+                                        '2 - Kinematic wave.\n'
+                                        '3 - Technical Flux.',
+                        'access': 'item',
+                        'default_value': None},
+
+                   4: {'name': 'ConnectionParameter',
+                       'description': 'If Richards:\n'
+                                      '    Potential - Sets the potential of the outlet. The difference in potential'
+                                      ' is what drives the flux.\n'
+                                      'If Kinematic wave:\n'
+                                      '    Residence Time - Linear flow parameter of travel time in days.\n'
+                                      'If Technical Flux:\n'
+                                      '    Maximum Flux - The maximum flux is in m3/day.',
+                       'access': 'item',
+                       'default_value': None}
+
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'BoundaryCondition',
+                        'description': 'Livestock Boundary Condition'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.description = 'CMF Outlet'
+        self.component_number = 29
+        self.location = None
+        self.cell = None
+        self.layer = None
+        self.outlet_type = None
+        self.parameter = None
+        self.checks = False
+        self.results = None
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        if self.outlet_type and self.parameter:
+            self.checks = True
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, location, cell, layer, type_, type_parameter):
+        """
+        Gathers the inputs and checks them.
+
+        :param location: Location of the cell
+        :param cell: Cell to connect to. Default is set to first cell
+        :param layer: Layer of cell to connect to. 0 is surface water.
+        :param type_: Type of connection from CMF Outlet Type
+        :param type_parameter: Parameter for the connection type.
+        """
+
+        # Gather data
+        self.location = self.add_default_value(location, 0)
+        self.cell = self.add_default_value(int(cell), 1)
+        self.layer = self.add_default_value(int(layer), 2)
+        self.outlet_type = self.add_default_value(type_, 3)
+        self.parameter = self.add_default_value(type_parameter, 4)
+
+        # Run checks
+        self.check_inputs()
+
+    def location_to_string(self):
+        """
+        Converts the location to a string.
+
+        :return: The location as a comma separated string
+        :rtype: str
+        """
+        if isinstance(self.location, str):
+            return self.location
+
+        else:
+            location_string = ','.join([str(v)
+                                        for v in self.location])
+            return location_string
+
+    def type_to_connection(self):
+        if self.outlet_type == 1:
+            return 'richards'
+
+        elif self.outlet_type == 2:
+            return 'kinematic_wave'
+
+        elif self.outlet_type == 3:
+            return 'technical_flux'
+
+    def set_outlet_connection(self):
+        """Constructs a dict with outlet information."""
+
+        return {'connection': self.type_to_connection(),
+                'connection_parameter': self.parameter}
+
+    def set_outlet(self):
+        """Constructs a dict with outlet information."""
+
+        self.results = gh_misc.PassClass({'type': 'outlet',
+                                          'location': self.location_to_string(),
+                                          'cell': self.cell,
+                                          'layer': self.layer,
+                                          'outlet_type': self.set_outlet_connection(),
+                                          },
+                                         'BoundaryCondition')
+
+        pp = pprint.PrettyPrinter(indent=1, width=50)
+        pp.pprint(self.results.c)
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        It runs set_outlet().
+        """
+
+        if self.checks:
+            self.set_outlet()
+
+
