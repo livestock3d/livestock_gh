@@ -1,0 +1,162 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>1 | Geometry &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="0 | Miscellaneous" href="miscellaneous.html" />
+    <link rel="prev" title="4 | Comfort" href="comfort.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-livestock.components.geometry">
+<span id="geometry"></span><h1>1 | Geometry<a class="headerlink" href="#module-livestock.components.geometry" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="livestock.components.geometry.LoadMesh">
+<em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">LoadMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and Load is True the component runs.
+It loads the .obj file and its data if there is any.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.LoadMesh.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>load</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.LoadMesh.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param path: Path where the mesh is saved.
+:param load: Load the mesh or not</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.geometry.SaveMesh">
+<em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">SaveMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case all the checks have passed and save is True the component runs.
+It saves the .obj file and its data if there is any.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.geometry.SaveMesh.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>data</em>, <em>dir_</em>, <em>name</em>, <em>save</em><span class="sig-paren">)</span><a class="headerlink" href="#livestock.components.geometry.SaveMesh.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.
+:param mesh: Mesh that should be saved.
+:param data: Mesh data that should be saved.
+:param <a href="#id1"><span class="problematic" id="id2">dir_</span></a>: Directory where the files should be saved.
+:param name: Name for mesh.
+:param save: Whether to save or not.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="component classes.html">Livestock Grasshopper Component Classes</a><ul>
+      <li>Previous: <a href="comfort.html" title="previous chapter">4 | Comfort</a></li>
+      <li>Next: <a href="miscellaneous.html" title="next chapter">0 | Miscellaneous</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/geometry.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
