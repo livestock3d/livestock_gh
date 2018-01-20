@@ -1,0 +1,446 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>livestock.components.misc &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for livestock.components.misc</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Christian Kongsgaard&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Imports</span>
+
+<span class="c1"># Module imports</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="c1"># Livestock imports</span>
+<span class="kn">from</span> <span class="nn">livestock.components.component</span> <span class="k">import</span> <span class="n">GHComponent</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.ssh</span> <span class="k">as</span> <span class="nn">ssh</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.misc</span> <span class="k">as</span> <span class="nn">gh_misc</span>
+
+<span class="c1"># Grasshopper imports</span>
+<span class="kn">import</span> <span class="nn">scriptcontext</span> <span class="k">as</span> <span class="nn">sc</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Livestock Miscellaneous Components</span>
+
+
+<div class="viewcode-block" id="PythonExecutor"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor">[docs]</a><span class="k">class</span> <span class="nc">PythonExecutor</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PythonPath&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Path to python.exe&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">}}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Path to python executor&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PythonExecutor.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;Path should be a string&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PythonExecutor.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PythonExecutor.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">py_exe</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param py_exe: Path to python.exe</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span> <span class="o">=</span> <span class="n">py_exe</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PythonExecutor.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed the component runs.</span>
+<span class="sd">        It prints the python.exe path and creates a scriptcontext.sticky with the path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Python Executor is set to: &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span><span class="p">)</span>
+
+            <span class="n">sc</span><span class="o">.</span><span class="n">sticky</span><span class="p">[</span><span class="s1">&#39;PythonExe&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span></div></div>
+
+
+<div class="viewcode-block" id="SSHConnection"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection">[docs]</a><span class="k">class</span> <span class="nc">SSHConnection</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;IP&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;IP Address for SSH connection&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Port&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Port for SSH connection&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Username&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Username for SSH connection&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Password&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Password for SSH connection&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">}}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Setup SSH connection.</span><span class="se">\n</span><span class="s1">&#39;</span> \
+                           <span class="s1">&#39;Icon based on art from Arthur Shlain from the Noun Project.&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SSHConnection.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;IP should be a string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Port should be a string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Username should be a string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Password should be a string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">warnings</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">warn</span> <span class="ow">in</span> <span class="n">warnings</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warn</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SSHConnection.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SSHConnection.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">pw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param ip: IP for SSH connection</span>
+<span class="sd">        :param port: Port for SSH connection</span>
+<span class="sd">        :param user: Username for SSH connection</span>
+<span class="sd">        :param pw: Password for SSH connection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">pw</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SSHConnection.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed the component runs.</span>
+<span class="sd">        It prints out the IP, Port and Username and creates a</span>
+<span class="sd">        scriptcontext.sticky all four inputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SSH connection is set to:&#39;</span>
+                  <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">IP: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span> <span class="o">+</span>
+                  <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Port: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span> <span class="o">+</span>
+                  <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">User: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Open Bash and run:&#39;</span>
+                  <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">sudo service ssh --full-restart&#39;</span><span class="p">)</span>
+
+            <span class="n">sc</span><span class="o">.</span><span class="n">sticky</span><span class="p">[</span><span class="s1">&#39;SSH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="CFDonSSH"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH">[docs]</a><span class="k">class</span> <span class="nc">CFDonSSH</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Directory&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Directory where the OpenFoam files are located&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Commands&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;OpenFoam Commands to run&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;CPUs&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of CPUs to perform each command on&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Runs the component&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">}}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Setup SSH connection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssh_path</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">ssh_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="CFDonSSH.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="CFDonSSH.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CFDonSSH.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">commands</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="n">commands</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus</span> <span class="o">=</span> <span class="n">cpus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_values</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CFDonSSH.write"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Initialize</span>
+        <span class="n">ssh</span><span class="o">.</span><span class="n">clean_ssh_folder</span><span class="p">()</span>
+        <span class="n">files_written</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">file_run</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cfd_ssh_template.py&#39;</span><span class="p">]</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cfd_ssh_template.py&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Write commands file</span>
+        <span class="n">gh_misc</span><span class="o">.</span><span class="n">write_file</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpus</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssh_path</span><span class="p">,</span> <span class="s1">&#39;cfd_commands&#39;</span><span class="p">)</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cfd_commands.txt&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Zip and move case files</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ssh_path</span> <span class="o">+</span> <span class="s1">&#39;/cfd_case&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+
+        <span class="c1"># SSH commands</span>
+        <span class="n">ssh_cmd</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">get_ssh</span><span class="p">()</span>
+        <span class="n">ssh_cmd</span><span class="p">[</span><span class="s1">&#39;file_transfer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">files_written</span><span class="p">)</span>
+        <span class="n">ssh_cmd</span><span class="p">[</span><span class="s1">&#39;file_run&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_run</span><span class="p">)</span>
+        <span class="n">ssh_cmd</span><span class="p">[</span><span class="s1">&#39;file_return&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solved_cfd_case.zip&#39;</span>
+        <span class="n">ssh_cmd</span><span class="p">[</span><span class="s1">&#39;template&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cfd_ssh&#39;</span>
+        <span class="n">ssh</span><span class="o">.</span><span class="n">write_ssh_commands</span><span class="p">(</span><span class="n">ssh_cmd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="CFDonSSH.run_template"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run_template">[docs]</a>    <span class="k">def</span> <span class="nf">run_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Python executor</span>
+        <span class="n">py_exe</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">get_python_exe</span><span class="p">()</span>
+
+        <span class="c1"># SSH template path</span>
+        <span class="n">ssh_template</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">ssh_path</span> <span class="o">+</span> <span class="s1">&#39;/ssh_template.py&#39;</span>
+
+        <span class="c1"># Run template</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">py_exe</span><span class="p">,</span> <span class="n">ssh_template</span><span class="p">])</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CFDonSSH.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_template</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="HourToDate"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate">[docs]</a><span class="k">class</span> <span class="nc">HourToDate</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hour&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Hour of the year&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Converted Date.&#39;</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Converts a hour of the year into a date on the format: DD MMM HH:mm&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">28</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="HourToDate.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="HourToDate.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HourToDate.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">hour</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HourToDate.convert_date"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.convert_date">[docs]</a>    <span class="k">def</span> <span class="nf">convert_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">hour_to_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="HourToDate.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_date</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

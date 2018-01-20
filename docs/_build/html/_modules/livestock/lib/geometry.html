@@ -1,0 +1,513 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>livestock.lib.geometry &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for livestock.lib.geometry</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Christian Kongsgaard&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Imports</span>
+
+<span class="c1"># Module imports</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Livestock imports</span>
+
+<span class="c1"># Grasshopper imports</span>
+<span class="kn">import</span> <span class="nn">Rhino.Geometry</span> <span class="k">as</span> <span class="nn">rg</span>
+<span class="kn">import</span> <span class="nn">scriptcontext</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="k">as</span> <span class="nn">rs</span>
+<span class="kn">import</span> <span class="nn">Rhino</span> <span class="k">as</span> <span class="nn">rc</span>
+<span class="kn">from</span> <span class="nn">System.Threading.Tasks.Parallel</span> <span class="k">import</span> <span class="n">ForEach</span>
+<span class="kn">from</span> <span class="nn">Rhino.Geometry.Brep</span> <span class="k">import</span> <span class="n">JoinBreps</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Livestock Grasshopper Geometry Classes and Functions</span>
+
+
+<div class="viewcode-block" id="bake"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.bake">[docs]</a><span class="k">def</span> <span class="nf">bake</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bakes geometry from Grasshopper</span>
+
+<span class="sd">    :param geo: Geometry to bake</span>
+<span class="sd">    :param doc: Grasshopper doc</span>
+<span class="sd">    :return: Rhino ID</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># we create or use some geometry</span>
+    <span class="n">geo_id</span> <span class="o">=</span> <span class="n">geo</span>
+
+    <span class="c1"># we obtain the reference in the Rhino doc</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+    <span class="n">doc_object</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">coercerhinoobject</span><span class="p">(</span><span class="n">geo_id</span><span class="p">)</span>
+
+    <span class="n">attributes</span> <span class="o">=</span> <span class="n">doc_object</span><span class="o">.</span><span class="n">Attributes</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="n">doc_object</span><span class="o">.</span><span class="n">Geometry</span>
+
+    <span class="c1"># we change the scriptcontext</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">RhinoDoc</span><span class="o">.</span><span class="n">ActiveDoc</span>
+
+    <span class="c1"># we add both the geometry and the attributes to the Rhino doc</span>
+    <span class="n">rhino_line</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">Objects</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+
+    <span class="c1"># we put back the original Grasshopper document as default</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+    <span class="k">return</span> <span class="n">rhino_line</span></div>
+
+
+<div class="viewcode-block" id="export"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.export">[docs]</a><span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exports Rhino geometry to a file.</span>
+
+<span class="sd">    :param ids: Geometry ID</span>
+<span class="sd">    :param file_path: File directory</span>
+<span class="sd">    :param file_name: File name</span>
+<span class="sd">    :param file_type: File extension</span>
+<span class="sd">    :param doc: Grasshopper document</span>
+<span class="sd">    :return: True on succes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sel_ids</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)):</span>
+        <span class="n">sel_ids</span> <span class="o">+=</span> <span class="s2">&quot;_SelId </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="n">file_name_and_type</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="n">file_type</span>
+    <span class="n">final_path</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span> <span class="o">+</span> <span class="n">file_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">file_name_and_type</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span>
+
+    <span class="n">command_string</span> <span class="o">=</span> <span class="s2">&quot;_-Export &quot;</span> <span class="o">+</span> <span class="n">sel_ids</span> <span class="o">+</span> <span class="s2">&quot;_Enter &quot;</span> <span class="o">+</span> <span class="n">final_path</span> <span class="o">+</span> <span class="s2">&quot; _Enter _Enter _Enter&quot;</span>
+    <span class="n">echo</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">Command</span><span class="p">(</span><span class="n">command_string</span><span class="p">,</span> <span class="n">echo</span><span class="p">)</span>
+
+    <span class="n">sc</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">RhinoDoc</span><span class="o">.</span><span class="n">ActiveDoc</span>
+    <span class="n">rs</span><span class="o">.</span><span class="n">SelectObject</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+    <span class="n">rs</span><span class="o">.</span><span class="n">Command</span><span class="p">(</span><span class="s2">&quot;_Delete&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+
+    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="bake_export_delete"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.bake_export_delete">[docs]</a><span class="k">def</span> <span class="nf">bake_export_delete</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bakes and exports Grasshopper geometry.</span>
+
+<span class="sd">    :param geo: Grasshopper geometry.</span>
+<span class="sd">    :param file_path: File directory</span>
+<span class="sd">    :param file_name: File name</span>
+<span class="sd">    :param file_type: File extension.</span>
+<span class="sd">    :param doc: Grasshopper doument</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">bake</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
+    <span class="n">export</span><span class="p">([</span><span class="n">g</span><span class="p">,</span> <span class="p">],</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="import_obj"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.import_obj">[docs]</a><span class="k">def</span> <span class="nf">import_obj</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a .obj file and converts it into a Rhino Mesh.</span>
+
+<span class="sd">    :param path: path including file name and file extension (.obj)</span>
+<span class="sd">    :return: Rhino Mesh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize mesh</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
+
+    <span class="c1"># Open File</span>
+    <span class="n">file_</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">file_</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">file_</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Check if file is generated with PyMesh</span>
+    <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;# Generated with PyMesh&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generated with PyMesh&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]),</span>
+                                             <span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">2</span><span class="p">]),</span>
+                                             <span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">3</span><span class="p">])</span>
+                                             <span class="p">)</span>
+                                  <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="o">.</span><span class="n">AddFace</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">MeshFace</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                                       <span class="p">)</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="o">.</span><span class="n">AddFace</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">MeshFace</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                                       <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">mesh</span><span class="o">.</span><span class="n">Vertices</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">1</span><span class="p">]),</span>
+                                             <span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">2</span><span class="p">]),</span>
+                                             <span class="nb">float</span><span class="p">((</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">3</span><span class="p">])</span>
+                                             <span class="p">)</span>
+                                  <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">mesh</span><span class="o">.</span><span class="n">Faces</span><span class="o">.</span><span class="n">AddFace</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">MeshFace</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                                                   <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                                       <span class="p">)</span>
+
+    <span class="n">mesh</span><span class="o">.</span><span class="n">Normals</span><span class="o">.</span><span class="n">ComputeNormals</span><span class="p">()</span>
+    <span class="n">mesh</span><span class="o">.</span><span class="n">Compact</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mesh</span></div>
+
+
+<div class="viewcode-block" id="load_points"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.load_points">[docs]</a><span class="k">def</span> <span class="nf">load_points</span><span class="p">(</span><span class="n">path_and_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a text file containing points</span>
+
+<span class="sd">    :param path_and_file:</span>
+<span class="sd">    :type path_and_file: object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">file_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_and_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">file_obj</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="n">pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rg</span><span class="o">.</span><span class="n">Point3d</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">])))</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+
+    <span class="n">file_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_and_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">points</span></div>
+
+
+<div class="viewcode-block" id="make_curves_from_points"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.make_curves_from_points">[docs]</a><span class="k">def</span> <span class="nf">make_curves_from_points</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a list of points to a 5-degree polynomium curve.&quot;&quot;&quot;</span>
+
+    <span class="n">curves</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">end_points</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">pts</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">end_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">crv</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Curve</span><span class="o">.</span><span class="n">CreateControlPointCurve</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">crv</span><span class="p">:</span>
+                <span class="n">curves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">crv</span><span class="p">)</span>
+                <span class="n">end_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">curves</span><span class="p">,</span> <span class="n">end_points</span></div>
+
+
+<span class="k">def</span> <span class="nf">parallel_make_context_mesh</span><span class="p">(</span><span class="n">brep</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ladybug - mesh breps parallel&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">make_mesh_from_srf</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mesh</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">CreateFromBrep</span><span class="p">(</span><span class="n">brep</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mesh_param</span><span class="p">)</span>
+            <span class="n">brep</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Dispose</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error in converting Brep to Mesh...&#39;</span><span class="p">)</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># prepare bulk list for each surface</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="p">)</span>
+
+    <span class="c1"># set-up mesh parameters for each surface based on surface size</span>
+    <span class="n">mesh_param</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">MeshingParameters</span><span class="o">.</span><span class="n">Default</span>  <span class="c1"># Coarse</span>
+    <span class="n">rc</span><span class="o">.</span><span class="n">MeshingParameters</span><span class="o">.</span><span class="n">GridMaxCount</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="n">mesh_param</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rc</span><span class="o">.</span><span class="n">MeshingParameters</span><span class="o">.</span><span class="n">SimplePlanes</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="n">mesh_param</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">rc</span><span class="o">.</span><span class="n">MeshingParameters</span><span class="o">.</span><span class="n">GridAmplification</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="n">mesh_param</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="c1"># Call the mesh function</span>
+    <span class="k">if</span> <span class="n">parallel</span><span class="p">:</span>
+        <span class="n">ForEach</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">brep</span><span class="p">)),</span> <span class="n">make_mesh_from_srf</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="p">)):</span>
+            <span class="n">make_mesh_from_srf</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mesh</span>
+
+
+<span class="k">def</span> <span class="nf">clean_and_coerce_list</span><span class="p">(</span><span class="n">brep_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Ladybug - This definition cleans the list and adds them to RhinoCommon&quot;&quot;&quot;</span>
+
+    <span class="n">outputMesh</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">outputBrep</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">brep_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rs</span><span class="o">.</span><span class="n">IsMesh</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">coercemesh</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">geo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">outputMesh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObject</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">rs</span><span class="o">.</span><span class="n">IsBrep</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+            <span class="n">geo</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">coercebrep</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">geo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">outputBrep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObject</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># the idea was to remove the problematice surfaces</span>
+                <span class="c1"># not all the geometry which is not possible since</span>
+                <span class="c1"># badGeometries won&#39;t pass rs.IsBrep()</span>
+                <span class="n">tempBrep</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">surfaces</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ExplodePolysurfaces</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">surfaces</span><span class="p">:</span>
+                    <span class="n">geo</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">coercesurface</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">geo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">tempBrep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObject</span><span class="p">(</span><span class="n">surface</span><span class="p">)</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="k">pass</span>
+
+                <span class="n">geo</span> <span class="o">=</span> <span class="n">JoinBreps</span><span class="p">(</span><span class="n">tempBrep</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">Brep</span> <span class="ow">in</span> <span class="n">tempBrep</span><span class="p">:</span>
+                    <span class="n">Brep</span><span class="o">.</span><span class="n">Dispose</span><span class="p">()</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObject</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="n">outputBrep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outputMesh</span><span class="p">,</span> <span class="n">outputBrep</span>
+
+
+<span class="k">def</span> <span class="nf">join_mesh</span><span class="p">(</span><span class="n">mesh_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ladybug - joinMesh&quot;&quot;&quot;</span>
+
+    <span class="n">joined_mesh</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Mesh</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mesh_list</span><span class="p">:</span> <span class="n">joined_mesh</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">joined_mesh</span>
+
+
+<span class="k">def</span> <span class="nf">rayTrace</span><span class="p">(</span><span class="n">startPts</span><span class="p">,</span> <span class="n">startVectors</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">numOfBounce</span><span class="p">,</span> <span class="n">lastBounceLen</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ladybug - RayTrace&quot;&quot;&quot;</span>
+
+    <span class="c1"># A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1">## clean the geometry and bring them to rhinoCommon separated as mesh and Brep</span>
+        <span class="n">contextMesh</span><span class="p">,</span> <span class="n">contextBrep</span> <span class="o">=</span> <span class="n">clean_and_coerce_list</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="c1">## mesh Brep</span>
+        <span class="n">contextMeshedBrep</span> <span class="o">=</span> <span class="n">parallel_make_context_mesh</span><span class="p">(</span><span class="n">contextBrep</span><span class="p">)</span>
+
+        <span class="c1">## Flatten the list of surfaces</span>
+        <span class="n">contextMeshedBrep</span> <span class="o">=</span> <span class="n">flatten_list</span><span class="p">(</span><span class="n">contextMeshedBrep</span><span class="p">)</span>
+        <span class="n">contextSrfs</span> <span class="o">=</span> <span class="n">contextMesh</span> <span class="o">+</span> <span class="n">contextMeshedBrep</span>
+        <span class="n">joinedContext</span> <span class="o">=</span> <span class="n">join_mesh</span><span class="p">(</span><span class="n">contextSrfs</span><span class="p">)</span>
+
+    <span class="c1"># Get rid of trimmed parts</span>
+    <span class="n">cleanBrep</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Brep</span><span class="o">.</span><span class="n">CreateFromMesh</span><span class="p">(</span><span class="n">joinedContext</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">rays</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">testPt</span> <span class="ow">in</span> <span class="n">startPts</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">startVectors</span><span class="p">:</span>
+            <span class="n">vector</span><span class="o">.</span><span class="n">Unitize</span><span class="p">()</span>
+            <span class="n">ray</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Ray3d</span><span class="p">(</span><span class="n">testPt</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">numOfBounce</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">intPts</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Intersect</span><span class="o">.</span><span class="n">Intersection</span><span class="o">.</span><span class="n">RayShoot</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span> <span class="p">[</span><span class="n">cleanBrep</span><span class="p">],</span> <span class="n">numOfBounce</span><span class="p">)</span>
+                <span class="c1"># print intPts</span>
+                <span class="k">if</span> <span class="n">intPts</span><span class="p">:</span>
+                    <span class="n">ptList</span> <span class="o">=</span> <span class="p">[</span><span class="n">testPt</span><span class="p">]</span>
+                    <span class="n">ptList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">intPts</span><span class="p">)</span>
+                    <span class="n">ray</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Polyline</span><span class="p">(</span><span class="n">ptList</span><span class="p">)</span><span class="o">.</span><span class="n">ToNurbsCurve</span><span class="p">()</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># create last ray</span>
+                        <span class="c1"># calculate plane at intersection</span>
+                        <span class="n">intNormal</span> <span class="o">=</span> <span class="n">cleanBrep</span><span class="o">.</span><span class="n">ClosestPoint</span><span class="p">(</span><span class="n">intPts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sc</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">ModelAbsoluteTolerance</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span>
+
+                        <span class="n">lastVector</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="n">ptList</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ptList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">lastVector</span><span class="o">.</span><span class="n">Unitize</span><span class="p">()</span>
+
+                        <span class="n">crossProductNormal</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Vector3d</span><span class="o">.</span><span class="n">CrossProduct</span><span class="p">(</span><span class="n">intNormal</span><span class="p">,</span> <span class="n">lastVector</span><span class="p">)</span>
+
+                        <span class="n">plane</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">intPts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">intNormal</span><span class="p">,</span> <span class="n">crossProductNormal</span><span class="p">)</span>
+
+                        <span class="n">mirrorT</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">Mirror</span><span class="p">(</span><span class="n">intPts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">plane</span><span class="o">.</span><span class="n">Normal</span><span class="p">)</span>
+
+                        <span class="n">lastRay</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">intPts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">lastBounceLen</span> <span class="o">*</span> <span class="n">lastVector</span><span class="p">)</span><span class="o">.</span><span class="n">ToNurbsCurve</span><span class="p">()</span>
+                        <span class="n">lastRay</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">mirrorT</span><span class="p">)</span>
+
+                        <span class="n">ray</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Curve</span><span class="o">.</span><span class="n">JoinCurves</span><span class="p">([</span><span class="n">ray</span><span class="p">,</span> <span class="n">lastRay</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+                    <span class="n">rays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ray</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># no bounce so let&#39;s just create a line form the point</span>
+                    <span class="n">firstRay</span> <span class="o">=</span> <span class="n">rc</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="n">testPt</span><span class="p">,</span> <span class="n">lastBounceLen</span> <span class="o">*</span> <span class="n">vector</span><span class="p">)</span><span class="o">.</span><span class="n">ToNurbsCurve</span><span class="p">()</span>
+                    <span class="n">rays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">firstRay</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rays</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No reflection!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">rays</span>
+
+
+<span class="k">def</span> <span class="nf">ray_shoot</span><span class="p">(</span><span class="n">start_pt</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">num_of_bounce</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build on: Ladybug - RayTrace&quot;&quot;&quot;</span>
+
+    <span class="n">ray</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">Ray3d</span><span class="p">(</span><span class="n">start_pt</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ray&#39;</span><span class="p">,</span> <span class="n">ray</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">num_of_bounce</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">int_pt</span> <span class="o">=</span> <span class="n">rg</span><span class="o">.</span><span class="n">RayShoot</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span> <span class="p">[</span><span class="n">context</span><span class="p">],</span> <span class="n">num_of_bounce</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;intPt:&#39;</span><span class="p">,</span> <span class="n">int_pt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">int_pt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Intersection!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No intersection!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No reflection!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="load_mesh_data"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.load_mesh_data">[docs]</a><span class="k">def</span> <span class="nf">load_mesh_data</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load additional data for a mesh.</span>
+<span class="sd">    :param path: Path for mesh file.</span>
+<span class="sd">    :return: Data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_Data.txt&#39;</span>
+
+    <span class="c1"># Check if file exists</span>
+    <span class="n">exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">file_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">file_obj</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mesh loaded with data&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mesh don&#39;t have any associated data&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mesh_faces"><a class="viewcode-back" href="../../../lib.html#livestock.lib.geometry.get_mesh_faces">[docs]</a><span class="k">def</span> <span class="nf">get_mesh_faces</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a mesh and convert its faces into individual meshes.</span>
+
+<span class="sd">    :param mesh: mesh</span>
+<span class="sd">    :return: list of &quot;face&quot; meshes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mesh_faces</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">MeshFaces</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh_faces</span><span class="p">),</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">mesh_faces</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mesh_faces</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">mesh_faces</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="n">mesh_faces</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span>
+        <span class="n">added_mesh</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">AddMesh</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+        <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">added_mesh</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">faces</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

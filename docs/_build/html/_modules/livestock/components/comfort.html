@@ -1,0 +1,799 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>livestock.components.comfort &#8212; Livestock_GH .0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for livestock.components.comfort</h1><div class="highlight"><pre>
+<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Christian Kongsgaard&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Imports</span>
+
+<span class="c1"># Module imports</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="c1"># Rhino and Grasshopper imports</span>
+<span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="k">as</span> <span class="nn">rs</span>
+
+<span class="c1"># Livestock imports</span>
+<span class="kn">from</span> <span class="nn">livestock.components.component</span> <span class="k">import</span> <span class="n">GHComponent</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.misc</span> <span class="k">as</span> <span class="nn">gh_misc</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.ssh</span> <span class="k">as</span> <span class="nn">gh_ssh</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.geometry</span> <span class="k">as</span> <span class="nn">gh_geo</span>
+<span class="kn">import</span> <span class="nn">livestock.lib.templates</span> <span class="k">as</span> <span class="nn">template</span>
+
+<span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
+<span class="c1"># Livestock Comfort Classes and Functions</span>
+
+
+<div class="viewcode-block" id="NewAirConditions"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions">[docs]</a><span class="k">class</span> <span class="nc">NewAirConditions</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Mesh&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Ground Mesh&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Evapotranspiration&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Evapotranspiration in m^3/day. &#39;</span>
+                                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Each tree branch should represent one time unit, with all the cell values to &#39;</span>
+                                       <span class="s1">&#39;that time.&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;HeatFlux&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;HeatFlux in MJ/m^2day. &#39;</span>
+                                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Each tree branch should represent one time unit, with all the cell values to &#39;</span>
+                                       <span class="s1">&#39;that time.&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;AirTemperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Air temperature in C&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;AirRelativeHumidity&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Relative Humidity in -&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;AirBoundaryHeight&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Top of the air column in m. &#39;</span>
+                                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Default is set to 10m&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+
+                    <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;InvestigationHeight&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Height at which the new air temperature and relative humidity should be &#39;</span>
+                                       <span class="s1">&#39;calculated. &#39;</span>
+                                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Default is set to 1.1m&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">},</span>
+
+                    <span class="mi">7</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;CPUs&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of cpus to perform the computation on.&#39;</span>
+                                       <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Default is set to 2&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+
+                    <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ResultFolder&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Folder where the result files should be saved&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+
+                    <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Run the component&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NewTemperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;New temperature in C.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NewRelativeHumidity&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;New relative humidity in -.&#39;</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evapotranspiration</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_flux</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">air_temperature</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">air_relhum</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_height</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">investigation_height</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">get_python_exe</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;relative_humidity&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+<div class="viewcode-block" id="NewAirConditions.check_inputs"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.config"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.run_checks"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">evapotranspiration</span><span class="p">,</span> <span class="n">heat_flux</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">relhum</span><span class="p">,</span> <span class="n">boundary_height</span><span class="p">,</span>
+                   <span class="n">investigation_height</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param mesh: Surfacce mesh.</span>
+<span class="sd">        :param evapotranspiration: Vapour flux</span>
+<span class="sd">        :param heat_flux: Heat flux</span>
+<span class="sd">        :param temperature: Outdoor temperature</span>
+<span class="sd">        :param relhum: Relative humidity</span>
+<span class="sd">        :param boundary_height: Height of the air columns.</span>
+<span class="sd">        :param investigation_height: Investigation height</span>
+<span class="sd">        :param cpus: Number of CPUs</span>
+<span class="sd">        :param folder: Folder where the result files should be saved.</span>
+<span class="sd">        :param run: Whether or not to run the component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evapotranspiration</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">tree_to_list</span><span class="p">(</span><span class="n">evapotranspiration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_flux</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">tree_to_list</span><span class="p">(</span><span class="n">heat_flux</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">air_temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">air_relhum</span> <span class="o">=</span> <span class="n">relhum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">boundary_height</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">investigation_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">investigation_height</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">cpus</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.convert_units"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.convert_units">[docs]</a>    <span class="k">def</span> <span class="nf">convert_units</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts heat and vapour flux to the correct units.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">convert_heat_flux</span><span class="p">(</span><span class="n">heat_list</span><span class="p">,</span> <span class="n">area</span><span class="p">):</span>
+
+            <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">area_</span><span class="p">):</span>
+                <span class="c1"># MJ/m2day -&gt; J/h</span>
+                <span class="c1"># 24 h/day, 1e6 J/MJ, multiply by area</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">area_</span><span class="p">)</span> <span class="o">*</span> <span class="mi">24</span><span class="o">/</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span>
+                <span class="k">return</span> <span class="n">new_value</span>
+
+            <span class="n">converted_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">converter</span><span class="p">(</span><span class="n">heat_row</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">area</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">heat_row</span><span class="p">))]</span>
+                              <span class="k">for</span> <span class="n">heat_row</span> <span class="ow">in</span> <span class="n">heat_list</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">converted_list</span>
+
+        <span class="k">def</span> <span class="nf">convert_vapour_flux</span><span class="p">(</span><span class="n">vapour_list</span><span class="p">):</span>
+
+            <span class="k">def</span> <span class="nf">converter</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="c1"># m^3/day -&gt; kg/s</span>
+                <span class="c1"># 24h*60min*60s = 86400 s/day, 998.2 kg/m^3 at 20C</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="mf">86400.0</span> <span class="o">*</span> <span class="mf">998.2</span>
+                <span class="k">return</span> <span class="n">new_value</span>
+
+            <span class="n">converted_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">converter</span><span class="p">(</span><span class="n">vapour</span><span class="p">)</span>
+                               <span class="k">for</span> <span class="n">vapour</span> <span class="ow">in</span> <span class="n">vapour_row</span><span class="p">]</span>
+                              <span class="k">for</span> <span class="n">vapour_row</span> <span class="ow">in</span> <span class="n">vapour_list</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">converted_list</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">evapotranspiration</span> <span class="o">=</span> <span class="n">convert_vapour_flux</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evapotranspiration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_flux</span> <span class="o">=</span> <span class="n">convert_heat_flux</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heat_flux</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.get_mesh_data"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.get_mesh_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_mesh_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts the data needed from the mesh.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mesh_faces</span> <span class="o">=</span> <span class="n">gh_geo</span><span class="o">.</span><span class="n">get_mesh_faces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">MeshArea</span><span class="p">(</span><span class="n">face</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                     <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh_faces</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.write_files"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.write_files">[docs]</a>    <span class="k">def</span> <span class="nf">write_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">write_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder</span>
+        <span class="n">files_written</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># evapotranspiration</span>
+        <span class="n">vapour_file</span> <span class="o">=</span> <span class="s1">&#39;vapour_flux.txt&#39;</span>
+        <span class="n">vapour_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">vapour_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evapotranspiration</span><span class="p">:</span>
+            <span class="n">vapour_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                      <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">row</span><span class="p">)</span>
+                             <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                             <span class="p">)</span>
+        <span class="n">vapour_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vapour_file</span><span class="p">)</span>
+
+        <span class="c1"># heat_flux</span>
+        <span class="n">heat_file</span> <span class="o">=</span> <span class="s1">&#39;heat_flux.txt&#39;</span>
+        <span class="n">heat_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">heat_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_flux</span><span class="p">:</span>
+            <span class="n">heat_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">row</span><span class="p">)</span>
+                           <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                           <span class="p">)</span>
+        <span class="n">heat_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heat_file</span><span class="p">)</span>
+
+        <span class="c1"># temperature</span>
+        <span class="n">temp_file</span> <span class="o">=</span> <span class="s1">&#39;temperature.txt&#39;</span>
+        <span class="n">temp_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">temp_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">temp_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">air_temperature</span><span class="p">))</span>
+        <span class="n">temp_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
+
+        <span class="c1"># relhum</span>
+        <span class="n">relhum_file</span> <span class="o">=</span> <span class="s1">&#39;relative_humidity.txt&#39;</span>
+        <span class="n">relhum_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">relhum_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">relhum_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                                  <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">air_relhum</span><span class="p">))</span>
+        <span class="n">relhum_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relhum_file</span><span class="p">)</span>
+
+        <span class="c1"># boundary_height and investigation_height</span>
+        <span class="n">height_file</span> <span class="o">=</span> <span class="s1">&#39;heights.txt&#39;</span>
+        <span class="n">height_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">height_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">height_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_height</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">investigation_height</span><span class="p">))</span>
+        <span class="n">height_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">height_file</span><span class="p">)</span>
+
+        <span class="c1"># area</span>
+        <span class="n">area_file</span> <span class="o">=</span> <span class="s1">&#39;area.txt&#39;</span>
+        <span class="n">area_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">area_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">area_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">))</span>
+        <span class="n">area_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">area_file</span><span class="p">)</span>
+
+        <span class="c1"># cpu</span>
+        <span class="n">cpu_file</span> <span class="o">=</span> <span class="s1">&#39;cpu.txt&#39;</span>
+        <span class="n">cpu_obj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_folder</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">cpu_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">cpu_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpus</span><span class="p">))</span>
+        <span class="n">cpu_obj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cpu_file</span><span class="p">)</span>
+
+        <span class="c1"># Template</span>
+        <span class="n">files_written</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">pick_template</span><span class="p">(</span><span class="s1">&#39;new_air&#39;</span><span class="p">,</span> <span class="n">write_folder</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.do_case"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.do_case">[docs]</a>    <span class="k">def</span> <span class="nf">do_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the case. Spawns a subprocess to run either the local or ssh template.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">template_to_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;/new_air_conditions_template.py&#39;</span>
+
+        <span class="c1"># Run template</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span><span class="p">,</span> <span class="n">template_to_run</span><span class="p">])</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.load_results"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.load_results">[docs]</a>    <span class="k">def</span> <span class="nf">load_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the results from the results files and adds them to self.results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">temp_results</span> <span class="o">=</span> <span class="s1">&#39;/temperature_results.txt&#39;</span>
+        <span class="n">relhum_results</span> <span class="o">=</span> <span class="s1">&#39;/relative_humidity_results.txt&#39;</span>
+
+        <span class="c1"># Temperature</span>
+        <span class="n">new_temp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">+</span> <span class="n">temp_results</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">list_to_tree</span><span class="p">([[</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                                             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                                                            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">new_temp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()])</span>
+        <span class="n">new_temp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Relative Humidity</span>
+        <span class="n">new_relhum</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span> <span class="o">+</span> <span class="n">relhum_results</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;relative_humidity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">list_to_tree</span><span class="p">([[</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                                                   <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                                                                  <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">new_relhum</span><span class="o">.</span><span class="n">readlines</span><span class="p">()])</span>
+        <span class="n">new_relhum</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NewAirConditions.run"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.NewAirConditions.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed and run is True the component runs.</span>
+<span class="sd">        The following functions are run - in this order.</span>
+<span class="sd">        get_mesh_data()</span>
+<span class="sd">        convert_units()</span>
+<span class="sd">        write_files()</span>
+<span class="sd">        do_case()</span>
+<span class="sd">        load_results()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_units</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_files</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">do_case</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_results</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="AdaptiveClothing"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveClothing</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;Temperature in C&#39;</span><span class="p">]}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;readMe!&#39;</span><span class="p">,</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">],</span>
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ClothingValue&#39;</span><span class="p">,</span> <span class="s1">&#39;Calculated clothing value in clo.&#39;</span><span class="p">]}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Computes the clothing values&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="AdaptiveClothing.check_inputs"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;Temperature should be a float&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AdaptiveClothing.insulation_clothing"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing.insulation_clothing">[docs]</a>    <span class="k">def</span> <span class="nf">insulation_clothing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the clothing isolation in clo for a given outdoor temperature.</span>
+<span class="sd">        Source: Havenith et al. - 2012 - &quot;The UTCI-clothing model&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">min_insulation</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">max_insulation</span> <span class="o">=</span> <span class="mf">1.43</span>
+        <span class="n">insulation</span> <span class="o">=</span> <span class="mf">1.372</span> \
+                     <span class="o">-</span> <span class="mf">0.01866</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> \
+                     <span class="o">-</span> <span class="mf">0.0004849</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">**</span> <span class="mi">2</span> \
+                     <span class="o">-</span> <span class="mf">0.000009333</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">**</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">min_insulation</span> <span class="o">&lt;</span> <span class="n">insulation</span> <span class="o">&lt;</span> <span class="n">max_insulation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">insulation</span>
+
+        <span class="k">elif</span> <span class="n">insulation</span> <span class="o">&lt;</span> <span class="n">min_insulation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">min_insulation</span>
+
+        <span class="k">elif</span> <span class="n">insulation</span> <span class="o">&gt;</span> <span class="n">max_insulation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">max_insulation</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;Something went wring in the clothing function&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AdaptiveClothing.config"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AdaptiveClothing.run_checks"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param temp: Outdoor temperature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temp</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AdaptiveClothing.run"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.AdaptiveClothing.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed and run is True the component runs.</span>
+<span class="sd">        It runs the insulation_clothing() function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">insulation_clothing</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="LoadAirResult"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult">[docs]</a><span class="k">class</span> <span class="nc">LoadAirResult</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ResultFolder&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Path to result folder.&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;LoadResult&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Run component&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NewTemperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;New temperature in C.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NewRelativeHumidity&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;New relative humidity in -.&#39;</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">26</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;relative_humidity&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="LoadAirResult.check_inputs"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;Insert result path&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LoadAirResult.config"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LoadAirResult.run_checks"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param path: Path for result file.</span>
+<span class="sd">        :param load: Load results files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/temperature_results.txt&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relhum_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/relative_humidity_results.txt&#39;</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LoadAirResult.load_result"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult.load_result">[docs]</a>    <span class="k">def</span> <span class="nf">load_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the results from the results files and adds them to self.results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Temperature</span>
+        <span class="n">new_temp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">list_to_tree</span><span class="p">([</span>
+                                                           <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                                            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                                                           <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">new_temp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()])</span>
+        <span class="n">new_temp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Relative Humidity</span>
+        <span class="n">new_relhum</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relhum_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;relative_humidity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">list_to_tree</span><span class="p">([[</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+                                                                   <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+                                                                  <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">new_relhum</span><span class="o">.</span><span class="n">readlines</span><span class="p">()])</span>
+        <span class="n">new_relhum</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="LoadAirResult.run"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.LoadAirResult.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed the component runs.</span>
+<span class="sd">        The following functions are run:</span>
+<span class="sd">        load_results()</span>
+<span class="sd">        The results are converted into a Grasshopper Tree structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_result</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="WaterEvaporation"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation">[docs]</a><span class="k">class</span> <span class="nc">WaterEvaporation</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
+        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Volume&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Air volume in m3&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Air temperature in C&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Water&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Water to be evaporated in kg&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+                    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;FractionOfEvaporation&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Fraction of the introduced about of water, which is evaporated.&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}}</span>
+
+        <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NewTemperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;New temperature in C.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;EnergyOfEvaporation&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Energy that is needed to evaporate the introduced water in J.&#39;</span><span class="p">},</span>
+
+                    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;VapourGain&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Vapour gain to the air in m3.&#39;</span><span class="p">}</span>
+                    <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">27</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">water</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">get_python_exe</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="WaterEvaporation.check_inputs"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">water</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fracture</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;Insert missing values&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.config"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the Grasshopper component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Generate Component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.run_checks"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">water</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+
+<span class="sd">        :param volume:</span>
+<span class="sd">        :type volume:</span>
+<span class="sd">        :param temperature:</span>
+<span class="sd">        :type temperature:</span>
+<span class="sd">        :param water:</span>
+<span class="sd">        :type water:</span>
+<span class="sd">        :param fraction:</span>
+<span class="sd">        :type fraction:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Gather data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">volume</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">water</span> <span class="o">=</span> <span class="n">water</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fraction</span> <span class="o">=</span> <span class="n">fraction</span>
+
+        <span class="c1"># Run checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.write"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">gh_ssh</span><span class="o">.</span><span class="n">clean_local_folder</span><span class="p">()</span>
+
+        <span class="c1"># Create volume file</span>
+        <span class="n">volume_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/volume.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">volume_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">]))</span>
+        <span class="n">volume_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Create Temperature file</span>
+        <span class="n">temp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/temperature.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">temp_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                                  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">]))</span>
+        <span class="n">temp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Create water file</span>
+        <span class="n">water_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/water.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">water_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                                   <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">water</span><span class="p">]))</span>
+        <span class="n">water_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># Create fraction file</span>
+        <span class="n">fraction_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/fraction.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">fraction_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                                      <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">faction</span><span class="p">]))</span>
+        <span class="n">fraction_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># create template</span>
+        <span class="n">template</span><span class="o">.</span><span class="n">pick_template</span><span class="p">(</span><span class="s1">&#39;water_evaporation&#39;</span><span class="p">,</span> <span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.evaluate_water_evaporation"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.evaluate_water_evaporation">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_water_evaporation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the case. Spawns a subprocess to run either the local template.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">template_to_run</span> <span class="o">=</span> <span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/water_evaporation_template.py&#39;</span>
+
+        <span class="c1"># Run template</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">py_exe</span><span class="p">,</span> <span class="n">template_to_run</span><span class="p">])</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.load_results"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.load_results">[docs]</a>    <span class="k">def</span> <span class="nf">load_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Read Temperature file</span>
+        <span class="n">temp_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/temperature.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">temp_lines</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">temp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                                       <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_lines</span>
+                                       <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+
+        <span class="c1"># Read energy file</span>
+        <span class="n">energy_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/energy.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">energy_lines</span> <span class="o">=</span> <span class="n">energy_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">energy_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                                  <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">energy_lines</span>
+                                  <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+
+        <span class="c1"># Read water file</span>
+        <span class="n">vapour_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gh_ssh</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="s1">&#39;/vapour.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">vapour_lines</span> <span class="o">=</span> <span class="n">vapour_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">vapour_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;vapour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                                  <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">vapour_lines</span>
+                                  <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="WaterEvaporation.run"><a class="viewcode-back" href="../../../comfort.html#livestock.components.comfort.WaterEvaporation.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case all the checks have passed the component runs.</span>
+<span class="sd">        The following functions are run:</span>
+<span class="sd">        load_results()</span>
+<span class="sd">        The results are converted into a Grasshopper Tree structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_water_evaporation</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_results</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Christian Kongsgaard Nielsen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
