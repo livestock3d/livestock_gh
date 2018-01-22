@@ -1,3 +1,5 @@
+.. _lib:
+
 Livestock Grasshopper Lib
 =========================
 
@@ -70,3 +72,9 @@ Templates
 .. autofunction:: process_cmf_surface_results
 
 .. autofunction:: new_air_conditions
+
+**Go Back to:**
+
+:ref:`Livestock Frontpage <livestock_pypi:livestock>`
+
+:ref:`Livestock Grasshopper <livestock_gh>`

@@ -1,3 +1,5 @@
+.. _classes:
+
 Livestock Grasshopper Component Classes
 =======================================
 
@@ -10,3 +12,9 @@ Livestock Grasshopper Component Classes
    geometry
    cmf
    comfort
+
+**Go Back to:**
+
+:ref:`Livestock Frontpage <livestock_pypi:livestock>`
+
+:ref:`Livestock Grasshopper <livestock_gh>`

@@ -1,3 +1,5 @@
+.. _components:
+
 Livestock Grasshopper Components
 ================================
 
@@ -776,3 +778,8 @@ Livestock Grasshopper Components
     :2.:    :Name: ClothingValue
             :Description: | Calculated clothing value in clo.
 
+**Go Back to:**
+
+:ref:`Livestock Frontpage <livestock_pypi:livestock>`
+
+:ref:`Livestock Grasshopper <livestock_gh>`
