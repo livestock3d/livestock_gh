@@ -578,11 +578,10 @@ class WaterEvaporation(GHComponent):
         self.volume = None
         self.temperature = None
         self.water = None
-        self.faction = None
+        self.fraction = None
         self.py_exe = gh_misc.get_python_exe()
         self.checks = False
         self.results = dict()
-
 
     def check_inputs(self):
         """

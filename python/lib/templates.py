@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 # Livestock Templates Functions
 
 
+
 def pick_template(template_name, path):
     """
     Writes a template given a template name and path to write it to.
@@ -48,6 +49,9 @@ def pick_template(template_name, path):
 
     elif template_name == 'new_air':
         return new_air_conditions(path)
+
+    elif template_name == 'water_evaporation':
+        return water_evaporation(path)
 
     else:
         raise NameError('Could not find template: ' + str(template_name))
@@ -305,6 +309,35 @@ def new_air_conditions(path):
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
+
+    file.close()
+
+    return file_name
+
+
+def water_evaporation(path):
+    """
+    Writes the water evaporation template.
+
+    :param path: Path to write it to.
+    :type path: str
+    :return: The file name
+    """
+
+    file_name = r'/new_air_conditions_template.py'
+    file = open(path + file_name, 'w')
+
+    file.write("# Imports\n")
+    file.write("import livestock.air as la\n")
+
+    file.write("# Run function\n")
+    file.write("if __name__ == '__main__':\n")
+    file.write("\tla.water_evaporation_wrapper(r'" + path + "')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')\n")
+    file.write("file_obj.close()")
 
     file.close()
 
