@@ -173,7 +173,7 @@ class NewAirConditions(GHComponent):
             def converter(value, area_):
                 # MJ/m2day -> J/h
                 # 24 h/day, 1e6 J/MJ, multiply by area
-                new_value = float(value) * float(area_) * 24/10**6
+                new_value = float(value) * float(area_) / 24 * 10**6
                 return new_value
 
             converted_list = [[converter(heat_row[i], area[i])
