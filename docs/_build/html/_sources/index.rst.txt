@@ -19,9 +19,7 @@ Welcome to Livestock_GH's documentation!
 
 **Go Back to:**
 
-:ref:`Livestock Frontpage <livestock_pypi:livestock>`
-
-:ref:`Livestock Grasshopper <livestock_gh>`
+* :ref:`Livestock Frontpage <livestock_pypi:livestock>`
 
 Indices and tables
 ==================
