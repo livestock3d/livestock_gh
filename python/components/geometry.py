@@ -19,6 +19,7 @@ import livestock.lib.misc as gh_misc
 
 
 class LoadMesh(GHComponent):
+    # TODO - Update to handle quad meshes
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -92,6 +93,7 @@ class LoadMesh(GHComponent):
 
 
 class SaveMesh(GHComponent):
+    # TODO - Update to handle quad meshes
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)

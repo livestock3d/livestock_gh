@@ -30,6 +30,7 @@ import rhinoscriptsyntax as rs
 
 
 class CMFGround(GHComponent):
+    # TODO - Create flux calculation methods components
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1009,6 +1010,7 @@ class CMFRetentionCurve(GHComponent):
 
 
 class CMFSolve(GHComponent):
+    # TODO - Put files in subfolder called /CMF
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1428,6 +1430,7 @@ class CMFSolve(GHComponent):
 
 
 class CMFResults(GHComponent):
+    # TODO - If csv exists load results instead of running new
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)

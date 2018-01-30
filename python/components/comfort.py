@@ -23,6 +23,7 @@ import livestock.lib.templates as template
 
 
 class NewAirConditions(GHComponent):
+    # TODO - Check if result folder exists; if not create new
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
