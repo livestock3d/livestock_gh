@@ -47,6 +47,7 @@
 <span class="c1"># Livestock Templates Functions</span>
 
 
+
 <div class="viewcode-block" id="pick_template"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.pick_template">[docs]</a><span class="k">def</span> <span class="nf">pick_template</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a template given a template name and path to write it to.</span>
@@ -89,6 +90,9 @@
 
     <span class="k">elif</span> <span class="n">template_name</span> <span class="o">==</span> <span class="s1">&#39;new_air&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">new_air_conditions</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">template_name</span> <span class="o">==</span> <span class="s1">&#39;water_evaporation&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">water_evaporation</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Could not find template: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">template_name</span><span class="p">))</span>
@@ -350,6 +354,35 @@
     <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">file_name</span></div>
+
+
+<span class="k">def</span> <span class="nf">water_evaporation</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes the water evaporation template.</span>
+
+<span class="sd">    :param path: Path to write it to.</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :return: The file name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">file_name</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/new_air_conditions_template.py&#39;</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Imports</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;import livestock.air as la</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Run function</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;if __name__ == &#39;__main__&#39;:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">la.water_evaporation_wrapper(r&#39;&quot;</span> <span class="o">+</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Announce that template finished and create out file</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;print(&#39;Finished with template&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;file_obj.close()&quot;</span><span class="p">)</span>
+
+    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">file_name</span>
 </pre></div>
 
           </div>
@@ -383,7 +416,7 @@
       &copy;2017, Christian Kongsgaard Nielsen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
