@@ -90,7 +90,10 @@ class NewAirConditions(GHComponent):
                         'description': 'New temperature in C.'},
 
                     2: {'name': 'NewRelativeHumidity',
-                        'description': 'New relative humidity in -.'}
+                        'description': 'New relative humidity in %.'},
+
+                    3: {'name': 'LatentHeatFlux',
+                        'description': 'Computed latent heat flux in J/h.'}
                     }
 
         self.inputs = inputs()
@@ -109,7 +112,9 @@ class NewAirConditions(GHComponent):
         self.area = None
         self.py_exe = gh_misc.get_python_exe()
         self.checks = [False, False, False, False, False, False, False]
-        self.results = {'temperature': [], 'relative_humidity': []}
+        self.results = {'temperature': [],
+                        'relative_humidity': [],
+                        'heat_flux': []}
 
     def check_inputs(self):
         """
@@ -148,11 +153,11 @@ class NewAirConditions(GHComponent):
         self.evapotranspiration = gh_misc.tree_to_list(evapotranspiration)
         self.air_temperature = temperature
         self.air_relhum = relhum
-        self.boundary_height = self.add_default_value(boundary_height, 5)
-        self.investigation_height = self.add_default_value(investigation_height, 6)
-        self.cpus = self.add_default_value(cpus, 7)
-        self.folder = self.add_default_value(folder, 8) + '/NewAir'
-        self.run_component = self.add_default_value(run, 9)
+        self.boundary_height = self.add_default_value(boundary_height, 4)
+        self.investigation_height = self.add_default_value(investigation_height, 5)
+        self.cpus = self.add_default_value(cpus, 6)
+        self.folder = self.add_default_value(folder, 7) + '/NewAir'
+        self.run_component = self.add_default_value(run, 8)
 
         # Run checks
         self.check_inputs()
@@ -254,7 +259,9 @@ class NewAirConditions(GHComponent):
         Loads the results from the results files and adds them to self.results.
         """
 
-        self.results['temperature'], self.results['relative_humidity'], self.results['heat_flux'] = load_new_air_results(self.folder)
+        self.results['temperature'], \
+        self.results['relative_humidity'], \
+        self.results['heat_flux'] = load_new_air_results(self.folder)
 
         return True
 
@@ -271,7 +278,6 @@ class NewAirConditions(GHComponent):
 
         if self.checks and self.run_component:
             self.get_mesh_data()
-            self.convert_units()
             self.write_files()
             self.do_case()
             self.load_results()
