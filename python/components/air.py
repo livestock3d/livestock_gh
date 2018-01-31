@@ -1,0 +1,583 @@
+__author__ = "Christian Kongsgaard"
+__license__ = "MIT"
+__version__ = "0.0.1"
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Imports
+
+# Module imports
+import subprocess
+import os
+
+# Rhino and Grasshopper imports
+import rhinoscriptsyntax as rs
+
+# Livestock imports
+from livestock.components.component import GHComponent
+import livestock.lib.misc as gh_misc
+import livestock.lib.ssh as gh_ssh
+import livestock.lib.geometry as gh_geo
+import livestock.lib.templates as template
+
+# -------------------------------------------------------------------------------------------------------------------- #
+# Livestock Comfort Classes and Functions
+
+
+class NewAirConditions(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Mesh',
+                        'description': 'Ground Mesh',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'Evapotranspiration',
+                        'description': 'Evapotranspiration in m^3/day. '
+                                       '\nEach tree branch should represent one time unit, with all the cell values to '
+                                       'that time.',
+                        'access': 'tree',
+                        'default_value': None},
+
+
+                    2: {'name': 'AirTemperature',
+                        'description': 'Air temperature in C',
+                        'access': 'list',
+                        'default_value': None},
+
+                    3: {'name': 'AirRelativeHumidity',
+                        'description': 'Relative Humidity in %',
+                        'access': 'list',
+                        'default_value': None},
+
+                    4: {'name': 'AirBoundaryHeight',
+                        'description': 'Top of the air column in m. '
+                                       '\nDefault is set to 10m',
+                        'access': 'item',
+                        'default_value': 10},
+
+                    5: {'name': 'InvestigationHeight',
+                        'description': 'Height at which the new air temperature and relative humidity should be '
+                                       'calculated. '
+                                       '\nDefault is set to 1.1m',
+                        'access': 'item',
+                        'default_value': 1.1},
+
+                    6: {'name': 'CPUs',
+                        'description': 'Number of cpus to perform the computation on.'
+                                       '\nDefault is set to 2',
+                        'access': 'item',
+                        'default_value': 2},
+
+                    7: {'name': 'ResultFolder',
+                        'description': 'Folder where the result files should be saved',
+                        'access': 'item',
+                        'default_value': None},
+
+                    8: {'name': 'Run',
+                        'description': 'Run the component',
+                        'access': 'item',
+                        'default_value': None}
+                    }
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+
+                    2: {'name': 'NewRelativeHumidity',
+                        'description': 'New relative humidity in -.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 24
+        self.mesh = None
+        self.evapotranspiration = None
+        self.heat_flux = None
+        self.air_temperature = None
+        self.air_relhum = None
+        self.boundary_height = None
+        self.investigation_height = None
+        self.cpus = None
+        self.folder = None
+        self.run_component = None
+        self.area = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.checks = [False, False, False, False, False, False, False]
+        self.results = {'temperature': [], 'relative_humidity': []}
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        self.checks = True
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, mesh, evapotranspiration, temperature, relhum, boundary_height,
+                   investigation_height, cpus, folder, run):
+
+        """
+        Gathers the inputs and checks them.
+
+        :param mesh: Surface mesh.
+        :param evapotranspiration: Vapour flux
+        :param temperature: Outdoor temperature
+        :param relhum: Relative humidity
+        :param boundary_height: Height of the air columns.
+        :param investigation_height: Investigation height
+        :param cpus: Number of CPUs
+        :param folder: Folder where the result files should be saved.
+        :param run: Whether or not to run the component.
+        """
+
+        # Gather data
+        self.mesh = mesh
+        self.evapotranspiration = gh_misc.tree_to_list(evapotranspiration)
+        self.air_temperature = temperature
+        self.air_relhum = relhum
+        self.boundary_height = self.add_default_value(boundary_height, 5)
+        self.investigation_height = self.add_default_value(investigation_height, 6)
+        self.cpus = self.add_default_value(cpus, 7)
+        self.folder = self.add_default_value(folder, 8) + '/NewAir'
+        self.run_component = self.add_default_value(run, 9)
+
+        # Run checks
+        self.check_inputs()
+
+
+    def get_mesh_data(self):
+        """
+        Extracts the data needed from the mesh.
+        """
+
+        mesh_faces = gh_geo.get_mesh_faces(self.mesh)
+
+        self.area = [rs.MeshArea(face)[1]
+                     for face in mesh_faces]
+
+    def write_files(self):
+        """
+        Write the files.
+        """
+
+        write_folder = self.folder
+        files_written = []
+
+        if not os.path.exists(write_folder):
+            os.mkdir(write_folder)
+
+        # evapotranspiration
+        vapour_file = 'vapour_flux.txt'
+        vapour_obj = open(write_folder + '/' + vapour_file, 'w')
+        for row in self.evapotranspiration:
+            vapour_obj.write(','.join(str(element)
+                                      for element in row)
+                             + '\n'
+                             )
+        vapour_obj.close()
+        files_written.append(vapour_file)
+
+
+        # temperature
+        temp_file = 'temperature.txt'
+        temp_obj = open(write_folder + '/' + temp_file, 'w')
+        temp_obj.write(','.join(str(elem)
+                                for elem in self.air_temperature))
+        temp_obj.close()
+        files_written.append(temp_file)
+
+        # relhum
+        relhum_file = 'relative_humidity.txt'
+        relhum_obj = open(write_folder + '/' + relhum_file, 'w')
+        relhum_obj.write(','.join(str(elem)
+                                  for elem in self.air_relhum))
+        relhum_obj.close()
+        files_written.append(relhum_file)
+
+        # boundary_height and investigation_height
+        height_file = 'heights.txt'
+        height_obj = open(write_folder + '/' + height_file, 'w')
+        height_obj.write(str(self.boundary_height) + '\n'
+                         + str(self.investigation_height))
+        height_obj.close()
+        files_written.append(height_file)
+
+        # area
+        area_file = 'area.txt'
+        area_obj = open(write_folder + '/' + area_file, 'w')
+        area_obj.write(','.join(str(elem)
+                                for elem in self.area))
+        area_obj.close()
+        files_written.append(area_file)
+
+        # cpu
+        cpu_file = 'cpu.txt'
+        cpu_obj = open(write_folder + '/' + cpu_file, 'w')
+        cpu_obj.write(str(self.cpus))
+        cpu_obj.close()
+        files_written.append(cpu_file)
+
+        # Template
+        files_written.append(template.pick_template('new_air', write_folder))
+
+        return True
+
+    def do_case(self):
+        """
+        Runs the case. Spawns a subprocess to run either the local or ssh template.
+        """
+
+        template_to_run = self.folder + '/new_air_conditions_template.py'
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, template_to_run])
+        thread.wait()
+        thread.kill()
+
+        return True
+
+    def load_results(self):
+        """
+        Loads the results from the results files and adds them to self.results.
+        """
+
+        self.results['temperature'], self.results['relative_humidity'], self.results['heat_flux'] = load_new_air_results(self.folder)
+
+        return True
+
+    def run(self):
+        """
+        In case all the checks have passed and run is True the component runs.
+        The following functions are run - in this order.
+        get_mesh_data()
+        convert_units()
+        write_files()
+        do_case()
+        load_results()
+        """
+
+        if self.checks and self.run_component:
+            self.get_mesh_data()
+            self.convert_units()
+            self.write_files()
+            self.do_case()
+            self.load_results()
+
+
+class LoadAirResult(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'ResultFolder',
+                        'description': 'Path to result folder.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'LoadResult',
+                        'description': 'Run component',
+                        'access': 'item',
+                        'default_value': False}}
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+
+                    2: {'name': 'NewRelativeHumidity',
+                        'description': 'New relative humidity in -.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 26
+        self.folder = None
+        self.load = None
+        self.checks = False
+        self.results = {'temperature': [], 'relative_humidity': []}
+        self.result_path = None
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        if self.folder:
+            self.checks = True
+        else:
+            warning = 'Insert result path'
+            self.add_warning(warning)
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, path, load):
+        """
+        Gathers the inputs and checks them.
+        :param path: Path for result folder.
+        :param load: Load results files.
+        """
+
+        # Gather data
+        self.folder = path
+        self.load = self.add_default_value(load, 1)
+
+        # Run checks
+        self.check_inputs()
+
+    def load_result(self):
+        """
+        Loads the results from the results files and adds them to self.results.
+        """
+
+        self.results['temperature'], self.results['relative_humidity'], self.results[
+            'heat_flux'] = load_new_air_results(self.folder)
+
+        return True
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The following functions are run:
+        load_results()
+        The results are converted into a Grasshopper Tree structure.
+        """
+
+        if self.checks and self.load:
+            self.load_result()
+
+
+def load_new_air_results(folder):
+    """
+    Loads the results from the results files and adds them to self.results.
+    """
+
+    temp_results = '/temperature_results.txt'
+    relhum_results = '/relative_humidity_results.txt'
+    heat_results = '/latent_heat_flux_results.txt'
+
+    # Temperature
+    new_temp = open(folder + temp_results, 'r')
+    new_temperature = gh_misc.list_to_tree([[float(element)
+                                             for element in line.strip().split(',')]
+                                            for line in new_temp.readlines()])
+    new_temp.close()
+
+    # Relative Humidity
+    new_relhum = open(folder + relhum_results, 'r')
+    new_relative_humidity = gh_misc.list_to_tree([[float(element)
+                                                   for element in line.strip().split(',')]
+                                                  for line in new_relhum.readlines()])
+    new_relhum.close()
+
+    # Relative Humidity
+    new_heat = open(folder + heat_results, 'r')
+    new_heat_flux = gh_misc.list_to_tree([[float(element)
+                                           for element in line.strip().split(',')]
+                                          for line in new_heat.readlines()])
+    new_relhum.close()
+
+    return (new_temperature, new_relative_humidity, new_heat_flux)
+
+
+class WaterEvaporation(GHComponent):
+
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: {'name': 'Volume',
+                        'description': 'Air volume in m3',
+                        'access': 'item',
+                        'default_value': None},
+
+                    1: {'name': 'Temperature',
+                        'description': 'Air temperature in C',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'Water',
+                        'description': 'Water to be evaporated in kg',
+                        'access': 'item',
+                        'default_value': None},
+
+                    3: {'name': 'FractionOfEvaporation',
+                        'description': 'Fraction of the introduced about of water, which is evaporated.',
+                        'access': 'item',
+                        'default_value': None}}
+
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
+
+                    1: {'name': 'NewTemperature',
+                        'description': 'New temperature in C.'},
+
+                    2: {'name': 'EnergyOfEvaporation',
+                        'description': 'Energy that is needed to evaporate the introduced water in J.'},
+
+                    3: {'name': 'VapourGain',
+                        'description': 'Vapour gain to the air in m3.'}
+                    }
+
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 27
+        self.volume = None
+        self.temperature = None
+        self.water = None
+        self.fraction = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.checks = False
+        self.results = dict()
+
+    def check_inputs(self):
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
+
+        if self.volume and self.temperature and self.water and self.fracture:
+            self.checks = True
+        else:
+            warning = 'Insert missing values'
+            self.add_warning(warning)
+
+    def config(self):
+        """
+        Generates the Grasshopper component.
+        """
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, volume, temperature, water, fraction):
+        """
+        Gathers the inputs and checks them.
+
+        :param volume:
+        :type volume:
+        :param temperature:
+        :type temperature:
+        :param water:
+        :type water:
+        :param fraction:
+        :type fraction:
+        :return:
+        :rtype:
+        """
+
+        # Gather data
+        self.volume = volume
+        self.temperature = temperature
+        self.water = water
+        self.fraction = fraction
+
+        # Run checks
+        self.check_inputs()
+
+    def write(self):
+        gh_ssh.clean_local_folder()
+
+        # Create volume file
+        volume_file = open(gh_ssh.local_path + '/volume.txt', 'w')
+        volume_file.write(','.join([str(v)
+                                    for v in self.volume]))
+        volume_file.close()
+
+        # Create Temperature file
+        temp_file = open(gh_ssh.local_path + '/temperature.txt', 'w')
+        temp_file.write(','.join([str(t)
+                                  for t in self.temperature]))
+        temp_file.close()
+
+        # Create water file
+        water_file = open(gh_ssh.local_path + '/water.txt', 'w')
+        water_file.write(','.join([str(w)
+                                   for w in self.water]))
+        water_file.close()
+
+        # Create fraction file
+        fraction_file = open(gh_ssh.local_path + '/fraction.txt', 'w')
+        fraction_file.write(','.join([str(f)
+                                      for f in self.faction]))
+        fraction_file.close()
+
+        # create template
+        template.pick_template('water_evaporation', gh_ssh.local_path)
+
+        return True
+
+    def evaluate_water_evaporation(self):
+        """
+        Runs the case. Spawns a subprocess to run either the local template.
+        """
+
+        template_to_run = gh_ssh.local_path + '/water_evaporation_template.py'
+
+        # Run template
+        thread = subprocess.Popen([self.py_exe, template_to_run])
+        thread.wait()
+        thread.kill()
+
+        return True
+
+    def load_results(self):
+        # Read Temperature file
+        temp_file = open(gh_ssh.local_path + '/temperature.txt', 'r')
+        temp_lines = temp_file.readlines()
+        temp_file.close()
+        self.results['temperature'] = [float(t.strip())
+                                       for line in temp_lines
+                                       for t in line.split(',')]
+
+        # Read energy file
+        energy_file = open(gh_ssh.local_path + '/energy.txt', 'r')
+        energy_lines = energy_file.readlines()
+        energy_file.close()
+        self.results['energy'] = [float(e.strip())
+                                  for line in energy_lines
+                                  for e in line.split(',')]
+
+        # Read water file
+        vapour_file = open(gh_ssh.local_path + '/vapour.txt', 'r')
+        vapour_lines = vapour_file.readlines()
+        vapour_file.close()
+        self.results['vapour'] = [float(v.strip())
+                                  for line in vapour_lines
+                                  for v in line.split(',')]
+
+        return True
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The following functions are run:
+        load_results()
+        The results are converted into a Grasshopper Tree structure.
+        """
+
+        if self.checks:
+            self.write()
+            self.evaluate_water_evaporation()
+            self.load_results()
