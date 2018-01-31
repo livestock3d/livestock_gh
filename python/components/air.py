@@ -307,7 +307,10 @@ class LoadAirResult(GHComponent):
                         'description': 'New temperature in C.'},
 
                     2: {'name': 'NewRelativeHumidity',
-                        'description': 'New relative humidity in -.'}
+                        'description': 'New relative humidity in %.'},
+
+                    3: {'name': 'Latent Heat Flux',
+                        'description': 'Latent Heat Flux in J/h'}
                     }
 
         self.inputs = inputs()
@@ -316,7 +319,7 @@ class LoadAirResult(GHComponent):
         self.folder = None
         self.load = None
         self.checks = False
-        self.results = {'temperature': [], 'relative_humidity': []}
+        self.results = {'temperature': [], 'relative_humidity': [], 'heat_flux': []}
         self.result_path = None
 
     def check_inputs(self):
