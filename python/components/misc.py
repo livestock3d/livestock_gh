@@ -23,6 +23,7 @@ import scriptcontext as sc
 
 
 class PythonExecutor(GHComponent):
+    # TODO - Check if Python path exists
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
