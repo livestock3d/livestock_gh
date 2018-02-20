@@ -294,7 +294,11 @@ def cfd_ssh_template(path):
 def new_air_conditions(path):
     """
     Writes the new air condition template.
+
     :param path: Path to write it to.
+    :type path: str
+    :return: File name of the template
+    :rtype: str
     """
 
     file_name = r'/new_air_conditions_template.py'

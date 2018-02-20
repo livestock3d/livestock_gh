@@ -23,7 +23,6 @@ import scriptcontext as sc
 
 
 class PythonExecutor(GHComponent):
-    # TODO - Check if Python path exists
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -51,10 +50,10 @@ class PythonExecutor(GHComponent):
         Checks inputs and raises a warning if an input is not the correct type.
         """
 
-        if isinstance(self.py_exe, str):
+        if os.path.exists(self.py_exe):
             self.checks = True
         else:
-            warning = 'Path should be a string'
+            warning = 'Component can not find Python'
             self.add_warning(warning)
 
     def config(self):

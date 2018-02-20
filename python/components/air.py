@@ -289,7 +289,6 @@ class NewAirConditions(GHComponent):
         In case all the checks have passed and run is True the component runs.
         The following functions are run - in this order.
         get_mesh_data()
-        convert_units()
         write_files()
         do_case()
         load_results()
