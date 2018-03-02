@@ -15,6 +15,14 @@ Livestock Grasshopper Component Classes
 
 **Go Back to:**
 
-:ref:`Livestock Frontpage <livestock_pypi:livestock>`
+`Livestock Frontpage`__
 
-:ref:`Livestock Grasshopper <livestock_gh>`
+`Livestock PyPi`__
+
+`Livestock Grasshopper`__
+
+__ https://ocni-dtu.github.io/
+
+__ https://ocni-dtu.github.io/livestock/index.html
+
+__ https://ocni-dtu.github.io/livestock_gh/index.html
