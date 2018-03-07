@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../livestock/livestock/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/../livestock/livestock/docs/.doctrees/environment.pickle" />
-      <change beforePath="$PROJECT_DIR$/../livestock/livestock/docs/.doctrees/ssh.doctree" afterPath="$PROJECT_DIR$/../livestock/livestock/docs/.doctrees/ssh.doctree" />
-      <change beforePath="$PROJECT_DIR$/../livestock/livestock/sphinx/conf.py" afterPath="$PROJECT_DIR$/../livestock/livestock/sphinx/conf.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" />
-      <change beforePath="$PROJECT_DIR$/sphinx/conf.py" afterPath="$PROJECT_DIR$/sphinx/conf.py" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -52,6 +47,7 @@
     <SUITE FILE_PATH="coverage/livestock_gh$air.coverage" NAME="air Coverage Results" MODIFIED="1517481416848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$misc.coverage" NAME="misc Coverage Results" MODIFIED="1511357788729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python/components" />
     <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_sphinx.coverage" NAME="sphinx task in livestock Coverage Results" MODIFIED="1520022911780" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
+    <SUITE FILE_PATH="coverage/livestock_gh$pdf_task_in_livestock.coverage" NAME="pdf task in livestock Coverage Results" MODIFIED="1520456922794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$upload_to_pypi.coverage" NAME="upload_to_pypi Coverage Results" MODIFIED="1517747265496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock/config_livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520284519920" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_layer_results.coverage" NAME="test_layer_results Coverage Results" MODIFIED="1511533123136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
@@ -67,6 +63,7 @@
     <SUITE FILE_PATH="coverage/livestock_gh$test_air.coverage" NAME="test_air Coverage Results" MODIFIED="1517744678669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock/test/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$push_to_grasshopper.coverage" NAME="push_to_grasshopper Coverage Results" MODIFIED="1511876064149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python/tests" />
     <SUITE FILE_PATH="coverage/livestock_gh$Air_Results_No_Water.coverage" NAME="Air_Results_No_Water Coverage Results" MODIFIED="1517476792181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis" />
+    <SUITE FILE_PATH="coverage/livestock_gh$pdf_task_in_grasshopper_.coverage" NAME="pdf task in grasshopper  Coverage Results" MODIFIED="1520457485016" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
     <SUITE FILE_PATH="coverage/livestock_gh$component.coverage" NAME="component Coverage Results" MODIFIED="1511358091551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python/components" />
   </component>
   <component name="DatabaseView">
@@ -82,7 +79,7 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -122,7 +119,7 @@
     </option>
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="ROOT_SYNC" value="SYNC" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../livestock/livestock" />
     <option name="RECENT_COMMON_BRANCH" value="development" />
     <push-targets>
       <push-target-info target-remote="origin" target-branch="master" repo="$PROJECT_DIR$/../livestock_win" source="development" />
@@ -242,8 +239,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -258,17 +253,20 @@
             <path>
               <item name="livestock_gh" type="b2602c69:ProjectViewProjectNode" />
               <item name="livestock_gh" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="sphinx" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="livestock_gh" type="b2602c69:ProjectViewProjectNode" />
               <item name="livestock_gh" type="462c0819:PsiDirectoryNode" />
               <item name="sphinx" type="462c0819:PsiDirectoryNode" />
+              <item name=".build" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -300,17 +298,18 @@
     <option name="myShowDebugConsoleByDefault" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode\Wadi_Result_Analysis" />
-      <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\linux" />
-      <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock_linux" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode\Wadi_Result_Analysis\AirResults" />
       <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode\Wadi_Result_Analysis\ComfortResults" />
       <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode" />
       <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode\Wadi_Result_Analysis" />
       <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock\livestock\test\test" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock\livestock\sphinx\.build" />
+      <recent name="C:\Users\Christian\Dropbox\Uddannelse\DTU\11. semester - Speciale\Python\SpecialeKode\Wadi_Result_Analysis" />
+      <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\linux" />
+      <recent name="C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock_linux" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -325,7 +324,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python docs.sphinx task in grasshopper">
+  <component name="RunManager" selected="Python docs.pdf task in grasshopper ">
     <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -512,7 +511,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="livestock_gh" />
+      <module name="livestock_win" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
       <option name="CLASS_NAME" value="" />
@@ -521,6 +520,40 @@
       <option name="TEST_TYPE" value="TEST_SCRIPT" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
+    </configuration>
+    <configuration name="pdf task in grasshopper " type="docs" factoryName="Sphinx task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="C:\Users\Christian\Miniconda3\envs\livestock_dev\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="livestock_gh" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="docutils_input_file" value="$PROJECT_DIR$/sphinx" />
+      <option name="docutils_output_file" value="$PROJECT_DIR$/sphinx/.build" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="latex" />
+      <option name="docutils_open_in_browser" value="false" />
+    </configuration>
+    <configuration name="pdf task in livestock" type="docs" factoryName="Sphinx task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../livestock/livestock" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="livestock" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="docutils_input_file" value="$PROJECT_DIR$/../livestock/livestock/sphinx" />
+      <option name="docutils_output_file" value="$PROJECT_DIR$/../livestock/livestock/sphinx/.build" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="latex" />
+      <option name="docutils_open_in_browser" value="false" />
     </configuration>
     <configuration name="sphinx task in grasshopper" type="docs" factoryName="Sphinx task">
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -565,7 +598,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="livestock_win" />
+      <module name="livestock_gh" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
       <option name="CLASS_NAME" value="" />
@@ -637,14 +670,16 @@
       <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
-    <list size="7">
+    <list size="9">
       <item index="0" class="java.lang.String" itemvalue="Python docs.sphinx task in livestock" />
-      <item index="1" class="java.lang.String" itemvalue="Python docs.sphinx task in grasshopper" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Air_Results_Optimized_0ms" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Air_Results_Different_Wind_Speeds" />
-      <item index="4" class="java.lang.String" itemvalue="Python.ComfortMetrics - Scatter" />
-      <item index="5" class="java.lang.String" itemvalue="Python.push_to_grasshopper" />
-      <item index="6" class="java.lang.String" itemvalue="Python.get_livestock_components" />
+      <item index="1" class="java.lang.String" itemvalue="Python docs.pdf task in livestock" />
+      <item index="2" class="java.lang.String" itemvalue="Python docs.sphinx task in grasshopper" />
+      <item index="3" class="java.lang.String" itemvalue="Python docs.pdf task in grasshopper " />
+      <item index="4" class="java.lang.String" itemvalue="Python.Air_Results_Optimized_0ms" />
+      <item index="5" class="java.lang.String" itemvalue="Python.Air_Results_Different_Wind_Speeds" />
+      <item index="6" class="java.lang.String" itemvalue="Python.ComfortMetrics - Scatter" />
+      <item index="7" class="java.lang.String" itemvalue="Python.push_to_grasshopper" />
+      <item index="8" class="java.lang.String" itemvalue="Python.get_livestock_components" />
     </list>
     <recent_temporary>
       <list size="5">
@@ -669,13 +704,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
-    </task>
-    <task id="LOCAL-00535" summary="update cmf slope test files">
-      <created>1516362846123</created>
-      <option name="number" value="00535" />
-      <option name="presentableId" value="LOCAL-00535" />
-      <option name="project" value="LOCAL" />
-      <updated>1516362846123</updated>
     </task>
     <task id="LOCAL-00536" summary="updated docs strings, import, removed flatten_list and added todos">
       <created>1516363078124</created>
@@ -1013,7 +1041,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520027558451</updated>
     </task>
-    <option name="localTasksCounter" value="584" />
+    <task id="LOCAL-00584" summary="update the sphinx docs">
+      <created>1520284738981</created>
+      <option name="number" value="00584" />
+      <option name="presentableId" value="LOCAL-00584" />
+      <option name="project" value="LOCAL" />
+      <updated>1520284738982</updated>
+    </task>
+    <option name="localTasksCounter" value="585" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1034,9 +1069,9 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6365132" sideWeight="0.48347548" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3206522" sideWeight="0.48347548" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.53369564" sideWeight="0.48134327" order="2" side_tool="false" content_ui="tabs" x="1920" y="23" width="1280" height="961" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30652174" sideWeight="0.4978678" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30652174" sideWeight="0.4978678" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13859275" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16577825" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1673774" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4488273" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" x="217" y="135" width="1267" height="775" />
@@ -1170,41 +1205,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes/WaterVolumes_Sprinkler_Local.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-709">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/wind_profile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="42" lean-forward="false" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/ComfortResults/Comfort_Results_Sprinkler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="21" lean-forward="true" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Weather Analysis/Abu_Dhabi.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="634">
-          <caret line="339" column="0" lean-forward="true" selection-start-line="339" selection-start-column="0" selection-end-line="339" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Rename _UTCI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/ComfortResults/Comfort_Results_Optimized_0ms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1467,10 +1467,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1649">
           <caret line="193" column="91" lean-forward="false" selection-start-line="193" selection-start-column="91" selection-end-line="193" selection-end-column="91" />
-          <folding>
-            <element signature="e#775#1660#0" expanded="false" />
-            <element signature="e#1725#2803#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1478,7 +1474,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1494,7 +1489,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1502,7 +1496,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1510,7 +1503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
           <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1518,6 +1510,46 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
           <caret line="49" column="36" lean-forward="true" selection-start-line="49" selection-start-column="36" selection-end-line="49" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinxmulticell.sty">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="30" lean-forward="true" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinxmanual.cls">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinxhowto.cls">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinxhighlight.sty">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinx.sty">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
