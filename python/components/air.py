@@ -25,6 +25,8 @@ import livestock.lib.templates as template
 
 class NewAirConditions(GHComponent):
 
+    """A component class that runs the Atmosphere Model from the thesis of Christian Kongsgaard."""
+
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
@@ -107,6 +109,7 @@ class NewAirConditions(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 24
+        self.description = 'Atmosphere Model from the thesis of Christian Kongsgaard.'
         self.mesh = None
         self.evapotranspiration = None
         self.heat_flux = None
@@ -126,16 +129,12 @@ class NewAirConditions(GHComponent):
                         'vapour_flux': []}
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -175,9 +174,7 @@ class NewAirConditions(GHComponent):
 
 
     def get_mesh_data(self):
-        """
-        Extracts the data needed from the mesh.
-        """
+        """Extracts the data needed from the mesh."""
 
         mesh_faces = gh_geo.get_mesh_faces(self.mesh)
 
@@ -185,9 +182,7 @@ class NewAirConditions(GHComponent):
                      for face in mesh_faces]
 
     def write_files(self):
-        """
-        Write the files.
-        """
+        """Write the files."""
 
         write_folder = self.folder
         files_written = []
@@ -260,9 +255,7 @@ class NewAirConditions(GHComponent):
         return True
 
     def do_case(self):
-        """
-        Runs the case. Spawns a subprocess to run either the local or ssh template.
-        """
+        """Runs the case. Spawns a subprocess to run either the local or ssh template."""
 
         template_to_run = self.folder + '/new_air_conditions_template.py'
 
@@ -274,9 +267,7 @@ class NewAirConditions(GHComponent):
         return True
 
     def load_results(self):
-        """
-        Loads the results from the results files and adds them to self.results.
-        """
+        """Loads the results from the results files and adds them to self.results."""
 
         self.results['temperature'], \
         self.results['relative_humidity'], \
@@ -286,12 +277,13 @@ class NewAirConditions(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed and run is True the component runs.
-        The following functions are run - in this order.
-        get_mesh_data()
-        write_files()
-        do_case()
-        load_results()
+        | In case all the checks have passed and run is True the component runs.
+        | The following functions are run - in this order.
+        | get_mesh_data()
+        | write_files()
+        | do_case()
+        | load_results()
+
         """
 
         if self.checks and self.run_component:
@@ -302,6 +294,8 @@ class NewAirConditions(GHComponent):
 
 
 class LoadAirResult(GHComponent):
+
+    """A component class that loads the results from Livestock New Air Conditions."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -333,6 +327,7 @@ class LoadAirResult(GHComponent):
 
         self.inputs = inputs()
         self.outputs = outputs()
+        self.description = 'Load the results from Livestock New Air Conditions'
         self.component_number = 26
         self.folder = None
         self.load = None
@@ -344,9 +339,7 @@ class LoadAirResult(GHComponent):
         self.result_path = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.folder:
             self.checks = True
@@ -355,9 +348,7 @@ class LoadAirResult(GHComponent):
             self.add_warning(warning)
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -365,6 +356,7 @@ class LoadAirResult(GHComponent):
     def run_checks(self, path, load):
         """
         Gathers the inputs and checks them.
+
         :param path: Path for result folder.
         :param load: Load results files.
         """
@@ -377,9 +369,7 @@ class LoadAirResult(GHComponent):
         self.check_inputs()
 
     def load_result(self):
-        """
-        Loads the results from the results files and adds them to self.results.
-        """
+        """Loads the results from the results files and adds them to self.results."""
 
         self.results['temperature'], self.results['relative_humidity'], self.results[
             'heat_flux'] = load_new_air_results(self.folder)
@@ -388,10 +378,11 @@ class LoadAirResult(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        The following functions are run:
-        load_results()
-        The results are converted into a Grasshopper Tree structure.
+        | In case all the checks have passed the component runs.
+        | The following functions are run:
+        | load_results()
+        | The results are converted into a Grasshopper Tree structure.
+
         """
 
         if self.checks and self.load:
@@ -399,9 +390,7 @@ class LoadAirResult(GHComponent):
 
 
 def load_new_air_results(folder):
-    """
-    Loads the results from the results files and adds them to self.results.
-    """
+    """Loads the results from the results files and adds them to self.results."""
 
     temp_results = '/temperature_results.txt'
     relhum_results = '/relative_humidity_results.txt'

@@ -43,43 +43,146 @@
             
   <div class="section" id="module-livestock.components.comfort">
 <span id="comfort"></span><h1>3 | Comfort<a class="headerlink" href="#module-livestock.components.comfort" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="livestock.components.comfort.AdaptiveClothing">
-<em class="property">class </em><code class="descclassname">livestock.components.comfort.</code><code class="descname">AdaptiveClothing</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-livestock.components.air"></span><dl class="class">
+<dt id="livestock.components.air.LoadAirResult">
+<em class="property">class </em><code class="descclassname">livestock.components.air.</code><code class="descname">LoadAirResult</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that loads the results from Livestock New Air Conditions.</p>
 <dl class="method">
-<dt id="livestock.components.comfort.AdaptiveClothing.check_inputs">
-<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dt id="livestock.components.air.LoadAirResult.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult.check_inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="livestock.components.comfort.AdaptiveClothing.config">
-<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.config" title="Permalink to this definition">¶</a></dt>
+<dt id="livestock.components.air.LoadAirResult.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult.config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the Grasshopper component.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="livestock.components.comfort.AdaptiveClothing.insulation_clothing">
-<code class="descname">insulation_clothing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing.insulation_clothing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.insulation_clothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the clothing isolation in clo for a given outdoor temperature.
-Source: Havenith et al. - 2012 - “The UTCI-clothing model”</p>
+<dt id="livestock.components.air.LoadAirResult.load_result">
+<code class="descname">load_result</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult.load_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult.load_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the results from the results files and adds them to self.results.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="livestock.components.comfort.AdaptiveClothing.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed and run is True the component runs.
-It runs the insulation_clothing() function.</p>
+<dt id="livestock.components.air.LoadAirResult.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult.run" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">The following functions are run:</div>
+<div class="line">load_results()</div>
+<div class="line">The results are converted into a Grasshopper Tree structure.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
-<dt id="livestock.components.comfort.AdaptiveClothing.run_checks">
-<code class="descname">run_checks</code><span class="sig-paren">(</span><em>temp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comfort.html#AdaptiveClothing.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comfort.AdaptiveClothing.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param temp: Outdoor temperature.</p>
+<dt id="livestock.components.air.LoadAirResult.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>load</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#LoadAirResult.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.LoadAirResult.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – Path for result folder.</li>
+<li><strong>load</strong> – Load results files.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="livestock.components.air.NewAirConditions">
+<em class="property">class </em><code class="descclassname">livestock.components.air.</code><code class="descname">NewAirConditions</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that runs the Atmosphere Model from the thesis of Christian Kongsgaard.</p>
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.check_inputs">
+<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.config">
+<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the Grasshopper component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.do_case">
+<code class="descname">do_case</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.do_case"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.do_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the case. Spawns a subprocess to run either the local or ssh template.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.get_mesh_data">
+<code class="descname">get_mesh_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.get_mesh_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.get_mesh_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the data needed from the mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.load_results">
+<code class="descname">load_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.load_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.load_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the results from the results files and adds them to self.results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.run" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed and run is True the component runs.</div>
+<div class="line">The following functions are run - in this order.</div>
+<div class="line">get_mesh_data()</div>
+<div class="line">write_files()</div>
+<div class="line">do_case()</div>
+<div class="line">load_results()</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.run_checks">
+<code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>evapotranspiration</em>, <em>temperature</em>, <em>relhum</em>, <em>wind_speed</em>, <em>boundary_height</em>, <em>investigation_height</em>, <em>cpus</em>, <em>folder</em>, <em>run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.run_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mesh</strong> – Surface mesh.</li>
+<li><strong>evapotranspiration</strong> – Vapour flux</li>
+<li><strong>temperature</strong> – Outdoor temperature</li>
+<li><strong>relhum</strong> – Relative humidity</li>
+<li><strong>wind_speed</strong> – Wind speed</li>
+<li><strong>boundary_height</strong> – Height of the air columns.</li>
+<li><strong>investigation_height</strong> – Investigation height</li>
+<li><strong>cpus</strong> – Number of CPUs</li>
+<li><strong>folder</strong> – Folder where the result files should be saved.</li>
+<li><strong>run</strong> – Whether or not to run the component.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="livestock.components.air.NewAirConditions.write_files">
+<code class="descname">write_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#NewAirConditions.write_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.NewAirConditions.write_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the files.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="livestock.components.air.load_new_air_results">
+<code class="descclassname">livestock.components.air.</code><code class="descname">load_new_air_results</code><span class="sig-paren">(</span><em>folder</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/air.html#load_new_air_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.air.load_new_air_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the results from the results files and adds them to self.results.</p>
 </dd></dl>
 
 <p><strong>Go Back to:</strong></p>

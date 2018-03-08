@@ -3,7 +3,10 @@
 
 .. automodule:: livestock.components.comfort
     :members:
-    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: livestock.components.air
+    :members:
     :show-inheritance:
 
 **Go Back to:**
