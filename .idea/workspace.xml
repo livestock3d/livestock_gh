@@ -746,13 +746,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00547" summary="added Load Air Results component">
-      <created>1516455468595</created>
-      <option name="number" value="00547" />
-      <option name="presentableId" value="LOCAL-00547" />
-      <option name="project" value="LOCAL" />
-      <updated>1516455468595</updated>
-    </task>
     <task id="LOCAL-00548" summary="updated sphinx docs">
       <created>1516457791512</created>
       <option name="number" value="00548" />
@@ -1089,7 +1082,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520530581710</updated>
     </task>
-    <option name="localTasksCounter" value="596" />
+    <task id="LOCAL-00596" summary="updated the main livestock page">
+      <created>1520530754833</created>
+      <option name="number" value="00596" />
+      <option name="presentableId" value="LOCAL-00596" />
+      <option name="project" value="LOCAL" />
+      <updated>1520530754833</updated>
+    </task>
+    <option name="localTasksCounter" value="597" />
     <servers />
   </component>
   <component name="TodoView">
