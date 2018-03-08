@@ -25,7 +25,10 @@ import livestock.lib.templates as template
 
 class NewAirConditions(GHComponent):
 
-    """A component class that runs the Atmosphere Model from the thesis of Christian Kongsgaard."""
+    """
+    A component class that computes a new air temperature and relative humidity with the
+    Atmosphere Model from the thesis of Christian Kongsgaard.
+    """
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -109,7 +112,7 @@ class NewAirConditions(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 24
-        self.description = 'Atmosphere Model from the thesis of Christian Kongsgaard.'
+        self.description = 'Computes new air temperature and relative humidity with the Atmosphere Model from the thesis of Christian Kongsgaard.'
         self.mesh = None
         self.evapotranspiration = None
         self.heat_flux = None

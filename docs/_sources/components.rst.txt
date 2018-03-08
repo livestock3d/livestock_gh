@@ -1,5 +1,3 @@
-.. _components:
-
 Livestock Grasshopper Components
 ================================
 
@@ -11,16 +9,16 @@ Livestock Grasshopper Components
 :Description: | Path to python executor.
 
 :Inputs:
-    :1.:    :Name: PythonPath
+    :0.:    :Name: PythonPath
             :Description: Path to python.exe
             :Data Access: Item
             :Default Value: | None
 
 :Outputs:
-    :1.:    :Name: readMe!
+    :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
-    :2.:    :Name: BoundaryCondition
+    :1.:    :Name: BoundaryCondition
             :Description: | Livestock Boundary Conditions.
 
 **Livestock SSH Connection**
@@ -28,28 +26,28 @@ Livestock Grasshopper Components
 :Description: | Setup SSH connection.
               | Icon based on art from Arthur Shlain from the Noun Project.
 :Inputs:
-    :1.:    :Name: IP
+    :0.:    :Name: IP
             :Description: IP Address for SSH connection.
             :Data Access: Item
             :Default Value: | None
 
-    :2.:    :Name: Port
+    :1.:    :Name: Port
             :Description: Port for SSH connection.
             :Data Access: Item
             :Default Value: | None
 
-    :3.:    :Name: Username
+    :2.:    :Name: Username
             :Description: Username for SSH connection.
             :Data Access: Item
             :Default Value: | None
 
-    :4.:    :Name: Password
+    :3.:    :Name: Password
             :Description: Password for SSH connection.
             :Data Access: Item
             :Default Value: | None
 
 :Outputs:
-    :1.:    :Name: readMe!
+    :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
 1 | Geometry
@@ -60,24 +58,24 @@ Livestock Grasshopper Components
 :Description: Loads a mesh.
 
 :Inputs:
-    :1.:    :Name: Filename
+    :0.:    :Name: Filename
             :Description: Directory and file name of mesh.
             :Data Access: Item
             :Default Value: | None
 
-    :2.:    :Name: Load
+    :1.:    :Name: Load
             :Description: Activates the component.
             :Data Access: Item
             :Default Value: | False
 
 :Outputs:
-    :1.:    :Name: readMe!
+    :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
-    :2.:    :Name: Mesh
+    :1.:    :Name: Mesh
             :Description: | Loaded mesh.
 
-    :3.:    :Name: MeshData
+    :2.:    :Name: MeshData
             :Description: | Additional data if any.
 
 **Livestock Save Mesh**
@@ -85,36 +83,36 @@ Livestock Grasshopper Components
 :Description: Saves a mesh and additional data
 
 :Inputs:
-    :1.:    :Name: Mesh
+    :0.:    :Name: Mesh
             :Description: Mesh to save.
             :Data Access: Item
             :Default Value: | None
 
-    :2.:    :Name: Data
+    :1.:    :Name: Data
             :Description: Additional data if any.
             :Data Access: Item
             :Default Value: | None
 
-    :3.:    :Name: Directory
+    :2.:    :Name: Directory
             :Description: File path to save mesh to.
             :Data Access: Item
             :Default Value: | None
 
-    :4.:    :Name: Filename
+    :3.:    :Name: Filename
             :Description: File name.
             :Data Access: Item
             :Default Value: | None
 
-    :5.:    :Name: Save
+    :4.:    :Name: Save
             :Description: Activates the component.
             :Data Access: Item
             :Default Value: | False
 
 :Outputs:
-    :1.:    :Name: readMe!
+    :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
-3 | CMF
+2 | CMF
 -------
 
 **Livestock CMF Ground**
@@ -123,33 +121,38 @@ Livestock Grasshopper Components
               | Icon art based created by Ben Davis from the Noun Project.
 
 :Inputs:
-    :1.:    :Name: Layers
+    :0.:    :Name: Layers
             :Description: Soil layers to add to the mesh in m.
-            :Data Access: Item
+            :Data Access: List
             :Default Value: | 0
 
-    :2.:    :Name: RetentionCurve
+    :1.:    :Name: RetentionCurve
             :Description: Livestock CMF Retention Curve.
             :Data Access: Item
             :Default Value: | None
 
-    :3.:    :Name: VegetationProperties
+    :2.:    :Name: VegetationProperties
             :Description: Input from Livestock CMF Vegetation Properties.
             :Data Access: Item
             :Default Value: | None
 
-    :4.:    :Name: SaturatedDepth
+    :3.:    :Name: SaturatedDepth
             :Description: Initial saturated depth in m. It is depth where the groundwater is located. Default is set
                           to 3m.
             :Data Access: Item
             :Default Value: | 3
 
-    :5.:    :Name: FaceIndices
+    :4.:    :Name: SurfaceWaterVolume
+            :Description: Initial surface water volume in m\ :sup:`3`. Default is set to 0 m\ :sup:`3`.
+            :Data Access: List
+            :Default Value: | None
+
+    :4.:    :Name: FaceIndices
             :Description: List of face indices, on where the ground properties are applied.
             :Data Access: List
             :Default Value: | None
 
-    :6.:    :Name: ETMethod
+    :5.:    :Name: ETMethod
             :Description: | Set method to calculate evapotranspiration.
                           | 0: No evapotranspiration.
                           | 1: Penman-Monteith.
@@ -158,12 +161,12 @@ Livestock Grasshopper Components
             :Data Access: Item
             :Default Value: | 2
 
-    :7.:    :Name: Manning
+    :6.:    :Name: Manning
             :Description: Set Manning roughness. If not set CMF calculates it from the above given values.
             :Data Access: Item
             :Default Value: | None
 
-    :8.:    :Name: PuddleDepth
+    :7.:    :Name: PuddleDepth
             :Description: Set puddle depth. Puddle depth is the height were run-off begins.
             :Data Access: Item
             :Default Value: | 0.01
@@ -687,7 +690,7 @@ Livestock Grasshopper Components
     :4.:    :Name: CSVPath
             :Description: | Path to csv file.
 
-4 | Comfort
+3 | Comfort
 -----------
 
 **Livestock New Air Conditions**
@@ -759,24 +762,6 @@ Livestock Grasshopper Components
     :3.:    :Name: NewRelativeHumidity
             :Description: | New relative humidity in -.
 
-**Livestock Adaptive Clothing**
-
-:Description:
-    | Computes the clothing isolation in clo for a given outdoor temperature.
-    | Source: Havenith et al. - 2012 - "The UTCI-clothing model"
-
-:Inputs:
-    :1.:    :Name: Temperature
-            :Description: Temperature in C
-            :Data Access: List
-            :Default Value: | None
-
-:Outputs:
-    :1.:    :Name: readMe!
-            :Description: | In case of any errors, it will be shown here.
-
-    :2.:    :Name: ClothingValue
-            :Description: | Calculated clothing value in clo.
 
 **Go Back to:**
 

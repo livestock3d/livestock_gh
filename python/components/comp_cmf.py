@@ -74,7 +74,7 @@ class CMFGround(GHComponent):
                                        '0: No evapotranspiration\n'
                                        '1: Penman-Monteith\n'
                                        '2: Shuttleworth-Wallace\n'
-                                       'Default is set to Shuttleworth-Wallace',
+                                       'Default is set to no evapotranspiration',
                         'access': 'item',
                         'default_value': 0},
 
@@ -609,10 +609,12 @@ class CMFSyntheticTree(GHComponent):
                         'description': 'Mesh face index where tree is placed',
                         'access': 'item',
                         'default_value': None},
+
                     1: {'name': 'TreeType',
-                        'description': 'Tree types: 0 - Deciduous, 1 - Coniferous, 2 - Shrubs. Default is deciduous',
+                        'description': 'Tree types: 0 - Deciduous. Default is deciduous',
                         'access': 'item',
                         'default_value': 0},
+
                     2: {'name': 'Height',
                         'description': 'Height of tree in meters. Default is set to 10m',
                         'access': 'item',
@@ -621,10 +623,13 @@ class CMFSyntheticTree(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Units',
                         'description': 'Shows the units of the tree values'},
+
                     2: {'name': 'TreeValues',
                         'description': 'Chosen tree properties values'},
+
                     3: {'name': 'TreeProperties',
                         'description': 'Livestock tree properties data'}}
 
@@ -768,10 +773,13 @@ class CMFRetentionCurve(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Units',
                         'description': 'Shows the units of the curve values'},
+
                     2: {'name': 'CurveValues',
                         'description': 'Chosen curve properties values'},
+
                     3: {'name': 'RetentionCurve',
                         'description': 'Livestock Retention Curve'}}
 
@@ -1315,9 +1323,10 @@ class CMFResults(GHComponent):
 
         def inputs():
             return {0: {'name': 'ResultFolder',
-                        'description': 'Path to result folder. Accepts output from Livestock Solve',
+                        'description': 'Path to result folder. Accepts output from Livestock Solve.',
                         'access': 'item',
                         'default_value': None},
+
                     1: {'name': 'FetchResult',
                         'description': 'Choose which result should be loaded:'
                                        '\n0 - Evapotranspiration'
@@ -1332,10 +1341,12 @@ class CMFResults(GHComponent):
                                        '\n9 - Soil layer wetness',
                         'access': 'item',
                         'default_value': 0},
+
                     2: {'name': 'SaveCSV',
                         'description': 'Save the values as a csv file - Default is set to False',
                         'access': 'item',
                         'default_value': False},
+
                     3: {'name': 'Run',
                         'description': 'Run component',
                         'access': 'item',
