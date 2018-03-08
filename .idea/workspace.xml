@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/background.md" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/index.md" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/index.md" />
+      <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" />
+      <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -83,15 +82,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="install.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="install.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="476">
-                <caret line="28" column="24" lean-forward="true" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
+              <first_editor relative-caret-position="544">
+                <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
                 <folding />
               </first_editor>
               <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_config.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -109,12 +118,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/index.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="221">
-                <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <first_editor relative-caret-position="459">
+                <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -181,7 +190,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes_Sprinkler_Local.py" />
         <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes_Sprinkler.py" />
         <option value="$PROJECT_DIR$/../livestock/livestock/hydrology.py" />
         <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/Comfort_Results_Sprinkler.py" />
@@ -230,8 +238,9 @@
         <option value="$PROJECT_DIR$/python/components/misc.py" />
         <option value="$PROJECT_DIR$/sphinx/components.rst" />
         <option value="$PROJECT_DIR$/../ocni-dtu.github.io/background.md" />
-        <option value="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
         <option value="$PROJECT_DIR$/../ocni-dtu.github.io/index.md" />
+        <option value="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" />
+        <option value="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
       </list>
     </option>
   </component>
@@ -738,13 +747,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00545" summary="updated version of New Air Conditions">
-      <created>1516447028405</created>
-      <option name="number" value="00545" />
-      <option name="presentableId" value="LOCAL-00545" />
-      <option name="project" value="LOCAL" />
-      <updated>1516447028405</updated>
-    </task>
     <task id="LOCAL-00546" summary="update to doc strings">
       <created>1516455433283</created>
       <option name="number" value="00546" />
@@ -1081,7 +1083,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520511971288</updated>
     </task>
-    <option name="localTasksCounter" value="594" />
+    <task id="LOCAL-00594" summary="updated the main livestock page">
+      <created>1520514403029</created>
+      <option name="number" value="00594" />
+      <option name="presentableId" value="LOCAL-00594" />
+      <option name="project" value="LOCAL" />
+      <updated>1520514403029</updated>
+    </task>
+    <option name="localTasksCounter" value="595" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1202,7 +1211,6 @@
       <path value="$PROJECT_DIR$/../livestock_linux/livestock_linux" />
       <path value="$PROJECT_DIR$/../livestock_win/livestock_win" />
     </ignored-roots>
-    <MESSAGE value="minor bug fixes" />
     <MESSAGE value="renamed folder" />
     <MESSAGE value="edited doc string" />
     <MESSAGE value="updated version of New Air Conditions" />
@@ -1227,7 +1235,8 @@
     <MESSAGE value="added todo" />
     <MESSAGE value="minor updates" />
     <MESSAGE value="update the sphinx docs" />
-    <option name="LAST_COMMIT_MESSAGE" value="update the sphinx docs" />
+    <MESSAGE value="updated the main livestock page" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the main livestock page" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1239,13 +1248,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/ComfortResults/Comfort_Compared.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="668">
-          <caret line="142" column="0" lean-forward="false" selection-start-line="142" selection-start-column="0" selection-end-line="148" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/ComfortMetrics - Scatter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="447">
@@ -1551,6 +1553,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/index.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="459">
+            <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/background.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -1562,22 +1575,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="476">
-            <caret line="28" column="24" lean-forward="true" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
-            <folding />
-          </first_editor>
-          <second_editor />
+    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/index.md">
+    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="221">
-            <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <first_editor relative-caret-position="544">
+            <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
             <folding />
           </first_editor>
           <second_editor />
