@@ -3,15 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/components.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/components.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/components.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/components.rst.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/components.html" afterPath="$PROJECT_DIR$/docs/components.html" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" afterPath="$PROJECT_DIR$/docs/index.html" />
-      <change beforePath="$PROJECT_DIR$/docs/objects.inv" afterPath="$PROJECT_DIR$/docs/objects.inv" />
-      <change beforePath="$PROJECT_DIR$/docs/searchindex.js" afterPath="$PROJECT_DIR$/docs/searchindex.js" />
-      <change beforePath="$PROJECT_DIR$/python/components/air.py" afterPath="$PROJECT_DIR$/python/components/air.py" />
-      <change beforePath="$PROJECT_DIR$/python/components/comp_cmf.py" afterPath="$PROJECT_DIR$/python/components/comp_cmf.py" />
+      <change beforePath="$PROJECT_DIR$/python/components/misc.py" afterPath="$PROJECT_DIR$/python/components/misc.py" />
       <change beforePath="$PROJECT_DIR$/sphinx/components.rst" afterPath="$PROJECT_DIR$/sphinx/components.rst" />
     </list>
     <ignored path=".idea/" />
@@ -89,14 +81,14 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.48236048">
       <split-first>
         <leaf>
           <file leaf-file-name="components.rst" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="314">
-                  <caret line="749" column="14" lean-forward="true" selection-start-line="749" selection-start-column="14" selection-end-line="749" selection-end-column="64" />
+                <state relative-caret-position="1224">
+                  <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -109,8 +101,8 @@
           <file leaf-file-name="comp_cmf.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="229">
-                  <caret line="596" column="81" lean-forward="true" selection-start-line="596" selection-start-column="81" selection-end-line="596" selection-end-column="81" />
+                <state relative-caret-position="498">
+                  <caret line="1763" column="65" lean-forward="true" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
                   <folding>
                     <element signature="e#857#8946#0" expanded="false" />
                     <element signature="e#5118#5223#0" expanded="false" />
@@ -160,20 +152,15 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="air.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/python/components/air.py">
+          <file leaf-file-name="misc.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/python/components/misc.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="250">
-                  <caret line="34" column="0" lean-forward="true" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+                <state relative-caret-position="714">
+                  <caret line="333" column="40" lean-forward="true" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
                   <folding>
-                    <element signature="e#5226#5331#0" expanded="false" />
-                    <element signature="e#5363#5488#0" expanded="false" />
-                    <element signature="e#5661#6834#0" expanded="false" />
-                    <element signature="e#6874#7062#0" expanded="false" />
-                    <element signature="e#7099#9512#0" expanded="false" />
-                    <element signature="e#9545#9856#0" expanded="false" />
-                    <element signature="e#9894#10147#0" expanded="false" />
-                    <element signature="e#10176#10598#0" expanded="false" />
+                    <element signature="e#666#2447#0" expanded="false" />
+                    <element signature="e#2489#6222#0" expanded="false" />
+                    <element signature="e#6259#9414#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -276,7 +263,6 @@
         <option value="$PROJECT_DIR$/sphinx/conf.py" />
         <option value="$PROJECT_DIR$/sphinx/superclass.rst" />
         <option value="$PROJECT_DIR$/python/components/component.py" />
-        <option value="$PROJECT_DIR$/python/components/misc.py" />
         <option value="$PROJECT_DIR$/sphinx/miscellaneous.rst" />
         <option value="$PROJECT_DIR$/python/components/geometry.py" />
         <option value="$PROJECT_DIR$/sphinx/geometry.rst" />
@@ -289,8 +275,9 @@
         <option value="$PROJECT_DIR$/python/lib/misc.py" />
         <option value="$PROJECT_DIR$/python/lib/ssh.py" />
         <option value="$PROJECT_DIR$/python/components/comp_cmf.py" />
-        <option value="$PROJECT_DIR$/sphinx/components.rst" />
         <option value="$PROJECT_DIR$/python/components/air.py" />
+        <option value="$PROJECT_DIR$/python/components/misc.py" />
+        <option value="$PROJECT_DIR$/sphinx/components.rst" />
       </list>
     </option>
   </component>
@@ -829,13 +816,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00541" summary="added more tests">
-      <created>1516376871939</created>
-      <option name="number" value="00541" />
-      <option name="presentableId" value="LOCAL-00541" />
-      <option name="project" value="LOCAL" />
-      <updated>1516376871939</updated>
-    </task>
     <task id="LOCAL-00542" summary="minor bug fixes">
       <created>1516437826939</created>
       <option name="number" value="00542" />
@@ -1172,7 +1152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520507860521</updated>
     </task>
-    <option name="localTasksCounter" value="590" />
+    <task id="LOCAL-00590" summary="update the sphinx docs">
+      <created>1520510175898</created>
+      <option name="number" value="00590" />
+      <option name="presentableId" value="LOCAL-00590" />
+      <option name="project" value="LOCAL" />
+      <updated>1520510175898</updated>
+    </task>
+    <option name="localTasksCounter" value="591" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1330,13 +1317,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/AirResults/Air_Results_Optimized_0ms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2482">
-          <caret line="152" column="55" lean-forward="false" selection-start-line="152" selection-start-column="55" selection-end-line="152" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/AirResults/Air_Results_Different_Wind_Speeds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
@@ -1507,17 +1487,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/components/misc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding>
-            <element signature="e#6259#9414#0" expanded="false" />
-            <element signature="e#9453#11263#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sphinx/miscellaneous.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -1677,10 +1646,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/python/components/air.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="307" column="62" lean-forward="false" selection-start-line="307" selection-start-column="40" selection-end-line="307" selection-end-column="62" />
+          <folding>
+            <element signature="e#759#10598#0" expanded="false" />
+            <element signature="e#5226#5331#0" expanded="false" />
+            <element signature="e#5363#5488#0" expanded="false" />
+            <element signature="e#5661#6834#0" expanded="false" />
+            <element signature="e#6874#7062#0" expanded="false" />
+            <element signature="e#7099#9512#0" expanded="false" />
+            <element signature="e#9545#9856#0" expanded="false" />
+            <element signature="e#9894#10147#0" expanded="false" />
+            <element signature="e#10176#10598#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="596" column="81" lean-forward="true" selection-start-line="596" selection-start-column="81" selection-end-line="596" selection-end-column="81" />
+        <state relative-caret-position="498">
+          <caret line="1763" column="65" lean-forward="true" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
           <folding>
             <element signature="e#857#8946#0" expanded="false" />
             <element signature="e#5118#5223#0" expanded="false" />
@@ -1729,28 +1716,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
+    <entry file="file://$PROJECT_DIR$/python/components/rain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="749" column="14" lean-forward="true" selection-start-line="749" selection-start-column="14" selection-end-line="749" selection-end-column="64" />
+        <state relative-caret-position="-1794">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/components/air.py">
+    <entry file="file://$PROJECT_DIR$/python/components/misc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="34" column="0" lean-forward="true" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        <state relative-caret-position="714">
+          <caret line="333" column="40" lean-forward="true" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
           <folding>
-            <element signature="e#5226#5331#0" expanded="false" />
-            <element signature="e#5363#5488#0" expanded="false" />
-            <element signature="e#5661#6834#0" expanded="false" />
-            <element signature="e#6874#7062#0" expanded="false" />
-            <element signature="e#7099#9512#0" expanded="false" />
-            <element signature="e#9545#9856#0" expanded="false" />
-            <element signature="e#9894#10147#0" expanded="false" />
-            <element signature="e#10176#10598#0" expanded="false" />
+            <element signature="e#666#2447#0" expanded="false" />
+            <element signature="e#2489#6222#0" expanded="false" />
+            <element signature="e#6259#9414#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -329,6 +329,7 @@ class HourToDate(GHComponent):
         def outputs():
             return {0: {'name': 'readMe!',
                         'description': 'In case of any errors, it will be shown here.'},
+
                     1: {'name': 'Date',
                         'description': 'Converted Date.'}
                     }

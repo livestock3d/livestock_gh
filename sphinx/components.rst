@@ -50,6 +50,22 @@ Livestock Grasshopper Components
     :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
+**Livestock Hour To Date**
+
+:Description: Convert a hour of the year into a date on the format: DD MMM HH:mm.
+:Inputs:
+    :0.:    :Name: Hour
+            :Description: Hour of the year.
+            :Data Access: Item
+            :Default Value: | 0
+
+:Outputs:
+    :0.:    :Name: readMe!
+            :Description: | In case of any errors, it will be shown here.
+
+    :1.:    :Name: Date
+            :Description: | Converted Date.
+
 1 | Geometry
 ------------
 
@@ -747,73 +763,110 @@ Livestock Grasshopper Components
 
 **Livestock New Air Conditions**
 
-:Description: Computes new air temperature and relative humidity
+:Description: Computes a new air temperature and relative humidity with the Atmosphere Model from the thesis of Christian Kongsgaard
 
 :Inputs:
-    :1.:    :Name: Mesh
+    :0.:    :Name: Mesh
             :Description: Ground Mesh
             :Data Access: Item
             :Default Value: | None
 
-    :2.:    :Name: Evapotranspiration
+    :1.:    :Name: Evapotranspiration
             :Description: Evapotranspiration in m\ :sup:`3`\/day.
                           Each tree branch should represent one time unit, with all the cell values to that time.
             :Data Access: Tree
             :Default Value: | None
 
-    :3.:    :Name: HeatFlux
-            :Description: HeatFlux in MJ/m\ :sup:`2`\day.
-                          Each tree branch should represent one time unit, with all the cell values to that time.
-            :Data Access: Tree
-            :Default Value: | None
-
-    :4.:    :Name: AirTemperature
+    :2.:    :Name: AirTemperature
             :Description: Air temperature in C
             :Data Access: List
             :Default Value: | None
 
-    :5.:    :Name: AirRelativeHumidity
+    :3.:    :Name: AirRelativeHumidity
             :Description: Relative Humidity in -
             :Data Access: List
             :Default Value: | None
 
-    :6.:    :Name: AirBoundaryHeight
+    :4.:    :Name: WindSpeed
+            :Description: Wind speed in m/s
+            :Data Access: List
+            :Default Value: | None
+
+    :5.:    :Name: AirBoundaryHeight
             :Description: Top of the air column in m. Default is set to 10m.
             :Data Access: Item
             :Default Value: | 10
 
-    :7.:    :Name: InvestigationHeight
+    :6.:    :Name: InvestigationHeight
             :Description: Height at which the new air temperature and relative humidity should be calculated.
                           Default is set to 1.1m.
             :Data Access: Item
             :Default Value: | 1.1
 
-    :8.:    :Name: CPUs
+    :7.:    :Name: CPUs
             :Description: Number of CPUs to perform the computations on. Default is set to 2
             :Data Access: Item
             :Default Value: | 2
 
-    :9.:    :Name: ThroughSSH
-            :Description: If the computation should be run through SSH. Default is set to False
+    :8.:    :Name: ResultFolder
+            :Description: Folder where the result files should be saved
             :Data Access: Item
             :Default Value: | False
 
-    :10.:
+    :9.:
             :Name: Run
             :Description: Run the component
             :Data Access: Item
             :Default Value: | False
 
 :Outputs:
-    :1.:    :Name: readMe!
+    :0.:    :Name: readMe!
             :Description: | In case of any errors, it will be shown here.
 
-    :2.:    :Name: NewTemperature
+    :1.:    :Name: NewTemperature
             :Description: | New temperature in C.
 
-    :3.:    :Name: NewRelativeHumidity
+    :2.:    :Name: NewRelativeHumidity
             :Description: | New relative humidity in -.
 
+    :3.:    :Name: LatentHeatFlux
+            :Description: | Computed latent heat flux in J/h.
+
+    :4.:    :Name: UsedVapourFlux
+            :Description: | Vapour flux used to alter the temperature and relative humidity in kg/h.
+
+
+**Livestock Load Air Results**
+
+:Description: A component class that computes a new air temperature and relative humidity with the Atmosphere Model from the thesis of Christian Kongsgaard
+
+:Inputs:
+    :0.:    :Name: ResultFolder
+            :Description: Path to result folder.
+            :Data Access: Item
+            :Default Value: | False
+
+    :1.:
+            :Name: LoadResult
+            :Description: Run the component
+            :Data Access: Item
+            :Default Value: | False
+
+:Outputs:
+    :0.:    :Name: readMe!
+            :Description: | In case of any errors, it will be shown here.
+
+    :1.:    :Name: NewTemperature
+            :Description: | New temperature in C.
+
+    :2.:    :Name: NewRelativeHumidity
+            :Description: | New relative humidity in -.
+
+    :3.:    :Name: LatentHeatFlux
+            :Description: | Computed latent heat flux in J/h.
+
+    :4.:    :Name: UsedVapourFlux
+            :Description: | Vapour flux used to alter the temperature and relative humidity in kg/h.
 
 **Go Back to:**
 
