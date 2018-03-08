@@ -21,6 +21,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -59,6 +60,9 @@
 
 
 <div class="viewcode-block" id="GHComponent"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent">[docs]</a><span class="k">class</span> <span class="nc">GHComponent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Super Class of the Grasshopper Components</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="kc">None</span>
@@ -70,10 +74,12 @@
 <div class="viewcode-block" id="GHComponent.config_component"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent.config_component">[docs]</a>    <span class="k">def</span> <span class="nf">config_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_number</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up the component, with the following steps:</span>
+
 <span class="sd">        - Load component data</span>
 <span class="sd">        - Generate component data</span>
 <span class="sd">        - Generate outputs</span>
 <span class="sd">        - Generate inputs</span>
+
 <span class="sd">        :param component_number: Integer with the component number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -100,6 +106,7 @@
 <div class="viewcode-block" id="GHComponent.add_warning"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent.add_warning">[docs]</a>    <span class="k">def</span> <span class="nf">add_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">warning</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a Grasshopper warning to the component.</span>
+
 <span class="sd">        :param warning: Warning text.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -110,6 +117,7 @@
 <div class="viewcode-block" id="GHComponent.add_output_parameter"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent.add_output_parameter">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds an output to the Grasshopper component.</span>
+
 <span class="sd">        :param output_: Output index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -120,6 +128,7 @@
 <div class="viewcode-block" id="GHComponent.add_input_parameter"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent.add_input_parameter">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds an input to the Grasshopper component.</span>
+
 <span class="sd">        :param input_: Input index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -139,6 +148,7 @@
 <div class="viewcode-block" id="GHComponent.add_default_value"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GHComponent.add_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">add_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">param_number</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a default value to a parameter.</span>
+
 <span class="sd">        :param parameter: Parameter to add default value to</span>
 <span class="sd">        :param param_number: Parameter number</span>
 <span class="sd">        :return: Parameter</span>
@@ -162,12 +172,6 @@
     <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">line</span></div>
-
-
-<div class="viewcode-block" id="GroundTemperature"><a class="viewcode-back" href="../../../superclass.html#livestock.components.component.GroundTemperature">[docs]</a><span class="k">class</span> <span class="nc">GroundTemperature</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
-        <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

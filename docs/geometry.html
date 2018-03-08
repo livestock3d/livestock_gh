@@ -21,6 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="3 | CMF" href="cmf.html" />
@@ -46,6 +47,7 @@
 <dt id="livestock.components.geometry.LoadMesh">
 <em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">LoadMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#LoadMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.LoadMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that loads an .obj file onto the Grasshopper canvas</p>
 <dl class="method">
 <dt id="livestock.components.geometry.LoadMesh.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#LoadMesh.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.LoadMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -68,9 +70,19 @@ It loads the .obj file and its data if there is any.</p>
 <dl class="method">
 <dt id="livestock.components.geometry.LoadMesh.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>load</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#LoadMesh.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.LoadMesh.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param path: Path where the mesh is saved.
-:param load: Load the mesh or not</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – Path where the mesh is saved.</li>
+<li><strong>load</strong> – Load the mesh or not</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -79,6 +91,7 @@ It loads the .obj file and its data if there is any.</p>
 <dt id="livestock.components.geometry.SaveMesh">
 <em class="property">class </em><code class="descclassname">livestock.components.geometry.</code><code class="descname">SaveMesh</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#SaveMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.SaveMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that saves a Grasshopper mesh to an .obj file</p>
 <dl class="method">
 <dt id="livestock.components.geometry.SaveMesh.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#SaveMesh.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.SaveMesh.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -101,12 +114,22 @@ It saves the .obj file and its data if there is any.</p>
 <dl class="method">
 <dt id="livestock.components.geometry.SaveMesh.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>data</em>, <em>dir_</em>, <em>name</em>, <em>save</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/geometry.html#SaveMesh.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.geometry.SaveMesh.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param mesh: Mesh that should be saved.
-:param data: Mesh data that should be saved.
-:param <a href="#id4"><span class="problematic" id="id5">dir_</span></a>: Directory where the files should be saved.
-:param name: Name for mesh.
-:param save: Whether to save or not.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mesh</strong> – Mesh that should be saved.</li>
+<li><strong>data</strong> – Mesh data that should be saved.</li>
+<li><strong>dir</strong> – Directory where the files should be saved.</li>
+<li><strong>name</strong> – Name for mesh.</li>
+<li><strong>save</strong> – Whether to save or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

@@ -21,6 +21,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -64,6 +65,8 @@
 
 
 <div class="viewcode-block" id="PythonExecutor"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.PythonExecutor">[docs]</a><span class="k">class</span> <span class="nc">PythonExecutor</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that points to the CPython executor&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -129,6 +132,8 @@
 
 
 <div class="viewcode-block" id="SSHConnection"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.SSHConnection">[docs]</a><span class="k">class</span> <span class="nc">SSHConnection</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that handles the SSH configuration&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -246,7 +251,7 @@
             <span class="n">sc</span><span class="o">.</span><span class="n">sticky</span><span class="p">[</span><span class="s1">&#39;SSH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">}</span></div></div>
 
 
-<div class="viewcode-block" id="CFDonSSH"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH">[docs]</a><span class="k">class</span> <span class="nc">CFDonSSH</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CFDonSSH</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -286,15 +291,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="CFDonSSH.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="CFDonSSH.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Generate Component</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CFDonSSH.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">commands</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">commands</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
 
         <span class="c1"># Gather data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
@@ -303,9 +308,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_values</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># Run checks</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CFDonSSH.write"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Initialize</span>
         <span class="n">ssh</span><span class="o">.</span><span class="n">clean_ssh_folder</span><span class="p">()</span>
@@ -328,9 +333,9 @@
         <span class="n">ssh_cmd</span><span class="p">[</span><span class="s1">&#39;template&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cfd_ssh&#39;</span>
         <span class="n">ssh</span><span class="o">.</span><span class="n">write_ssh_commands</span><span class="p">(</span><span class="n">ssh_cmd</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="CFDonSSH.run_template"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run_template">[docs]</a>    <span class="k">def</span> <span class="nf">run_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_template</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1"># Python executor</span>
         <span class="n">py_exe</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">get_python_exe</span><span class="p">()</span>
@@ -341,15 +346,17 @@
         <span class="c1"># Run template</span>
         <span class="n">thread</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">py_exe</span><span class="p">,</span> <span class="n">ssh_template</span><span class="p">])</span>
         <span class="n">thread</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">thread</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span></div>
+        <span class="n">thread</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CFDonSSH.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.CFDonSSH.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run_template</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_template</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="HourToDate"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate">[docs]</a><span class="k">class</span> <span class="nc">HourToDate</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that converts a hour of the year into a date on the format: DD MMM HH:mm&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -377,15 +384,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="HourToDate.check_inputs"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="HourToDate.config"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HourToDate.run_checks"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hour</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gathers the inputs and checks them.</span>
+<span class="sd">        :param hour: Hour of the year</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Gather data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">hour</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -394,11 +408,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="HourToDate.convert_date"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.convert_date">[docs]</a>    <span class="k">def</span> <span class="nf">convert_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a hour of the year to a datetime&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">hour_to_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="HourToDate.run"><a class="viewcode-back" href="../../../miscellaneous.html#livestock.components.misc.HourToDate.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run component&quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">convert_date</span><span class="p">()</span></div></div>
 </pre></div>

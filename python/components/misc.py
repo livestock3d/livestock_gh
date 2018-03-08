@@ -24,6 +24,8 @@ import scriptcontext as sc
 
 class PythonExecutor(GHComponent):
 
+    """A component class that points to the CPython executor"""
+
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
@@ -88,6 +90,8 @@ class PythonExecutor(GHComponent):
 
 
 class SSHConnection(GHComponent):
+
+    """A component class that handles the SSH configuration"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -310,6 +314,8 @@ class CFDonSSH(GHComponent):
 
 class HourToDate(GHComponent):
 
+    """A component class that converts a hour of the year into a date on the format: DD MMM HH:mm"""
+
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
@@ -336,15 +342,22 @@ class HourToDate(GHComponent):
         self.results = None
 
     def check_inputs(self):
+        """Checks inputs and raises a warning if an input is not the correct type."""
+
         if self.hour:
             self.checks = True
 
     def config(self):
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
 
     def run_checks(self, hour):
+        """
+        Gathers the inputs and checks them.
+        :param hour: Hour of the year
+        """
 
         # Gather data
         self.hour = self.add_default_value(hour, 0)
@@ -353,10 +366,13 @@ class HourToDate(GHComponent):
         self.check_inputs()
 
     def convert_date(self):
+        """Converts a hour of the year to a datetime"""
 
         self.results = gh_misc.hour_to_date(self.hour)
         return True
 
     def run(self):
+        """Run component"""
+
         if self.checks:
             self.convert_date()

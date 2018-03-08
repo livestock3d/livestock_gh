@@ -21,6 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="0 | Miscellaneous" href="miscellaneous.html" />
@@ -46,53 +47,90 @@
 <dt id="livestock.components.component.GHComponent">
 <em class="property">class </em><code class="descclassname">livestock.components.component.</code><code class="descname">GHComponent</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Super Class of the Grasshopper Components</p>
 <dl class="method">
 <dt id="livestock.components.component.GHComponent.add_default_value">
 <code class="descname">add_default_value</code><span class="sig-paren">(</span><em>parameter</em>, <em>param_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent.add_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent.add_default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a default value to a parameter.
-:param parameter: Parameter to add default value to
-:param param_number: Parameter number
-:return: Parameter</p>
+<dd><p>Adds a default value to a parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>parameter</strong> – Parameter to add default value to</li>
+<li><strong>param_number</strong> – Parameter number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Parameter</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.component.GHComponent.add_input_parameter">
 <code class="descname">add_input_parameter</code><span class="sig-paren">(</span><em>input_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent.add_input_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent.add_input_parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an input to the Grasshopper component.
-:param <a href="#id4"><span class="problematic" id="id5">input_</span></a>: Input index.</p>
+<dd><p>Adds an input to the Grasshopper component.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input</strong> – Input index.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.component.GHComponent.add_output_parameter">
 <code class="descname">add_output_parameter</code><span class="sig-paren">(</span><em>output_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent.add_output_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent.add_output_parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an output to the Grasshopper component.
-:param <a href="#id6"><span class="problematic" id="id7">output_</span></a>: Output index.</p>
+<dd><p>Adds an output to the Grasshopper component.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>output</strong> – Output index.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.component.GHComponent.add_warning">
 <code class="descname">add_warning</code><span class="sig-paren">(</span><em>warning</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent.add_warning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent.add_warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a Grasshopper warning to the component.
-:param warning: Warning text.</p>
+<dd><p>Adds a Grasshopper warning to the component.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>warning</strong> – Warning text.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.component.GHComponent.config_component">
 <code class="descname">config_component</code><span class="sig-paren">(</span><em>component_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GHComponent.config_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GHComponent.config_component" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the component, with the following steps:
-- Load component data
-- Generate component data
-- Generate outputs
-- Generate inputs
-:param component_number: Integer with the component number</p>
+<dd><p>Sets up the component, with the following steps:</p>
+<ul class="simple">
+<li>Load component data</li>
+<li>Generate component data</li>
+<li>Generate outputs</li>
+<li>Generate inputs</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>component_number</strong> – Integer with the component number</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="livestock.components.component.GroundTemperature">
-<em class="property">class </em><code class="descclassname">livestock.components.component.</code><code class="descname">GroundTemperature</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/component.html#GroundTemperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.component.GroundTemperature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
 </dd></dl>
 
 <dl class="function">

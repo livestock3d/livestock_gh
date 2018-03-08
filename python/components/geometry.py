@@ -1,6 +1,5 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -20,6 +19,8 @@ import livestock.lib.misc as gh_misc
 
 class LoadMesh(GHComponent):
     # TODO - Update to handle quad meshes
+
+    """A component class that loads an .obj file onto the Grasshopper canvas"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -53,16 +54,12 @@ class LoadMesh(GHComponent):
         self.data = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -70,6 +67,7 @@ class LoadMesh(GHComponent):
     def run_checks(self, path, load):
         """
         Gathers the inputs and checks them.
+
         :param path: Path where the mesh is saved.
         :param load: Load the mesh or not
         """
@@ -94,6 +92,8 @@ class LoadMesh(GHComponent):
 
 class SaveMesh(GHComponent):
     # TODO - Update to handle quad meshes
+
+    """A component class that saves a Grasshopper mesh to an .obj file"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -141,16 +141,12 @@ class SaveMesh(GHComponent):
         self.checks = [False, False]
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -158,6 +154,7 @@ class SaveMesh(GHComponent):
     def run_checks(self, mesh, data, dir_, name, save):
         """
         Gathers the inputs and checks them.
+
         :param mesh: Mesh that should be saved.
         :param data: Mesh data that should be saved.
         :param dir_: Directory where the files should be saved.

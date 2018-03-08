@@ -1,5 +1,11 @@
 Undocumented Python objects
 ===========================
+livestock.components.component
+------------------------------
+Classes:
+ * GHComponent
+ * GroundTemperature
+
 livestock.lib.geometry
 ----------------------
 Functions:

@@ -18,6 +18,9 @@ import Grasshopper.Kernel as gh
 
 
 class GHComponent:
+    """
+    Super Class of the Grasshopper Components
+    """
 
     def __init__(self, ghenv):
         self.outputs = None
@@ -29,10 +32,12 @@ class GHComponent:
     def config_component(self, component_number):
         """
         Sets up the component, with the following steps:
+
         - Load component data
         - Generate component data
         - Generate outputs
         - Generate inputs
+
         :param component_number: Integer with the component number
         """
 
@@ -59,6 +64,7 @@ class GHComponent:
     def add_warning(self, warning):
         """
         Adds a Grasshopper warning to the component.
+
         :param warning: Warning text.
         """
 
@@ -69,6 +75,7 @@ class GHComponent:
     def add_output_parameter(self, output_):
         """
         Adds an output to the Grasshopper component.
+
         :param output_: Output index.
         """
 
@@ -79,6 +86,7 @@ class GHComponent:
     def add_input_parameter(self, input_):
         """
         Adds an input to the Grasshopper component.
+
         :param input_: Input index.
         """
 
@@ -98,6 +106,7 @@ class GHComponent:
     def add_default_value(self, parameter, param_number):
         """
         Adds a default value to a parameter.
+
         :param parameter: Parameter to add default value to
         :param param_number: Parameter number
         :return: Parameter
@@ -121,9 +130,3 @@ def component_data(n):
     line = line.split(';')
 
     return line
-
-
-class GroundTemperature(GHComponent):
-
-    def __init__(self, ghenv):
-        GHComponent.__init__(self, ghenv)

@@ -3,7 +3,6 @@
 
 .. automodule:: livestock.components.geometry
     :members:
-    :undoc-members:
     :show-inheritance:
 
 **Go Back to:**
