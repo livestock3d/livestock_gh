@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -81,7 +80,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="install.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="install.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
@@ -94,11 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_config.yml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="_config.yml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+            <state relative-caret-position="51">
+              <caret line="3" column="27" lean-forward="true" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -238,8 +237,8 @@
         <option value="$PROJECT_DIR$/sphinx/components.rst" />
         <option value="$PROJECT_DIR$/../ocni-dtu.github.io/background.md" />
         <option value="$PROJECT_DIR$/../ocni-dtu.github.io/index.md" />
-        <option value="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" />
         <option value="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
+        <option value="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" />
       </list>
     </option>
   </component>
@@ -746,13 +745,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00549" summary="updated sphinx docs">
-      <created>1516458717212</created>
-      <option name="number" value="00549" />
-      <option name="presentableId" value="LOCAL-00549" />
-      <option name="project" value="LOCAL" />
-      <updated>1516458717212</updated>
-    </task>
     <task id="LOCAL-00550" summary="updated sphinx docs">
       <created>1516458827511</created>
       <option name="number" value="00550" />
@@ -1089,7 +1081,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520530859602</updated>
     </task>
-    <option name="localTasksCounter" value="598" />
+    <task id="LOCAL-00598" summary="updated the main livestock page">
+      <created>1520530973270</created>
+      <option name="number" value="00598" />
+      <option name="presentableId" value="LOCAL-00598" />
+      <option name="project" value="LOCAL" />
+      <updated>1520530973270</updated>
+    </task>
+    <option name="localTasksCounter" value="599" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1574,14 +1573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -1590,6 +1581,14 @@
             <folding />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="27" lean-forward="true" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
