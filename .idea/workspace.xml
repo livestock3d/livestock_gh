@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/_config.yml" />
       <change beforePath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" afterPath="$PROJECT_DIR$/../ocni-dtu.github.io/install.md" />
     </list>
     <ignored path=".idea/" />
@@ -86,8 +85,8 @@
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="544">
-                <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
+              <first_editor relative-caret-position="527">
+                <caret line="31" column="29" lean-forward="true" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -747,13 +746,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00546" summary="update to doc strings">
-      <created>1516455433283</created>
-      <option name="number" value="00546" />
-      <option name="presentableId" value="LOCAL-00546" />
-      <option name="project" value="LOCAL" />
-      <updated>1516455433283</updated>
-    </task>
     <task id="LOCAL-00547" summary="added Load Air Results component">
       <created>1516455468595</created>
       <option name="number" value="00547" />
@@ -1090,7 +1082,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520514403029</updated>
     </task>
-    <option name="localTasksCounter" value="595" />
+    <task id="LOCAL-00595" summary="updated the main livestock page">
+      <created>1520530581709</created>
+      <option name="number" value="00595" />
+      <option name="presentableId" value="LOCAL-00595" />
+      <option name="project" value="LOCAL" />
+      <updated>1520530581710</updated>
+    </task>
+    <option name="localTasksCounter" value="596" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1586,8 +1585,8 @@
     <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="544">
-            <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
+          <first_editor relative-caret-position="527">
+            <caret line="31" column="29" lean-forward="true" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
             <folding />
           </first_editor>
           <second_editor />
