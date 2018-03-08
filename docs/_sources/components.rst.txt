@@ -234,7 +234,7 @@ Livestock Grasshopper Components
             :Default Value: | None
 
     :4.:    :Name: GlobalRadiation
-            :Description: Global Radiation in W/m\:sup:`2`\. Either a list or a tree where the number of branches is equal to the number
+            :Description: Global Radiation in W/m\ :sup:`2`\. Either a list or a tree where the number of branches is equal to the number
                           of mesh faces.
             :Data Access: Tree
             :Default Value: | None

@@ -3,16 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/components.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/components.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/air.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/air.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" />
       <change beforePath="$PROJECT_DIR$/docs/_sources/components.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/components.rst.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/comfort.html" afterPath="$PROJECT_DIR$/docs/comfort.html" />
       <change beforePath="$PROJECT_DIR$/docs/components.html" afterPath="$PROJECT_DIR$/docs/components.html" />
       <change beforePath="$PROJECT_DIR$/docs/searchindex.js" afterPath="$PROJECT_DIR$/docs/searchindex.js" />
+      <change beforePath="$PROJECT_DIR$/sphinx/components.rst" afterPath="$PROJECT_DIR$/sphinx/components.rst" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -59,7 +53,7 @@
     <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_sphinx.coverage" NAME="sphinx task in livestock Coverage Results" MODIFIED="1520022911780" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$pdf_task_in_livestock.coverage" NAME="pdf task in livestock Coverage Results" MODIFIED="1520456922794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$upload_to_pypi.coverage" NAME="upload_to_pypi Coverage Results" MODIFIED="1517747265496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock/config_livestock" />
-    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520511860673" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
+    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520511960291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_layer_results.coverage" NAME="test_layer_results Coverage Results" MODIFIED="1511533123136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cell_results.coverage" NAME="test_cell_results Coverage Results" MODIFIED="1511516557310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cmf_model.coverage" NAME="test_cmf_model Coverage Results" MODIFIED="1511940652117" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_linux/livestock_linux/test" />
@@ -95,8 +89,8 @@
           <file leaf-file-name="components.rst" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1224">
-                  <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+                <state relative-caret-position="510">
+                  <caret line="231" column="40" lean-forward="false" selection-start-line="231" selection-start-column="40" selection-end-line="231" selection-end-column="40" />
                   <folding />
                 </state>
               </provider>
@@ -824,13 +818,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00543" summary="renamed folder">
-      <created>1516437847858</created>
-      <option name="number" value="00543" />
-      <option name="presentableId" value="LOCAL-00543" />
-      <option name="project" value="LOCAL" />
-      <updated>1516437847858</updated>
-    </task>
     <task id="LOCAL-00544" summary="edited doc string">
       <created>1516446982653</created>
       <option name="number" value="00544" />
@@ -1167,7 +1154,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520511847336</updated>
     </task>
-    <option name="localTasksCounter" value="592" />
+    <task id="LOCAL-00592" summary="update the sphinx docs">
+      <created>1520511876070</created>
+      <option name="number" value="00592" />
+      <option name="presentableId" value="LOCAL-00592" />
+      <option name="project" value="LOCAL" />
+      <updated>1520511876070</updated>
+    </task>
+    <option name="localTasksCounter" value="593" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1746,8 +1740,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1224">
-          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+        <state relative-caret-position="510">
+          <caret line="231" column="40" lean-forward="false" selection-start-line="231" selection-start-column="40" selection-end-line="231" selection-end-column="40" />
           <folding />
         </state>
       </provider>
