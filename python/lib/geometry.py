@@ -167,8 +167,8 @@ def load_points(path_and_file):
     """
     Loads a text file containing points
 
-    :param path_and_file:
-    :type path_and_file: object
+    :param path_and_file: Path to the points file.
+    :type path_and_file: str
     """
 
     points = []
@@ -187,7 +187,7 @@ def load_points(path_and_file):
 
 
 def make_curves_from_points(points):
-    """Converts a list of points to a 5-degree polynomium curve."""
+    """Converts a list of points to a 5-degree polynomial curve."""
 
     curves = []
     end_points = []
@@ -205,7 +205,7 @@ def make_curves_from_points(points):
 
 
 def parallel_make_context_mesh(brep, parallel=False):
-    """Ladybug - mesh breps parallel"""
+    #"""Ladybug - mesh breps parallel"""
 
     def make_mesh_from_srf(i):
         try:
@@ -235,7 +235,7 @@ def parallel_make_context_mesh(brep, parallel=False):
 
 
 def clean_and_coerce_list(brep_list):
-    """ Ladybug - This definition cleans the list and adds them to RhinoCommon"""
+    #""" Ladybug - This definition cleans the list and adds them to RhinoCommon"""
 
     outputMesh = []
     outputBrep = []
@@ -289,7 +289,7 @@ def clean_and_coerce_list(brep_list):
 
 
 def join_mesh(mesh_list):
-    """Ladybug - joinMesh"""
+    #"""Ladybug - joinMesh"""
 
     joined_mesh = rg.Mesh()
     for m in mesh_list: joined_mesh.Append(m)
@@ -298,7 +298,7 @@ def join_mesh(mesh_list):
 
 
 def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
-    """Ladybug - RayTrace"""
+    #"""Ladybug - RayTrace"""
 
     # A failed attampt to use mesh instead of brep so the component could work with trimmed surfaces
     if len(context) != 0:
@@ -363,7 +363,7 @@ def rayTrace(startPts, startVectors, context, numOfBounce, lastBounceLen):
 
 
 def ray_shoot(start_pt, vector, context, num_of_bounce=1):
-    """Build on: Ladybug - RayTrace"""
+    #"""Build on: Ladybug - RayTrace"""
 
     ray = rg.Ray3d(start_pt, vector)
     print('ray', ray)
@@ -387,8 +387,9 @@ def ray_shoot(start_pt, vector, context, num_of_bounce=1):
 def load_mesh_data(path):
     """
     Load additional data for a mesh.
+
     :param path: Path for mesh file.
-    :return: Data
+    :return: Data from the mesh
     """
 
     path = path.split('.')[0] + '_Data.txt'

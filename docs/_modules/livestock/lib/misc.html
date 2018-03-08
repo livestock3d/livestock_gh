@@ -66,9 +66,14 @@
 
 
 <div class="viewcode-block" id="tree_to_list"><a class="viewcode-back" href="../../../lib.html#livestock.lib.misc.tree_to_list">[docs]</a><span class="k">def</span> <span class="nf">tree_to_list</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">retrieve_base</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a list representation of a Grasshopper DataTree&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    | Returns a list representation of a Grasshopper DataTree</span>
+<span class="sd">    | `Source`__</span>
 
-    <span class="c1"># TODO - Find source</span>
+<span class="sd">    __ https://gist.github.com/piac/ef91ac83cb5ee92a1294</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">extend_at</span><span class="p">(</span><span class="n">path_</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">simple_input</span><span class="p">,</span> <span class="n">rest_list</span><span class="p">):</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
 
@@ -90,9 +95,13 @@
 
 
 <div class="viewcode-block" id="list_to_tree"><a class="viewcode-back" href="../../../lib.html#livestock.lib.misc.list_to_tree">[docs]</a><span class="k">def</span> <span class="nf">list_to_tree</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">none_and_holes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Transforms nestings of lists or tuples to a Grasshopper DataTree&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    | Transforms nestings of lists or tuples to a Grasshopper DataTree</span>
+<span class="sd">    | `Source`__</span>
 
-    <span class="c1">#TODO - Find source</span>
+<span class="sd">    __ https://gist.github.com/piac/ef91ac83cb5ee92a1294</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">proc</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">track</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">Array</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="n">track</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">none_and_holes</span><span class="p">:</span>
@@ -129,6 +138,7 @@
 <div class="viewcode-block" id="write_file"><a class="viewcode-back" href="../../../lib.html#livestock.lib.misc.write_file">[docs]</a><span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;txt&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a text file.</span>
+
 <span class="sd">    :param text: Text to write.</span>
 <span class="sd">    :param path: Directory to save it to.</span>
 <span class="sd">    :param name: File name.</span>
@@ -206,7 +216,16 @@
     <span class="k">return</span> <span class="n">py</span></div>
 
 
-<span class="k">def</span> <span class="nf">hour_to_date</span><span class="p">(</span><span class="n">hour_of_the_year</span><span class="p">):</span>
+<div class="viewcode-block" id="hour_to_date"><a class="viewcode-back" href="../../../lib.html#livestock.lib.misc.hour_to_date">[docs]</a><span class="k">def</span> <span class="nf">hour_to_date</span><span class="p">(</span><span class="n">hour_of_the_year</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transform a hour of the year into a string datetime on the format DD MMM HH:mm</span>
+
+<span class="sd">    :param hour_of_the_year: Hour of the year</span>
+<span class="sd">    :type hour_of_the_year: int</span>
+<span class="sd">    :return: Datetime on format DD MMM HH:mm</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1">#TODO - Make better code</span>
 
     <span class="n">month_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;JAN&#39;</span><span class="p">,</span> <span class="s1">&#39;FEB&#39;</span><span class="p">,</span> <span class="s1">&#39;MAR&#39;</span><span class="p">,</span> <span class="s1">&#39;APR&#39;</span><span class="p">,</span> <span class="s1">&#39;MAY&#39;</span><span class="p">,</span> <span class="s1">&#39;JUN&#39;</span><span class="p">,</span> <span class="s1">&#39;JUL&#39;</span><span class="p">,</span> <span class="s1">&#39;AUG&#39;</span><span class="p">,</span> <span class="s1">&#39;SEP&#39;</span><span class="p">,</span> <span class="s1">&#39;OCT&#39;</span><span class="p">,</span> <span class="s1">&#39;NOV&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC&#39;</span><span class="p">]</span>
@@ -239,7 +258,7 @@
 
         <span class="n">time</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hour_of_the_year</span> <span class="o">%</span> <span class="mi">24</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="n">minutes</span>
 
-    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">month</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">month</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

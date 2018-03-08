@@ -23,7 +23,7 @@ ssh_path = r'C:\livestock\ssh'
 local_path = r'C:\livestock\local'
 
 def get_ssh():
-    """Extracts the SSH information from a stricky"""
+    """Extracts the SSH information from a sticky"""
 
     ip = str(sc.sticky["SSH"]['ip'])
     port = str(sc.sticky["SSH"]['port'])
@@ -36,9 +36,7 @@ def get_ssh():
 
 
 def clean_ssh_folder():
-    """
-    Cleans the livestock/ssh folder on the C drive.
-    """
+    """Cleans the livestock/ssh folder on the C drive."""
 
     if os.path.isdir(ssh_path):
         for file in os.listdir(ssh_path):
@@ -47,13 +45,25 @@ def clean_ssh_folder():
         os.mkdir(ssh_path)
 
 
+def clean_local_folder():
+    """Cleans the livestock/local folder on the C drive."""
+
+    if os.path.isdir(local_path):
+        for file in os.listdir(local_path):
+            os.remove(local_path + '/' + file)
+    else:
+        os.mkdir(local_path)
+
+
 def write_ssh_commands(ssh_dict):
     """
     Write the files need for Livestock SSH connection to work.
+
     :param ssh_dict: Dictionary with all SSH information. Needs to be on the following form:
-    {'ip': string, 'user': string, 'port': string, 'password': 'string', 'file_transfer': list of strings,
-    'file_run': list of strings, 'file_return': list of strings, 'template': string}
-    :return:
+    {'ip': string, 'user': string,
+    'port': string, 'password': 'string',
+    'file_transfer': list of strings, 'file_run': list of strings,
+    'file_return': list of strings, 'template': string}
     """
 
     # Write SSH commands
@@ -73,15 +83,3 @@ def write_ssh_commands(ssh_dict):
     templates.pick_template(ssh_dict['template'], ssh_path)
 
     return True
-
-
-def clean_local_folder():
-    """
-    Cleans the livestock/local folder on the C drive.
-    """
-
-    if os.path.isdir(local_path):
-        for file in os.listdir(local_path):
-            os.remove(local_path + '/' + file)
-    else:
-        os.mkdir(local_path)

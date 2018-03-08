@@ -24,7 +24,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="4 | Comfort" href="comfort.html" />
+    <link rel="prev" title="3 | Comfort" href="comfort.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -87,12 +87,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="livestock.lib.geometry.clean_and_coerce_list">
-<code class="descclassname">livestock.lib.geometry.</code><code class="descname">clean_and_coerce_list</code><span class="sig-paren">(</span><em>brep_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#clean_and_coerce_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.clean_and_coerce_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ladybug - This definition cleans the list and adds them to RhinoCommon</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="livestock.lib.geometry.export">
 <code class="descclassname">livestock.lib.geometry.</code><code class="descname">export</code><span class="sig-paren">(</span><em>ids</em>, <em>file_path</em>, <em>file_name</em>, <em>file_type</em>, <em>doc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports Rhino geometry to a file.</p>
@@ -149,17 +143,19 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="livestock.lib.geometry.join_mesh">
-<code class="descclassname">livestock.lib.geometry.</code><code class="descname">join_mesh</code><span class="sig-paren">(</span><em>mesh_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#join_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.join_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ladybug - joinMesh</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="livestock.lib.geometry.load_mesh_data">
 <code class="descclassname">livestock.lib.geometry.</code><code class="descname">load_mesh_data</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#load_mesh_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.load_mesh_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load additional data for a mesh.
-:param path: Path for mesh file.
-:return: Data</p>
+<dd><p>Load additional data for a mesh.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path for mesh file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Data from the mesh</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -170,7 +166,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path_and_file</strong> (<em>object</em>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path_and_file</strong> (<em>str</em>) – Path to the points file.</td>
 </tr>
 </tbody>
 </table>
@@ -179,25 +175,7 @@
 <dl class="function">
 <dt id="livestock.lib.geometry.make_curves_from_points">
 <code class="descclassname">livestock.lib.geometry.</code><code class="descname">make_curves_from_points</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#make_curves_from_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.make_curves_from_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a list of points to a 5-degree polynomium curve.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="livestock.lib.geometry.parallel_make_context_mesh">
-<code class="descclassname">livestock.lib.geometry.</code><code class="descname">parallel_make_context_mesh</code><span class="sig-paren">(</span><em>brep</em>, <em>parallel=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#parallel_make_context_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.parallel_make_context_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ladybug - mesh breps parallel</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="livestock.lib.geometry.rayTrace">
-<code class="descclassname">livestock.lib.geometry.</code><code class="descname">rayTrace</code><span class="sig-paren">(</span><em>startPts</em>, <em>startVectors</em>, <em>context</em>, <em>numOfBounce</em>, <em>lastBounceLen</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#rayTrace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.rayTrace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ladybug - RayTrace</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="livestock.lib.geometry.ray_shoot">
-<code class="descclassname">livestock.lib.geometry.</code><code class="descname">ray_shoot</code><span class="sig-paren">(</span><em>start_pt</em>, <em>vector</em>, <em>context</em>, <em>num_of_bounce=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/geometry.html#ray_shoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.geometry.ray_shoot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build on: Ladybug - RayTrace</p>
+<dd><p>Converts a list of points to a 5-degree polynomial curve.</p>
 </dd></dl>
 
 </div>
@@ -244,25 +222,59 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="livestock.lib.misc.hour_to_date">
+<code class="descclassname">livestock.lib.misc.</code><code class="descname">hour_to_date</code><span class="sig-paren">(</span><em>hour_of_the_year</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/misc.html#hour_to_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.misc.hour_to_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a hour of the year into a string datetime on the format DD MMM HH:mm</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hour_of_the_year</strong> (<em>int</em>) – Hour of the year</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Datetime on format DD MMM HH:mm</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="livestock.lib.misc.list_to_tree">
 <code class="descclassname">livestock.lib.misc.</code><code class="descname">list_to_tree</code><span class="sig-paren">(</span><em>input_, none_and_holes=True, source=[0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/misc.html#list_to_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.misc.list_to_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transforms nestings of lists or tuples to a Grasshopper DataTree</p>
+<dd><div class="line-block">
+<div class="line">Transforms nestings of lists or tuples to a Grasshopper DataTree</div>
+<div class="line"><a class="reference external" href="https://gist.github.com/piac/ef91ac83cb5ee92a1294">Source</a></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.misc.tree_to_list">
 <code class="descclassname">livestock.lib.misc.</code><code class="descname">tree_to_list</code><span class="sig-paren">(</span><em>input_</em>, <em>retrieve_base=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/misc.html#tree_to_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.misc.tree_to_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list representation of a Grasshopper DataTree</p>
+<dd><div class="line-block">
+<div class="line">Returns a list representation of a Grasshopper DataTree</div>
+<div class="line"><a class="reference external" href="https://gist.github.com/piac/ef91ac83cb5ee92a1294">Source</a></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.misc.write_file">
 <code class="descclassname">livestock.lib.misc.</code><code class="descname">write_file</code><span class="sig-paren">(</span><em>text</em>, <em>path</em>, <em>name</em>, <em>file_type='txt'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/misc.html#write_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.misc.write_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a text file.
-:param text: Text to write.
-:param path: Directory to save it to.
-:param name: File name.
-:param file_type: File extension.</p>
+<dd><p>Writes a text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> – Text to write.</li>
+<li><strong>path</strong> – Directory to save it to.</li>
+<li><strong>name</strong> – File name.</li>
+<li><strong>file_type</strong> – File extension.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -283,17 +295,25 @@
 <dl class="function">
 <dt id="livestock.lib.ssh.get_ssh">
 <code class="descclassname">livestock.lib.ssh.</code><code class="descname">get_ssh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/ssh.html#get_ssh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.ssh.get_ssh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts the SSH information from a stricky</p>
+<dd><p>Extracts the SSH information from a sticky</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.ssh.write_ssh_commands">
 <code class="descclassname">livestock.lib.ssh.</code><code class="descname">write_ssh_commands</code><span class="sig-paren">(</span><em>ssh_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/ssh.html#write_ssh_commands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.ssh.write_ssh_commands" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write the files need for Livestock SSH connection to work.
-:param ssh_dict: Dictionary with all SSH information. Needs to be on the following form:
-{‘ip’: string, ‘user’: string, ‘port’: string, ‘password’: ‘string’, ‘file_transfer’: list of strings,
-‘file_run’: list of strings, ‘file_return’: list of strings, ‘template’: string}
-:return:</p>
+<dd><p>Write the files need for Livestock SSH connection to work.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ssh_dict</strong> – Dictionary with all SSH information. Needs to be on the following form:</td>
+</tr>
+</tbody>
+</table>
+<p>{‘ip’: string, ‘user’: string,
+‘port’: string, ‘password’: ‘string’,
+‘file_transfer’: list of strings, ‘file_run’: list of strings,
+‘file_return’: list of strings, ‘template’: string}</p>
 </dd></dl>
 
 </div>
@@ -302,15 +322,29 @@
 <dl class="function">
 <dt id="livestock.lib.templates.cmf_template">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">cmf_template</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#cmf_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.cmf_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the CMF template.
-:param path: Path to write it to.</p>
+<dd><p>Writes the CMF template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to write it to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.templates.drain_mesh_template">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">drain_mesh_template</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#drain_mesh_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.drain_mesh_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the template for the drain mesh function.
-:param path: Path to write it to.</p>
+<dd><p>Writes the template for the drain mesh function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to write it to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -334,30 +368,61 @@
 <dl class="function">
 <dt id="livestock.lib.templates.pick_template">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">pick_template</code><span class="sig-paren">(</span><em>template_name</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#pick_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.pick_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a template given a template name and path to write it to.
-:param template_name: Template name.
-:param path: Path to save it to.</p>
+<dd><p>Writes a template given a template name and path to write it to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>template_name</strong> – Template name.</li>
+<li><strong>path</strong> – Path to save it to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.templates.process_cmf_results">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">process_cmf_results</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#process_cmf_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.process_cmf_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the CMF result lookup template.
-:param path: Path to write it to.</p>
+<dd><p>Writes the CMF result lookup template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to write it to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.templates.process_cmf_surface_results">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">process_cmf_surface_results</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#process_cmf_surface_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.process_cmf_surface_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the CMF surface result template.
-:param path: Path to write it to.</p>
+<dd><p>Writes the CMF surface result template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to write it to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="livestock.lib.templates.ssh_template">
 <code class="descclassname">livestock.lib.templates.</code><code class="descname">ssh_template</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/lib/templates.html#ssh_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.lib.templates.ssh_template" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the ssh template.
-:param path: Path to write it to.</p>
+<dd><p>Writes the ssh template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to write it to.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -392,7 +457,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="comfort.html" title="previous chapter">4 | Comfort</a></li>
+      <li>Previous: <a href="comfort.html" title="previous chapter">3 | Comfort</a></li>
   </ul></li>
 </ul>
 </div>

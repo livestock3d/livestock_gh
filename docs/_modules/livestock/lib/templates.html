@@ -42,16 +42,15 @@
   <h1>Source code for livestock.lib.templates</h1><div class="highlight"><pre>
 <span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Christian Kongsgaard&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
 
 <span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
-<span class="c1"># Livestock Templates Functions</span>
-
+<span class="c1"># Livestock Template Functions</span>
 
 
 <div class="viewcode-block" id="pick_template"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.pick_template">[docs]</a><span class="k">def</span> <span class="nf">pick_template</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a template given a template name and path to write it to.</span>
+
 <span class="sd">    :param template_name: Template name.</span>
 <span class="sd">    :param path: Path to save it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -101,24 +100,14 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<span class="k">def</span> <span class="nf">print_template_header</span><span class="p">(</span><span class="n">template</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;                     LIVESTOCK                    &#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;                  Running Template:&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;                       &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------------------------------------------------&#39;</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="drain_mesh_template"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.drain_mesh_template">[docs]</a><span class="k">def</span> <span class="nf">drain_mesh_template</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the template for the drain mesh function.</span>
+
 <span class="sd">    :param path: Path to write it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">file_name</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/drain_mesh_template.py&#39;</span>
-    <span class="n">print_template_header</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
     <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 
     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;print(&#39;Running template drain_mesh_template.py&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -139,68 +128,15 @@
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def drain_pools_template(path):</span>
-<span class="sd">    file = open(&#39;DrainPoolsTemplate.py&#39;, &#39;w&#39;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Running template DrainPoolsTemplate.py&#39;)&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Get user&quot;)</span>
-<span class="sd">    file.write(&quot;user = open(&#39;user.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Import&quot;)</span>
-<span class="sd">    file.write(&quot;import sys&quot;)</span>
-<span class="sd">    file.write(&quot;sys.path.insert(0, &#39;/home/&#39; + user + &#39;/livestock/classes&#39;)&quot;)</span>
-<span class="sd">    file.write(&quot;from RainClasses import drainPools&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Get path&quot;)</span>
-<span class="sd">    file.write(&quot;poolPath = &#39;/home/&#39; + user + &#39;/livestock/templates/&#39;&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Run function&quot;)</span>
-<span class="sd">    file.write(&quot;warn = drainPools(poolPath)&quot;)</span>
-<span class="sd">    file.write(&quot;print(warn)&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Annouce that template finished and create out file&quot;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)&quot;)</span>
-
-<span class="sd">    return True</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def fix_mesh_template(path):</span>
-<span class="sd">    file = open(&#39;FixMeshTemplate.py&#39;, &#39;w&#39;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Running template FixMeshTemplate.py&#39;)&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Get user&quot;)</span>
-<span class="sd">    file.write(&quot;user = open(&#39;user.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Imports&quot;)</span>
-<span class="sd">    file.write(&quot;import sys&quot;)</span>
-<span class="sd">    file.write(&quot;import pymesh as pm&quot;)</span>
-<span class="sd">    file.write(&quot;sys.path.insert(0, &#39;/home/&#39; + user + &#39;/livestock/classes&#39;)&quot;)</span>
-<span class="sd">    file.write(&quot;from GeometryClasses import fix_mesh&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Get files&quot;)</span>
-<span class="sd">    file.write(&quot;meshPath = &#39;/home/&#39; + user + &#39;/livestock/templates/mesh.obj&#39;&quot;)</span>
-<span class="sd">    file.write(&quot;outPath = &#39;/home/&#39; + user + &#39;/livestock/templates/fixedMesh.obj&#39;&quot;)</span>
-<span class="sd">    file.write(&quot;detail = open(&#39;detail.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Run function&quot;)</span>
-<span class="sd">    file.write(&quot;mesh = pm.load_mesh(meshPath)&quot;)</span>
-<span class="sd">    file.write(&quot;mesh = fix_mesh(mesh, detail=detail)&quot;)</span>
-<span class="sd">    file.write(&quot;pm.save_mesh(outPath, mesh)&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Annouce that template finished and create out file&quot;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)&quot;)</span>
-<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)&quot;)</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ssh_template"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.ssh_template">[docs]</a><span class="k">def</span> <span class="nf">ssh_template</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the ssh template.</span>
+
 <span class="sd">    :param path: Path to write it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">file_name</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/ssh_template.py&#39;</span>
-    <span class="n">print_template_header</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
     <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 
     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Imports</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -214,38 +150,15 @@
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def topographic_index_template(path):</span>
-<span class="sd">    file = open(path + &#39;\\topographicIndexTemplate.py&#39;, &#39;w&#39;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Running template topographicIndexTemplate.py&#39;)\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Imports\n&quot;)</span>
-<span class="sd">    file.write(&quot;from pathlib import Path\n&quot;)</span>
-<span class="sd">    file.write(&quot;import sys\n&quot;)</span>
-<span class="sd">    file.write(&quot;homeUser = str(Path.home())\n&quot;)</span>
-<span class="sd">    file.write(&quot;sys.path.insert(0, homeUser + &#39;/livestock/classes&#39;)\n&quot;)</span>
-<span class="sd">    file.write(&quot;from RainClasses import topographicIndex\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Get files\n&quot;)</span>
-<span class="sd">    file.write(&quot;meshPath = homeUser + &#39;/livestock/templates/drainMesh.obj&#39;\n&quot;)</span>
-<span class="sd">    file.write(&quot;drainfaces = homeUser + &#39;/livestock/templates/drainfaces.txt&#39;\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Run function\n&quot;)</span>
-<span class="sd">    file.write(&quot;topographicIndex(meshPath, drainfaces)\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Announce that template finished and create out file\n&quot;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)\n&quot;)</span>
-<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)&quot;)</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="cmf_template"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.cmf_template">[docs]</a><span class="k">def</span> <span class="nf">cmf_template</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the CMF template.</span>
+
 <span class="sd">    :param path: Path to write it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">file_name</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;/cmf_template.py&#39;</span>
-    <span class="n">print_template_header</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
     <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 
     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Imports</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -269,6 +182,7 @@
 <div class="viewcode-block" id="process_cmf_results"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.process_cmf_results">[docs]</a><span class="k">def</span> <span class="nf">process_cmf_results</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the CMF result lookup template.</span>
+
 <span class="sd">    :param path: Path to write it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -292,6 +206,7 @@
 <div class="viewcode-block" id="process_cmf_surface_results"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.process_cmf_surface_results">[docs]</a><span class="k">def</span> <span class="nf">process_cmf_surface_results</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes the CMF surface result template.</span>
+
 <span class="sd">    :param path: Path to write it to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -311,27 +226,6 @@
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def cfd_ssh_template(path):</span>
-<span class="sd">    file_name = r&#39;/cfd_ssh_template.py&#39;</span>
-<span class="sd">    file = open(path + file_name, &#39;w&#39;)</span>
-<span class="sd">    print_template_header(file_name)</span>
-
-<span class="sd">    file.write(&quot;# Imports\n&quot;)</span>
-<span class="sd">    file.write(&quot;from pathlib import Path\n&quot;)</span>
-<span class="sd">    file.write(&quot;import sys\n&quot;)</span>
-<span class="sd">    file.write(&quot;home_user = str(Path.home())\n&quot;)</span>
-<span class="sd">    file.write(&quot;sys.path.insert(0, home_user + &#39;/livestock&#39;)\n&quot;)</span>
-<span class="sd">    file.write(&quot;from lib.misc import run_cfd\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Run function\n&quot;)</span>
-<span class="sd">    file.write(&quot;run_cfd(home_user + &#39;/livestock/ssh&#39;)\n&quot;)</span>
-
-<span class="sd">    file.write(&quot;# Announce that template finished and create out file\n&quot;)</span>
-<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)\n&quot;)</span>
-<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)\n&quot;)</span>
-<span class="sd">    file.write(&quot;file_obj.close()&quot;)</span>
-<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="new_air_conditions"><a class="viewcode-back" href="../../../lib.html#livestock.lib.templates.new_air_conditions">[docs]</a><span class="k">def</span> <span class="nf">new_air_conditions</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -388,6 +282,109 @@
     <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">file_name</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def cfd_ssh_template(path):</span>
+<span class="sd">    file_name = r&#39;/cfd_ssh_template.py&#39;</span>
+<span class="sd">    file = open(path + file_name, &#39;w&#39;)</span>
+<span class="sd">    print_template_header(file_name)</span>
+
+<span class="sd">    file.write(&quot;# Imports\n&quot;)</span>
+<span class="sd">    file.write(&quot;from pathlib import Path\n&quot;)</span>
+<span class="sd">    file.write(&quot;import sys\n&quot;)</span>
+<span class="sd">    file.write(&quot;home_user = str(Path.home())\n&quot;)</span>
+<span class="sd">    file.write(&quot;sys.path.insert(0, home_user + &#39;/livestock&#39;)\n&quot;)</span>
+<span class="sd">    file.write(&quot;from lib.misc import run_cfd\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Run function\n&quot;)</span>
+<span class="sd">    file.write(&quot;run_cfd(home_user + &#39;/livestock/ssh&#39;)\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Announce that template finished and create out file\n&quot;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)\n&quot;)</span>
+<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)\n&quot;)</span>
+<span class="sd">    file.write(&quot;file_obj.close()&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def topographic_index_template(path):</span>
+<span class="sd">    file = open(path + &#39;\\topographicIndexTemplate.py&#39;, &#39;w&#39;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Running template topographicIndexTemplate.py&#39;)\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Imports\n&quot;)</span>
+<span class="sd">    file.write(&quot;from pathlib import Path\n&quot;)</span>
+<span class="sd">    file.write(&quot;import sys\n&quot;)</span>
+<span class="sd">    file.write(&quot;homeUser = str(Path.home())\n&quot;)</span>
+<span class="sd">    file.write(&quot;sys.path.insert(0, homeUser + &#39;/livestock/classes&#39;)\n&quot;)</span>
+<span class="sd">    file.write(&quot;from RainClasses import topographicIndex\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Get files\n&quot;)</span>
+<span class="sd">    file.write(&quot;meshPath = homeUser + &#39;/livestock/templates/drainMesh.obj&#39;\n&quot;)</span>
+<span class="sd">    file.write(&quot;drainfaces = homeUser + &#39;/livestock/templates/drainfaces.txt&#39;\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Run function\n&quot;)</span>
+<span class="sd">    file.write(&quot;topographicIndex(meshPath, drainfaces)\n&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Announce that template finished and create out file\n&quot;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)\n&quot;)</span>
+<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def drain_pools_template(path):</span>
+<span class="sd">    file = open(&#39;DrainPoolsTemplate.py&#39;, &#39;w&#39;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Running template DrainPoolsTemplate.py&#39;)&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Get user&quot;)</span>
+<span class="sd">    file.write(&quot;user = open(&#39;user.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Import&quot;)</span>
+<span class="sd">    file.write(&quot;import sys&quot;)</span>
+<span class="sd">    file.write(&quot;sys.path.insert(0, &#39;/home/&#39; + user + &#39;/livestock/classes&#39;)&quot;)</span>
+<span class="sd">    file.write(&quot;from RainClasses import drainPools&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Get path&quot;)</span>
+<span class="sd">    file.write(&quot;poolPath = &#39;/home/&#39; + user + &#39;/livestock/templates/&#39;&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Run function&quot;)</span>
+<span class="sd">    file.write(&quot;warn = drainPools(poolPath)&quot;)</span>
+<span class="sd">    file.write(&quot;print(warn)&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Annouce that template finished and create out file&quot;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)&quot;)</span>
+
+<span class="sd">    return True</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def fix_mesh_template(path):</span>
+<span class="sd">    file = open(&#39;FixMeshTemplate.py&#39;, &#39;w&#39;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Running template FixMeshTemplate.py&#39;)&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Get user&quot;)</span>
+<span class="sd">    file.write(&quot;user = open(&#39;user.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Imports&quot;)</span>
+<span class="sd">    file.write(&quot;import sys&quot;)</span>
+<span class="sd">    file.write(&quot;import pymesh as pm&quot;)</span>
+<span class="sd">    file.write(&quot;sys.path.insert(0, &#39;/home/&#39; + user + &#39;/livestock/classes&#39;)&quot;)</span>
+<span class="sd">    file.write(&quot;from GeometryClasses import fix_mesh&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Get files&quot;)</span>
+<span class="sd">    file.write(&quot;meshPath = &#39;/home/&#39; + user + &#39;/livestock/templates/mesh.obj&#39;&quot;)</span>
+<span class="sd">    file.write(&quot;outPath = &#39;/home/&#39; + user + &#39;/livestock/templates/fixedMesh.obj&#39;&quot;)</span>
+<span class="sd">    file.write(&quot;detail = open(&#39;detail.txt&#39;, &#39;r&#39;).readline()&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Run function&quot;)</span>
+<span class="sd">    file.write(&quot;mesh = pm.load_mesh(meshPath)&quot;)</span>
+<span class="sd">    file.write(&quot;mesh = fix_mesh(mesh, detail=detail)&quot;)</span>
+<span class="sd">    file.write(&quot;pm.save_mesh(outPath, mesh)&quot;)</span>
+
+<span class="sd">    file.write(&quot;# Annouce that template finished and create out file&quot;)</span>
+<span class="sd">    file.write(&quot;print(&#39;Finished with template&#39;)&quot;)</span>
+<span class="sd">    file.write(&quot;file_obj = open(&#39;out.txt&#39;, &#39;w&#39;)&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
           </div>

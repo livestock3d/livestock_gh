@@ -1,15 +1,14 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
-# Livestock Templates Functions
-
+# Livestock Template Functions
 
 
 def pick_template(template_name, path):
     """
     Writes a template given a template name and path to write it to.
+
     :param template_name: Template name.
     :param path: Path to save it to.
     """
@@ -59,24 +58,14 @@ def pick_template(template_name, path):
     return True
 
 
-def print_template_header(template):
-    print('---------------------------------------------------')
-    print('')
-    print('                     LIVESTOCK                    ')
-    print('                  Running Template:')
-    print('                       ' + str(template))
-    print('')
-    print('---------------------------------------------------')
-
-
 def drain_mesh_template(path):
     """
     Writes the template for the drain mesh function.
+
     :param path: Path to write it to.
     """
 
     file_name = r'/drain_mesh_template.py'
-    print_template_header(file_name)
     file = open(path + file_name, 'w')
 
     file.write("print('Running template drain_mesh_template.py')\n")
@@ -97,68 +86,15 @@ def drain_mesh_template(path):
 
     return True
 
-"""
-def drain_pools_template(path):
-    file = open('DrainPoolsTemplate.py', 'w')
-    file.write("print('Running template DrainPoolsTemplate.py')")
-
-    file.write("# Get user")
-    file.write("user = open('user.txt', 'r').readline()")
-
-    file.write("# Import")
-    file.write("import sys")
-    file.write("sys.path.insert(0, '/home/' + user + '/livestock/classes')")
-    file.write("from RainClasses import drainPools")
-
-    file.write("# Get path")
-    file.write("poolPath = '/home/' + user + '/livestock/templates/'")
-
-    file.write("# Run function")
-    file.write("warn = drainPools(poolPath)")
-    file.write("print(warn)")
-
-    file.write("# Annouce that template finished and create out file")
-    file.write("print('Finished with template')")
-
-    return True
-"""
-"""
-def fix_mesh_template(path):
-    file = open('FixMeshTemplate.py', 'w')
-    file.write("print('Running template FixMeshTemplate.py')")
-
-    file.write("# Get user")
-    file.write("user = open('user.txt', 'r').readline()")
-
-    file.write("# Imports")
-    file.write("import sys")
-    file.write("import pymesh as pm")
-    file.write("sys.path.insert(0, '/home/' + user + '/livestock/classes')")
-    file.write("from GeometryClasses import fix_mesh")
-
-    file.write("# Get files")
-    file.write("meshPath = '/home/' + user + '/livestock/templates/mesh.obj'")
-    file.write("outPath = '/home/' + user + '/livestock/templates/fixedMesh.obj'")
-    file.write("detail = open('detail.txt', 'r').readline()")
-
-    file.write("# Run function")
-    file.write("mesh = pm.load_mesh(meshPath)")
-    file.write("mesh = fix_mesh(mesh, detail=detail)")
-    file.write("pm.save_mesh(outPath, mesh)")
-
-    file.write("# Annouce that template finished and create out file")
-    file.write("print('Finished with template')")
-    file.write("file_obj = open('out.txt', 'w')")
-"""
 
 def ssh_template(path):
     """
     Writes the ssh template.
+
     :param path: Path to write it to.
     """
 
     file_name = r'/ssh_template.py'
-    print_template_header(file_name)
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
@@ -172,38 +108,15 @@ def ssh_template(path):
 
     return True
 
-"""
-def topographic_index_template(path):
-    file = open(path + '\\topographicIndexTemplate.py', 'w')
-    file.write("print('Running template topographicIndexTemplate.py')\n")
-
-    file.write("# Imports\n")
-    file.write("from pathlib import Path\n")
-    file.write("import sys\n")
-    file.write("homeUser = str(Path.home())\n")
-    file.write("sys.path.insert(0, homeUser + '/livestock/classes')\n")
-    file.write("from RainClasses import topographicIndex\n")
-
-    file.write("# Get files\n")
-    file.write("meshPath = homeUser + '/livestock/templates/drainMesh.obj'\n")
-    file.write("drainfaces = homeUser + '/livestock/templates/drainfaces.txt'\n")
-
-    file.write("# Run function\n")
-    file.write("topographicIndex(meshPath, drainfaces)\n")
-
-    file.write("# Announce that template finished and create out file\n")
-    file.write("print('Finished with template')\n")
-    file.write("file_obj = open('out.txt', 'w')")
-"""
 
 def cmf_template(path):
     """
     Writes the CMF template.
+
     :param path: Path to write it to.
     """
 
     file_name = r'/cmf_template.py'
-    print_template_header(file_name)
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
@@ -227,6 +140,7 @@ def cmf_template(path):
 def process_cmf_results(path):
     """
     Writes the CMF result lookup template.
+
     :param path: Path to write it to.
     """
 
@@ -250,6 +164,7 @@ def process_cmf_results(path):
 def process_cmf_surface_results(path):
     """
     Writes the CMF surface result template.
+
     :param path: Path to write it to.
     """
 
@@ -269,27 +184,6 @@ def process_cmf_surface_results(path):
 
     return True
 
-"""
-def cfd_ssh_template(path):
-    file_name = r'/cfd_ssh_template.py'
-    file = open(path + file_name, 'w')
-    print_template_header(file_name)
-
-    file.write("# Imports\n")
-    file.write("from pathlib import Path\n")
-    file.write("import sys\n")
-    file.write("home_user = str(Path.home())\n")
-    file.write("sys.path.insert(0, home_user + '/livestock')\n")
-    file.write("from lib.misc import run_cfd\n")
-
-    file.write("# Run function\n")
-    file.write("run_cfd(home_user + '/livestock/ssh')\n")
-
-    file.write("# Announce that template finished and create out file\n")
-    file.write("print('Finished with template')\n")
-    file.write("file_obj = open('out.txt', 'w')\n")
-    file.write("file_obj.close()")
-"""
 
 def new_air_conditions(path):
     """
@@ -346,3 +240,106 @@ def water_evaporation(path):
     file.close()
 
     return file_name
+
+
+
+"""
+def cfd_ssh_template(path):
+    file_name = r'/cfd_ssh_template.py'
+    file = open(path + file_name, 'w')
+    print_template_header(file_name)
+
+    file.write("# Imports\n")
+    file.write("from pathlib import Path\n")
+    file.write("import sys\n")
+    file.write("home_user = str(Path.home())\n")
+    file.write("sys.path.insert(0, home_user + '/livestock')\n")
+    file.write("from lib.misc import run_cfd\n")
+
+    file.write("# Run function\n")
+    file.write("run_cfd(home_user + '/livestock/ssh')\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')\n")
+    file.write("file_obj.close()")
+"""
+
+"""
+def topographic_index_template(path):
+    file = open(path + '\\topographicIndexTemplate.py', 'w')
+    file.write("print('Running template topographicIndexTemplate.py')\n")
+
+    file.write("# Imports\n")
+    file.write("from pathlib import Path\n")
+    file.write("import sys\n")
+    file.write("homeUser = str(Path.home())\n")
+    file.write("sys.path.insert(0, homeUser + '/livestock/classes')\n")
+    file.write("from RainClasses import topographicIndex\n")
+
+    file.write("# Get files\n")
+    file.write("meshPath = homeUser + '/livestock/templates/drainMesh.obj'\n")
+    file.write("drainfaces = homeUser + '/livestock/templates/drainfaces.txt'\n")
+
+    file.write("# Run function\n")
+    file.write("topographicIndex(meshPath, drainfaces)\n")
+
+    file.write("# Announce that template finished and create out file\n")
+    file.write("print('Finished with template')\n")
+    file.write("file_obj = open('out.txt', 'w')")
+"""
+
+
+"""
+def drain_pools_template(path):
+    file = open('DrainPoolsTemplate.py', 'w')
+    file.write("print('Running template DrainPoolsTemplate.py')")
+
+    file.write("# Get user")
+    file.write("user = open('user.txt', 'r').readline()")
+
+    file.write("# Import")
+    file.write("import sys")
+    file.write("sys.path.insert(0, '/home/' + user + '/livestock/classes')")
+    file.write("from RainClasses import drainPools")
+
+    file.write("# Get path")
+    file.write("poolPath = '/home/' + user + '/livestock/templates/'")
+
+    file.write("# Run function")
+    file.write("warn = drainPools(poolPath)")
+    file.write("print(warn)")
+
+    file.write("# Annouce that template finished and create out file")
+    file.write("print('Finished with template')")
+
+    return True
+"""
+"""
+def fix_mesh_template(path):
+    file = open('FixMeshTemplate.py', 'w')
+    file.write("print('Running template FixMeshTemplate.py')")
+
+    file.write("# Get user")
+    file.write("user = open('user.txt', 'r').readline()")
+
+    file.write("# Imports")
+    file.write("import sys")
+    file.write("import pymesh as pm")
+    file.write("sys.path.insert(0, '/home/' + user + '/livestock/classes')")
+    file.write("from GeometryClasses import fix_mesh")
+
+    file.write("# Get files")
+    file.write("meshPath = '/home/' + user + '/livestock/templates/mesh.obj'")
+    file.write("outPath = '/home/' + user + '/livestock/templates/fixedMesh.obj'")
+    file.write("detail = open('detail.txt', 'r').readline()")
+
+    file.write("# Run function")
+    file.write("mesh = pm.load_mesh(meshPath)")
+    file.write("mesh = fix_mesh(mesh, detail=detail)")
+    file.write("pm.save_mesh(outPath, mesh)")
+
+    file.write("# Annouce that template finished and create out file")
+    file.write("print('Finished with template')")
+    file.write("file_obj = open('out.txt', 'w')")
+"""

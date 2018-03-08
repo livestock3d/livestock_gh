@@ -24,9 +24,14 @@ from Grasshopper.Kernel.Data import GH_Path as Path
 
 
 def tree_to_list(input_, retrieve_base=lambda x: x[0]):
-    """Returns a list representation of a Grasshopper DataTree"""
+    """
+    | Returns a list representation of a Grasshopper DataTree
+    | `Source`__
 
-    # TODO - Find source
+    __ https://gist.github.com/piac/ef91ac83cb5ee92a1294
+
+    """
+
     def extend_at(path_, index, simple_input, rest_list):
         target = path[index]
 
@@ -48,9 +53,13 @@ def tree_to_list(input_, retrieve_base=lambda x: x[0]):
 
 
 def list_to_tree(input_, none_and_holes=True, source=[0]):
-    """Transforms nestings of lists or tuples to a Grasshopper DataTree"""
+    """
+    | Transforms nestings of lists or tuples to a Grasshopper DataTree
+    | `Source`__
 
-    #TODO - Find source
+    __ https://gist.github.com/piac/ef91ac83cb5ee92a1294
+    """
+
     def proc(input_, tree, track):
         path = Path(Array[int](track))
         if len(input_) == 0 and none_and_holes:
@@ -87,6 +96,7 @@ class PassClass:
 def write_file(text, path, name, file_type='txt'):
     """
     Writes a text file.
+
     :param text: Text to write.
     :param path: Directory to save it to.
     :param name: File name.
@@ -165,6 +175,15 @@ def get_python_exe():
 
 
 def hour_to_date(hour_of_the_year):
+    """
+    Transform a hour of the year into a string datetime on the format DD MMM HH:mm
+
+    :param hour_of_the_year: Hour of the year
+    :type hour_of_the_year: int
+    :return: Datetime on format DD MMM HH:mm
+    :rtype: str
+    """
+
     #TODO - Make better code
 
     month_list = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
