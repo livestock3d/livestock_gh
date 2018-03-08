@@ -1,4 +1,4 @@
-4 | Comfort
+3 | Comfort
 -----------
 
 .. automodule:: livestock.components.comfort

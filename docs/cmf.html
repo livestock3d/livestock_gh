@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>3 | CMF &#8212; Livestock Grasshopper 2018.03 documentation</title>
+    <title>2 | CMF &#8212; Livestock Grasshopper 2018.03 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4 | Comfort" href="comfort.html" />
+    <link rel="next" title="3 | Comfort" href="comfort.html" />
     <link rel="prev" title="1 | Geometry" href="geometry.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -42,11 +42,12 @@
           <div class="body" role="main">
             
   <div class="section" id="module-livestock.components.comp_cmf">
-<span id="cmf"></span><h1>3 | CMF<a class="headerlink" href="#module-livestock.components.comp_cmf" title="Permalink to this headline">¶</a></h1>
+<span id="cmf"></span><h1>2 | CMF<a class="headerlink" href="#module-livestock.components.comp_cmf" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="livestock.components.comp_cmf.CMFGround">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFGround</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFGround"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that generates the CMF ground</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFGround.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -62,15 +63,29 @@
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.convert_et_number_to_method">
 <code class="descname">convert_et_number_to_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFGround.convert_et_number_to_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.convert_et_number_to_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a number into a ET method.
-:return: ET method name.</p>
+<dd><p>Converts a number into a ET method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ET method name.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.convert_runoff_number_to_method">
 <code class="descname">convert_runoff_number_to_method</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFGround.convert_runoff_number_to_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.convert_runoff_number_to_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a number into a surface run-off method.
-:return: Surface run-off name</p>
+<dd><p>Converts a number into a surface run-off method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Surface run-off name</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -83,71 +98,27 @@ The component puts all the inputs into a dict and uses PassClass to pass it on.<
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFGround.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>layers</em>, <em>retention_curve</em>, <em>vegetation_properties</em>, <em>saturated_depth</em>, <em>surface_water</em>, <em>face_indices</em>, <em>et_method</em>, <em>manning_</em>, <em>puddle</em>, <em>surface_run_off_method</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFGround.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFGround.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param layers: Depth of layers.
-:param retention_curve: Livestock retention curve dict.
-:param vegetation_properties: Livestock vegetation properties dict.
-:param saturated_depth: Saturated depth of the cell.
-:param surface_water: Initial surfacee water volume.
-:param face_indices: Face indices where the properties should be applied to.
-:param et_method: Evapotranspriation calculation method.
-:param <a href="#id4"><span class="problematic" id="id5">manning_</span></a>: Manning roughness.
-:param puddle: Puddle depth.
-:param surface_run_off_method: Surface Run-off method.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="livestock.components.comp_cmf.CMFInlet">
-<em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFInlet</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFInlet.check_inputs">
-<code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet.check_inputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks inputs and raises a warning if an input is not the correct type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFInlet.config">
-<code class="descname">config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet.config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates the Grasshopper component.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFInlet.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-It runs set_inlet().</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFInlet.run_checks">
-<code class="descname">run_checks</code><span class="sig-paren">(</span><em>cell</em>, <em>layer</em>, <em>inlet_flux</em>, <em>time_step</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet.run_checks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gathers the inputs and checks them.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cell</strong> – </li>
-<li><strong>layer</strong> – </li>
-<li><strong>inlet_flux</strong> – </li>
-<li><strong>time_step</strong> – </li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layers</strong> – Depth of layers.</li>
+<li><strong>retention_curve</strong> – Livestock retention curve dict.</li>
+<li><strong>vegetation_properties</strong> – Livestock vegetation properties dict.</li>
+<li><strong>saturated_depth</strong> – Saturated depth of the cell.</li>
+<li><strong>surface_water</strong> – Initial surface water volume.</li>
+<li><strong>face_indices</strong> – Face indices where the properties should be applied to.</li>
+<li><strong>et_method</strong> – Evapotranspriation calculation method.</li>
+<li><strong>manning</strong> – Manning roughness.</li>
+<li><strong>puddle</strong> – Puddle depth.</li>
+<li><strong>surface_run_off_method</strong> – Surface Run-off method.</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFInlet.set_inlet">
-<code class="descname">set_inlet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFInlet.set_inlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFInlet.set_inlet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a dict with inlet information.</p>
 </dd></dl>
 
 </dd></dl>
@@ -156,6 +127,7 @@ It runs set_inlet().</p>
 <dt id="livestock.components.comp_cmf.CMFOutlet">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFOutlet</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutlet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutlet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that creates a CMF Outlet.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutlet.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutlet.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutlet.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -187,8 +159,10 @@ It runs set_inlet().</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutlet.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutlet.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutlet.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-It runs set_outlet().</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">It runs set_outlet().</div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -224,17 +198,13 @@ It runs set_outlet().</p>
 <dd><p>Constructs a dict with outlet information.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="livestock.components.comp_cmf.CMFOutlet.type_to_connection">
-<code class="descname">type_to_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutlet.type_to_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutlet.type_to_connection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="livestock.components.comp_cmf.CMFOutputs">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFOutputs</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that specifies the wanted outputs from the CMF simulation.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutputs.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutputs.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -250,31 +220,50 @@ It runs set_outlet().</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutputs.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutputs.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-set_outputs() are run and passed on with PassClass.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">set_outputs() are run and passed on with PassClass.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutputs.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>evapo_trans</em>, <em>surface_water_volume</em>, <em>surface_water_flux</em>, <em>heat_flux</em>, <em>aero_res</em>, <em>three_d_flux</em>, <em>potential</em>, <em>theta</em>, <em>volume</em>, <em>wetness</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutputs.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param evapo_trans: Whether to include evapotranspiration or not.
-:param surface_water_volume: Whether to include surface water volume or not.
-:param surface_water_flux: Whether to include surface water flux or not.
-:param heat_flux: Whether to include surface heat flux or not.
-:param aero_res: Whether to include aerodynamic resistance or not.
-:param three_d_flux: Whether to include soil water flux or not.
-:param potential: Whether to include soil potential or not.
-:param theta: Whether to include soil theta or not.
-:param volume: Whether to include soil water volume or not.
-:param wetness: Whether to include soil wetness or not.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>evapo_trans</strong> – Whether to include evapotranspiration or not.</li>
+<li><strong>surface_water_volume</strong> – Whether to include surface water volume or not.</li>
+<li><strong>surface_water_flux</strong> – Whether to include surface water flux or not.</li>
+<li><strong>heat_flux</strong> – Whether to include surface heat flux or not.</li>
+<li><strong>aero_res</strong> – Whether to include aerodynamic resistance or not.</li>
+<li><strong>three_d_flux</strong> – Whether to include soil water flux or not.</li>
+<li><strong>potential</strong> – Whether to include soil potential or not.</li>
+<li><strong>theta</strong> – Whether to include soil theta or not.</li>
+<li><strong>volume</strong> – Whether to include soil water volume or not.</li>
+<li><strong>wetness</strong> – Whether to include soil wetness or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFOutputs.set_outputs">
 <code class="descname">set_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFOutputs.set_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFOutputs.set_outputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes the wanted outputs into a dict
-:return: output dict.</p>
+<dd><p>Converts the wanted outputs into a dict</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">output dict.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -283,6 +272,7 @@ set_outputs() are run and passed on with PassClass.</p>
 <dt id="livestock.components.comp_cmf.CMFResults">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFResults</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that loads the CMF results.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFResults.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -304,38 +294,65 @@ set_outputs() are run and passed on with PassClass.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFResults.load_result_csv">
 <code class="descname">load_result_csv</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults.load_result_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.load_result_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the csv file containing the wanted results.
-:param path: Csv file path
-:return: The results</p>
+<dd><p>Loads the csv file containing the wanted results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Csv file path</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The results</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFResults.process_xml">
 <code class="descname">process_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults.process_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.process_xml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes the xml result file and extracts the wanted information and saves it as a csv file.
-:return: csv file path.</p>
+<dd><p>Processes the xml result file and extracts the wanted information and saves it as a csv file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">csv file path.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFResults.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed and run is True the component runs.
-Following functions are run:
-set_units()
-process_xml()
-load_result_csv()
-delete_files()
-The results are converted into a Grasshopper Tree structure.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed and run is True the component runs.</div>
+<div class="line">Following functions are run:</div>
+<div class="line">set_units()</div>
+<div class="line">process_xml()</div>
+<div class="line">load_result_csv()</div>
+<div class="line">delete_files()</div>
+<div class="line">The results are converted into a Grasshopper Tree structure.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFResults.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>fetch_result</em>, <em>save</em>, <em>run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFResults.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFResults.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param path: Result path
-:param fetch_result: Which result to fetch
-:param save: Whether to save the csv file or not.
-:param run: Whether to run the component or not.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – Result path</li>
+<li><strong>fetch_result</strong> – Which result to fetch</li>
+<li><strong>save</strong> – Whether to save the csv file or not.</li>
+<li><strong>run</strong> – Whether to run the component or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -350,6 +367,7 @@ The results are converted into a Grasshopper Tree structure.</p>
 <dt id="livestock.components.comp_cmf.CMFRetentionCurve">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFRetentionCurve</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFRetentionCurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that generates the CMF retention curve</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFRetentionCurve.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFRetentionCurve.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -371,28 +389,42 @@ The results are converted into a Grasshopper Tree structure.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFRetentionCurve.load_retention_curve">
 <code class="descname">load_retention_curve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFRetentionCurve.load_retention_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.load_retention_curve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the retention curve data and converts it into a order dict.
-If any property is to be overwritten it is also done in this function.</p>
+<dd><div class="line-block">
+<div class="line">Loads the retention curve data and converts it into a order dict.</div>
+<div class="line">If any property is to be overwritten it is also done in this function.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFRetentionCurve.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFRetentionCurve.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-Loads the retention curve data and passes it on with PassClass.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">Loads the retention curve data and passes it on with PassClass.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFRetentionCurve.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>soil_index</em>, <em>k_sat</em>, <em>phi</em>, <em>alpha</em>, <em>n</em>, <em>m</em>, <em>l</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFRetentionCurve.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFRetentionCurve.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param soil_index: Soil index.
-:param k_sat: Ksat
-:param phi: Phi
-:param alpha: Alpha
-:param n: N
-:param m: M
-:param l: L</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>soil_index</strong> – Soil index.</li>
+<li><strong>k_sat</strong> – Ksat</li>
+<li><strong>phi</strong> – Phi</li>
+<li><strong>alpha</strong> – Alpha</li>
+<li><strong>n</strong> – N</li>
+<li><strong>m</strong> – M</li>
+<li><strong>l</strong> – L</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -401,6 +433,7 @@ Loads the retention curve data and passes it on with PassClass.</p>
 <dt id="livestock.components.comp_cmf.CMFSolve">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSolve</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that solves the CMF Case.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolve.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolve.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -429,27 +462,39 @@ If not then a warning is raised.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolve.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolve.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed and write_case is True the component writes the case files.
-If all checks have passed and run_case is True the simulation is started.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed and write_case is True the component writes the case files.</div>
+<div class="line">If all checks have passed and run_case is True the simulation is started.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolve.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>mesh</em>, <em>ground</em>, <em>weather</em>, <em>trees</em>, <em>stream</em>, <em>boundary_conditions</em>, <em>solver_settings</em>, <em>folder</em>, <em>name</em>, <em>outputs</em>, <em>write</em>, <em>overwrite</em>, <em>run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolve.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param mesh: Project Mesh
-:param ground: Livestock Ground dict
-:param weather: Livestock Weather dict
-:param trees: Livestock Tree dict
-:param stream: Livestock Stream dict
-:param boundary_conditions: Livestock Boundary Condition dict
-:param solver_settings: Livestock Solver settings dict
-:param folder: Case folder
-:param name: Case name
-:param outputs: Livestock Outputs dict
-:param write: Whether to write or not
-:param overwrite: Overwrite exsiting files
-:param run: Whether to run or not.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mesh</strong> – Project Mesh</li>
+<li><strong>ground</strong> – Livestock Ground dict</li>
+<li><strong>weather</strong> – Livestock Weather dict</li>
+<li><strong>trees</strong> – Livestock Tree dict</li>
+<li><strong>stream</strong> – Livestock Stream dict</li>
+<li><strong>boundary_conditions</strong> – Livestock Boundary Condition dict</li>
+<li><strong>solver_settings</strong> – Livestock Solver settings dict</li>
+<li><strong>folder</strong> – Case folder</li>
+<li><strong>name</strong> – Case name</li>
+<li><strong>outputs</strong> – Livestock Outputs dict</li>
+<li><strong>write</strong> – Whether to write or not</li>
+<li><strong>overwrite</strong> – Overwrite exsiting files</li>
+<li><strong>run</strong> – Whether to run or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -461,8 +506,15 @@ If all checks have passed and run_case is True the simulation is started.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolve.write">
 <code class="descname">write</code><span class="sig-paren">(</span><em>doc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolve.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolve.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the needed files.
-:param doc: Grasshopper document.</p>
+<dd><p>Writes the needed files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>doc</strong> – Grasshopper document.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -471,6 +523,7 @@ If all checks have passed and run_case is True the simulation is started.</p>
 <dt id="livestock.components.comp_cmf.CMFSolverSettings">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSolverSettings</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolverSettings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that sets the solver settings for CMF Solve.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolverSettings.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolverSettings.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -486,18 +539,30 @@ If all checks have passed and run_case is True the simulation is started.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolverSettings.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolverSettings.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-Constructs a solver settings dict, prints it and passes it on with PassClass.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">Constructs a solver settings dict, prints it and passes it on with PassClass.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSolverSettings.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>length</em>, <em>time_step</em>, <em>tolerance</em>, <em>verbosity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSolverSettings.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSolverSettings.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param length: Number of time steps to be taken.
-:param time_step: Size of time step.
-:param tolerance: Solver tolerance.
-:param verbosity: Solver verbosity.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>length</strong> – Number of time steps to be taken.</li>
+<li><strong>time_step</strong> – Size of time step.</li>
+<li><strong>tolerance</strong> – Solver tolerance.</li>
+<li><strong>verbosity</strong> – Solver verbosity.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -506,6 +571,7 @@ Constructs a solver settings dict, prints it and passes it on with PassClass.</p
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSurfaceFluxResult</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSurfaceFluxResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that visualizes the surface fluxes from a CMF case.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSurfaceFluxResult.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -533,29 +599,41 @@ Constructs a solver settings dict, prints it and passes it on with PassClass.</p
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSurfaceFluxResult.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed and Write is True the component writes the component files.
-In case all the checks have passed the component runs.
-The following functions are run:
-write()
-run_template()
-load_results()
-delete_files()
-The results are converted into a Grasshopper Tree structure.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed and Write is True the component writes the component files.</div>
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">The following functions are run:</div>
+<div class="line">write()</div>
+<div class="line">run_template()</div>
+<div class="line">load_results()</div>
+<div class="line">delete_files()</div>
+<div class="line">The results are converted into a Grasshopper Tree structure.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>path</em>, <em>mesh</em>, <em>run_off</em>, <em>rain</em>, <em>evapo</em>, <em>infiltration</em>, <em>save</em>, <em>write</em>, <em>run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSurfaceFluxResult.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param path: Path for result file.
-:param mesh: Case mesh
-:param run_off: Whether to include run-off or not.
-:param rain: Whether to include rain or not.
-:param evapo: Whether to include evapotranspiration or not.
-:param infiltration: Whether to include infiltration or not.
-:param save: Save result to file or not
-:param write: Write component files or not
-:param run: Run component or not.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> – Path for result file.</li>
+<li><strong>mesh</strong> – Case mesh</li>
+<li><strong>run_off</strong> – Whether to include run-off or not.</li>
+<li><strong>rain</strong> – Whether to include rain or not.</li>
+<li><strong>evapo</strong> – Whether to include evapotranspiration or not.</li>
+<li><strong>infiltration</strong> – Whether to include infiltration or not.</li>
+<li><strong>save</strong> – Save result to file or not</li>
+<li><strong>write</strong> – Write component files or not</li>
+<li><strong>run</strong> – Run component or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -576,6 +654,7 @@ The results are converted into a Grasshopper Tree structure.</p>
 <dt id="livestock.components.comp_cmf.CMFSyntheticTree">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFSyntheticTree</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSyntheticTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that generates a synthetic tree.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSyntheticTree.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSyntheticTree.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -603,17 +682,29 @@ The results are converted into a Grasshopper Tree structure.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSyntheticTree.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSyntheticTree.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-It runs the function compute_tree. Creates a dict and passes it on with PassClass.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">It runs the function compute_tree. Creates a dict and passes it on with PassClass.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFSyntheticTree.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>face_index</em>, <em>tree_type</em>, <em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFSyntheticTree.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFSyntheticTree.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param face_index: Mesh face index.
-:param tree_type: Tree type.
-:param height: Tree height.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>face_index</strong> – Mesh face index.</li>
+<li><strong>tree_type</strong> – Tree type.</li>
+<li><strong>height</strong> – Tree height.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -622,6 +713,7 @@ It runs the function compute_tree. Creates a dict and passes it on with PassClas
 <dt id="livestock.components.comp_cmf.CMFVegetationProperties">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFVegetationProperties</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFVegetationProperties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that generates the CMF Vegetation Properties.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFVegetationProperties.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFVegetationProperties.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -649,16 +741,25 @@ It runs the function compute_tree. Creates a dict and passes it on with PassClas
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFVegetationProperties.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFVegetationProperties.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>In case all the checks have passed the component runs.
-It run pick_properties()
-And passes on the property dict with PassClass.</p>
+<dd><div class="line-block">
+<div class="line">In case all the checks have passed the component runs.</div>
+<div class="line">It run pick_properties()</div>
+<div class="line">And passes on the property dict with PassClass.</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFVegetationProperties.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>property_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFVegetationProperties.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFVegetationProperties.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param <a href="#id6"><span class="problematic" id="id7">property_</span></a>: Property index.</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property</strong> – Property index.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -667,6 +768,7 @@ And passes on the property dict with PassClass.</p>
 <dt id="livestock.components.comp_cmf.CMFWeather">
 <em class="property">class </em><code class="descclassname">livestock.components.comp_cmf.</code><code class="descname">CMFWeather</code><span class="sig-paren">(</span><em>ghenv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="superclass.html#livestock.components.component.GHComponent" title="livestock.components.component.GHComponent"><code class="xref py py-class docutils literal"><span class="pre">livestock.components.component.GHComponent</span></code></a></p>
+<p>A component class that generates the CMF weather</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.check_inputs">
 <code class="descname">check_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.check_inputs" title="Permalink to this definition">¶</a></dt>
@@ -682,40 +784,68 @@ And passes on the property dict with PassClass.</p>
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.convert_cloud_cover">
 <code class="descname">convert_cloud_cover</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.convert_cloud_cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_cloud_cover" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts cloud cover to sun shine fraction.
-sun shine = 1 - cloud cover
-:return: list with sun shine fractions.</p>
+<dd><div class="line-block">
+<div class="line">Converts cloud cover to sun shine fraction.</div>
+<div class="line">Sun shine = 1 - cloud cover</div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list with sun shine fractions.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.convert_location">
 <code class="descname">convert_location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.convert_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_location" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts information from a Ladybug Tools location
-:return: Latitude, longitude and time zone</p>
+<dd><p>Extracts information from a Ladybug Tools location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Latitude, longitude and time zone</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.convert_radiation_unit">
 <code class="descname">convert_radiation_unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.convert_radiation_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_radiation_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts radiation from W/m2 to MJ/(m2*day)
-1 W/m2 =&gt; 60s*60min*24hours/10^6 =&gt; MJ/(m2*day)
-1 W/m2 = 0.0864 MJ/(m2*day)</p>
+<dd><div class="line-block">
+<div class="line">Converts radiation from W/m<sup>2</sup> to MJ/(m<sup>2</sup> day)</div>
+<div class="line">1 W/m<sup>2</sup> =&gt; 60s * 60min * 24hours/10<sup>6</sup> =&gt; MJ/(m<sup>2</sup> day)</div>
+<div class="line">1 W/m<sup>2</sup> = 0.0864 MJ/(m<sup>2</sup> day)</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.convert_rain_unit">
 <code class="descname">convert_rain_unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.convert_rain_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.convert_rain_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts rain from mm/h to mm/day
-1 mm/h = 24 mm/day</p>
+<dd><div class="line-block">
+<div class="line">Converts rain from mm/h to mm/day</div>
+<div class="line">1 mm/h = 24 mm/day</div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.match_cell_count">
 <code class="descname">match_cell_count</code><span class="sig-paren">(</span><em>weather_parameter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.match_cell_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.match_cell_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether a whether a weather parameter has the correct number of sublists,
-so they matches the number of cells. Then converts it into a dict with a list for each cell.
-:param weather_parameter: Weather parameter to check.
-:return: Corrected weather parameter as dict.</p>
+so they matches the number of cells. Then converts it into a dict with a list for each cell.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weather_parameter</strong> – Weather parameter to check.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Corrected weather parameter as dict.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -728,27 +858,39 @@ so they matches the number of cells. Then converts it into a dict with a list fo
 <dt id="livestock.components.comp_cmf.CMFWeather.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>In case all the checks have passed the component runs.
-The following functions are run:
-print_weather_lengths()
-convert_cloud_cover()
-convert_radiation_unit()
-convert_location()
-A weather dict is created an passes on with PassClass.</p>
+The following functions are run:</p>
+<ul class="simple">
+<li>print_weather_lengths()</li>
+<li>convert_cloud_cover()</li>
+<li>convert_radiation_unit()</li>
+<li>convert_location()</li>
+</ul>
+<p>A weather dict is created an passes on with PassClass.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="livestock.components.comp_cmf.CMFWeather.run_checks">
 <code class="descname">run_checks</code><span class="sig-paren">(</span><em>temp</em>, <em>wind</em>, <em>rel_hum</em>, <em>cloud_cover</em>, <em>global_radiation</em>, <em>rain</em>, <em>ground_temp</em>, <em>location</em>, <em>face_count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/livestock/components/comp_cmf.html#CMFWeather.run_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#livestock.components.comp_cmf.CMFWeather.run_checks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gathers the inputs and checks them.
-:param temp: Temperature
-:param wind: Wind speed
-:param rel_hum: Relative humidity
-:param cloud_cover: Cloud cover
-:param global_radiation: Global radiation
-:param rain: Rain
-:param ground_temp: Ground temperature.
-:param location: Ladybug Tool location
-:param face_count: Number of mesh faces in project</p>
+<dd><p>Gathers the inputs and checks them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>temp</strong> – Temperature</li>
+<li><strong>wind</strong> – Wind speed</li>
+<li><strong>rel_hum</strong> – Relative humidity</li>
+<li><strong>cloud_cover</strong> – Cloud cover</li>
+<li><strong>global_radiation</strong> – Global radiation</li>
+<li><strong>rain</strong> – Rain</li>
+<li><strong>ground_temp</strong> – Ground temperature.</li>
+<li><strong>location</strong> – Ladybug Tool location</li>
+<li><strong>face_count</strong> – Number of mesh faces in project</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -770,7 +912,7 @@ A weather dict is created an passes on with PassClass.</p>
   <li><a href="index.html">Documentation overview</a><ul>
   <li><a href="component_classes.html">Livestock Grasshopper Component Classes</a><ul>
       <li>Previous: <a href="geometry.html" title="previous chapter">1 | Geometry</a></li>
-      <li>Next: <a href="comfort.html" title="next chapter">4 | Comfort</a></li>
+      <li>Next: <a href="comfort.html" title="next chapter">3 | Comfort</a></li>
   </ul></li>
   </ul></li>
 </ul>

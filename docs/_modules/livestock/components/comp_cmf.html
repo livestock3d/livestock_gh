@@ -42,7 +42,6 @@
   <h1>Source code for livestock.components.comp_cmf</h1><div class="highlight"><pre>
 <span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Christian Kongsgaard&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.1.0&quot;</span>
 
 <span class="c1"># -------------------------------------------------------------------------------------------------------------------- #</span>
 <span class="c1"># Imports</span>
@@ -73,6 +72,8 @@
 
 <div class="viewcode-block" id="CMFGround"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFGround">[docs]</a><span class="k">class</span> <span class="nc">CMFGround</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
     <span class="c1"># TODO - Create flux calculation methods components</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that generates the CMF ground&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -166,16 +167,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFGround.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFGround.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFGround.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFGround.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -184,11 +181,12 @@
                    <span class="n">et_method</span><span class="p">,</span> <span class="n">manning_</span><span class="p">,</span> <span class="n">puddle</span><span class="p">,</span> <span class="n">surface_run_off_method</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param layers: Depth of layers.</span>
 <span class="sd">        :param retention_curve: Livestock retention curve dict.</span>
 <span class="sd">        :param vegetation_properties: Livestock vegetation properties dict.</span>
 <span class="sd">        :param saturated_depth: Saturated depth of the cell.</span>
-<span class="sd">        :param surface_water: Initial surfacee water volume.</span>
+<span class="sd">        :param surface_water: Initial surface water volume.</span>
 <span class="sd">        :param face_indices: Face indices where the properties should be applied to.</span>
 <span class="sd">        :param et_method: Evapotranspriation calculation method.</span>
 <span class="sd">        :param manning_: Manning roughness.</span>
@@ -214,6 +212,7 @@
 <div class="viewcode-block" id="CMFGround.convert_et_number_to_method"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFGround.convert_et_number_to_method">[docs]</a>    <span class="k">def</span> <span class="nf">convert_et_number_to_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a number into a ET method.</span>
+
 <span class="sd">        :return: ET method name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -230,6 +229,7 @@
 <div class="viewcode-block" id="CMFGround.convert_runoff_number_to_method"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFGround.convert_runoff_number_to_method">[docs]</a>    <span class="k">def</span> <span class="nf">convert_runoff_number_to_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a number into a surface run-off method.</span>
+
 <span class="sd">        :return: Surface run-off name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -264,6 +264,8 @@
 
 
 <div class="viewcode-block" id="CMFWeather"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather">[docs]</a><span class="k">class</span> <span class="nc">CMFWeather</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that generates the CMF weather&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -346,16 +348,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFWeather.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFWeather.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -363,6 +361,7 @@
 <div class="viewcode-block" id="CMFWeather.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">wind</span><span class="p">,</span> <span class="n">rel_hum</span><span class="p">,</span> <span class="n">cloud_cover</span><span class="p">,</span> <span class="n">global_radiation</span><span class="p">,</span> <span class="n">rain</span><span class="p">,</span> <span class="n">ground_temp</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">face_count</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param temp: Temperature</span>
 <span class="sd">        :param wind: Wind speed</span>
 <span class="sd">        :param rel_hum: Relative humidity</span>
@@ -390,8 +389,9 @@
 
 <div class="viewcode-block" id="CMFWeather.convert_cloud_cover"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.convert_cloud_cover">[docs]</a>    <span class="k">def</span> <span class="nf">convert_cloud_cover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts cloud cover to sun shine fraction.</span>
-<span class="sd">        sun shine = 1 - cloud cover</span>
+<span class="sd">        | Converts cloud cover to sun shine fraction.</span>
+<span class="sd">        | Sun shine = 1 - cloud cover</span>
+
 <span class="sd">        :return: list with sun shine fractions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -406,9 +406,10 @@
 
 <div class="viewcode-block" id="CMFWeather.convert_radiation_unit"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.convert_radiation_unit">[docs]</a>    <span class="k">def</span> <span class="nf">convert_radiation_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts radiation from W/m2 to MJ/(m2*day)</span>
-<span class="sd">        1 W/m2 =&gt; 60s*60min*24hours/10^6 =&gt; MJ/(m2*day)</span>
-<span class="sd">        1 W/m2 = 0.0864 MJ/(m2*day)</span>
+<span class="sd">        | Converts radiation from W/m\ :sup:`2` to MJ/(m\ :sup:`2` day)</span>
+<span class="sd">        | 1 W/m\ :sup:`2` =&gt; 60s * 60min * 24hours/10\ :sup:`6` =&gt; MJ/(m\ :sup:`2` day)</span>
+<span class="sd">        | 1 W/m\ :sup:`2` = 0.0864 MJ/(m\ :sup:`2` day)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">converted_radiation</span> <span class="o">=</span> <span class="p">{}</span>
@@ -422,8 +423,9 @@
 
 <div class="viewcode-block" id="CMFWeather.convert_rain_unit"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.convert_rain_unit">[docs]</a>    <span class="k">def</span> <span class="nf">convert_rain_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts rain from mm/h to mm/day</span>
-<span class="sd">        1 mm/h = 24 mm/day</span>
+<span class="sd">        | Converts rain from mm/h to mm/day</span>
+<span class="sd">        | 1 mm/h = 24 mm/day</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">converted_rain</span> <span class="o">=</span> <span class="p">{}</span>
@@ -438,6 +440,7 @@
 <div class="viewcode-block" id="CMFWeather.convert_location"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.convert_location">[docs]</a>    <span class="k">def</span> <span class="nf">convert_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts information from a Ladybug Tools location</span>
+
 <span class="sd">        :return: Latitude, longitude and time zone</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -448,6 +451,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether a whether a weather parameter has the correct number of sublists,</span>
 <span class="sd">        so they matches the number of cells. Then converts it into a dict with a list for each cell.</span>
+
 <span class="sd">        :param weather_parameter: Weather parameter to check.</span>
 <span class="sd">        :return: Corrected weather parameter as dict.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -481,9 +485,7 @@
         <span class="k">return</span> <span class="n">weather_dict</span></div>
 
 <div class="viewcode-block" id="CMFWeather.print_weather_lengths"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFWeather.print_weather_lengths">[docs]</a>    <span class="k">def</span> <span class="nf">print_weather_lengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Prints the length of each weather parameter.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Prints the length of each weather parameter.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">printer</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; includes: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="s1">&#39; lists&#39;</span><span class="p">)</span>
@@ -500,10 +502,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        In case all the checks have passed the component runs.</span>
 <span class="sd">        The following functions are run:</span>
-<span class="sd">        print_weather_lengths()</span>
-<span class="sd">        convert_cloud_cover()</span>
-<span class="sd">        convert_radiation_unit()</span>
-<span class="sd">        convert_location()</span>
+
+<span class="sd">        - print_weather_lengths()</span>
+<span class="sd">        - convert_cloud_cover()</span>
+<span class="sd">        - convert_radiation_unit()</span>
+<span class="sd">        - convert_location()</span>
+
 <span class="sd">        A weather dict is created an passes on with PassClass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -532,124 +536,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">PassClass</span><span class="p">(</span><span class="n">weather_dict</span><span class="p">,</span> <span class="s1">&#39;Weather&#39;</span><span class="p">)</span></div></div>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">class CMFStream(GHComponent):</span>
-
-<span class="sd">    def __init__(self):</span>
-<span class="sd">        GHComponent.__init__(self)</span>
-
-<span class="sd">        def inputs(x):</span>
-<span class="sd">            if x == 0:</span>
-<span class="sd">                return {0: [&#39;MidStreamCurve&#39;, &#39;Curve following the middle of the stream&#39;],</span>
-<span class="sd">                        1: [&#39;CrossSections&#39;,&#39;Cross section curves along the stream&#39;]}</span>
-
-<span class="sd">        def outputs():</span>
-<span class="sd">            return {0: [&#39;readMe!&#39;, &#39;In case of any errors, it will be shown here.&#39;],</span>
-<span class="sd">                    1: [&#39;Stream&#39;, &#39;Livestock Stream Data Class&#39;],</span>
-<span class="sd">                    2: [&#39;ReconstructedStream&#39;, &#39;The reconstructed stream as represented in CMF&#39;]}</span>
-
-<span class="sd">        self.inputs = inputs(0)</span>
-<span class="sd">        self.outputs = outputs()</span>
-<span class="sd">        self.component_number = 13</span>
-<span class="sd">        self.mid_curve = None</span>
-<span class="sd">        self.cross_sections = None</span>
-<span class="sd">        self.shape = []</span>
-<span class="sd">        self.x = None</span>
-<span class="sd">        self.y = None</span>
-<span class="sd">        self.z = None</span>
-<span class="sd">        self.lengths = None</span>
-<span class="sd">        self.width = None</span>
-<span class="sd">        self.slope_bank = None</span>
-<span class="sd">        self.water_depth = None</span>
-<span class="sd">        self.checks = [False, False]</span>
-<span class="sd">        self.results = None</span>
-
-<span class="sd">    def check_inputs(self, ghenv):</span>
-<span class="sd">        warning = []</span>
-
-<span class="sd">        if self.mid_curve:</span>
-<span class="sd">            self.checks = True</span>
-
-<span class="sd">    def config(self, ghenv):</span>
-
-<span class="sd">        # Generate Component</span>
-<span class="sd">        self.config_component(ghenv, self.component_number)</span>
-
-<span class="sd">    def run_checks(self, ghenv, mid_curve, cross_sections):</span>
-<span class="sd">        # Gather data</span>
-<span class="sd">        self.mid_curve = mid_curve</span>
-<span class="sd">        self.cross_sections = cross_sections</span>
-
-<span class="sd">        # Run checks</span>
-<span class="sd">        self.check_inputs(ghenv)</span>
-
-<span class="sd">    def process_curves(self):</span>
-
-<span class="sd">        def intersection_mid_cross_section_curves(cross_sections, mid_curve):</span>
-
-<span class="sd">            # get cross section vertices and mid point and cross section intersections</span>
-<span class="sd">            intersection_points = []</span>
-<span class="sd">            cross_section_verts = []</span>
-
-<span class="sd">            for crv in cross_sections:</span>
-<span class="sd">                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])</span>
-<span class="sd">                cross_section_verts.append(rs.PolylineVertices(crv))</span>
-
-<span class="sd">            if len(cross_section_verts[0]) == 3:</span>
-<span class="sd">                shape = 0 # triangular reach</span>
-<span class="sd">                return intersection_points, cross_section_verts, shape</span>
-<span class="sd">            elif len(cross_section_verts[0]) == 4:</span>
-<span class="sd">                shape = 1 # rectangular reach</span>
-<span class="sd">                return intersection_points, cross_section_verts, shape</span>
-<span class="sd">            else:</span>
-<span class="sd">                print(&#39;Error in shape&#39;)</span>
-<span class="sd">                return None, None, None</span>
-
-<span class="sd">        def get_mid_points(intersection_points):</span>
-<span class="sd">            mid_points = []</span>
-<span class="sd">            x = []</span>
-<span class="sd">            y = []</span>
-<span class="sd">            z = []</span>
-
-<span class="sd">            for i in range(len(intersection_points)):</span>
-<span class="sd">                pt = intersection_points[i] - intersection_points[i + 1]</span>
-<span class="sd">                mid_points.append(pt)</span>
-<span class="sd">                x.append(pt.X)</span>
-<span class="sd">                y.append(pt.Y)</span>
-<span class="sd">                z.append(pt.Z)</span>
-
-<span class="sd">            return mid_points, x, y, z</span>
-
-<span class="sd">        def sort_cross_section_verts(cross_section_verts, shape):</span>
-<span class="sd">            if shape == 0:</span>
-<span class="sd">                left = []</span>
-<span class="sd">                right = []</span>
-<span class="sd">                bottom = []</span>
-<span class="sd">                for i in range(len(cross_section_verts)):</span>
-<span class="sd">                    pass</span>
-<span class="sd">            elif shape == 1:</span>
-<span class="sd">                return</span>
-<span class="sd">            else:</span>
-<span class="sd">                print(&#39;Shape with value:&#39;, str(shape), &#39;not defined!&#39;)</span>
-<span class="sd">                return None</span>
-
-<span class="sd">        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)</span>
-
-<span class="sd">        return None</span>
-
-<span class="sd">    def run(self):</span>
-<span class="sd">        if self.checks:</span>
-<span class="sd">            ground_dict = {&#39;mesh&#39;: self.mesh,</span>
-<span class="sd">                           &#39;layers&#39;: self.layers,</span>
-<span class="sd">                           &#39;retention_curve&#39;: self.retention_curve,</span>
-<span class="sd">                           &#39;grass&#39;: self.grass,</span>
-<span class="sd">                           &#39;initial_saturation&#39;: self.initial_saturation}</span>
-
-<span class="sd">            self.results = gh_misc.PassClass(ground_dict, &#39;CMF_Ground&#39;)</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-
 <div class="viewcode-block" id="CMFVegetationProperties"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties">[docs]</a><span class="k">class</span> <span class="nc">CMFVegetationProperties</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that generates the CMF Vegetation Properties.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -688,16 +577,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFVegetationProperties.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFVegetationProperties.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -705,6 +590,7 @@
 <div class="viewcode-block" id="CMFVegetationProperties.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">property_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param property_: Property index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -715,18 +601,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CMFVegetationProperties.load_csv"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.load_csv">[docs]</a>    <span class="k">def</span> <span class="nf">load_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads a csv file with the vegetation properties.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Loads a csv file with the vegetation properties.&quot;&quot;&quot;</span>
 
         <span class="n">load</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="CMFVegetationProperties.pick_property"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.pick_property">[docs]</a>    <span class="k">def</span> <span class="nf">pick_property</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Selects the correct vegetation property. And stores it as a ordered dict.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Selects the correct vegetation property. And stores it as a ordered dict.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">load_csv</span><span class="p">()</span>
         <span class="n">data_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">property_index</span><span class="p">]</span>
@@ -745,9 +627,10 @@
 
 <div class="viewcode-block" id="CMFVegetationProperties.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFVegetationProperties.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        It run pick_properties()</span>
-<span class="sd">        And passes on the property dict with PassClass.</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | It run pick_properties()</span>
+<span class="sd">        | And passes on the property dict with PassClass.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
@@ -757,6 +640,8 @@
 
 
 <div class="viewcode-block" id="CMFSyntheticTree"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree">[docs]</a><span class="k">class</span> <span class="nc">CMFSyntheticTree</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that generates a synthetic tree.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -805,9 +690,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFSyntheticTree.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
@@ -816,9 +699,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMFSyntheticTree.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -826,6 +707,7 @@
 <div class="viewcode-block" id="CMFSyntheticTree.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face_index</span><span class="p">,</span> <span class="n">tree_type</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param face_index: Mesh face index.</span>
 <span class="sd">        :param tree_type: Tree type.</span>
 <span class="sd">        :param height: Tree height.</span>
@@ -840,18 +722,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CMFSyntheticTree.load_csv"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.load_csv">[docs]</a>    <span class="k">def</span> <span class="nf">load_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads a csv file with the tree properties.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Loads a csv file with the tree properties.&quot;&quot;&quot;</span>
 
         <span class="n">load</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_path</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_type</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="CMFSyntheticTree.compute_tree"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.compute_tree">[docs]</a>    <span class="k">def</span> <span class="nf">compute_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Selects the correct tree property. It computes the property information and stores it as a ordered dict.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Selects the correct tree property. It computes the property information and stores it as a ordered dict.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">load_csv</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">property</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Synthetic Deciduous&#39;</span><span class="p">),</span>
@@ -872,8 +750,8 @@
 
 <div class="viewcode-block" id="CMFSyntheticTree.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSyntheticTree.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        It runs the function compute_tree. Creates a dict and passes it on with PassClass.</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | It runs the function compute_tree. Creates a dict and passes it on with PassClass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
@@ -885,6 +763,8 @@
 
 
 <div class="viewcode-block" id="CMFRetentionCurve"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve">[docs]</a><span class="k">class</span> <span class="nc">CMFRetentionCurve</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that generates the CMF retention curve&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -940,7 +820,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">15</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Generates retention curve&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Generates CMF retention curve&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;APPDATA&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv&#39;</span>
@@ -956,16 +836,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFRetentionCurve.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFRetentionCurve.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -973,6 +849,7 @@
 <div class="viewcode-block" id="CMFRetentionCurve.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soil_index</span><span class="p">,</span> <span class="n">k_sat</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param soil_index: Soil index.</span>
 <span class="sd">        :param k_sat: Ksat</span>
 <span class="sd">        :param phi: Phi</span>
@@ -995,9 +872,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CMFRetentionCurve.load_csv"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.load_csv">[docs]</a>    <span class="k">def</span> <span class="nf">load_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads a csv file with the retention curve data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Loads a csv file with the retention curve data.&quot;&quot;&quot;</span>
 
         <span class="n">load</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1005,8 +880,9 @@
 
 <div class="viewcode-block" id="CMFRetentionCurve.load_retention_curve"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.load_retention_curve">[docs]</a>    <span class="k">def</span> <span class="nf">load_retention_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads the retention curve data and converts it into a order dict.</span>
-<span class="sd">        If any property is to be overwritten it is also done in this function.</span>
+<span class="sd">        | Loads the retention curve data and converts it into a order dict.</span>
+<span class="sd">        | If any property is to be overwritten it is also done in this function.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">load_csv</span><span class="p">()</span>
@@ -1042,8 +918,9 @@
 
 <div class="viewcode-block" id="CMFRetentionCurve.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFRetentionCurve.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        Loads the retention curve data and passes it on with PassClass.</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | Loads the retention curve data and passes it on with PassClass.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
@@ -1053,6 +930,8 @@
 
 <div class="viewcode-block" id="CMFSolve"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve">[docs]</a><span class="k">class</span> <span class="nc">CMFSolve</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
     <span class="c1"># TODO - Put files in subfolder called /CMF</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that solves the CMF Case.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -1156,9 +1035,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFSolve.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ground</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1167,9 +1044,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMFSolve.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -1178,6 +1053,7 @@
                    <span class="n">outputs</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param mesh: Project Mesh</span>
 <span class="sd">        :param ground: Livestock Ground dict</span>
 <span class="sd">        :param weather: Livestock Weather dict</span>
@@ -1220,6 +1096,7 @@
 <div class="viewcode-block" id="CMFSolve.write"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes the needed files.</span>
+
 <span class="sd">        :param doc: Grasshopper document.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1426,9 +1303,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFSolve.do_case"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve.do_case">[docs]</a>    <span class="k">def</span> <span class="nf">do_case</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Spawns a new subprocess, that runs the ssh template.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Spawns a new subprocess, that runs the ssh template.&quot;&quot;&quot;</span>
 
         <span class="n">ssh_template</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">ssh_path</span> <span class="o">+</span> <span class="s1">&#39;/ssh_template.py&#39;</span>
 
@@ -1459,8 +1334,9 @@
 
 <div class="viewcode-block" id="CMFSolve.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolve.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed and write_case is True the component writes the case files.</span>
-<span class="sd">        If all checks have passed and run_case is True the simulation is started.</span>
+<span class="sd">        | In case all the checks have passed and write_case is True the component writes the case files.</span>
+<span class="sd">        | If all checks have passed and run_case is True the simulation is started.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_case</span><span class="p">:</span>
@@ -1473,6 +1349,8 @@
 
 <div class="viewcode-block" id="CMFResults"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults">[docs]</a><span class="k">class</span> <span class="nc">CMFResults</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
     <span class="c1"># TODO - If csv exists load results instead of running new</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that loads the CMF results.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -1521,6 +1399,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">17</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Load CMF results&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fetch_result</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1532,9 +1411,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFResults.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1543,9 +1420,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMFResults.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -1553,6 +1428,7 @@
 <div class="viewcode-block" id="CMFResults.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fetch_result</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param path: Result path</span>
 <span class="sd">        :param fetch_result: Which result to fetch</span>
 <span class="sd">        :param save: Whether to save the csv file or not.</span>
@@ -1571,6 +1447,7 @@
 <div class="viewcode-block" id="CMFResults.process_xml"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.process_xml">[docs]</a>    <span class="k">def</span> <span class="nf">process_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Processes the xml result file and extracts the wanted information and saves it as a csv file.</span>
+
 <span class="sd">        :return: csv file path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1602,6 +1479,7 @@
 <div class="viewcode-block" id="CMFResults.load_result_csv"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.load_result_csv">[docs]</a>    <span class="k">def</span> <span class="nf">load_result_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads the csv file containing the wanted results.</span>
+
 <span class="sd">        :param path: Csv file path</span>
 <span class="sd">        :return: The results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1658,6 +1536,7 @@
 
 <div class="viewcode-block" id="CMFResults.delete_files"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.delete_files">[docs]</a>    <span class="k">def</span> <span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete the helper files.&quot;&quot;&quot;</span>
+
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/cmf_results_template.py&#39;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/result_lookup.txt&#39;</span><span class="p">)</span>
 
@@ -1709,14 +1588,16 @@
 
 <div class="viewcode-block" id="CMFResults.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFResults.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed and run is True the component runs.</span>
-<span class="sd">        Following functions are run:</span>
-<span class="sd">        set_units()</span>
-<span class="sd">        process_xml()</span>
-<span class="sd">        load_result_csv()</span>
-<span class="sd">        delete_files()</span>
-<span class="sd">        The results are converted into a Grasshopper Tree structure.</span>
+<span class="sd">        | In case all the checks have passed and run is True the component runs.</span>
+<span class="sd">        | Following functions are run:</span>
+<span class="sd">        | set_units()</span>
+<span class="sd">        | process_xml()</span>
+<span class="sd">        | load_result_csv()</span>
+<span class="sd">        | delete_files()</span>
+<span class="sd">        | The results are converted into a Grasshopper Tree structure.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_component</span><span class="p">:</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">set_units</span><span class="p">()</span>
@@ -1728,6 +1609,8 @@
 
 
 <div class="viewcode-block" id="CMFOutputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutputs">[docs]</a><span class="k">class</span> <span class="nc">CMFOutputs</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that specifies the wanted outputs from the CMF simulation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -1799,6 +1682,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Specify the wanted outputs from the CMF simulation.&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">evapo_trans</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surface_water_volume</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surface_water_flux</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1814,16 +1698,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFOutputs.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutputs.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFOutputs.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutputs.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -1832,6 +1712,7 @@
                    <span class="n">potential</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">wetness</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param evapo_trans: Whether to include evapotranspiration or not.</span>
 <span class="sd">        :param surface_water_volume: Whether to include surface water volume or not.</span>
 <span class="sd">        :param surface_water_flux: Whether to include surface water flux or not.</span>
@@ -1861,7 +1742,8 @@
 
 <div class="viewcode-block" id="CMFOutputs.set_outputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutputs.set_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convertes the wanted outputs into a dict</span>
+<span class="sd">        Converts the wanted outputs into a dict</span>
+
 <span class="sd">        :return: output dict.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1902,8 +1784,9 @@
 
 <div class="viewcode-block" id="CMFOutputs.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutputs.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        set_outputs() are run and passed on with PassClass.</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | set_outputs() are run and passed on with PassClass.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
@@ -1912,7 +1795,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">PassClass</span><span class="p">(</span><span class="n">out_dict</span><span class="p">,</span> <span class="s1">&#39;Outputs&#39;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="CMFInlet"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet">[docs]</a><span class="k">class</span> <span class="nc">CMFInlet</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CMFInlet</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -1962,23 +1845,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="CMFInlet.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inlet_flux</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="CMFInlet.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the Grasshopper component.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CMFInlet.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">inlet_flux</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">inlet_flux</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
 
@@ -1996,9 +1879,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_default_value</span><span class="p">(</span><span class="n">time_step</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
         <span class="c1"># Run checks</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_inputs</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CMFInlet.set_inlet"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet.set_inlet">[docs]</a>    <span class="k">def</span> <span class="nf">set_inlet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_inlet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructs a dict with inlet information.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">gh_misc</span><span class="o">.</span><span class="n">PassClass</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;inlet&#39;</span><span class="p">,</span>
@@ -2011,19 +1894,21 @@
                                          <span class="s1">&#39;BoundaryCondition&#39;</span><span class="p">)</span>
 
         <span class="n">pp</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">PrettyPrinter</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-        <span class="n">pp</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">c</span><span class="p">)</span></div>
+        <span class="n">pp</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CMFInlet.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFInlet.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        In case all the checks have passed the component runs.</span>
 <span class="sd">        It runs set_inlet().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_inlet</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_inlet</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="CMFSolverSettings"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolverSettings">[docs]</a><span class="k">class</span> <span class="nc">CMFSolverSettings</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;A component class that sets the solver settings for CMF Solve.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
             <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -2072,16 +1957,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFSolverSettings.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolverSettings.check_inputs">[docs]</a>        <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFSolverSettings.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolverSettings.config">[docs]</a>        <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Generates the Grasshopper component.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
             <span class="c1"># Generate Component</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -2089,6 +1970,7 @@
 <div class="viewcode-block" id="CMFSolverSettings.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolverSettings.run_checks">[docs]</a>        <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Gathers the inputs and checks them.</span>
+
 <span class="sd">            :param length: Number of time steps to be taken.</span>
 <span class="sd">            :param time_step: Size of time step.</span>
 <span class="sd">            :param tolerance: Solver tolerance.</span>
@@ -2106,8 +1988,8 @@
 
 <div class="viewcode-block" id="CMFSolverSettings.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSolverSettings.run">[docs]</a>        <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            In case all the checks have passed the component runs.</span>
-<span class="sd">            Constructs a solver settings dict, prints it and passes it on with PassClass.</span>
+<span class="sd">            | In case all the checks have passed the component runs.</span>
+<span class="sd">            | Constructs a solver settings dict, prints it and passes it on with PassClass.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
@@ -2121,6 +2003,8 @@
 
 
 <div class="viewcode-block" id="CMFSurfaceFluxResult"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSurfaceFluxResult">[docs]</a><span class="k">class</span> <span class="nc">CMFSurfaceFluxResult</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that visualizes the surface fluxes from a CMF case.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -2191,6 +2075,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Visualize the surface fluxes from a CMF case.&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;m3/day&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2207,9 +2092,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">result_path</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFSurfaceFluxResult.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSurfaceFluxResult.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span>
@@ -2218,9 +2101,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_warning</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMFSurfaceFluxResult.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSurfaceFluxResult.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -2228,6 +2109,7 @@
 <div class="viewcode-block" id="CMFSurfaceFluxResult.run_checks"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSurfaceFluxResult.run_checks">[docs]</a>    <span class="k">def</span> <span class="nf">run_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">run_off</span><span class="p">,</span> <span class="n">rain</span><span class="p">,</span> <span class="n">evapo</span><span class="p">,</span> <span class="n">infiltration</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gathers the inputs and checks them.</span>
+
 <span class="sd">        :param path: Path for result file.</span>
 <span class="sd">        :param mesh: Case mesh</span>
 <span class="sd">        :param run_off: Whether to include run-off or not.</span>
@@ -2340,14 +2222,15 @@
 
 <div class="viewcode-block" id="CMFSurfaceFluxResult.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFSurfaceFluxResult.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed and Write is True the component writes the component files.</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        The following functions are run:</span>
-<span class="sd">        write()</span>
-<span class="sd">        run_template()</span>
-<span class="sd">        load_results()</span>
-<span class="sd">        delete_files()</span>
-<span class="sd">        The results are converted into a Grasshopper Tree structure.</span>
+<span class="sd">        | In case all the checks have passed and Write is True the component writes the component files.</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | The following functions are run:</span>
+<span class="sd">        | write()</span>
+<span class="sd">        | run_template()</span>
+<span class="sd">        | load_results()</span>
+<span class="sd">        | delete_files()</span>
+<span class="sd">        | The results are converted into a Grasshopper Tree structure.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_files</span><span class="p">:</span>
@@ -2360,6 +2243,8 @@
 
 
 <div class="viewcode-block" id="CMFOutlet"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet">[docs]</a><span class="k">class</span> <span class="nc">CMFOutlet</span><span class="p">(</span><span class="n">GHComponent</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A component class that creates a CMF Outlet.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">):</span>
         <span class="n">GHComponent</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ghenv</span><span class="p">)</span>
@@ -2416,7 +2301,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;CMF Outlet&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Create a CMF Outlet&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component_number</span> <span class="o">=</span> <span class="mi">29</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2427,17 +2312,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="CMFOutlet.check_inputs"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet.check_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks inputs and raises a warning if an input is not the correct type.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks inputs and raises a warning if an input is not the correct type.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outlet_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checks</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="CMFOutlet.config"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet.config">[docs]</a>    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generates the Grasshopper component.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generates the Grasshopper component.&quot;&quot;&quot;</span>
 
         <span class="c1"># Generate Component</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_number</span><span class="p">)</span></div>
@@ -2470,6 +2351,7 @@
 <span class="sd">        :return: The location as a comma separated string</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
 
@@ -2478,7 +2360,7 @@
                                         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">location_string</span></div>
 
-<div class="viewcode-block" id="CMFOutlet.type_to_connection"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet.type_to_connection">[docs]</a>    <span class="k">def</span> <span class="nf">type_to_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">type_to_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outlet_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;richards&#39;</span>
 
@@ -2486,7 +2368,7 @@
             <span class="k">return</span> <span class="s1">&#39;kinematic_wave&#39;</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outlet_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;technical_flux&#39;</span></div>
+            <span class="k">return</span> <span class="s1">&#39;technical_flux&#39;</span>
 
 <div class="viewcode-block" id="CMFOutlet.set_outlet_connection"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet.set_outlet_connection">[docs]</a>    <span class="k">def</span> <span class="nf">set_outlet_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructs a dict with outlet information.&quot;&quot;&quot;</span>
@@ -2510,14 +2392,130 @@
 
 <div class="viewcode-block" id="CMFOutlet.run"><a class="viewcode-back" href="../../../cmf.html#livestock.components.comp_cmf.CMFOutlet.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        In case all the checks have passed the component runs.</span>
-<span class="sd">        It runs set_outlet().</span>
+<span class="sd">        | In case all the checks have passed the component runs.</span>
+<span class="sd">        | It runs set_outlet().</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_outlet</span><span class="p">()</span></div></div>
 
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">class CMFStream(GHComponent):</span>
+
+<span class="sd">    def __init__(self):</span>
+<span class="sd">        GHComponent.__init__(self)</span>
+
+<span class="sd">        def inputs(x):</span>
+<span class="sd">            if x == 0:</span>
+<span class="sd">                return {0: [&#39;MidStreamCurve&#39;, &#39;Curve following the middle of the stream&#39;],</span>
+<span class="sd">                        1: [&#39;CrossSections&#39;,&#39;Cross section curves along the stream&#39;]}</span>
+
+<span class="sd">        def outputs():</span>
+<span class="sd">            return {0: [&#39;readMe!&#39;, &#39;In case of any errors, it will be shown here.&#39;],</span>
+<span class="sd">                    1: [&#39;Stream&#39;, &#39;Livestock Stream Data Class&#39;],</span>
+<span class="sd">                    2: [&#39;ReconstructedStream&#39;, &#39;The reconstructed stream as represented in CMF&#39;]}</span>
+
+<span class="sd">        self.inputs = inputs(0)</span>
+<span class="sd">        self.outputs = outputs()</span>
+<span class="sd">        self.component_number = 13</span>
+<span class="sd">        self.mid_curve = None</span>
+<span class="sd">        self.cross_sections = None</span>
+<span class="sd">        self.shape = []</span>
+<span class="sd">        self.x = None</span>
+<span class="sd">        self.y = None</span>
+<span class="sd">        self.z = None</span>
+<span class="sd">        self.lengths = None</span>
+<span class="sd">        self.width = None</span>
+<span class="sd">        self.slope_bank = None</span>
+<span class="sd">        self.water_depth = None</span>
+<span class="sd">        self.checks = [False, False]</span>
+<span class="sd">        self.results = None</span>
+
+<span class="sd">    def check_inputs(self, ghenv):</span>
+<span class="sd">        warning = []</span>
+
+<span class="sd">        if self.mid_curve:</span>
+<span class="sd">            self.checks = True</span>
+
+<span class="sd">    def config(self, ghenv):</span>
+
+<span class="sd">        # Generate Component</span>
+<span class="sd">        self.config_component(ghenv, self.component_number)</span>
+
+<span class="sd">    def run_checks(self, ghenv, mid_curve, cross_sections):</span>
+<span class="sd">        # Gather data</span>
+<span class="sd">        self.mid_curve = mid_curve</span>
+<span class="sd">        self.cross_sections = cross_sections</span>
+
+<span class="sd">        # Run checks</span>
+<span class="sd">        self.check_inputs(ghenv)</span>
+
+<span class="sd">    def process_curves(self):</span>
+
+<span class="sd">        def intersection_mid_cross_section_curves(cross_sections, mid_curve):</span>
+
+<span class="sd">            # get cross section vertices and mid point and cross section intersections</span>
+<span class="sd">            intersection_points = []</span>
+<span class="sd">            cross_section_verts = []</span>
+
+<span class="sd">            for crv in cross_sections:</span>
+<span class="sd">                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])</span>
+<span class="sd">                cross_section_verts.append(rs.PolylineVertices(crv))</span>
+
+<span class="sd">            if len(cross_section_verts[0]) == 3:</span>
+<span class="sd">                shape = 0 # triangular reach</span>
+<span class="sd">                return intersection_points, cross_section_verts, shape</span>
+<span class="sd">            elif len(cross_section_verts[0]) == 4:</span>
+<span class="sd">                shape = 1 # rectangular reach</span>
+<span class="sd">                return intersection_points, cross_section_verts, shape</span>
+<span class="sd">            else:</span>
+<span class="sd">                print(&#39;Error in shape&#39;)</span>
+<span class="sd">                return None, None, None</span>
+
+<span class="sd">        def get_mid_points(intersection_points):</span>
+<span class="sd">            mid_points = []</span>
+<span class="sd">            x = []</span>
+<span class="sd">            y = []</span>
+<span class="sd">            z = []</span>
+
+<span class="sd">            for i in range(len(intersection_points)):</span>
+<span class="sd">                pt = intersection_points[i] - intersection_points[i + 1]</span>
+<span class="sd">                mid_points.append(pt)</span>
+<span class="sd">                x.append(pt.X)</span>
+<span class="sd">                y.append(pt.Y)</span>
+<span class="sd">                z.append(pt.Z)</span>
+
+<span class="sd">            return mid_points, x, y, z</span>
+
+<span class="sd">        def sort_cross_section_verts(cross_section_verts, shape):</span>
+<span class="sd">            if shape == 0:</span>
+<span class="sd">                left = []</span>
+<span class="sd">                right = []</span>
+<span class="sd">                bottom = []</span>
+<span class="sd">                for i in range(len(cross_section_verts)):</span>
+<span class="sd">                    pass</span>
+<span class="sd">            elif shape == 1:</span>
+<span class="sd">                return</span>
+<span class="sd">            else:</span>
+<span class="sd">                print(&#39;Shape with value:&#39;, str(shape), &#39;not defined!&#39;)</span>
+<span class="sd">                return None</span>
+
+<span class="sd">        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)</span>
+
+<span class="sd">        return None</span>
+
+<span class="sd">    def run(self):</span>
+<span class="sd">        if self.checks:</span>
+<span class="sd">            ground_dict = {&#39;mesh&#39;: self.mesh,</span>
+<span class="sd">                           &#39;layers&#39;: self.layers,</span>
+<span class="sd">                           &#39;retention_curve&#39;: self.retention_curve,</span>
+<span class="sd">                           &#39;grass&#39;: self.grass,</span>
+<span class="sd">                           &#39;initial_saturation&#39;: self.initial_saturation}</span>
+
+<span class="sd">            self.results = gh_misc.PassClass(ground_dict, &#39;CMF_Ground&#39;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
           </div>

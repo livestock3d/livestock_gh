@@ -1,6 +1,5 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.1.0"
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Imports
@@ -31,6 +30,8 @@ import rhinoscriptsyntax as rs
 
 class CMFGround(GHComponent):
     # TODO - Create flux calculation methods components
+
+    """A component class that generates the CMF ground"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -124,16 +125,12 @@ class CMFGround(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -142,11 +139,12 @@ class CMFGround(GHComponent):
                    et_method, manning_, puddle, surface_run_off_method):
         """
         Gathers the inputs and checks them.
+
         :param layers: Depth of layers.
         :param retention_curve: Livestock retention curve dict.
         :param vegetation_properties: Livestock vegetation properties dict.
         :param saturated_depth: Saturated depth of the cell.
-        :param surface_water: Initial surfacee water volume.
+        :param surface_water: Initial surface water volume.
         :param face_indices: Face indices where the properties should be applied to.
         :param et_method: Evapotranspriation calculation method.
         :param manning_: Manning roughness.
@@ -172,6 +170,7 @@ class CMFGround(GHComponent):
     def convert_et_number_to_method(self):
         """
         Converts a number into a ET method.
+
         :return: ET method name.
         """
 
@@ -188,6 +187,7 @@ class CMFGround(GHComponent):
     def convert_runoff_number_to_method(self):
         """
         Converts a number into a surface run-off method.
+
         :return: Surface run-off name
         """
 
@@ -222,6 +222,8 @@ class CMFGround(GHComponent):
 
 
 class CMFWeather(GHComponent):
+
+    """A component class that generates the CMF weather"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -304,16 +306,12 @@ class CMFWeather(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -321,6 +319,7 @@ class CMFWeather(GHComponent):
     def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location, face_count):
         """
         Gathers the inputs and checks them.
+
         :param temp: Temperature
         :param wind: Wind speed
         :param rel_hum: Relative humidity
@@ -348,8 +347,9 @@ class CMFWeather(GHComponent):
 
     def convert_cloud_cover(self):
         """
-        Converts cloud cover to sun shine fraction.
-        sun shine = 1 - cloud cover
+        | Converts cloud cover to sun shine fraction.
+        | Sun shine = 1 - cloud cover
+
         :return: list with sun shine fractions.
         """
 
@@ -364,9 +364,10 @@ class CMFWeather(GHComponent):
 
     def convert_radiation_unit(self):
         """
-        Converts radiation from W/m2 to MJ/(m2*day)
-        1 W/m2 => 60s*60min*24hours/10^6 => MJ/(m2*day)
-        1 W/m2 = 0.0864 MJ/(m2*day)
+        | Converts radiation from W/m\ :sup:`2` to MJ/(m\ :sup:`2` day)
+        | 1 W/m\ :sup:`2` => 60s * 60min * 24hours/10\ :sup:`6` => MJ/(m\ :sup:`2` day)
+        | 1 W/m\ :sup:`2` = 0.0864 MJ/(m\ :sup:`2` day)
+
         """
 
         converted_radiation = {}
@@ -380,8 +381,9 @@ class CMFWeather(GHComponent):
 
     def convert_rain_unit(self):
         """
-        Converts rain from mm/h to mm/day
-        1 mm/h = 24 mm/day
+        | Converts rain from mm/h to mm/day
+        | 1 mm/h = 24 mm/day
+
         """
 
         converted_rain = {}
@@ -396,6 +398,7 @@ class CMFWeather(GHComponent):
     def convert_location(self):
         """
         Extracts information from a Ladybug Tools location
+
         :return: Latitude, longitude and time zone
         """
 
@@ -406,6 +409,7 @@ class CMFWeather(GHComponent):
         """
         Checks whether a whether a weather parameter has the correct number of sublists,
         so they matches the number of cells. Then converts it into a dict with a list for each cell.
+
         :param weather_parameter: Weather parameter to check.
         :return: Corrected weather parameter as dict.
         """
@@ -439,9 +443,7 @@ class CMFWeather(GHComponent):
         return weather_dict
 
     def print_weather_lengths(self):
-        """
-        Prints the length of each weather parameter.
-        """
+        """Prints the length of each weather parameter."""
 
         def printer(parameter_name, parameter):
             print(str(parameter_name) + ' includes: ' + str(len(parameter.keys())) + ' lists')
@@ -458,10 +460,12 @@ class CMFWeather(GHComponent):
         """
         In case all the checks have passed the component runs.
         The following functions are run:
-        print_weather_lengths()
-        convert_cloud_cover()
-        convert_radiation_unit()
-        convert_location()
+
+        - print_weather_lengths()
+        - convert_cloud_cover()
+        - convert_radiation_unit()
+        - convert_location()
+
         A weather dict is created an passes on with PassClass.
         """
 
@@ -490,124 +494,9 @@ class CMFWeather(GHComponent):
             self.results = gh_misc.PassClass(weather_dict, 'Weather')
 
 
-"""
-class CMFStream(GHComponent):
-
-    def __init__(self):
-        GHComponent.__init__(self)
-
-        def inputs(x):
-            if x == 0:
-                return {0: ['MidStreamCurve', 'Curve following the middle of the stream'],
-                        1: ['CrossSections','Cross section curves along the stream']}
-
-        def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Stream', 'Livestock Stream Data Class'],
-                    2: ['ReconstructedStream', 'The reconstructed stream as represented in CMF']}
-
-        self.inputs = inputs(0)
-        self.outputs = outputs()
-        self.component_number = 13
-        self.mid_curve = None
-        self.cross_sections = None
-        self.shape = []
-        self.x = None
-        self.y = None
-        self.z = None
-        self.lengths = None
-        self.width = None
-        self.slope_bank = None
-        self.water_depth = None
-        self.checks = [False, False]
-        self.results = None
-
-    def check_inputs(self, ghenv):
-        warning = []
-
-        if self.mid_curve:
-            self.checks = True
-
-    def config(self, ghenv):
-
-        # Generate Component
-        self.config_component(ghenv, self.component_number)
-
-    def run_checks(self, ghenv, mid_curve, cross_sections):
-        # Gather data
-        self.mid_curve = mid_curve
-        self.cross_sections = cross_sections
-
-        # Run checks
-        self.check_inputs(ghenv)
-
-    def process_curves(self):
-
-        def intersection_mid_cross_section_curves(cross_sections, mid_curve):
-
-            # get cross section vertices and mid point and cross section intersections
-            intersection_points = []
-            cross_section_verts = []
-
-            for crv in cross_sections:
-                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])
-                cross_section_verts.append(rs.PolylineVertices(crv))
-
-            if len(cross_section_verts[0]) == 3:
-                shape = 0 # triangular reach
-                return intersection_points, cross_section_verts, shape
-            elif len(cross_section_verts[0]) == 4:
-                shape = 1 # rectangular reach
-                return intersection_points, cross_section_verts, shape
-            else:
-                print('Error in shape')
-                return None, None, None
-
-        def get_mid_points(intersection_points):
-            mid_points = []
-            x = []
-            y = []
-            z = []
-
-            for i in range(len(intersection_points)):
-                pt = intersection_points[i] - intersection_points[i + 1]
-                mid_points.append(pt)
-                x.append(pt.X)
-                y.append(pt.Y)
-                z.append(pt.Z)
-
-            return mid_points, x, y, z
-
-        def sort_cross_section_verts(cross_section_verts, shape):
-            if shape == 0:
-                left = []
-                right = []
-                bottom = []
-                for i in range(len(cross_section_verts)):
-                    pass
-            elif shape == 1:
-                return
-            else:
-                print('Shape with value:', str(shape), 'not defined!')
-                return None
-
-        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)
-
-        return None
-
-    def run(self):
-        if self.checks:
-            ground_dict = {'mesh': self.mesh,
-                           'layers': self.layers,
-                           'retention_curve': self.retention_curve,
-                           'grass': self.grass,
-                           'initial_saturation': self.initial_saturation}
-
-            self.results = gh_misc.PassClass(ground_dict, 'CMF_Ground')
-"""
-
-
 class CMFVegetationProperties(GHComponent):
+
+    """A component class that generates the CMF Vegetation Properties."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -646,16 +535,12 @@ class CMFVegetationProperties(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -663,6 +548,7 @@ class CMFVegetationProperties(GHComponent):
     def run_checks(self, property_):
         """
         Gathers the inputs and checks them.
+
         :param property_: Property index.
         """
 
@@ -673,18 +559,14 @@ class CMFVegetationProperties(GHComponent):
         self.check_inputs()
 
     def load_csv(self):
-        """
-        Loads a csv file with the vegetation properties.
-        """
+        """Loads a csv file with the vegetation properties."""
 
         load = csv.read_csv(self.data_path)
         self.units = load[0]
         self.data = load[1]
 
     def pick_property(self):
-        """
-        Selects the correct vegetation property. And stores it as a ordered dict.
-        """
+        """Selects the correct vegetation property. And stores it as a ordered dict."""
 
         self.load_csv()
         data_list = self.data[self.property_index]
@@ -703,9 +585,10 @@ class CMFVegetationProperties(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        It run pick_properties()
-        And passes on the property dict with PassClass.
+        | In case all the checks have passed the component runs.
+        | It run pick_properties()
+        | And passes on the property dict with PassClass.
+
         """
 
         if self.checks:
@@ -715,6 +598,8 @@ class CMFVegetationProperties(GHComponent):
 
 
 class CMFSyntheticTree(GHComponent):
+
+    """A component class that generates a synthetic tree."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -763,9 +648,7 @@ class CMFSyntheticTree(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.height:
             self.checks = True
@@ -774,9 +657,7 @@ class CMFSyntheticTree(GHComponent):
             self.add_warning(warning)
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -784,6 +665,7 @@ class CMFSyntheticTree(GHComponent):
     def run_checks(self, face_index, tree_type, height):
         """
         Gathers the inputs and checks them.
+
         :param face_index: Mesh face index.
         :param tree_type: Tree type.
         :param height: Tree height.
@@ -798,18 +680,14 @@ class CMFSyntheticTree(GHComponent):
         self.check_inputs()
 
     def load_csv(self):
-        """
-        Loads a csv file with the tree properties.
-        """
+        """Loads a csv file with the tree properties."""
 
         load = csv.read_csv(self.data_path[self.tree_type])
         self.units = load[0]
         self.data = load[1]
 
     def compute_tree(self):
-        """
-        Selects the correct tree property. It computes the property information and stores it as a ordered dict.
-        """
+        """Selects the correct tree property. It computes the property information and stores it as a ordered dict."""
 
         self.load_csv()
         self.property = collections.OrderedDict([('name', 'Synthetic Deciduous'),
@@ -830,8 +708,8 @@ class CMFSyntheticTree(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        It runs the function compute_tree. Creates a dict and passes it on with PassClass.
+        | In case all the checks have passed the component runs.
+        | It runs the function compute_tree. Creates a dict and passes it on with PassClass.
         """
 
         if self.checks:
@@ -843,6 +721,8 @@ class CMFSyntheticTree(GHComponent):
 
 
 class CMFRetentionCurve(GHComponent):
+
+    """A component class that generates the CMF retention curve"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -898,7 +778,7 @@ class CMFRetentionCurve(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 15
-        self.description = 'Generates retention curve'
+        self.description = 'Generates CMF retention curve'
         self.data = None
         self.units = None
         self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
@@ -914,16 +794,12 @@ class CMFRetentionCurve(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -931,6 +807,7 @@ class CMFRetentionCurve(GHComponent):
     def run_checks(self, soil_index, k_sat, phi, alpha, n, m, l):
         """
         Gathers the inputs and checks them.
+
         :param soil_index: Soil index.
         :param k_sat: Ksat
         :param phi: Phi
@@ -953,9 +830,7 @@ class CMFRetentionCurve(GHComponent):
         self.check_inputs()
 
     def load_csv(self):
-        """
-        Loads a csv file with the retention curve data.
-        """
+        """Loads a csv file with the retention curve data."""
 
         load = csv.read_csv(self.data_path)
         self.units = load[0]
@@ -963,8 +838,9 @@ class CMFRetentionCurve(GHComponent):
 
     def load_retention_curve(self):
         """
-        Loads the retention curve data and converts it into a order dict.
-        If any property is to be overwritten it is also done in this function.
+        | Loads the retention curve data and converts it into a order dict.
+        | If any property is to be overwritten it is also done in this function.
+
         """
 
         self.load_csv()
@@ -1000,8 +876,9 @@ class CMFRetentionCurve(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        Loads the retention curve data and passes it on with PassClass.
+        | In case all the checks have passed the component runs.
+        | Loads the retention curve data and passes it on with PassClass.
+
         """
 
         if self.checks:
@@ -1011,6 +888,8 @@ class CMFRetentionCurve(GHComponent):
 
 class CMFSolve(GHComponent):
     # TODO - Put files in subfolder called /CMF
+
+    """A component class that solves the CMF Case."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1114,9 +993,7 @@ class CMFSolve(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.ground:
             self.checks = True
@@ -1125,9 +1002,7 @@ class CMFSolve(GHComponent):
             self.add_warning(warning)
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -1136,6 +1011,7 @@ class CMFSolve(GHComponent):
                    outputs, write, overwrite, run):
         """
         Gathers the inputs and checks them.
+
         :param mesh: Project Mesh
         :param ground: Livestock Ground dict
         :param weather: Livestock Weather dict
@@ -1178,6 +1054,7 @@ class CMFSolve(GHComponent):
     def write(self, doc):
         """
         Writes the needed files.
+
         :param doc: Grasshopper document.
         """
 
@@ -1384,9 +1261,7 @@ class CMFSolve(GHComponent):
         return True
 
     def do_case(self):
-        """
-        Spawns a new subprocess, that runs the ssh template.
-        """
+        """Spawns a new subprocess, that runs the ssh template."""
 
         ssh_template = ssh.ssh_path + '/ssh_template.py'
 
@@ -1417,8 +1292,9 @@ class CMFSolve(GHComponent):
 
     def run(self, doc):
         """
-        In case all the checks have passed and write_case is True the component writes the case files.
-        If all checks have passed and run_case is True the simulation is started.
+        | In case all the checks have passed and write_case is True the component writes the case files.
+        | If all checks have passed and run_case is True the simulation is started.
+
         """
 
         if self.checks and self.write_case:
@@ -1431,6 +1307,8 @@ class CMFSolve(GHComponent):
 
 class CMFResults(GHComponent):
     # TODO - If csv exists load results instead of running new
+
+    """A component class that loads the CMF results."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1479,6 +1357,7 @@ class CMFResults(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 17
+        self.description = 'Load CMF results'
         self.unit = None
         self.path = None
         self.fetch_result = None
@@ -1490,9 +1369,7 @@ class CMFResults(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.path:
             self.checks = True
@@ -1501,9 +1378,7 @@ class CMFResults(GHComponent):
             self.add_warning(warning)
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -1511,6 +1386,7 @@ class CMFResults(GHComponent):
     def run_checks(self, path, fetch_result, save, run):
         """
         Gathers the inputs and checks them.
+
         :param path: Result path
         :param fetch_result: Which result to fetch
         :param save: Whether to save the csv file or not.
@@ -1529,6 +1405,7 @@ class CMFResults(GHComponent):
     def process_xml(self):
         """
         Processes the xml result file and extracts the wanted information and saves it as a csv file.
+
         :return: csv file path.
         """
 
@@ -1560,6 +1437,7 @@ class CMFResults(GHComponent):
     def load_result_csv(self, path):
         """
         Loads the csv file containing the wanted results.
+
         :param path: Csv file path
         :return: The results
         """
@@ -1616,6 +1494,7 @@ class CMFResults(GHComponent):
 
     def delete_files(self, csv_path):
         """Delete the helper files."""
+
         os.remove(self.path + '/cmf_results_template.py')
         os.remove(self.path + '/result_lookup.txt')
 
@@ -1667,14 +1546,16 @@ class CMFResults(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed and run is True the component runs.
-        Following functions are run:
-        set_units()
-        process_xml()
-        load_result_csv()
-        delete_files()
-        The results are converted into a Grasshopper Tree structure.
+        | In case all the checks have passed and run is True the component runs.
+        | Following functions are run:
+        | set_units()
+        | process_xml()
+        | load_result_csv()
+        | delete_files()
+        | The results are converted into a Grasshopper Tree structure.
+
         """
+
         if self.checks and self.run_component:
 
             self.set_units()
@@ -1686,6 +1567,8 @@ class CMFResults(GHComponent):
 
 
 class CMFOutputs(GHComponent):
+
+    """A component class that specifies the wanted outputs from the CMF simulation."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1757,6 +1640,7 @@ class CMFOutputs(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 16
+        self.description = "Specify the wanted outputs from the CMF simulation."
         self.evapo_trans = None
         self.surface_water_volume = None
         self.surface_water_flux = None
@@ -1772,16 +1656,12 @@ class CMFOutputs(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -1790,6 +1670,7 @@ class CMFOutputs(GHComponent):
                    potential, theta, volume, wetness):
         """
         Gathers the inputs and checks them.
+
         :param evapo_trans: Whether to include evapotranspiration or not.
         :param surface_water_volume: Whether to include surface water volume or not.
         :param surface_water_flux: Whether to include surface water flux or not.
@@ -1819,7 +1700,8 @@ class CMFOutputs(GHComponent):
 
     def set_outputs(self):
         """
-        Convertes the wanted outputs into a dict
+        Converts the wanted outputs into a dict
+
         :return: output dict.
         """
 
@@ -1860,8 +1742,9 @@ class CMFOutputs(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        set_outputs() are run and passed on with PassClass.
+        | In case all the checks have passed the component runs.
+        | set_outputs() are run and passed on with PassClass.
+
         """
 
         if self.checks:
@@ -1983,6 +1866,8 @@ class CMFInlet(GHComponent):
 
 class CMFSolverSettings(GHComponent):
 
+        """A component class that sets the solver settings for CMF Solve."""
+
         def __init__(self, ghenv):
             GHComponent.__init__(self, ghenv)
 
@@ -2030,16 +1915,12 @@ class CMFSolverSettings(GHComponent):
             self.results = None
 
         def check_inputs(self):
-            """
-            Checks inputs and raises a warning if an input is not the correct type.
-            """
+            """Checks inputs and raises a warning if an input is not the correct type."""
 
             self.checks = True
 
         def config(self):
-            """
-            Generates the Grasshopper component.
-            """
+            """Generates the Grasshopper component."""
 
             # Generate Component
             self.config_component(self.component_number)
@@ -2047,6 +1928,7 @@ class CMFSolverSettings(GHComponent):
         def run_checks(self, length, time_step, tolerance, verbosity):
             """
             Gathers the inputs and checks them.
+
             :param length: Number of time steps to be taken.
             :param time_step: Size of time step.
             :param tolerance: Solver tolerance.
@@ -2064,8 +1946,8 @@ class CMFSolverSettings(GHComponent):
 
         def run(self):
             """
-            In case all the checks have passed the component runs.
-            Constructs a solver settings dict, prints it and passes it on with PassClass.
+            | In case all the checks have passed the component runs.
+            | Constructs a solver settings dict, prints it and passes it on with PassClass.
             """
 
             if self.checks:
@@ -2079,6 +1961,8 @@ class CMFSolverSettings(GHComponent):
 
 
 class CMFSurfaceFluxResult(GHComponent):
+
+    """A component class that visualizes the surface fluxes from a CMF case."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -2149,6 +2033,7 @@ class CMFSurfaceFluxResult(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 25
+        self.description = 'Visualize the surface fluxes from a CMF case.'
         self.unit = 'm3/day'
         self.mesh = None
         self.path = None
@@ -2165,9 +2050,7 @@ class CMFSurfaceFluxResult(GHComponent):
         self.result_path = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.path:
             self.checks = True
@@ -2176,9 +2059,7 @@ class CMFSurfaceFluxResult(GHComponent):
             self.add_warning(warning)
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -2186,6 +2067,7 @@ class CMFSurfaceFluxResult(GHComponent):
     def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save, write, run):
         """
         Gathers the inputs and checks them.
+
         :param path: Path for result file.
         :param mesh: Case mesh
         :param run_off: Whether to include run-off or not.
@@ -2298,14 +2180,15 @@ class CMFSurfaceFluxResult(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed and Write is True the component writes the component files.
-        In case all the checks have passed the component runs.
-        The following functions are run:
-        write()
-        run_template()
-        load_results()
-        delete_files()
-        The results are converted into a Grasshopper Tree structure.
+        | In case all the checks have passed and Write is True the component writes the component files.
+        | In case all the checks have passed the component runs.
+        | The following functions are run:
+        | write()
+        | run_template()
+        | load_results()
+        | delete_files()
+        | The results are converted into a Grasshopper Tree structure.
+
         """
 
         if self.checks and self.write_files:
@@ -2318,6 +2201,8 @@ class CMFSurfaceFluxResult(GHComponent):
 
 
 class CMFOutlet(GHComponent):
+
+    """A component class that creates a CMF Outlet."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -2374,7 +2259,7 @@ class CMFOutlet(GHComponent):
 
         self.inputs = inputs()
         self.outputs = outputs()
-        self.description = 'CMF Outlet'
+        self.description = 'Create a CMF Outlet'
         self.component_number = 29
         self.location = None
         self.cell = None
@@ -2385,17 +2270,13 @@ class CMFOutlet(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """
-        Checks inputs and raises a warning if an input is not the correct type.
-        """
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
         if self.outlet_type and self.parameter:
             self.checks = True
 
     def config(self):
-        """
-        Generates the Grasshopper component.
-        """
+        """Generates the Grasshopper component."""
 
         # Generate Component
         self.config_component(self.component_number)
@@ -2428,6 +2309,7 @@ class CMFOutlet(GHComponent):
         :return: The location as a comma separated string
         :rtype: str
         """
+
         if isinstance(self.location, str):
             return self.location
 
@@ -2468,11 +2350,127 @@ class CMFOutlet(GHComponent):
 
     def run(self):
         """
-        In case all the checks have passed the component runs.
-        It runs set_outlet().
+        | In case all the checks have passed the component runs.
+        | It runs set_outlet().
+
         """
 
         if self.checks:
             self.set_outlet()
 
 
+"""
+class CMFStream(GHComponent):
+
+    def __init__(self):
+        GHComponent.__init__(self)
+
+        def inputs(x):
+            if x == 0:
+                return {0: ['MidStreamCurve', 'Curve following the middle of the stream'],
+                        1: ['CrossSections','Cross section curves along the stream']}
+
+        def outputs():
+            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
+                    1: ['Stream', 'Livestock Stream Data Class'],
+                    2: ['ReconstructedStream', 'The reconstructed stream as represented in CMF']}
+
+        self.inputs = inputs(0)
+        self.outputs = outputs()
+        self.component_number = 13
+        self.mid_curve = None
+        self.cross_sections = None
+        self.shape = []
+        self.x = None
+        self.y = None
+        self.z = None
+        self.lengths = None
+        self.width = None
+        self.slope_bank = None
+        self.water_depth = None
+        self.checks = [False, False]
+        self.results = None
+
+    def check_inputs(self, ghenv):
+        warning = []
+
+        if self.mid_curve:
+            self.checks = True
+
+    def config(self, ghenv):
+
+        # Generate Component
+        self.config_component(ghenv, self.component_number)
+
+    def run_checks(self, ghenv, mid_curve, cross_sections):
+        # Gather data
+        self.mid_curve = mid_curve
+        self.cross_sections = cross_sections
+
+        # Run checks
+        self.check_inputs(ghenv)
+
+    def process_curves(self):
+
+        def intersection_mid_cross_section_curves(cross_sections, mid_curve):
+
+            # get cross section vertices and mid point and cross section intersections
+            intersection_points = []
+            cross_section_verts = []
+
+            for crv in cross_sections:
+                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])
+                cross_section_verts.append(rs.PolylineVertices(crv))
+
+            if len(cross_section_verts[0]) == 3:
+                shape = 0 # triangular reach
+                return intersection_points, cross_section_verts, shape
+            elif len(cross_section_verts[0]) == 4:
+                shape = 1 # rectangular reach
+                return intersection_points, cross_section_verts, shape
+            else:
+                print('Error in shape')
+                return None, None, None
+
+        def get_mid_points(intersection_points):
+            mid_points = []
+            x = []
+            y = []
+            z = []
+
+            for i in range(len(intersection_points)):
+                pt = intersection_points[i] - intersection_points[i + 1]
+                mid_points.append(pt)
+                x.append(pt.X)
+                y.append(pt.Y)
+                z.append(pt.Z)
+
+            return mid_points, x, y, z
+
+        def sort_cross_section_verts(cross_section_verts, shape):
+            if shape == 0:
+                left = []
+                right = []
+                bottom = []
+                for i in range(len(cross_section_verts)):
+                    pass
+            elif shape == 1:
+                return
+            else:
+                print('Shape with value:', str(shape), 'not defined!')
+                return None
+
+        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)
+
+        return None
+
+    def run(self):
+        if self.checks:
+            ground_dict = {'mesh': self.mesh,
+                           'layers': self.layers,
+                           'retention_curve': self.retention_curve,
+                           'grass': self.grass,
+                           'initial_saturation': self.initial_saturation}
+
+            self.results = gh_misc.PassClass(ground_dict, 'CMF_Ground')
+"""

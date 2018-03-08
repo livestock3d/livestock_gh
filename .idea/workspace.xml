@@ -3,49 +3,24 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/docs/.buildinfo" afterPath="$PROJECT_DIR$/docs/.buildinfo" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/cmf.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/cmf.doctree" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" />
       <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/geometry.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/geometry.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/lib.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/lib.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/miscellaneous.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/miscellaneous.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/.doctrees/superclass.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/superclass.doctree" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/index.html" afterPath="$PROJECT_DIR$/docs/_modules/index.html" />
       <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/comfort.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/comfort.html" />
       <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/component.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/component.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/geometry.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/geometry.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/lib/geometry.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/lib/geometry.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/lib/misc.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/lib/misc.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/lib/ssh.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/lib/ssh.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/lib/templates.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/lib/templates.html" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/geometry.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/geometry.rst.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/lib.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/lib.rst.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/miscellaneous.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/miscellaneous.rst.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/superclass.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/superclass.rst.txt" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/cmf.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/cmf.rst.txt" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/comfort.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/comfort.rst.txt" />
       <change beforePath="$PROJECT_DIR$/docs/cmf.html" afterPath="$PROJECT_DIR$/docs/cmf.html" />
       <change beforePath="$PROJECT_DIR$/docs/comfort.html" afterPath="$PROJECT_DIR$/docs/comfort.html" />
       <change beforePath="$PROJECT_DIR$/docs/component_classes.html" afterPath="$PROJECT_DIR$/docs/component_classes.html" />
-      <change beforePath="$PROJECT_DIR$/docs/components.html" afterPath="$PROJECT_DIR$/docs/components.html" />
       <change beforePath="$PROJECT_DIR$/docs/genindex.html" afterPath="$PROJECT_DIR$/docs/genindex.html" />
-      <change beforePath="$PROJECT_DIR$/docs/geometry.html" afterPath="$PROJECT_DIR$/docs/geometry.html" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" afterPath="$PROJECT_DIR$/docs/index.html" />
-      <change beforePath="$PROJECT_DIR$/docs/lib.html" afterPath="$PROJECT_DIR$/docs/lib.html" />
-      <change beforePath="$PROJECT_DIR$/docs/miscellaneous.html" afterPath="$PROJECT_DIR$/docs/miscellaneous.html" />
       <change beforePath="$PROJECT_DIR$/docs/objects.inv" afterPath="$PROJECT_DIR$/docs/objects.inv" />
-      <change beforePath="$PROJECT_DIR$/docs/py-modindex.html" afterPath="$PROJECT_DIR$/docs/py-modindex.html" />
-      <change beforePath="$PROJECT_DIR$/docs/python.txt" afterPath="$PROJECT_DIR$/docs/python.txt" />
-      <change beforePath="$PROJECT_DIR$/docs/search.html" afterPath="$PROJECT_DIR$/docs/search.html" />
       <change beforePath="$PROJECT_DIR$/docs/searchindex.js" afterPath="$PROJECT_DIR$/docs/searchindex.js" />
-      <change beforePath="$PROJECT_DIR$/docs/superclass.html" afterPath="$PROJECT_DIR$/docs/superclass.html" />
-      <change beforePath="$PROJECT_DIR$/docs/undoc.pickle" afterPath="$PROJECT_DIR$/docs/undoc.pickle" />
-      <change beforePath="$PROJECT_DIR$/python/components/component.py" afterPath="$PROJECT_DIR$/python/components/component.py" />
-      <change beforePath="$PROJECT_DIR$/python/components/geometry.py" afterPath="$PROJECT_DIR$/python/components/geometry.py" />
-      <change beforePath="$PROJECT_DIR$/python/components/misc.py" afterPath="$PROJECT_DIR$/python/components/misc.py" />
-      <change beforePath="$PROJECT_DIR$/sphinx/geometry.rst" afterPath="$PROJECT_DIR$/sphinx/geometry.rst" />
-      <change beforePath="$PROJECT_DIR$/sphinx/lib.rst" afterPath="$PROJECT_DIR$/sphinx/lib.rst" />
-      <change beforePath="$PROJECT_DIR$/sphinx/miscellaneous.rst" afterPath="$PROJECT_DIR$/sphinx/miscellaneous.rst" />
-      <change beforePath="$PROJECT_DIR$/sphinx/superclass.rst" afterPath="$PROJECT_DIR$/sphinx/superclass.rst" />
+      <change beforePath="$PROJECT_DIR$/python/components/comfort.py" afterPath="$PROJECT_DIR$/python/components/comfort.py" />
+      <change beforePath="$PROJECT_DIR$/python/components/comp_cmf.py" afterPath="$PROJECT_DIR$/python/components/comp_cmf.py" />
+      <change beforePath="$PROJECT_DIR$/sphinx/cmf.rst" afterPath="$PROJECT_DIR$/sphinx/cmf.rst" />
+      <change beforePath="$PROJECT_DIR$/sphinx/comfort.rst" afterPath="$PROJECT_DIR$/sphinx/comfort.rst" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -92,7 +67,7 @@
     <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_sphinx.coverage" NAME="sphinx task in livestock Coverage Results" MODIFIED="1520022911780" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$pdf_task_in_livestock.coverage" NAME="pdf task in livestock Coverage Results" MODIFIED="1520456922794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$upload_to_pypi.coverage" NAME="upload_to_pypi Coverage Results" MODIFIED="1517747265496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock/config_livestock" />
-    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520497395896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
+    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520499250344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_layer_results.coverage" NAME="test_layer_results Coverage Results" MODIFIED="1511533123136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cell_results.coverage" NAME="test_cell_results Coverage Results" MODIFIED="1511516557310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cmf_model.coverage" NAME="test_cmf_model Coverage Results" MODIFIED="1511940652117" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_linux/livestock_linux/test" />
@@ -123,12 +98,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="comfort.rst" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphinx/comfort.rst">
+      <file leaf-file-name="cmf.rst" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sphinx/cmf.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+            <state relative-caret-position="68">
+              <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comp_cmf.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="597">
+              <caret line="400" column="0" lean-forward="true" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
+              <folding>
+                <element signature="e#206#215#0" expanded="true" />
+                <element signature="e#857#8945#0" expanded="false" />
+                <element signature="e#19217#22915#0" expanded="false" />
+                <element signature="e#19327#20687#0" expanded="false" />
+                <element signature="e#22960#28182#0" expanded="false" />
+                <element signature="e#28228#34067#0" expanded="false" />
+                <element signature="e#34103#49878#0" expanded="false" />
+                <element signature="e#49916#58456#0" expanded="false" />
+                <element signature="e#58495#65542#0" expanded="false" />
+                <element signature="e#65579#69341#0" expanded="false" />
+                <element signature="e#69391#73288#0" expanded="false" />
+                <element signature="e#73337#81891#0" expanded="false" />
+                <element signature="e#73453#76883#0" expanded="false" />
+                <element signature="e#81929#87731#0" expanded="false" />
+                <element signature="e#87734#91549#1" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -136,8 +137,8 @@
       <file leaf-file-name="component_classes.rst" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sphinx/component_classes.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="27" selection-end-column="53" />
+            <state relative-caret-position="187">
+              <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -146,18 +147,8 @@
       <file leaf-file-name="components.rst" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="838">
-              <caret line="792" column="53" lean-forward="false" selection-start-line="792" selection-start-column="53" selection-end-line="792" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="geometry.rst" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphinx/geometry.rst">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="18" lean-forward="false" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+            <state relative-caret-position="821">
+              <caret line="758" column="38" lean-forward="false" selection-start-line="758" selection-start-column="38" selection-end-line="758" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -173,11 +164,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib.rst" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lib.rst" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sphinx/lib.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="459">
+              <caret line="27" column="15" lean-forward="false" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -252,8 +243,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/Air_Results_No_Water.py" />
-        <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Colors.py" />
         <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes_Soil_Parameters.py" />
         <option value="$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes_Copenhagen.py" />
         <option value="$PROJECT_DIR$/../livestock/livestock/config_livestock/upload_to_pypi.py" />
@@ -284,8 +273,6 @@
         <option value="$PROJECT_DIR$/sphinx/index.rst" />
         <option value="$PROJECT_DIR$/../livestock/livestock/sphinx/index.rst" />
         <option value="$PROJECT_DIR$/sphinx/component_classes.rst" />
-        <option value="$PROJECT_DIR$/sphinx/comfort.rst" />
-        <option value="$PROJECT_DIR$/sphinx/cmf.rst" />
         <option value="$PROJECT_DIR$/sphinx/components.rst" />
         <option value="$PROJECT_DIR$/../livestock/livestock/sphinx/geometry.rst" />
         <option value="$PROJECT_DIR$/../livestock/livestock/sphinx/air.rst" />
@@ -303,6 +290,10 @@
         <option value="$PROJECT_DIR$/python/components/geometry.py" />
         <option value="$PROJECT_DIR$/sphinx/geometry.rst" />
         <option value="$PROJECT_DIR$/sphinx/lib.rst" />
+        <option value="$PROJECT_DIR$/sphinx/comfort.rst" />
+        <option value="$PROJECT_DIR$/python/components/comfort.py" />
+        <option value="$PROJECT_DIR$/sphinx/cmf.rst" />
+        <option value="$PROJECT_DIR$/python/components/comp_cmf.py" />
       </list>
     </option>
   </component>
@@ -835,13 +826,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00537" summary="added CMF Outlet component class">
-      <created>1516370620906</created>
-      <option name="number" value="00537" />
-      <option name="presentableId" value="LOCAL-00537" />
-      <option name="project" value="LOCAL" />
-      <updated>1516370620906</updated>
-    </task>
     <task id="LOCAL-00538" summary="added CMF Outlet and tests">
       <created>1516373007986</created>
       <option name="number" value="00538" />
@@ -1178,7 +1162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520457722936</updated>
     </task>
-    <option name="localTasksCounter" value="586" />
+    <task id="LOCAL-00586" summary="update the sphinx docs">
+      <created>1520497424463</created>
+      <option name="number" value="00586" />
+      <option name="presentableId" value="LOCAL-00586" />
+      <option name="project" value="LOCAL" />
+      <updated>1520497424463</updated>
+    </task>
+    <option name="localTasksCounter" value="587" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1336,20 +1327,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/WaterVolumes/WaterVolumes_Optimized.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="54" column="0" lean-forward="false" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Wadi_Result_Analysis/ComfortResults/Comfort_Results_Optimized.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-998">
-          <caret line="121" column="38" lean-forward="false" selection-start-line="121" selection-start-column="11" selection-end-line="121" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../Uddannelse/DTU/11. semester - Speciale/Python/SpecialeKode/Combine MRT.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -1525,14 +1502,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="49" column="36" lean-forward="true" selection-start-line="49" selection-start-column="36" selection-end-line="49" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../livestock/livestock/sphinx/.build/sphinxmulticell.sty">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -1565,38 +1534,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/cmf.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/comfort.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="53" lean-forward="false" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/component_classes.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="27" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="838">
-          <caret line="792" column="53" lean-forward="false" selection-start-line="792" selection-start-column="53" selection-end-line="792" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1677,19 +1614,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/geometry.rst">
+    <entry file="file://$PROJECT_DIR$/sphinx/lib.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="18" lean-forward="false" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+        <state relative-caret-position="459">
+          <caret line="27" column="15" lean-forward="false" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/lib.rst">
+    <entry file="file://$PROJECT_DIR$/sphinx/geometry.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="272">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="821">
+          <caret line="758" column="38" lean-forward="false" selection-start-line="758" selection-start-column="38" selection-end-line="758" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/components/comfort.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+          <folding>
+            <element signature="e#727#3141#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/comfort.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/component_classes.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/cmf.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="597">
+          <caret line="400" column="0" lean-forward="true" selection-start-line="400" selection-start-column="0" selection-end-line="400" selection-end-column="0" />
+          <folding>
+            <element signature="e#206#215#0" expanded="true" />
+            <element signature="e#857#8945#0" expanded="false" />
+            <element signature="e#19217#22915#0" expanded="false" />
+            <element signature="e#19327#20687#0" expanded="false" />
+            <element signature="e#22960#28182#0" expanded="false" />
+            <element signature="e#28228#34067#0" expanded="false" />
+            <element signature="e#34103#49878#0" expanded="false" />
+            <element signature="e#49916#58456#0" expanded="false" />
+            <element signature="e#58495#65542#0" expanded="false" />
+            <element signature="e#65579#69341#0" expanded="false" />
+            <element signature="e#69391#73288#0" expanded="false" />
+            <element signature="e#73337#81891#0" expanded="false" />
+            <element signature="e#73453#76883#0" expanded="false" />
+            <element signature="e#81929#87731#0" expanded="false" />
+            <element signature="e#87734#91549#1" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
