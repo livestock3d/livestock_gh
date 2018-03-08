@@ -746,13 +746,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00548" summary="updated sphinx docs">
-      <created>1516457791512</created>
-      <option name="number" value="00548" />
-      <option name="presentableId" value="LOCAL-00548" />
-      <option name="project" value="LOCAL" />
-      <updated>1516457791512</updated>
-    </task>
     <task id="LOCAL-00549" summary="updated sphinx docs">
       <created>1516458717212</created>
       <option name="number" value="00549" />
@@ -1089,7 +1082,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520530754833</updated>
     </task>
-    <option name="localTasksCounter" value="597" />
+    <task id="LOCAL-00597" summary="updated the main livestock page">
+      <created>1520530859602</created>
+      <option name="number" value="00597" />
+      <option name="presentableId" value="LOCAL-00597" />
+      <option name="project" value="LOCAL" />
+      <updated>1520530859602</updated>
+    </task>
+    <option name="localTasksCounter" value="598" />
     <servers />
   </component>
   <component name="TodoView">
