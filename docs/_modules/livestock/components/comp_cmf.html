@@ -116,7 +116,7 @@
                                        <span class="s1">&#39;0: No evapotranspiration</span><span class="se">\n</span><span class="s1">&#39;</span>
                                        <span class="s1">&#39;1: Penman-Monteith</span><span class="se">\n</span><span class="s1">&#39;</span>
                                        <span class="s1">&#39;2: Shuttleworth-Wallace</span><span class="se">\n</span><span class="s1">&#39;</span>
-                                       <span class="s1">&#39;Default is set to Shuttleworth-Wallace&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;Default is set to no evapotranspiration&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
 
@@ -651,10 +651,12 @@
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Mesh face index where tree is placed&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
                     <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;TreeType&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Tree types: 0 - Deciduous, 1 - Coniferous, 2 - Shrubs. Default is deciduous&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Tree types: 0 - Deciduous. Default is deciduous&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+
                     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Height&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Height of tree in meters. Default is set to 10m&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
@@ -663,10 +665,13 @@
         <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
             <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+
                     <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Units&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Shows the units of the tree values&#39;</span><span class="p">},</span>
+
                     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;TreeValues&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Chosen tree properties values&#39;</span><span class="p">},</span>
+
                     <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;TreeProperties&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Livestock tree properties data&#39;</span><span class="p">}}</span>
 
@@ -810,10 +815,13 @@
         <span class="k">def</span> <span class="nf">outputs</span><span class="p">():</span>
             <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;readMe!&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;In case of any errors, it will be shown here.&#39;</span><span class="p">},</span>
+
                     <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Units&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Shows the units of the curve values&#39;</span><span class="p">},</span>
+
                     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;CurveValues&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Chosen curve properties values&#39;</span><span class="p">},</span>
+
                     <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;RetentionCurve&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Livestock Retention Curve&#39;</span><span class="p">}}</span>
 
@@ -1357,9 +1365,10 @@
 
         <span class="k">def</span> <span class="nf">inputs</span><span class="p">():</span>
             <span class="k">return</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ResultFolder&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Path to result folder. Accepts output from Livestock Solve&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Path to result folder. Accepts output from Livestock Solve.&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
                     <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;FetchResult&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Choose which result should be loaded:&#39;</span>
                                        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">0 - Evapotranspiration&#39;</span>
@@ -1374,10 +1383,12 @@
                                        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">9 - Soil layer wetness&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+
                     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;SaveCSV&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Save the values as a csv file - Default is set to False&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;default_value&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+
                     <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Run component&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;access&#39;</span><span class="p">:</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>

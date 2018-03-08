@@ -3,8 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="99d2d8a4-d03b-44fa-8184-486229ed0ca4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/python/components/misc.py" afterPath="$PROJECT_DIR$/python/components/misc.py" />
-      <change beforePath="$PROJECT_DIR$/sphinx/components.rst" afterPath="$PROJECT_DIR$/sphinx/components.rst" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/comfort.doctree" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/components.doctree" afterPath="$PROJECT_DIR$/docs/.doctrees/components.doctree" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/air.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/air.html" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/comp_cmf.html" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" afterPath="$PROJECT_DIR$/docs/_modules/livestock/components/misc.html" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/components.rst.txt" afterPath="$PROJECT_DIR$/docs/_sources/components.rst.txt" />
+      <change beforePath="$PROJECT_DIR$/docs/comfort.html" afterPath="$PROJECT_DIR$/docs/comfort.html" />
+      <change beforePath="$PROJECT_DIR$/docs/components.html" afterPath="$PROJECT_DIR$/docs/components.html" />
+      <change beforePath="$PROJECT_DIR$/docs/searchindex.js" afterPath="$PROJECT_DIR$/docs/searchindex.js" />
     </list>
     <ignored path=".idea/" />
     <ignored path="python/archive/" />
@@ -51,7 +59,7 @@
     <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_sphinx.coverage" NAME="sphinx task in livestock Coverage Results" MODIFIED="1520022911780" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$pdf_task_in_livestock.coverage" NAME="pdf task in livestock Coverage Results" MODIFIED="1520456922794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock" />
     <SUITE FILE_PATH="coverage/livestock_gh$upload_to_pypi.coverage" NAME="upload_to_pypi Coverage Results" MODIFIED="1517747265496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock/livestock/config_livestock" />
-    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520508557042" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
+    <SUITE FILE_PATH="coverage/livestock_gh$sphinx_task_in_grasshopper.coverage" NAME="sphinx task in grasshopper Coverage Results" MODIFIED="1520511860673" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Roaming/McNeel/Rhinoceros/5.0/scripts" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_layer_results.coverage" NAME="test_layer_results Coverage Results" MODIFIED="1511533123136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cell_results.coverage" NAME="test_cell_results Coverage Results" MODIFIED="1511516557310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_win/livestock_win/test" />
     <SUITE FILE_PATH="coverage/livestock_gh$test_cmf_model.coverage" NAME="test_cmf_model Coverage Results" MODIFIED="1511940652117" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../livestock_linux/livestock_linux/test" />
@@ -88,7 +96,7 @@
             <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1224">
-                  <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+                  <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -102,7 +110,7 @@
             <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="498">
-                  <caret line="1763" column="65" lean-forward="true" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
+                  <caret line="1763" column="65" lean-forward="false" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
                   <folding>
                     <element signature="e#857#8946#0" expanded="false" />
                     <element signature="e#5118#5223#0" expanded="false" />
@@ -156,7 +164,7 @@
             <entry file="file://$PROJECT_DIR$/python/components/misc.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="714">
-                  <caret line="333" column="40" lean-forward="true" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
+                  <caret line="333" column="40" lean-forward="false" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
                   <folding>
                     <element signature="e#666#2447#0" expanded="false" />
                     <element signature="e#2489#6222#0" expanded="false" />
@@ -816,13 +824,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00542" summary="minor bug fixes">
-      <created>1516437826939</created>
-      <option name="number" value="00542" />
-      <option name="presentableId" value="LOCAL-00542" />
-      <option name="project" value="LOCAL" />
-      <updated>1516437826940</updated>
-    </task>
     <task id="LOCAL-00543" summary="renamed folder">
       <created>1516437847858</created>
       <option name="number" value="00543" />
@@ -1159,7 +1160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520510175898</updated>
     </task>
-    <option name="localTasksCounter" value="591" />
+    <task id="LOCAL-00591" summary="update the sphinx docs">
+      <created>1520511847336</created>
+      <option name="number" value="00591" />
+      <option name="presentableId" value="LOCAL-00591" />
+      <option name="project" value="LOCAL" />
+      <updated>1520511847336</updated>
+    </task>
+    <option name="localTasksCounter" value="592" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1180,7 +1188,7 @@
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27878466" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="0" y="0" width="434" height="856" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6365132" sideWeight="0.48347548" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3206522" sideWeight="0.48347548" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="true" show_stripe_button="true" weight="0.53369564" sideWeight="0.48134327" order="2" side_tool="false" content_ui="tabs" x="1920" y="23" width="1280" height="961" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="true" show_stripe_button="true" weight="0.53369564" sideWeight="0.48134327" order="2" side_tool="false" content_ui="tabs" x="1920" y="23" width="1280" height="961" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30652174" sideWeight="0.4978678" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13859275" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16897655" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1667,7 +1675,7 @@
     <entry file="file://$PROJECT_DIR$/python/components/comp_cmf.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="498">
-          <caret line="1763" column="65" lean-forward="true" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
+          <caret line="1763" column="65" lean-forward="false" selection-start-line="1763" selection-start-column="65" selection-end-line="1763" selection-end-column="65" />
           <folding>
             <element signature="e#857#8946#0" expanded="false" />
             <element signature="e#5118#5223#0" expanded="false" />
@@ -1727,7 +1735,7 @@
     <entry file="file://$PROJECT_DIR$/python/components/misc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="714">
-          <caret line="333" column="40" lean-forward="true" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
+          <caret line="333" column="40" lean-forward="false" selection-start-line="333" selection-start-column="40" selection-end-line="333" selection-end-column="55" />
           <folding>
             <element signature="e#666#2447#0" expanded="false" />
             <element signature="e#2489#6222#0" expanded="false" />
@@ -1739,7 +1747,7 @@
     <entry file="file://$PROJECT_DIR$/sphinx/components.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1224">
-          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding />
         </state>
       </provider>
