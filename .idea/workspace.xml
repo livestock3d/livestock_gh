@@ -98,8 +98,8 @@
         <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="524">
-                <caret line="57" column="20" lean-forward="true" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="20" />
+              <first_editor relative-caret-position="736">
+                <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -723,13 +723,6 @@
       <option name="presentableId" value="Default" />
       <updated>1495731098776</updated>
     </task>
-    <task id="LOCAL-00553" summary="updated sphinx docs">
-      <created>1516646487752</created>
-      <option name="number" value="00553" />
-      <option name="presentableId" value="LOCAL-00553" />
-      <option name="project" value="LOCAL" />
-      <updated>1516646487753</updated>
-    </task>
     <task id="LOCAL-00554" summary="updated doc strings and sphinx docs">
       <created>1516648978676</created>
       <option name="number" value="00554" />
@@ -1066,7 +1059,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520776587935</updated>
     </task>
-    <option name="localTasksCounter" value="602" />
+    <task id="LOCAL-00602" summary="updated the main livestock page">
+      <created>1520778930870</created>
+      <option name="number" value="00602" />
+      <option name="presentableId" value="LOCAL-00602" />
+      <option name="project" value="LOCAL" />
+      <updated>1520778930870</updated>
+    </task>
+    <option name="localTasksCounter" value="603" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1561,8 +1561,8 @@
     <entry file="file://$PROJECT_DIR$/../ocni-dtu.github.io/install.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="524">
-            <caret line="57" column="20" lean-forward="true" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="20" />
+          <first_editor relative-caret-position="736">
+            <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />
