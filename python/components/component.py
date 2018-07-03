@@ -130,3 +130,25 @@ def component_data(n):
     line = line.split(';')
 
     return line
+
+
+def inputs(name):
+
+    if name == 'required':
+        return {'name': '--Required--',
+                        'description': 'Below are the required inputs to make this component work',
+                        'access': 'item',
+                        'default_value': None}
+
+    elif name == 'optional':
+        return {'name': '--Optional--',
+                        'description': 'Below are the optional inputs to make this component work',
+                        'access': 'item',
+                        'default_value': None}
+
+
+def outputs(name):
+
+    if name == 'readme':
+        return {'name': 'ReadMe!',
+                        'description': 'In case of any errors, it will be shown here.'}

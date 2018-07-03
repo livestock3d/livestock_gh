@@ -17,6 +17,7 @@ import livestock.lib.ssh as ssh
 import livestock.lib.geometry as gh_geo
 import livestock.lib.livestock_csv as csv
 from livestock.components.component import GHComponent
+from livestock.components import component
 import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
 
@@ -37,37 +38,39 @@ class CMFGround(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Layers',
-                        'description': 'Soil layers to add to the mesh in m',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'MeshFaces',
+                        'description': 'The mesh the where the ground properties should be applied.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: component.inputs('optional'),
+
+                    3: {'name': 'Layers',
+                        'description': 'List of the depth of soil layers to add to the mesh in m.\n'
+                                       'If the values 1 and 2 are given, two layers will be created. '
+                                       'One from 0 to 1m and one from 1m to 2m.\nDefault is 1m',
                         'access': 'list',
+                        'default_value': 1},
+
+                    4: {'name': 'GroundType',
+                        'description': 'Ground type to be applied. A number from 0-6 can be provided or the '
+                                       'Livestock Ground Type component can be connected.\n'
+                                       '0 - Medium course ground with short grass.\n'
+                                       '1 - Bla bla bla\n'
+                                       '2 - Bla bla bla\n'
+                                       '3 - Bla bla bla\n'
+                                       '4 - Bla bla bla\n'
+                                       'Default is 0 - Medium ground with short grass.',
+                        'access': 'item',
                         'default_value': 0},
 
-                    1: {'name': 'RetentionCurve',
-                        'description': 'Livestock CMF Retention Curve',
-                        'access': 'item',
-                        'default_value': None},
-
-                    2: {'name': 'VegetationProperties',
-                        'description': 'Input from Livestock CMF Vegetation Properties',
-                        'access': 'item',
-                        'default_value': None},
-
-                    3: {'name': 'SaturatedDepth',
-                        'description': 'Initial saturated depth in m. It is depth where the groundwater is located'
-                                       ' - Default is set to 3m',
-                        'access': 'item',
-                        'default_value': 3},
-
-                    4: {'name': 'SurfaceWaterVolume',
-                        'description': 'Initial surface water volume in m3.'
-                                       ' - Default is set to 0 m3',
+                    5: {'name': 'SurfaceWater',
+                        'description': 'Initial volume of surface water placed on each mesh face in m3.\n'
+                                       'Default is set to 0m3',
                         'access': 'item',
                         'default_value': 0},
-
-                    5: {'name': 'FaceIndices',
-                        'description': 'List of face indices, on where the ground properties are applied.',
-                        'access': 'list',
-                        'default_value': None},
 
                     6: {'name': 'ETMethod',
                         'description': 'Set method to calculate evapotranspiration.\n'
@@ -78,19 +81,7 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': 0},
 
-                    7: {'name': 'Manning',
-                        'description': 'Set Manning roughness. '
-                                       '\nIf not set CMF calculates it from the above given values.',
-                        'access': 'item',
-                        'default_value': None},
-
-                    8: {'name': 'PuddleDepth',
-                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
-                                       'Default is set to 0.01m',
-                        'access': 'item',
-                        'default_value': 0.01},
-
-                    9: {'name': 'SurfaceRunOffMethod',
+                    7: {'name': 'SurfaceRunOffMethod',
                         'description': 'Set the method for computing the surface run-off.\n'
                                        '0 - Kinematic Wave.\n'
                                        '1 - Diffusive Wave.\n'
@@ -100,10 +91,12 @@ class CMFGround(GHComponent):
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
-                    1: {'name': 'Ground',
+                    1: {'name': 'GroundData',
+                        'description': 'Livestock Ground Data'},
+
+                    2: {'name': 'Ground',
                         'description': 'Livestock Ground Data Class'}}
 
         self.inputs = inputs()
@@ -183,6 +176,7 @@ class CMFGround(GHComponent):
         else:
             w = 'ETMethod has to between 0 and 2. Input was: ' + str(self.et_number)
             self.add_warning(w)
+            raise ValueError(w)
 
     def convert_runoff_number_to_method(self):
         """
@@ -198,6 +192,7 @@ class CMFGround(GHComponent):
         else:
             w = 'SurfaceRunOffMethod has to between 0 and 1. Input was: ' + str(self.surface_run_off_method)
             self.add_warning(w)
+            raise ValueError(w)
 
     def run(self):
         """
@@ -206,19 +201,29 @@ class CMFGround(GHComponent):
         """
 
         if self.checks:
-            ground_dict = {'face_indices': self.face_indices,
+            ground_dict = {'mesh': self.mesh,
                            'layers': self.layers,
-                           'retention_curve': self.retention_curve,
-                           'vegetation_properties': self.vegetation_properties,
-                           'saturated_depth': self.saturated_depth,
-                           'surface_water_volume': self.surface_water,
+                           'ground_type': self.ground_type,
+                           'surface_water': self.surface_water,
                            'et_method': self.convert_et_number_to_method(),
-                           'manning': self.manning,
-                           'puddle_depth': self.puddle,
                            'runoff_method': self.convert_runoff_number_to_method()
                            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
+
+
+class CMFGroundType(GHComponent):
+    7: {'name': 'Manning',
+        'description': 'Set Manning roughness. '
+                       '\nIf not set CMF calculates it from the above given values.',
+        'access': 'item',
+        'default_value': None},
+
+    8: {'name': 'PuddleDepth',
+        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
+                       'Default is set to 0.01m',
+        'access': 'item',
+        'default_value': 0.01},
 
 
 class CMFWeather(GHComponent):
