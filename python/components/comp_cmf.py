@@ -611,24 +611,93 @@ class CMFSurfaceProperties(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Property',
-                        'description': '0-1 grasses. 2-6 soils',
+            return {0: component.inputs('optional'),
+
+                    1: {'name': 'SurfaceCover',
+                        'description': 'Sets the surface cover for the ground. Can either be an integer from 0-6 or'
+                                       'the output from CMF Surface Cover.\n'
+                                       '0 - Short Grass: 0.12m\n'
+                                       '1 - High Grass: 0.4m\n'
+                                       '2 - Wet Sand\n'
+                                       '3 - Yellow Sand\n'
+                                       '4 - White Sand\n'
+                                       '5 - Bare Moist Soil\n'
+                                       '6 - Bare Dry Soil\n'
+                                       'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
-                        'default_value': 0}
+                        'default_value': 0},
+
+                    2: {'name': 'Height',
+                        'description': 'Height of the surface cover in meters.\n'
+                                       'Default is 0.12m',
+                        'access': 'item',
+                        'default_value': 0.12},
+
+                    3: {'name': 'LeafAreaIndex',
+                        'description': 'Leaf area index of the surface cover. Leaf area index is unitless.\n'
+                                       'Default is 2.88',
+                        'access': 'item',
+                        'default_value': 2.88},
+
+                    4: {'name': 'Albedo',
+                        'description': 'Albedo of the surface cover. Albedo is unitless.\n'
+                                       'Default is 0.23',
+                        'access': 'item',
+                        'default_value': 0.23},
+
+                    5: {'name': 'CanopyClosure',
+                        'description': 'Canopy closure of the surface cover. Canopy closure is unitless.\n'
+                                       'Default is 1.0',
+                        'access': 'item',
+                        'default_value': 1.0},
+
+                    6: {'name': 'CanopyPARExtinction',
+                        'description': 'Canopy PAR Extinction of the surface cover. '
+                                       'Canopy PAR Extinction is unitless.\n'
+                                       'Default is 0.6',
+                        'access': 'item',
+                        'default_value': 0.6},
+
+                    7: {'name': 'CanopyCapacityLAI',
+                        'description': 'Canopy Capacity per LAI of the surface cover. '
+                                       'Canopy Capacity per LAI is in millimeters.\n'
+                                       'Default is 0.1',
+                        'access': 'item',
+                        'default_value': 0.1},
+
+                    8: {'name': 'StomatalResistance',
+                        'description': 'Stomatal Resistance of the surface cover. '
+                                       'Stomatal Resistance is in s/m.\n'
+                                       'Default is 100.0',
+                        'access': 'item',
+                        'default_value': 100.0},
+
+                    9: {'name': 'RootDepth',
+                        'description': 'Root Depth of the surface cover. '
+                                       'Root Depth is in meters.\n'
+                                       'Default is 0.25',
+                        'access': 'item',
+                        'default_value': 0.25},
+
+                    10: {'name': 'FractionRootDepth',
+                         'description': 'Fraction at root depth of the surface cover. '
+                                        'Fraction at root depth is unitless.\n'
+                                        'Default is 1',
+                         'access': 'item',
+                         'default_value': 1},
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'Units',
                         'description': 'Shows the units of the surface values'},
 
-                    2: {'name': 'VegetationValues',
-                        'description': 'Chosen surface properties values'},
+                    2: {'name': 'SurfaceValues',
+                        'description': 'Chosen Surface Properties Values'},
 
-                    3: {'name': 'VegetationProperties',
-                        'description': 'Livestock surface properties data'}}
+                    3: {'name': 'SurfaceProperties',
+                        'description': 'Livestock Surface Properties Data Class'}}
 
         self.inputs = inputs()
         self.outputs = outputs()
