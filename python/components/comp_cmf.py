@@ -25,13 +25,12 @@ from livestock.lib.templates import pick_template
 import Rhino.Geometry as rg
 import rhinoscriptsyntax as rs
 
+
 # -------------------------------------------------------------------------------------------------------------------- #
 # Classes
 
 
 class CMFGround(GHComponent):
-    # TODO - Create flux calculation methods components
-
     """A component class that generates the CMF ground"""
 
     def __init__(self, ghenv):
@@ -213,21 +212,127 @@ class CMFGround(GHComponent):
 
 
 class CMFGroundType(GHComponent):
-    7: {'name': 'Manning',
-        'description': 'Set Manning roughness. '
-                       '\nIf not set CMF calculates it from the above given values.',
-        'access': 'item',
-        'default_value': None},
 
-    8: {'name': 'PuddleDepth',
-        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
-                       'Default is set to 0.01m',
-        'access': 'item',
-        'default_value': 0.01},
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: component.inputs('optional'),
+
+                    1: {'name': 'RetentionCurve',
+                        'description': 'Sets the retention curve for the ground. Can either be an integer from 0-5 or'
+                                       'the output from CMF RetentionCurve.\n'
+                                       '0 - Standard CMF Retention Curve\n'
+                                       '1 - Coarse Soil\n'
+                                       '2 - Medium Soil\n'
+                                       '3 - Medium Fine Soil\n'
+                                       '4 - Fine Soil\n'
+                                       '5 - Very Fine Soil\n'
+                                       'Default is set to 0: Standard CMF Retention Curve',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    2: {'name': 'SurfaceCover',
+                        'description': 'Sets the surface cover for the ground. Can either be an integer from 0-6 or'
+                                       'the output from CMF Surface Cover.\n'
+                                       '0 - Short Grass: 0.12m\n'
+                                       '1 - High Grass: 0.4m\n'
+                                       '2 - Wet Sand\n'
+                                       '3 - Yellow Sand\n'
+                                       '4 - White Sand\n'
+                                       '5 - Bare Moist Soil\n'
+                                       '6 - Bare Dry Soil\n'
+                                       'Default is set to 0: Short Grass: 0.12m',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    3: {'name': 'Manning',
+                        'description': 'Set Manning roughness. '
+                                       '\nIf not set CMF calculates it from the above given values.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    4: {'name': 'PuddleDepth',
+                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
+                                       'Default is set to 0.01m',
+                        'access': 'item',
+                        'default_value': 0.01},
+                    }
+
+        def outputs():
+            return {0: component.outputs('readme'),
+
+                    1: {'name': 'GroundTypeData',
+                        'description': 'Livestock Ground Type Data'},
+
+                    2: {'name': 'GroundType',
+                        'description': 'Livestock Ground Type Data Class'}}
+
+        # Component Config
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 11
+        self.description = 'Specifies the CMF Ground Type properties.'
+        self.checks = False
+
+        # Data Parameters
+        self.retention_curve = None
+        self.surface_properties = None
+        self.manning = None
+        self.puddle = None
+        self.saturated_depth = None
+        self.results = None
+
+    def check_inputs(self):
+        """Checks inputs and raises a warning if an input is not the correct type."""
+
+        self.checks = True
+
+    def config(self):
+        """Generates the Grasshopper component."""
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, retention_curve, surface_properties, manning_roughness, puddle_depth, saturated_depth):
+        """
+        Gathers the inputs and checks them.
+
+        :param retention_curve: Livestock retention curve dict.
+        :param surface_properties: Livestock surface properties dict.
+        :param manning_roughness: Manning roughness.
+        :param puddle_depth: Puddle depth.
+        :param saturated_depth: Saturated depth of the cell.
+        """
+
+        # Gather data
+        self.retention_curve = self.add_default_value(retention_curve, 0)
+        self.surface_properties = self.add_default_value(surface_properties, 1)
+        self.manning = self.add_default_value(manning_roughness, 2)
+        self.puddle = self.add_default_value(puddle_depth, 3)
+        self.saturated_depth = self.add_default_value(saturated_depth, 4)
+
+        # Run checks
+        self.check_inputs()
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The component puts all the inputs into a dict and uses PassClass to pass it on.
+        """
+
+        if self.checks:
+            ground_type_dict = {'retention_curve': self.retention_curve,
+                                'surface_properties': self.surface_properties,
+                                'manning': self.manning,
+                                'puddle_depth': self.puddle,
+                                'saturated_depth': self.saturated_depth,
+                                }
+
+            self.results = gh_misc.PassClass(ground_type_dict, 'Ground Type')
 
 
 class CMFWeather(GHComponent):
-
     """A component class that generates the CMF weather"""
 
     def __init__(self, ghenv):
@@ -363,7 +468,7 @@ class CMFWeather(GHComponent):
         for cloud_key in self.cloud_cover.keys():
             sun_shine[cloud_key] = []
             for cc in self.cloud_cover[cloud_key]:
-                sun_shine[cloud_key].append(1-float(cc))
+                sun_shine[cloud_key].append(1 - float(cc))
 
         return sun_shine
 
@@ -380,7 +485,7 @@ class CMFWeather(GHComponent):
         for radiation_key in self.global_radiation.keys():
             converted_radiation[radiation_key] = []
             for rad in self.global_radiation[radiation_key]:
-                converted_radiation[radiation_key].append(float(rad)*0.0864)
+                converted_radiation[radiation_key].append(float(rad) * 0.0864)
 
         self.global_radiation = converted_radiation
 
@@ -499,8 +604,7 @@ class CMFWeather(GHComponent):
             self.results = gh_misc.PassClass(weather_dict, 'Weather')
 
 
-class CMFVegetationProperties(GHComponent):
-
+class CMFSurfaceProperties(GHComponent):
     """A component class that generates the CMF Vegetation Properties."""
 
     def __init__(self, ghenv):
@@ -603,7 +707,6 @@ class CMFVegetationProperties(GHComponent):
 
 
 class CMFSyntheticTree(GHComponent):
-
     """A component class that generates a synthetic tree."""
 
     def __init__(self, ghenv):
@@ -731,7 +834,6 @@ class CMFSyntheticTree(GHComponent):
 
 
 class CMFRetentionCurve(GHComponent):
-
     """A component class that generates the CMF retention curve"""
 
     def __init__(self, ghenv):
@@ -970,7 +1072,7 @@ class CMFSolve(GHComponent):
 
                     12: {'name': 'Run',
                          'description': 'Boolean to run analysis'
-                         '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
+                                        '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
                          'access': 'item',
                          'default_value': False}}
 
@@ -1474,9 +1576,9 @@ class CMFResults(GHComponent):
             return points_
 
         if self.fetch_result == 2:
-                # fetch_result 2 contains points
-                csv_obj = csv.read_csv(path, False)
-                return convert_file_to_points(csv_obj)
+            # fetch_result 2 contains points
+            csv_obj = csv.read_csv(path, False)
+            return convert_file_to_points(csv_obj)
 
         elif 0 <= self.fetch_result <= 4:
             return csv.read_csv(path, False)
@@ -1573,7 +1675,6 @@ class CMFResults(GHComponent):
         """
 
         if self.checks and self.run_component:
-
             self.set_units()
             self.csv_path = self.process_xml()
             results = self.load_result_csv(self.csv_path)
@@ -1583,7 +1684,6 @@ class CMFResults(GHComponent):
 
 
 class CMFOutputs(GHComponent):
-
     """A component class that specifies the wanted outputs from the CMF simulation."""
 
     def __init__(self, ghenv):
@@ -1862,7 +1962,7 @@ class CMFInlet(GHComponent):
                                           'cell': self.cell,
                                           'layer': self.layer,
                                           'inlet_flux': ','.join([str(elem)
-                                                            for elem in self.inlet_flux]),
+                                                                  for elem in self.inlet_flux]),
                                           'time_step': self.time_step
                                           },
                                          'BoundaryCondition')
@@ -1881,103 +1981,101 @@ class CMFInlet(GHComponent):
 
 
 class CMFSolverSettings(GHComponent):
+    """A component class that sets the solver settings for CMF Solve."""
 
-        """A component class that sets the solver settings for CMF Solve."""
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
-        def __init__(self, ghenv):
-            GHComponent.__init__(self, ghenv)
+        def inputs():
+            return {0: {'name': 'AnalysisLength',
+                        'description': 'Total length of the simulation in hours - default is set to 24 hours.',
+                        'access': 'item',
+                        'default_value': 24},
 
-            def inputs():
-                return {0: {'name': 'AnalysisLength',
-                            'description': 'Total length of the simulation in hours - default is set to 24 hours.',
-                            'access': 'item',
-                            'default_value': 24},
+                    1: {'name': 'TimeStep',
+                        'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
+                                       '\n24 is a time step of one day. '
+                                       '\nDefault is 1 hour',
+                        'access': 'item',
+                        'default_value': 1},
 
-                        1: {'name': 'TimeStep',
-                            'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
-                                           '\n24 is a time step of one day. '
-                                           '\nDefault is 1 hour',
-                            'access': 'item',
-                            'default_value': 1},
+                    2: {'name': 'SolverTolerance',
+                        'description': 'Solver tolerance - Default is 1e-8',
+                        'access': 'item',
+                        'default_value': 10 ** -8},
 
-                        2: {'name': 'SolverTolerance',
-                            'description': 'Solver tolerance - Default is 1e-8',
-                            'access': 'item',
-                            'default_value': 10**-8},
+                    3: {'name': 'Verbosity',
+                        'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
+                                       '0 - Prints only at start and end of simulation.\n'
+                                       '1 - Prints at every time step.',
+                        'access': 'item',
+                        'default_value': 1}}
 
-                        3: {'name': 'Verbosity',
-                            'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
-                                           '0 - Prints only at start and end of simulation.\n'
-                                           '1 - Prints at every time step.',
-                            'access': 'item',
-                            'default_value': 1}}
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
 
-            def outputs():
-                return {0: {'name': 'readMe!',
-                            'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'SolverSettings',
+                        'description': 'Livestock Solver Settings'}}
 
-                        1: {'name': 'SolverSettings',
-                            'description': 'Livestock Solver Settings'}}
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 21
+        self.description = 'Sets the solver settings for CMF Solve'
+        self.length = None
+        self.time_step = None
+        self.tolerance = None
+        self.verbosity = None
+        self.checks = [False, False, False, False]
+        self.results = None
 
-            self.inputs = inputs()
-            self.outputs = outputs()
-            self.component_number = 21
-            self.description = 'Sets the solver settings for CMF Solve'
-            self.length = None
-            self.time_step = None
-            self.tolerance = None
-            self.verbosity = None
-            self.checks = [False, False, False, False]
-            self.results = None
+    def check_inputs(self):
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
-        def check_inputs(self):
-            """Checks inputs and raises a warning if an input is not the correct type."""
+        self.checks = True
 
-            self.checks = True
+    def config(self):
+        """Generates the Grasshopper component."""
 
-        def config(self):
-            """Generates the Grasshopper component."""
+        # Generate Component
+        self.config_component(self.component_number)
 
-            # Generate Component
-            self.config_component(self.component_number)
+    def run_checks(self, length, time_step, tolerance, verbosity):
+        """
+        Gathers the inputs and checks them.
 
-        def run_checks(self, length, time_step, tolerance, verbosity):
-            """
-            Gathers the inputs and checks them.
+        :param length: Number of time steps to be taken.
+        :param time_step: Size of time step.
+        :param tolerance: Solver tolerance.
+        :param verbosity: Solver verbosity.
+        """
 
-            :param length: Number of time steps to be taken.
-            :param time_step: Size of time step.
-            :param tolerance: Solver tolerance.
-            :param verbosity: Solver verbosity.
-            """
+        # Gather data
+        self.length = self.add_default_value(length, 0)
+        self.time_step = self.add_default_value(time_step, 1)
+        self.tolerance = self.add_default_value(tolerance, 2)
+        self.verbosity = self.add_default_value(verbosity, 3)
 
-            # Gather data
-            self.length = self.add_default_value(length, 0)
-            self.time_step = self.add_default_value(time_step, 1)
-            self.tolerance = self.add_default_value(tolerance, 2)
-            self.verbosity = self.add_default_value(verbosity, 3)
+        # Run checks
+        self.check_inputs()
 
-            # Run checks
-            self.check_inputs()
+    def run(self):
+        """
+        | In case all the checks have passed the component runs.
+        | Constructs a solver settings dict, prints it and passes it on with PassClass.
+        """
 
-        def run(self):
-            """
-            | In case all the checks have passed the component runs.
-            | Constructs a solver settings dict, prints it and passes it on with PassClass.
-            """
+        if self.checks:
+            settings_dict = {'analysis_length': int(self.length),
+                             'time_step': float(self.time_step),
+                             'tolerance': self.tolerance,
+                             'verbosity': int(self.verbosity)}
 
-            if self.checks:
-                settings_dict = {'analysis_length': int(self.length),
-                                 'time_step': float(self.time_step),
-                                 'tolerance': self.tolerance,
-                                 'verbosity': int(self.verbosity)}
-
-                print(settings_dict.items())
-                self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
+            print(settings_dict.items())
+            self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
 
 
 class CMFSurfaceFluxResult(GHComponent):
-
     """A component class that visualizes the surface fluxes from a CMF case."""
 
     def __init__(self, ghenv):
@@ -2136,7 +2234,6 @@ class CMFSurfaceFluxResult(GHComponent):
             return True
 
         def flux_config(path_, run_off, rain, evapo, infiltration):
-
             flux_obj = open(path_ + '/flux_config.txt', 'w')
             flux_obj.write(str(run_off) + '\n')
             flux_obj.write(str(rain) + '\n')
@@ -2217,7 +2314,6 @@ class CMFSurfaceFluxResult(GHComponent):
 
 
 class CMFOutlet(GHComponent):
-
     """A component class that creates a CMF Outlet."""
 
     def __init__(self, ghenv):
@@ -2246,22 +2342,22 @@ class CMFOutlet(GHComponent):
 
                     3: {'name': 'OutletType',
                         'description': 'Set type of outlet connection.\n'
-                                        '1 - Richards.\n'
-                                        '2 - Kinematic wave.\n'
-                                        '3 - Technical Flux.',
+                                       '1 - Richards.\n'
+                                       '2 - Kinematic wave.\n'
+                                       '3 - Technical Flux.',
                         'access': 'item',
                         'default_value': None},
 
-                   4: {'name': 'ConnectionParameter',
-                       'description': 'If Richards:\n'
-                                      '    Potential - Sets the potential of the outlet. The difference in potential'
-                                      ' is what drives the flux.\n'
-                                      'If Kinematic wave:\n'
-                                      '    Residence Time - Linear flow parameter of travel time in days.\n'
-                                      'If Technical Flux:\n'
-                                      '    Maximum Flux - The maximum flux is in m3/day.',
-                       'access': 'item',
-                       'default_value': None}
+                    4: {'name': 'ConnectionParameter',
+                        'description': 'If Richards:\n'
+                                       '    Potential - Sets the potential of the outlet. The difference in potential'
+                                       ' is what drives the flux.\n'
+                                       'If Kinematic wave:\n'
+                                       '    Residence Time - Linear flow parameter of travel time in days.\n'
+                                       'If Technical Flux:\n'
+                                       '    Maximum Flux - The maximum flux is in m3/day.',
+                        'access': 'item',
+                        'default_value': None}
 
                     }
 
