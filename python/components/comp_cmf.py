@@ -14,6 +14,7 @@ import pprint
 
 # Livestock imports
 import livestock.lib.ssh as ssh
+import livestock.lib.cmf_lib as cmf_lib
 import livestock.lib.geometry as gh_geo
 import livestock.lib.livestock_csv as csv
 from livestock.components.component import GHComponent
@@ -98,6 +99,7 @@ class CMFGround(GHComponent):
                     2: {'name': 'Ground',
                         'description': 'Livestock Ground Data Class'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 11
@@ -115,6 +117,8 @@ class CMFGround(GHComponent):
         self.surface_run_off_method = None
         self.checks = [False, False, False, False, False]
         self.results = None
+
+    # Data Parameters
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -685,6 +689,13 @@ class CMFSurfaceProperties(GHComponent):
                                         'Default is 1',
                          'access': 'item',
                          'default_value': 1},
+
+                    11: {'name': 'LeafWidth',
+                         'description': 'Leaf width of the surface cover. '
+                                        'Leaf width is in meters.\n'
+                                        'Default is 0.005m',
+                         'access': 'item',
+                         'default_value': 0.005}
                     }
 
         def outputs():
@@ -699,13 +710,15 @@ class CMFSurfaceProperties(GHComponent):
                     3: {'name': 'SurfaceProperties',
                         'description': 'Livestock Surface Properties Data Class'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 13
-        self.description = 'Generates CMF Vegetation Properties' \
+        self.description = 'Generates CMF Surface Cover Properties' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
         self.data = None
         self.units = None
+        # Data Parameters
         self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
         self.property_index = None
         self.property = None
@@ -959,14 +972,18 @@ class CMFRetentionCurve(GHComponent):
                     3: {'name': 'RetentionCurve',
                         'description': 'Livestock Retention Curve'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 15
         self.description = 'Generates CMF retention curve'
-        self.data = None
-        self.units = None
+        self.checks = False
+        self.results = None
+
+        # Data Parameters
         self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
         self.property = None
+        self.properties_dict = {}
         self.soil_index = None
         self.k_sat = None
         self.phi = None
@@ -974,8 +991,6 @@ class CMFRetentionCurve(GHComponent):
         self.n = None
         self.m = None
         self.l = None
-        self.checks = False
-        self.results = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -1009,54 +1024,20 @@ class CMFRetentionCurve(GHComponent):
         self.n = self.add_default_value(n, 4)
         self.m = self.add_default_value(m, 5)
         self.l = self.add_default_value(l, 6)
+        self.modified_properties()
 
         # Run checks
         self.check_inputs()
 
-    def load_csv(self):
-        """Loads a csv file with the retention curve data."""
-
-        load = csv.read_csv(self.data_path)
-        self.units = load[0]
-        self.data = load[1]
-
-    def load_retention_curve(self):
-        """
-        | Loads the retention curve data and converts it into a order dict.
-        | If any property is to be overwritten it is also done in this function.
-
-        """
-
-        self.load_csv()
-        self.property = collections.OrderedDict([('type', str(self.data[self.soil_index][0])),
-                                                 ('K_sat', float(self.data[self.soil_index][1])),
-                                                 ('phi', float(self.data[self.soil_index][2])),
-                                                 ('alpha', float(self.data[self.soil_index][3])),
-                                                 ('n', float(self.data[self.soil_index][4])),
-                                                 ('m', float(self.data[self.soil_index][5])),
-                                                 ('l', float(self.data[self.soil_index][6]))
-                                                 ])
-
-        # Set modified properties
-        if self.k_sat:
-            self.property['K_sat'] = self.k_sat
-
-        if self.phi:
-            self.property['phi'] = self.phi
-
-        if self.alpha:
-            self.property['alpha'] = self.alpha
-
-        if self.n:
-            self.property['n'] = self.n
-
-        if self.m:
-            self.property['m'] = self.m
-
-        if self.l:
-            self.property['l'] = self.l
-
-        return True
+    def modified_properties(self):
+        self.properties_dict = collections.OrderedDict([
+            ('k_sat', self.k_sat),
+            ('phi', self.phi),
+            ('alpha', self.alpha),
+            ('n', self.n),
+            ('m', self.m),
+            ('l', self.l)
+        ])
 
     def run(self):
         """
@@ -1066,7 +1047,7 @@ class CMFRetentionCurve(GHComponent):
         """
 
         if self.checks:
-            self.load_retention_curve()
+            self.property = cmf_lib.load_retention_curve(self.soil_index, self.properties_dict)
             self.results = gh_misc.PassClass(self.property, 'RetentionCurve')
 
 
