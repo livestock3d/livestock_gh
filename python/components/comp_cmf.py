@@ -716,14 +716,24 @@ class CMFSurfaceProperties(GHComponent):
         self.component_number = 13
         self.description = 'Generates CMF Surface Cover Properties' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
-        self.data = None
-        self.units = None
-        # Data Parameters
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
-        self.property_index = None
-        self.property = None
         self.checks = False
         self.results = None
+
+        # Data Parameters
+        self.property_index = None
+        self.property = None
+        self.properties_dict = {}
+        self.height = None
+        self.lai = None
+        self.albedo = None
+        self.canopy_closure = None
+        self.canopy_par = None
+        self.canopy_capacity = None
+        self.stomatal = None
+        self.root_depth = None
+        self.root_fraction = None
+        self.leaf_width = None
+
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -736,7 +746,8 @@ class CMFSurfaceProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_):
+    def run_checks(self, property_, height, lai, albedo, canopy_closure, canopy_par, canopy_cap,
+                   stomatal, root_depth, root_fraction, leaf_width):
         """
         Gathers the inputs and checks them.
 
@@ -745,34 +756,33 @@ class CMFSurfaceProperties(GHComponent):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
+        self.height = self.add_default_value(height, 1)
+        self.lai = self.add_default_value(lai, 2)
+        self.albedo = self.add_default_value(albedo, 3)
+        self.canopy_closure = self.add_default_value(canopy_closure, 4)
+        self.canopy_par = self.add_default_value(canopy_par, 5)
+        self.canopy_capacity = self.add_default_value(canopy_cap, 6)
+        self.stomatal = self.add_default_value(stomatal, 7)
+        self.root_depth = self.add_default_value(root_depth, 8)
+        self.root_fraction = self.add_default_value(root_fraction, 9)
+        self.leaf_width = self.add_default_value(leaf_width, 10)
 
         # Run checks
         self.check_inputs()
 
-    def load_csv(self):
-        """Loads a csv file with the vegetation properties."""
-
-        load = csv.read_csv(self.data_path)
-        self.units = load[0]
-        self.data = load[1]
-
-    def pick_property(self):
-        """Selects the correct vegetation property. And stores it as a ordered dict."""
-
-        self.load_csv()
-        data_list = self.data[self.property_index]
-        self.property = collections.OrderedDict([('name', data_list[0]),
-                                                 ('height', data_list[1]),
-                                                 ('lai', data_list[2]),
-                                                 ('albedo', data_list[3]),
-                                                 ('canopy_closure', data_list[4]),
-                                                 ('canopy_par', data_list[5]),
-                                                 ('canopy_capacity', data_list[6]),
-                                                 ('stomatal_res', data_list[7]),
-                                                 ('root_depth', data_list[8]),
-                                                 ('root_fraction', data_list[9]),
-                                                 ('leaf_width', 0.005)
-                                                 ])
+    def modified_properties(self):
+        self.properties_dict = collections.OrderedDict([
+            ('height', self.height),
+            ('lai', self.lai),
+            ('albedo', self.albedo),
+            ('canopy_closure', self.canopy_closure),
+            ('canopy_par', self.canopy_par),
+            ('canopy_capacity', self.canopy_capacity),
+            ('stomatal_res', self.stomatal),
+            ('root_depth', self.root_depth),
+            ('root_fraction', self.root_fraction),
+            ('leaf_width', self.leaf_width),
+        ])
 
     def run(self):
         """
@@ -783,9 +793,8 @@ class CMFSurfaceProperties(GHComponent):
         """
 
         if self.checks:
-            self.pick_property()
-
-            self.results = gh_misc.PassClass(self.property, 'VegetationProperty')
+            self.property = cmf_lib.load_surface_cover(self.property_index, self.properties_dict)
+            self.results = gh_misc.PassClass(self.property, 'SurfaceCover')
 
 
 class CMFSyntheticTree(GHComponent):
@@ -981,7 +990,6 @@ class CMFRetentionCurve(GHComponent):
         self.results = None
 
         # Data Parameters
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
         self.property = None
         self.properties_dict = {}
         self.soil_index = None
