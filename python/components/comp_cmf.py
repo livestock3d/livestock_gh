@@ -1119,14 +1119,14 @@ class CMFSolve(GHComponent):
                         'default_value': None},
 
                     2: {'name': 'Write',
-                         'description': 'Boolean to write files',
-                         'access': 'item',
-                         'default_value': False},
+                        'description': 'Boolean to write files',
+                        'access': 'item',
+                        'default_value': False},
 
                     3: {'name': 'Run',
-                         'description': 'Boolean to run analysis\n',
-                         'access': 'item',
-                         'default_value': False},
+                        'description': 'Boolean to run analysis\n',
+                        'access': 'item',
+                        'default_value': False},
 
                     4: component.inputs('optional'),
 
@@ -1156,16 +1156,16 @@ class CMFSolve(GHComponent):
                         'default_value': None},
 
                     10: {'name': 'CaseName',
-                        'description': 'Case name as string.\n'
-                                       'Default is: unnamed_cmf_case',
-                        'access': 'item',
-                        'default_value': 'unnamed_cmf_case'},
+                         'description': 'Case name as string.\n'
+                                        'Default is: unnamed_cmf_case',
+                         'access': 'item',
+                         'default_value': 'unnamed_cmf_case'},
 
                     11: {'name': 'Folder',
-                        'description': 'Path to case folder.\n'
-                                       'Default is C:/livestock/analyses',
-                        'access': 'item',
-                        'default_value': r'C:\livestock\analyses'},
+                         'description': 'Path to case folder.\n'
+                                        'Default is C:/livestock/analyses',
+                         'access': 'item',
+                         'default_value': r'C:\livestock\analyses'},
 
                     12: {'name': 'SSH',
                          'description': 'If True the case will be computed through the SSH connection.'
@@ -1183,16 +1183,20 @@ class CMFSolve(GHComponent):
                     1: {'name': 'ResultPath',
                         'description': 'Path to result files'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 14
         self.description = 'Solves CMF Case.\n' \
                            'Icon art based on Vectors Market from the Noun Project.'
+        self.checks = False
+        self.results = None
+
+        # Data Parameters
         self.mesh = None
         self.ground = None
         self.weather = None
         self.trees = None
-        self.stream = None
         self.boundary_conditions = None
         self.solver_settings = None
         self.folder = None
@@ -1204,8 +1208,7 @@ class CMFSolve(GHComponent):
         self.run_case = None
         self.py_exe = gh_misc.get_python_exe()
         self.written = False
-        self.checks = False
-        self.results = None
+
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
