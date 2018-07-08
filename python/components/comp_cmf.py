@@ -103,20 +103,15 @@ class CMFGround(GHComponent):
         self.component_number = 11
         self.description = 'Generates CMF ground' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
-        self.face_indices = None
-        self.layers = None
-        self.retention_curve = None
-        self.vegetation_properties = None
-        self.saturated_depth = None
-        self.surface_water = None
-        self.et_number = None
-        self.manning = None
-        self.puddle = None
-        self.surface_run_off_method = None
-        self.checks = [False, False, False, False, False]
+        self.checks = False
         self.results = None
 
-    # Data Parameters
+        # Data Parameters
+        self.mesh_faces = None
+        self.layers = None
+        self.surface_water = None
+        self.et_number = None
+        self.surface_run_off_method = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -237,7 +232,7 @@ class CMFGround(GHComponent):
         """
 
         if self.checks:
-            ground_dict = {'mesh': self.mesh,
+            ground_dict = {'mesh': self.mesh_faces,
                            'layers': self.layers,
                            'ground_type': self.ground_type,
                            'surface_water': self.surface_water,
@@ -1116,71 +1111,70 @@ class CMFSolve(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Mesh',
-                        'description': 'Topography as a mesh',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'Ground',
+                        'description': 'Output from Livestock CMF Ground',
                         'access': 'item',
                         'default_value': None},
 
-                    1: {'name': 'Ground',
-                        'description': 'Input from Livestock CMF Ground',
-                        'access': 'list',
-                        'default_value': None},
+                    2: {'name': 'Write',
+                         'description': 'Boolean to write files',
+                         'access': 'item',
+                         'default_value': False},
 
-                    2: {'name': 'Weather',
+                    3: {'name': 'Run',
+                         'description': 'Boolean to run analysis\n',
+                         'access': 'item',
+                         'default_value': False},
+
+                    4: component.inputs('optional'),
+
+                    5: {'name': 'Weather',
                         'description': 'Input from Livestock CMF Weather',
                         'access': 'item',
                         'default_value': None},
 
-                    3: {'name': 'Trees',
+                    6: {'name': 'Trees',
                         'description': 'Input from Livestock CMF Tree',
                         'access': 'list',
                         'default_value': None},
 
-                    4: {'name': 'Stream',
-                        'description': 'Input from Livestock CMF Stream',
-                        'access': 'item',
-                        'default_value': None},
-
-                    5: {'name': 'BoundaryConditions',
+                    7: {'name': 'BoundaryConditions',
                         'description': 'Input from Livestock CMF Boundary Condition',
                         'access': 'list',
                         'default_value': None},
 
-                    6: {'name': 'SolverSettings',
+                    8: {'name': 'SolverSettings',
                         'description': 'Input from Livestock CMF Solver Settings',
                         'access': 'item',
                         'default_value': None},
-
-                    7: {'name': 'Folder',
-                        'description': 'Path to folder. Default is Desktop',
-                        'access': 'item',
-                        'default_value': os.path.join(os.environ["HOMEPATH"], "Desktop")},
-
-                    8: {'name': 'CaseName',
-                        'description': 'Case name as string. Default is CMF',
-                        'access': 'item',
-                        'default_value': 'CMF'},
 
                     9: {'name': 'Outputs',
                         'description': 'Connect Livestock Outputs',
                         'access': 'item',
                         'default_value': None},
 
-                    10: {'name': 'Write',
-                         'description': 'Boolean to write files',
+                    10: {'name': 'CaseName',
+                        'description': 'Case name as string.\n'
+                                       'Default is: unnamed_cmf_case',
+                        'access': 'item',
+                        'default_value': 'unnamed_cmf_case'},
+
+                    11: {'name': 'Folder',
+                        'description': 'Path to case folder.\n'
+                                       'Default is C:/livestock/analyses',
+                        'access': 'item',
+                        'default_value': r'C:\livestock\analyses'},
+
+                    12: {'name': 'SSH',
+                         'description': 'If True the case will be computed through the SSH connection.'
+                                        'To get the SSH connection to work; the Livestock SSH Component '
+                                        'should be configured. If False; the case will be run locally.\n'
+                                        'Default is set to False',
                          'access': 'item',
                          'default_value': False},
-
-                    11: {'name': 'Overwrite',
-                         'description': 'If True excising case will be overwritten. Default is set to True',
-                         'access': 'item',
-                         'default_value': True},
-
-                    12: {'name': 'Run',
-                         'description': 'Boolean to run analysis'
-                                        '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
-                         'access': 'item',
-                         'default_value': False}}
+                    }
 
         def outputs():
             return {0: {'name': 'readMe!',

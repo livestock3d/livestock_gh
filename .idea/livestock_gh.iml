@@ -5,7 +5,6 @@
     <orderEntry type="jdk" jdkName="IronPython 2.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="livestock" />
-    <orderEntry type="module" module-name="ocni-dtu.github.io" />
   </component>
   <component name="PackageRequirementsSettings">
     <option name="requirementsPath" value="" />
