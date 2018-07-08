@@ -57,12 +57,10 @@ class CMFGround(GHComponent):
                     4: {'name': 'GroundType',
                         'description': 'Ground type to be applied. A number from 0-6 can be provided or the '
                                        'Livestock Ground Type component can be connected.\n'
-                                       '0 - Medium course ground with short grass.\n'
-                                       '1 - Bla bla bla\n'
-                                       '2 - Bla bla bla\n'
-                                       '3 - Bla bla bla\n'
-                                       '4 - Bla bla bla\n'
-                                       'Default is 0 - Medium ground with short grass.',
+                                       '0 - Short grass with medium ground\n'
+                                       '1 - Gravel (light color and permeable)\n'
+                                       '2 - Pavement (dark color and non-permeable)\n'
+                                       'Default is 0 - Short grass with medium ground',
                         'access': 'item',
                         'default_value': 0},
 
@@ -131,8 +129,8 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, surface_water, face_indices,
-                   et_method, manning_, puddle, surface_run_off_method):
+    def run_checks(self, mesh_faces, layers, ground_type, surface_water,
+                   et_method, surface_run_off_method):
         """
         Gathers the inputs and checks them.
 
@@ -149,19 +147,54 @@ class CMFGround(GHComponent):
         """
 
         # Gather data
-        self.layers = self.add_default_value(layers, 0)
-        self.retention_curve = self.add_default_value(retention_curve, 1)
-        self.vegetation_properties = self.add_default_value(vegetation_properties, 2)
-        self.saturated_depth = self.add_default_value(saturated_depth, 3)
-        self.surface_water = self.add_default_value(surface_water, 4)
-        self.face_indices = self.add_default_value(face_indices, 5)
-        self.et_number = self.add_default_value(et_method, 6)
-        self.manning = self.add_default_value(manning_, 7)
-        self.puddle = self.add_default_value(puddle, 8)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 9)
+        self.mesh_faces = self.add_default_value(mesh_faces, 0)
+        self.layers = self.add_default_value(layers, 1)
+        self.ground_type = self.convert_ground_type(ground_type)
+        self.surface_water = self.add_default_value(surface_water, 3)
+        self.et_number = self.add_default_value(et_method, 4)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 5)
 
         # Run checks
         self.check_inputs()
+
+    def convert_ground_type(self, ground_type):
+        if isinstance(ground_type, int):
+            return self.construct_ground_type(ground_type)
+
+        elif not ground_type:
+            return self.construct_ground_type(0)
+
+        else:
+            return ground_type.c
+
+    def construct_ground_type(self, index):
+        manning = None
+        puddle = 0.01
+        saturated_depth = 3
+
+        if index == 0:
+            return {'retention_curve': cmf_lib.load_retention_curve(0),
+                    'surface_properties': cmf_lib.load_surface_cover(0),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        elif index == 1:
+            return {'retention_curve': cmf_lib.load_retention_curve(1),
+                    'surface_properties': cmf_lib.load_surface_cover(3),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        elif index == 2:
+            return {'retention_curve': cmf_lib.load_retention_curve(0, {'k_sat': 0.01}),
+                    'surface_properties': cmf_lib.load_surface_cover(5),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        else:
+            raise ValueError('Ground type should be an integer from 0-2. Given value was:' + str(index))
 
     def convert_et_number_to_method(self):
         """
@@ -310,14 +343,30 @@ class CMFGroundType(GHComponent):
         """
 
         # Gather data
-        self.retention_curve = self.add_default_value(retention_curve, 0)
-        self.surface_properties = self.add_default_value(surface_properties, 1)
+        self.retention_curve = self.convert_retention_curve(retention_curve)
+        self.surface_properties = self.convert_surface_properties(surface_properties)
         self.manning = self.add_default_value(manning_roughness, 2)
         self.puddle = self.add_default_value(puddle_depth, 3)
         self.saturated_depth = self.add_default_value(saturated_depth, 4)
 
         # Run checks
         self.check_inputs()
+
+    def convert_retention_curve(self, retention_curve):
+        if isinstance(retention_curve, int):
+            return cmf_lib.load_retention_curve(retention_curve)
+        elif not retention_curve:
+            return cmf_lib.load_retention_curve(0)
+        else:
+            return retention_curve.c
+
+    def convert_surface_properties(self, surface_cover):
+        if isinstance(surface_cover, int):
+            return cmf_lib.load_surface_cover(surface_cover)
+        elif not surface_cover:
+            return cmf_lib.load_surface_cover(0)
+        else:
+            return surface_cover.c
 
     def run(self):
         """
@@ -618,8 +667,7 @@ class CMFSurfaceProperties(GHComponent):
             return {0: component.inputs('optional'),
 
                     1: {'name': 'SurfaceCover',
-                        'description': 'Sets the surface cover for the ground. Can either be an integer from 0-6 or'
-                                       'the output from CMF Surface Cover.\n'
+                        'description': 'Sets the surface cover for the ground.\n'
                                        '0 - Short Grass: 0.12m\n'
                                        '1 - High Grass: 0.4m\n'
                                        '2 - Wet Sand\n'
@@ -734,7 +782,6 @@ class CMFSurfaceProperties(GHComponent):
         self.root_fraction = None
         self.leaf_width = None
 
-
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
 
@@ -766,6 +813,7 @@ class CMFSurfaceProperties(GHComponent):
         self.root_depth = self.add_default_value(root_depth, 8)
         self.root_fraction = self.add_default_value(root_fraction, 9)
         self.leaf_width = self.add_default_value(leaf_width, 10)
+        self.modified_properties()
 
         # Run checks
         self.check_inputs()
