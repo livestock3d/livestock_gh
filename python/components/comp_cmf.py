@@ -143,7 +143,7 @@ class CMFGround(GHComponent):
         """
 
         # Gather data
-        self.mesh_faces = self.add_default_value(mesh_faces, 0)
+        self.mesh_faces = self.add_default_value(rs.coercemesh(mesh_faces), 0)
         self.layers = self.add_default_value(layers, 1)
         self.ground_type = self.convert_ground_type(ground_type)
         self.surface_water = self.add_default_value(surface_water, 3)
@@ -1103,8 +1103,6 @@ class CMFRetentionCurve(GHComponent):
 
 
 class CMFSolve(GHComponent):
-    # TODO - Put files in subfolder called /CMF
-
     """A component class that solves the CMF Case."""
 
     def __init__(self, ghenv):
@@ -1192,22 +1190,23 @@ class CMFSolve(GHComponent):
         self.results = None
 
         # Data Parameters
-        self.mesh = None
         self.ground = None
+        self.write_case = None
+        self.run_case = None
         self.weather = None
         self.trees = None
         self.boundary_conditions = None
         self.solver_settings = None
+        self.output_config = None
         self.folder = None
         self.case_name = None
+        self.ssh = None
+
+        # Additional Parameters
         self.case_path = None
-        self.write_case = None
-        self.overwrite = True
-        self.output_config = None
-        self.run_case = None
+        self.mesh = None
         self.py_exe = gh_misc.get_python_exe()
         self.written = False
-
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -1229,19 +1228,17 @@ class CMFSolve(GHComponent):
         """
         Gathers the inputs and checks them.
 
-        :param mesh: Project Mesh
         :param ground: Livestock Ground dict
+        :param write: Whether to write or not
+        :param run: Whether to run or not.
         :param weather: Livestock Weather dict
         :param trees: Livestock Tree dict
-        :param stream: Livestock Stream dict
         :param boundary_conditions: Livestock Boundary Condition dict
         :param solver_settings: Livestock Solver settings dict
-        :param folder: Case folder
-        :param name: Case name
         :param outputs: Livestock Outputs dict
-        :param write: Whether to write or not
-        :param overwrite: Overwrite exsiting files
-        :param run: Whether to run or not.
+        :param name: Case name
+        :param folder: Case folder
+        :param ssh: Whether to run on ssh or not.
         """
 
         # Gather data
@@ -1265,7 +1262,7 @@ class CMFSolve(GHComponent):
     def update_case_path(self):
         """Updates the case folder path."""
 
-        self.case_path = self.folder + '\\' + self.case_name
+        self.case_path = self.folder + '\\' + self.case_name + '\\cmf'
 
     def write(self, doc):
         """
@@ -1285,9 +1282,27 @@ class CMFSolve(GHComponent):
             return weather_file
 
         def write_ground(ground_dict_, folder):
+
             # Process ground
             ground_dict = list(ground.c for ground in ground_dict_)
 
+            # Join meshes
+            meshes = [ground['mesh']
+                      for ground in ground_dict]
+            joined_mesh = rs.JoinMeshes(meshes)
+
+            # Compute face indices list
+            joined_mesh_centers = rs.MeshFaceCenters(joined_mesh)
+            for ground in ground_dict:
+                ground_centers = rs.MeshFaceCenters(ground['mesh'])
+                ground['mesh'] = []
+                for index in range(len(joined_mesh_centers)):
+                    for center_pt in ground_centers:
+                        if center_pt == joined_mesh_centers[index]:
+                            ground['mesh'].append(index)
+
+            # Save Mesh
+            gh_geo.bake_export_delete(joined_mesh, folder, 'mesh', '.obj', doc)
 
             # Write json file
             ground_file = 'ground.json'
@@ -1408,14 +1423,9 @@ class CMFSolve(GHComponent):
         else:
             os.mkdir(self.folder + '/' + self.case_name)
 
-        files_written = []
-
-        # Save Mesh
-        gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
-
         # Append to files written
+        files_written = list()
         files_written.append('mesh.obj')
-
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
         files_written.append(write_solver_info(self.solver_settings, self.case_path))
@@ -2545,120 +2555,3 @@ class CMFOutlet(GHComponent):
 
         if self.checks:
             self.set_outlet()
-
-
-"""
-class CMFStream(GHComponent):
-
-    def __init__(self):
-        GHComponent.__init__(self)
-
-        def inputs(x):
-            if x == 0:
-                return {0: ['MidStreamCurve', 'Curve following the middle of the stream'],
-                        1: ['CrossSections','Cross section curves along the stream']}
-
-        def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Stream', 'Livestock Stream Data Class'],
-                    2: ['ReconstructedStream', 'The reconstructed stream as represented in CMF']}
-
-        self.inputs = inputs(0)
-        self.outputs = outputs()
-        self.component_number = 13
-        self.mid_curve = None
-        self.cross_sections = None
-        self.shape = []
-        self.x = None
-        self.y = None
-        self.z = None
-        self.lengths = None
-        self.width = None
-        self.slope_bank = None
-        self.water_depth = None
-        self.checks = [False, False]
-        self.results = None
-
-    def check_inputs(self, ghenv):
-        warning = []
-
-        if self.mid_curve:
-            self.checks = True
-
-    def config(self, ghenv):
-
-        # Generate Component
-        self.config_component(ghenv, self.component_number)
-
-    def run_checks(self, ghenv, mid_curve, cross_sections):
-        # Gather data
-        self.mid_curve = mid_curve
-        self.cross_sections = cross_sections
-
-        # Run checks
-        self.check_inputs(ghenv)
-
-    def process_curves(self):
-
-        def intersection_mid_cross_section_curves(cross_sections, mid_curve):
-
-            # get cross section vertices and mid point and cross section intersections
-            intersection_points = []
-            cross_section_verts = []
-
-            for crv in cross_sections:
-                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])
-                cross_section_verts.append(rs.PolylineVertices(crv))
-
-            if len(cross_section_verts[0]) == 3:
-                shape = 0 # triangular reach
-                return intersection_points, cross_section_verts, shape
-            elif len(cross_section_verts[0]) == 4:
-                shape = 1 # rectangular reach
-                return intersection_points, cross_section_verts, shape
-            else:
-                print('Error in shape')
-                return None, None, None
-
-        def get_mid_points(intersection_points):
-            mid_points = []
-            x = []
-            y = []
-            z = []
-
-            for i in range(len(intersection_points)):
-                pt = intersection_points[i] - intersection_points[i + 1]
-                mid_points.append(pt)
-                x.append(pt.X)
-                y.append(pt.Y)
-                z.append(pt.Z)
-
-            return mid_points, x, y, z
-
-        def sort_cross_section_verts(cross_section_verts, shape):
-            if shape == 0:
-                left = []
-                right = []
-                bottom = []
-                for i in range(len(cross_section_verts)):
-                    pass
-            elif shape == 1:
-                return
-            else:
-                print('Shape with value:', str(shape), 'not defined!')
-                return None
-
-        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)
-
-        return None
-
-    def run(self):
-        if self.checks:
-            ground_dict = {'mesh': self.mesh,
-                           'layers': self.layers,
-                           'retention_curve': self.retention_curve,
-                           'grass': self.grass,
-                           'initial_saturation': self.initial_saturation}
-
-            self.results = gh_misc.PassClass(ground_dict, 'CMF_Ground')
-"""
