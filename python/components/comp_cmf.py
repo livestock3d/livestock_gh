@@ -110,6 +110,7 @@ class CMFGround(GHComponent):
         # Data Parameters
         self.mesh_faces = None
         self.layers = None
+        self.ground_type = None
         self.surface_water = None
         self.et_number = None
         self.surface_run_off_method = None
@@ -143,18 +144,18 @@ class CMFGround(GHComponent):
         """
 
         # Gather data
-        self.mesh_faces = self.add_default_value(rs.coercemesh(mesh_faces), 0)
-        self.layers = self.add_default_value(layers, 1)
+        self.mesh_faces = self.add_default_value(rs.coercemesh(mesh_faces), 1)
+        self.layers = self.add_default_value(layers, 3)
         self.ground_type = self.convert_ground_type(ground_type)
-        self.surface_water = self.add_default_value(surface_water, 3)
-        self.et_number = self.add_default_value(et_method, 4)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 5)
+        self.surface_water = self.add_default_value(surface_water, 5)
+        self.et_number = self.add_default_value(et_method, 6)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 7)
 
         # Run checks
         self.check_inputs()
 
     def convert_ground_type(self, ground_type):
-        if isinstance(ground_type, int):
+        if isinstance(ground_type, int) or isinstance(ground_type, float):
             return self.construct_ground_type(ground_type)
 
         elif not ground_type:
@@ -1113,7 +1114,7 @@ class CMFSolve(GHComponent):
 
                     1: {'name': 'Ground',
                         'description': 'Output from Livestock CMF Ground',
-                        'access': 'item',
+                        'access': 'list',
                         'default_value': None},
 
                     2: {'name': 'Write',
@@ -1242,17 +1243,17 @@ class CMFSolve(GHComponent):
         """
 
         # Gather data
-        self.ground = self.add_default_value(ground, 0)
-        self.write_case = self.add_default_value(write, 1)
-        self.run_case = self.add_default_value(run, 2)
-        self.weather = self.add_default_value(weather, 3)
-        self.trees = self.add_default_value(trees, 4)
-        self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
-        self.solver_settings = self.add_default_value(solver_settings, 6)
-        self.output_config = self.add_default_value(outputs, 7)
-        self.case_name = self.add_default_value(name, 8)
-        self.folder = self.add_default_value(folder, 9)
-        self.ssh = self.add_default_value(ssh, 10)
+        self.ground = self.add_default_value(ground, 1)
+        self.write_case = self.add_default_value(write, 2)
+        self.run_case = self.add_default_value(run, 3)
+        self.weather = self.add_default_value(weather, 5)
+        self.trees = self.add_default_value(trees, 6)
+        self.boundary_conditions = self.add_default_value(boundary_conditions, 7)
+        self.solver_settings = self.add_default_value(solver_settings, 8)
+        self.output_config = self.add_default_value(outputs, 9)
+        self.case_name = self.add_default_value(name, 10)
+        self.folder = self.add_default_value(folder, 11)
+        self.ssh = self.add_default_value(ssh, 12)
 
         self.update_case_path()
 
@@ -1284,7 +1285,8 @@ class CMFSolve(GHComponent):
         def write_ground(ground_dict_, folder):
 
             # Process ground
-            ground_dict = list(ground.c for ground in ground_dict_)
+            ground_dict = [ground.c
+                           for ground in ground_dict_]
 
             # Join meshes
             meshes = [ground['mesh']
@@ -1296,10 +1298,9 @@ class CMFSolve(GHComponent):
             for ground in ground_dict:
                 ground_centers = rs.MeshFaceCenters(ground['mesh'])
                 ground['mesh'] = []
-                for index in range(len(joined_mesh_centers)):
-                    for center_pt in ground_centers:
-                        if center_pt == joined_mesh_centers[index]:
-                            ground['mesh'].append(index)
+                for center_pt in ground_centers:
+                    ground['mesh'].append(joined_mesh_centers.index(center_pt))
+
 
             # Save Mesh
             gh_geo.bake_export_delete(joined_mesh, folder, 'mesh', '.obj', doc)
@@ -1307,7 +1308,7 @@ class CMFSolve(GHComponent):
             # Write json file
             ground_file = 'ground.json'
             with open(folder + '/' + ground_file, 'w') as outfile:
-                json.dump(ground_dict_, outfile)
+                json.dump(ground_dict, outfile)
 
             return ground_file
 
@@ -1421,7 +1422,7 @@ class CMFSolve(GHComponent):
         if os.path.exists(self.case_path):
             self.written = True
         else:
-            os.mkdir(self.folder + '/' + self.case_name)
+            os.mkdir(self.case_path)
 
         # Append to files written
         files_written = list()
