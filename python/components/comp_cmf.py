@@ -11,12 +11,15 @@ import collections
 import subprocess
 from shutil import copyfile
 import pprint
+import json
 
 # Livestock imports
 import livestock.lib.ssh as ssh
+import livestock.lib.cmf_lib as cmf_lib
 import livestock.lib.geometry as gh_geo
 import livestock.lib.livestock_csv as csv
 from livestock.components.component import GHComponent
+from livestock.components import component
 import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
 
@@ -24,50 +27,49 @@ from livestock.lib.templates import pick_template
 import Rhino.Geometry as rg
 import rhinoscriptsyntax as rs
 
+
 # -------------------------------------------------------------------------------------------------------------------- #
 # Classes
 
 
 class CMFGround(GHComponent):
-    # TODO - Create flux calculation methods components
-
     """A component class that generates the CMF ground"""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Layers',
-                        'description': 'Soil layers to add to the mesh in m',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'MeshFaces',
+                        'description': 'The mesh the where the ground properties should be applied.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: component.inputs('optional'),
+
+                    3: {'name': 'Layers',
+                        'description': 'List of the depth of soil layers to add to the mesh in m.\n'
+                                       'If the values 1 and 2 are given, two layers will be created. '
+                                       'One from 0 to 1m and one from 1m to 2m.\nDefault is 1m',
                         'access': 'list',
+                        'default_value': 1},
+
+                    4: {'name': 'GroundType',
+                        'description': 'Ground type to be applied. A number from 0-6 can be provided or the '
+                                       'Livestock Ground Type component can be connected.\n'
+                                       '0 - Short grass with medium ground\n'
+                                       '1 - Gravel (light color and permeable)\n'
+                                       '2 - Pavement (dark color and non-permeable)\n'
+                                       'Default is 0 - Short grass with medium ground',
+                        'access': 'item',
                         'default_value': 0},
 
-                    1: {'name': 'RetentionCurve',
-                        'description': 'Livestock CMF Retention Curve',
-                        'access': 'item',
-                        'default_value': None},
-
-                    2: {'name': 'VegetationProperties',
-                        'description': 'Input from Livestock CMF Vegetation Properties',
-                        'access': 'item',
-                        'default_value': None},
-
-                    3: {'name': 'SaturatedDepth',
-                        'description': 'Initial saturated depth in m. It is depth where the groundwater is located'
-                                       ' - Default is set to 3m',
-                        'access': 'item',
-                        'default_value': 3},
-
-                    4: {'name': 'SurfaceWaterVolume',
-                        'description': 'Initial surface water volume in m3.'
-                                       ' - Default is set to 0 m3',
+                    5: {'name': 'SurfaceWater',
+                        'description': 'Initial volume of surface water placed on each mesh face in m3.\n'
+                                       'Default is set to 0m3',
                         'access': 'item',
                         'default_value': 0},
-
-                    5: {'name': 'FaceIndices',
-                        'description': 'List of face indices, on where the ground properties are applied.',
-                        'access': 'list',
-                        'default_value': None},
 
                     6: {'name': 'ETMethod',
                         'description': 'Set method to calculate evapotranspiration.\n'
@@ -78,19 +80,7 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': 0},
 
-                    7: {'name': 'Manning',
-                        'description': 'Set Manning roughness. '
-                                       '\nIf not set CMF calculates it from the above given values.',
-                        'access': 'item',
-                        'default_value': None},
-
-                    8: {'name': 'PuddleDepth',
-                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
-                                       'Default is set to 0.01m',
-                        'access': 'item',
-                        'default_value': 0.01},
-
-                    9: {'name': 'SurfaceRunOffMethod',
+                    7: {'name': 'SurfaceRunOffMethod',
                         'description': 'Set the method for computing the surface run-off.\n'
                                        '0 - Kinematic Wave.\n'
                                        '1 - Diffusive Wave.\n'
@@ -100,29 +90,30 @@ class CMFGround(GHComponent):
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
-                    1: {'name': 'Ground',
+                    1: {'name': 'GroundData',
+                        'description': 'Livestock Ground Data'},
+
+                    2: {'name': 'Ground',
                         'description': 'Livestock Ground Data Class'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 11
         self.description = 'Generates CMF ground' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
-        self.face_indices = None
+        self.checks = False
+        self.results = None
+
+        # Data Parameters
+        self.mesh_faces = None
         self.layers = None
-        self.retention_curve = None
-        self.vegetation_properties = None
-        self.saturated_depth = None
+        self.ground_type = None
         self.surface_water = None
         self.et_number = None
-        self.manning = None
-        self.puddle = None
         self.surface_run_off_method = None
-        self.checks = [False, False, False, False, False]
-        self.results = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -135,8 +126,8 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, layers, retention_curve, vegetation_properties, saturated_depth, surface_water, face_indices,
-                   et_method, manning_, puddle, surface_run_off_method):
+    def run_checks(self, mesh_faces, layers, ground_type, surface_water,
+                   et_method, surface_run_off_method):
         """
         Gathers the inputs and checks them.
 
@@ -153,19 +144,54 @@ class CMFGround(GHComponent):
         """
 
         # Gather data
-        self.layers = self.add_default_value(layers, 0)
-        self.retention_curve = self.add_default_value(retention_curve, 1)
-        self.vegetation_properties = self.add_default_value(vegetation_properties, 2)
-        self.saturated_depth = self.add_default_value(saturated_depth, 3)
-        self.surface_water = self.add_default_value(surface_water, 4)
-        self.face_indices = self.add_default_value(face_indices, 5)
+        self.mesh_faces = self.add_default_value(rs.coercemesh(mesh_faces), 1)
+        self.layers = self.add_default_value(layers, 3)
+        self.ground_type = self.convert_ground_type(ground_type)
+        self.surface_water = self.add_default_value(surface_water, 5)
         self.et_number = self.add_default_value(et_method, 6)
-        self.manning = self.add_default_value(manning_, 7)
-        self.puddle = self.add_default_value(puddle, 8)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 9)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 7)
 
         # Run checks
         self.check_inputs()
+
+    def convert_ground_type(self, ground_type):
+        if isinstance(ground_type, int) or isinstance(ground_type, float):
+            return self.construct_ground_type(ground_type)
+
+        elif not ground_type:
+            return self.construct_ground_type(0)
+
+        else:
+            return ground_type.c
+
+    def construct_ground_type(self, index):
+        manning = None
+        puddle = 0.01
+        saturated_depth = 3
+
+        if index == 0:
+            return {'retention_curve': cmf_lib.load_retention_curve(0),
+                    'surface_properties': cmf_lib.load_surface_cover(0),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        elif index == 1:
+            return {'retention_curve': cmf_lib.load_retention_curve(1),
+                    'surface_properties': cmf_lib.load_surface_cover(3),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        elif index == 2:
+            return {'retention_curve': cmf_lib.load_retention_curve(0, {'k_sat': 0.01}),
+                    'surface_properties': cmf_lib.load_surface_cover(5),
+                    'manning': manning,
+                    'puddle_depth': puddle,
+                    'saturated_depth': saturated_depth, }
+
+        else:
+            raise ValueError('Ground type should be an integer from 0-2. Given value was:' + str(index))
 
     def convert_et_number_to_method(self):
         """
@@ -183,6 +209,7 @@ class CMFGround(GHComponent):
         else:
             w = 'ETMethod has to between 0 and 2. Input was: ' + str(self.et_number)
             self.add_warning(w)
+            raise ValueError(w)
 
     def convert_runoff_number_to_method(self):
         """
@@ -198,6 +225,7 @@ class CMFGround(GHComponent):
         else:
             w = 'SurfaceRunOffMethod has to between 0 and 1. Input was: ' + str(self.surface_run_off_method)
             self.add_warning(w)
+            raise ValueError(w)
 
     def run(self):
         """
@@ -206,23 +234,155 @@ class CMFGround(GHComponent):
         """
 
         if self.checks:
-            ground_dict = {'face_indices': self.face_indices,
+            ground_dict = {'mesh': self.mesh_faces,
                            'layers': self.layers,
-                           'retention_curve': self.retention_curve,
-                           'vegetation_properties': self.vegetation_properties,
-                           'saturated_depth': self.saturated_depth,
-                           'surface_water_volume': self.surface_water,
+                           'ground_type': self.ground_type,
+                           'surface_water': self.surface_water,
                            'et_method': self.convert_et_number_to_method(),
-                           'manning': self.manning,
-                           'puddle_depth': self.puddle,
                            'runoff_method': self.convert_runoff_number_to_method()
                            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
 
 
-class CMFWeather(GHComponent):
+class CMFGroundType(GHComponent):
 
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
+
+        def inputs():
+            return {0: component.inputs('optional'),
+
+                    1: {'name': 'RetentionCurve',
+                        'description': 'Sets the retention curve for the ground. Can either be an integer from 0-5 or'
+                                       'the output from CMF RetentionCurve.\n'
+                                       '0 - Standard CMF Retention Curve\n'
+                                       '1 - Coarse Soil\n'
+                                       '2 - Medium Soil\n'
+                                       '3 - Medium Fine Soil\n'
+                                       '4 - Fine Soil\n'
+                                       '5 - Very Fine Soil\n'
+                                       'Default is set to 0: Standard CMF Retention Curve',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    2: {'name': 'SurfaceCover',
+                        'description': 'Sets the surface cover for the ground. Can either be an integer from 0-6 or'
+                                       'the output from CMF Surface Cover.\n'
+                                       '0 - Short Grass: 0.12m\n'
+                                       '1 - High Grass: 0.4m\n'
+                                       '2 - Wet Sand\n'
+                                       '3 - Yellow Sand\n'
+                                       '4 - White Sand\n'
+                                       '5 - Bare Moist Soil\n'
+                                       '6 - Bare Dry Soil\n'
+                                       'Default is set to 0: Short Grass: 0.12m',
+                        'access': 'item',
+                        'default_value': 0},
+
+                    3: {'name': 'Manning',
+                        'description': 'Set Manning roughness. '
+                                       '\nIf not set CMF calculates it from the above given values.',
+                        'access': 'item',
+                        'default_value': None},
+
+                    4: {'name': 'PuddleDepth',
+                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
+                                       'Default is set to 0.01m',
+                        'access': 'item',
+                        'default_value': 0.01},
+                    }
+
+        def outputs():
+            return {0: component.outputs('readme'),
+
+                    1: {'name': 'GroundTypeData',
+                        'description': 'Livestock Ground Type Data'},
+
+                    2: {'name': 'GroundType',
+                        'description': 'Livestock Ground Type Data Class'}}
+
+        # Component Config
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 11
+        self.description = 'Specifies the CMF Ground Type properties.'
+        self.checks = False
+
+        # Data Parameters
+        self.retention_curve = None
+        self.surface_properties = None
+        self.manning = None
+        self.puddle = None
+        self.saturated_depth = None
+        self.results = None
+
+    def check_inputs(self):
+        """Checks inputs and raises a warning if an input is not the correct type."""
+
+        self.checks = True
+
+    def config(self):
+        """Generates the Grasshopper component."""
+
+        # Generate Component
+        self.config_component(self.component_number)
+
+    def run_checks(self, retention_curve, surface_properties, manning_roughness, puddle_depth, saturated_depth):
+        """
+        Gathers the inputs and checks them.
+
+        :param retention_curve: Livestock retention curve dict.
+        :param surface_properties: Livestock surface properties dict.
+        :param manning_roughness: Manning roughness.
+        :param puddle_depth: Puddle depth.
+        :param saturated_depth: Saturated depth of the cell.
+        """
+
+        # Gather data
+        self.retention_curve = self.convert_retention_curve(retention_curve)
+        self.surface_properties = self.convert_surface_properties(surface_properties)
+        self.manning = self.add_default_value(manning_roughness, 2)
+        self.puddle = self.add_default_value(puddle_depth, 3)
+        self.saturated_depth = self.add_default_value(saturated_depth, 4)
+
+        # Run checks
+        self.check_inputs()
+
+    def convert_retention_curve(self, retention_curve):
+        if isinstance(retention_curve, int):
+            return cmf_lib.load_retention_curve(retention_curve)
+        elif not retention_curve:
+            return cmf_lib.load_retention_curve(0)
+        else:
+            return retention_curve.c
+
+    def convert_surface_properties(self, surface_cover):
+        if isinstance(surface_cover, int):
+            return cmf_lib.load_surface_cover(surface_cover)
+        elif not surface_cover:
+            return cmf_lib.load_surface_cover(0)
+        else:
+            return surface_cover.c
+
+    def run(self):
+        """
+        In case all the checks have passed the component runs.
+        The component puts all the inputs into a dict and uses PassClass to pass it on.
+        """
+
+        if self.checks:
+            ground_type_dict = {'retention_curve': self.retention_curve,
+                                'surface_properties': self.surface_properties,
+                                'manning': self.manning,
+                                'puddle_depth': self.puddle,
+                                'saturated_depth': self.saturated_depth,
+                                }
+
+            self.results = gh_misc.PassClass(ground_type_dict, 'Ground Type')
+
+
+class CMFWeather(GHComponent):
     """A component class that generates the CMF weather"""
 
     def __init__(self, ghenv):
@@ -358,7 +518,7 @@ class CMFWeather(GHComponent):
         for cloud_key in self.cloud_cover.keys():
             sun_shine[cloud_key] = []
             for cc in self.cloud_cover[cloud_key]:
-                sun_shine[cloud_key].append(1-float(cc))
+                sun_shine[cloud_key].append(1 - float(cc))
 
         return sun_shine
 
@@ -375,7 +535,7 @@ class CMFWeather(GHComponent):
         for radiation_key in self.global_radiation.keys():
             converted_radiation[radiation_key] = []
             for rad in self.global_radiation[radiation_key]:
-                converted_radiation[radiation_key].append(float(rad)*0.0864)
+                converted_radiation[radiation_key].append(float(rad) * 0.0864)
 
         self.global_radiation = converted_radiation
 
@@ -494,45 +654,130 @@ class CMFWeather(GHComponent):
             self.results = gh_misc.PassClass(weather_dict, 'Weather')
 
 
-class CMFVegetationProperties(GHComponent):
-
+class CMFSurfaceProperties(GHComponent):
     """A component class that generates the CMF Vegetation Properties."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Property',
-                        'description': '0-1 grasses. 2-6 soils',
+            return {0: component.inputs('optional'),
+
+                    1: {'name': 'SurfaceCover',
+                        'description': 'Sets the surface cover for the ground.\n'
+                                       '0 - Short Grass: 0.12m\n'
+                                       '1 - High Grass: 0.4m\n'
+                                       '2 - Wet Sand\n'
+                                       '3 - Yellow Sand\n'
+                                       '4 - White Sand\n'
+                                       '5 - Bare Moist Soil\n'
+                                       '6 - Bare Dry Soil\n'
+                                       'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
-                        'default_value': 0}
+                        'default_value': 0},
+
+                    2: {'name': 'Height',
+                        'description': 'Height of the surface cover in meters.\n'
+                                       'Default is 0.12m',
+                        'access': 'item',
+                        'default_value': 0.12},
+
+                    3: {'name': 'LeafAreaIndex',
+                        'description': 'Leaf area index of the surface cover. Leaf area index is unitless.\n'
+                                       'Default is 2.88',
+                        'access': 'item',
+                        'default_value': 2.88},
+
+                    4: {'name': 'Albedo',
+                        'description': 'Albedo of the surface cover. Albedo is unitless.\n'
+                                       'Default is 0.23',
+                        'access': 'item',
+                        'default_value': 0.23},
+
+                    5: {'name': 'CanopyClosure',
+                        'description': 'Canopy closure of the surface cover. Canopy closure is unitless.\n'
+                                       'Default is 1.0',
+                        'access': 'item',
+                        'default_value': 1.0},
+
+                    6: {'name': 'CanopyPARExtinction',
+                        'description': 'Canopy PAR Extinction of the surface cover. '
+                                       'Canopy PAR Extinction is unitless.\n'
+                                       'Default is 0.6',
+                        'access': 'item',
+                        'default_value': 0.6},
+
+                    7: {'name': 'CanopyCapacityLAI',
+                        'description': 'Canopy Capacity per LAI of the surface cover. '
+                                       'Canopy Capacity per LAI is in millimeters.\n'
+                                       'Default is 0.1',
+                        'access': 'item',
+                        'default_value': 0.1},
+
+                    8: {'name': 'StomatalResistance',
+                        'description': 'Stomatal Resistance of the surface cover. '
+                                       'Stomatal Resistance is in s/m.\n'
+                                       'Default is 100.0',
+                        'access': 'item',
+                        'default_value': 100.0},
+
+                    9: {'name': 'RootDepth',
+                        'description': 'Root Depth of the surface cover. '
+                                       'Root Depth is in meters.\n'
+                                       'Default is 0.25',
+                        'access': 'item',
+                        'default_value': 0.25},
+
+                    10: {'name': 'FractionRootDepth',
+                         'description': 'Fraction at root depth of the surface cover. '
+                                        'Fraction at root depth is unitless.\n'
+                                        'Default is 1',
+                         'access': 'item',
+                         'default_value': 1},
+
+                    11: {'name': 'LeafWidth',
+                         'description': 'Leaf width of the surface cover. '
+                                        'Leaf width is in meters.\n'
+                                        'Default is 0.005m',
+                         'access': 'item',
+                         'default_value': 0.005}
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'Units',
                         'description': 'Shows the units of the surface values'},
 
-                    2: {'name': 'VegetationValues',
-                        'description': 'Chosen surface properties values'},
+                    2: {'name': 'SurfaceValues',
+                        'description': 'Chosen Surface Properties Values'},
 
-                    3: {'name': 'VegetationProperties',
-                        'description': 'Livestock surface properties data'}}
+                    3: {'name': 'SurfaceProperties',
+                        'description': 'Livestock Surface Properties Data Class'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 13
-        self.description = 'Generates CMF Vegetation Properties' \
+        self.description = 'Generates CMF Surface Cover Properties' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
-        self.data = None
-        self.units = None
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
-        self.property_index = None
-        self.property = None
         self.checks = False
         self.results = None
+
+        # Data Parameters
+        self.property_index = None
+        self.property = None
+        self.properties_dict = {}
+        self.height = None
+        self.lai = None
+        self.albedo = None
+        self.canopy_closure = None
+        self.canopy_par = None
+        self.canopy_capacity = None
+        self.stomatal = None
+        self.root_depth = None
+        self.root_fraction = None
+        self.leaf_width = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -545,7 +790,8 @@ class CMFVegetationProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_):
+    def run_checks(self, property_, height, lai, albedo, canopy_closure, canopy_par, canopy_cap,
+                   stomatal, root_depth, root_fraction, leaf_width):
         """
         Gathers the inputs and checks them.
 
@@ -554,34 +800,34 @@ class CMFVegetationProperties(GHComponent):
 
         # Gather data
         self.property_index = self.add_default_value(int(property_), 0)
+        self.height = self.add_default_value(height, 1)
+        self.lai = self.add_default_value(lai, 2)
+        self.albedo = self.add_default_value(albedo, 3)
+        self.canopy_closure = self.add_default_value(canopy_closure, 4)
+        self.canopy_par = self.add_default_value(canopy_par, 5)
+        self.canopy_capacity = self.add_default_value(canopy_cap, 6)
+        self.stomatal = self.add_default_value(stomatal, 7)
+        self.root_depth = self.add_default_value(root_depth, 8)
+        self.root_fraction = self.add_default_value(root_fraction, 9)
+        self.leaf_width = self.add_default_value(leaf_width, 10)
+        self.modified_properties()
 
         # Run checks
         self.check_inputs()
 
-    def load_csv(self):
-        """Loads a csv file with the vegetation properties."""
-
-        load = csv.read_csv(self.data_path)
-        self.units = load[0]
-        self.data = load[1]
-
-    def pick_property(self):
-        """Selects the correct vegetation property. And stores it as a ordered dict."""
-
-        self.load_csv()
-        data_list = self.data[self.property_index]
-        self.property = collections.OrderedDict([('name', data_list[0]),
-                                                 ('height', data_list[1]),
-                                                 ('lai', data_list[2]),
-                                                 ('albedo', data_list[3]),
-                                                 ('canopy_closure', data_list[4]),
-                                                 ('canopy_par', data_list[5]),
-                                                 ('canopy_capacity', data_list[6]),
-                                                 ('stomatal_res', data_list[7]),
-                                                 ('root_depth', data_list[8]),
-                                                 ('root_fraction', data_list[9]),
-                                                 ('leaf_width', 0.005)
-                                                 ])
+    def modified_properties(self):
+        self.properties_dict = collections.OrderedDict([
+            ('height', self.height),
+            ('lai', self.lai),
+            ('albedo', self.albedo),
+            ('canopy_closure', self.canopy_closure),
+            ('canopy_par', self.canopy_par),
+            ('canopy_capacity', self.canopy_capacity),
+            ('stomatal_res', self.stomatal),
+            ('root_depth', self.root_depth),
+            ('root_fraction', self.root_fraction),
+            ('leaf_width', self.leaf_width),
+        ])
 
     def run(self):
         """
@@ -592,13 +838,11 @@ class CMFVegetationProperties(GHComponent):
         """
 
         if self.checks:
-            self.pick_property()
-
-            self.results = gh_misc.PassClass(self.property, 'VegetationProperty')
+            self.property = cmf_lib.load_surface_cover(self.property_index, self.properties_dict)
+            self.results = gh_misc.PassClass(self.property, 'SurfaceCover')
 
 
 class CMFSyntheticTree(GHComponent):
-
     """A component class that generates a synthetic tree."""
 
     def __init__(self, ghenv):
@@ -726,7 +970,6 @@ class CMFSyntheticTree(GHComponent):
 
 
 class CMFRetentionCurve(GHComponent):
-
     """A component class that generates the CMF retention curve"""
 
     def __init__(self, ghenv):
@@ -771,8 +1014,7 @@ class CMFRetentionCurve(GHComponent):
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'Units',
                         'description': 'Shows the units of the curve values'},
@@ -783,14 +1025,17 @@ class CMFRetentionCurve(GHComponent):
                     3: {'name': 'RetentionCurve',
                         'description': 'Livestock Retention Curve'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 15
         self.description = 'Generates CMF retention curve'
-        self.data = None
-        self.units = None
-        self.data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
+        self.checks = False
+        self.results = None
+
+        # Data Parameters
         self.property = None
+        self.properties_dict = {}
         self.soil_index = None
         self.k_sat = None
         self.phi = None
@@ -798,8 +1043,6 @@ class CMFRetentionCurve(GHComponent):
         self.n = None
         self.m = None
         self.l = None
-        self.checks = False
-        self.results = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -833,54 +1076,20 @@ class CMFRetentionCurve(GHComponent):
         self.n = self.add_default_value(n, 4)
         self.m = self.add_default_value(m, 5)
         self.l = self.add_default_value(l, 6)
+        self.modified_properties()
 
         # Run checks
         self.check_inputs()
 
-    def load_csv(self):
-        """Loads a csv file with the retention curve data."""
-
-        load = csv.read_csv(self.data_path)
-        self.units = load[0]
-        self.data = load[1]
-
-    def load_retention_curve(self):
-        """
-        | Loads the retention curve data and converts it into a order dict.
-        | If any property is to be overwritten it is also done in this function.
-
-        """
-
-        self.load_csv()
-        self.property = collections.OrderedDict([('type', str(self.data[self.soil_index][0])),
-                                                 ('K_sat', float(self.data[self.soil_index][1])),
-                                                 ('phi', float(self.data[self.soil_index][2])),
-                                                 ('alpha', float(self.data[self.soil_index][3])),
-                                                 ('n', float(self.data[self.soil_index][4])),
-                                                 ('m', float(self.data[self.soil_index][5])),
-                                                 ('l', float(self.data[self.soil_index][6]))
-                                                 ])
-
-        # Set modified properties
-        if self.k_sat:
-            self.property['K_sat'] = self.k_sat
-
-        if self.phi:
-            self.property['phi'] = self.phi
-
-        if self.alpha:
-            self.property['alpha'] = self.alpha
-
-        if self.n:
-            self.property['n'] = self.n
-
-        if self.m:
-            self.property['m'] = self.m
-
-        if self.l:
-            self.property['l'] = self.l
-
-        return True
+    def modified_properties(self):
+        self.properties_dict = collections.OrderedDict([
+            ('k_sat', self.k_sat),
+            ('phi', self.phi),
+            ('alpha', self.alpha),
+            ('n', self.n),
+            ('m', self.m),
+            ('l', self.l)
+        ])
 
     def run(self):
         """
@@ -890,115 +1099,115 @@ class CMFRetentionCurve(GHComponent):
         """
 
         if self.checks:
-            self.load_retention_curve()
+            self.property = cmf_lib.load_retention_curve(self.soil_index, self.properties_dict)
             self.results = gh_misc.PassClass(self.property, 'RetentionCurve')
 
 
 class CMFSolve(GHComponent):
-    # TODO - Put files in subfolder called /CMF
-
     """A component class that solves the CMF Case."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Mesh',
-                        'description': 'Topography as a mesh',
-                        'access': 'item',
-                        'default_value': None},
+            return {0: component.inputs('required'),
 
                     1: {'name': 'Ground',
-                        'description': 'Input from Livestock CMF Ground',
+                        'description': 'Output from Livestock CMF Ground',
                         'access': 'list',
                         'default_value': None},
 
-                    2: {'name': 'Weather',
+                    2: {'name': 'Write',
+                        'description': 'Boolean to write files',
+                        'access': 'item',
+                        'default_value': False},
+
+                    3: {'name': 'Run',
+                        'description': 'Boolean to run analysis\n',
+                        'access': 'item',
+                        'default_value': False},
+
+                    4: component.inputs('optional'),
+
+                    5: {'name': 'Weather',
                         'description': 'Input from Livestock CMF Weather',
                         'access': 'item',
                         'default_value': None},
 
-                    3: {'name': 'Trees',
+                    6: {'name': 'Trees',
                         'description': 'Input from Livestock CMF Tree',
                         'access': 'list',
                         'default_value': None},
 
-                    4: {'name': 'Stream',
-                        'description': 'Input from Livestock CMF Stream',
-                        'access': 'item',
-                        'default_value': None},
-
-                    5: {'name': 'BoundaryConditions',
+                    7: {'name': 'BoundaryConditions',
                         'description': 'Input from Livestock CMF Boundary Condition',
                         'access': 'list',
                         'default_value': None},
 
-                    6: {'name': 'SolverSettings',
+                    8: {'name': 'SolverSettings',
                         'description': 'Input from Livestock CMF Solver Settings',
                         'access': 'item',
                         'default_value': None},
-
-                    7: {'name': 'Folder',
-                        'description': 'Path to folder. Default is Desktop',
-                        'access': 'item',
-                        'default_value': os.path.join(os.environ["HOMEPATH"], "Desktop")},
-
-                    8: {'name': 'CaseName',
-                        'description': 'Case name as string. Default is CMF',
-                        'access': 'item',
-                        'default_value': 'CMF'},
 
                     9: {'name': 'Outputs',
                         'description': 'Connect Livestock Outputs',
                         'access': 'item',
                         'default_value': None},
 
-                    10: {'name': 'Write',
-                         'description': 'Boolean to write files',
+                    10: {'name': 'CaseName',
+                         'description': 'Case name as string.\n'
+                                        'Default is: unnamed_cmf_case',
+                         'access': 'item',
+                         'default_value': 'unnamed_cmf_case'},
+
+                    11: {'name': 'Folder',
+                         'description': 'Path to case folder.\n'
+                                        'Default is C:/livestock/analyses',
+                         'access': 'item',
+                         'default_value': r'C:\livestock\analyses'},
+
+                    12: {'name': 'SSH',
+                         'description': 'If True the case will be computed through the SSH connection.'
+                                        'To get the SSH connection to work; the Livestock SSH Component '
+                                        'should be configured. If False; the case will be run locally.\n'
+                                        'Default is set to False',
                          'access': 'item',
                          'default_value': False},
-
-                    11: {'name': 'Overwrite',
-                         'description': 'If True excising case will be overwritten. Default is set to True',
-                         'access': 'item',
-                         'default_value': True},
-
-                    12: {'name': 'Run',
-                         'description': 'Boolean to run analysis'
-                         '\nAnalysis will be ran through SSH. Configure the connection with Livestock SSH',
-                         'access': 'item',
-                         'default_value': False}}
+                    }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'ResultPath',
                         'description': 'Path to result files'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 14
         self.description = 'Solves CMF Case.\n' \
                            'Icon art based on Vectors Market from the Noun Project.'
-        self.mesh = None
-        self.ground = None
-        self.weather = None
-        self.trees = None
-        self.stream = None
-        self.boundary_conditions = None
-        self.solver_settings = None
-        self.folder = None
-        self.case_name = None
-        self.case_path = None
-        self.write_case = None
-        self.overwrite = True
-        self.output_config = None
-        self.run_case = None
-        self.py_exe = gh_misc.get_python_exe()
-        self.written = False
         self.checks = False
         self.results = None
+
+        # Data Parameters
+        self.ground = None
+        self.write_case = None
+        self.run_case = None
+        self.weather = None
+        self.trees = None
+        self.boundary_conditions = None
+        self.solver_settings = None
+        self.output_config = None
+        self.folder = None
+        self.case_name = None
+        self.ssh = None
+
+        # Additional Parameters
+        self.case_path = None
+        self.mesh = None
+        self.py_exe = gh_misc.get_python_exe()
+        self.written = False
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -1015,40 +1224,37 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh, ground, weather, trees, stream, boundary_conditions, solver_settings, folder, name,
-                   outputs, write, overwrite, run):
+    def run_checks(self, ground, write, run, weather, trees, boundary_conditions, solver_settings,
+                   outputs, name, folder, ssh,):
         """
         Gathers the inputs and checks them.
 
-        :param mesh: Project Mesh
         :param ground: Livestock Ground dict
+        :param write: Whether to write or not
+        :param run: Whether to run or not.
         :param weather: Livestock Weather dict
         :param trees: Livestock Tree dict
-        :param stream: Livestock Stream dict
         :param boundary_conditions: Livestock Boundary Condition dict
         :param solver_settings: Livestock Solver settings dict
-        :param folder: Case folder
-        :param name: Case name
         :param outputs: Livestock Outputs dict
-        :param write: Whether to write or not
-        :param overwrite: Overwrite exsiting files
-        :param run: Whether to run or not.
+        :param name: Case name
+        :param folder: Case folder
+        :param ssh: Whether to run on ssh or not.
         """
 
         # Gather data
-        self.mesh = self.add_default_value(mesh, 0)
         self.ground = self.add_default_value(ground, 1)
-        self.weather = self.add_default_value(weather, 2)
-        self.trees = self.add_default_value(trees, 3)
-        self.stream = self.add_default_value(stream, 4)
-        self.boundary_conditions = self.add_default_value(boundary_conditions, 5)
-        self.solver_settings = self.add_default_value(solver_settings, 6)
-        self.folder = self.add_default_value(folder, 7)
-        self.case_name = self.add_default_value(name, 8)
+        self.write_case = self.add_default_value(write, 2)
+        self.run_case = self.add_default_value(run, 3)
+        self.weather = self.add_default_value(weather, 5)
+        self.trees = self.add_default_value(trees, 6)
+        self.boundary_conditions = self.add_default_value(boundary_conditions, 7)
+        self.solver_settings = self.add_default_value(solver_settings, 8)
         self.output_config = self.add_default_value(outputs, 9)
-        self.write_case = self.add_default_value(write, 10)
-        self.overwrite = self.add_default_value(overwrite, 11)
-        self.run_case = self.add_default_value(run, 12)
+        self.case_name = self.add_default_value(name, 10)
+        self.folder = self.add_default_value(folder, 11)
+        self.ssh = self.add_default_value(ssh, 12)
+
         self.update_case_path()
 
         # Run checks
@@ -1057,7 +1263,7 @@ class CMFSolve(GHComponent):
     def update_case_path(self):
         """Updates the case folder path."""
 
-        self.case_path = self.folder + '\\' + self.case_name
+        self.case_path = self.folder + '\\' + self.case_name + '\\cmf'
 
     def write(self, doc):
         """
@@ -1067,41 +1273,42 @@ class CMFSolve(GHComponent):
         """
 
         # Helper functions
-        def write_weather(weather_dict_, folder):
-            weather_dict = weather_dict_.c
-            weather_root = ET.Element('weather')
-            weather_keys = weather_dict.keys()
+        def write_weather(weather_dict, folder):
 
-            for k in weather_keys:
-                data = ET.SubElement(weather_root, str(k))
-                data.text = str(weather_dict[str(k)])
-
-            weather_tree = ET.ElementTree(weather_root)
-            weather_file = 'weather.xml'
-            weather_tree.write(folder + '/' + weather_file, xml_declaration=True)
+            # Write json file
+            weather_file = 'weather.json'
+            with open(folder + '/' + weather_file, 'w') as outfile:
+                json.dump(weather_dict.c, outfile)
 
             return weather_file
 
         def write_ground(ground_dict_, folder):
+
             # Process ground
-            ground_dict = list(ground.c for ground in ground_dict_)
-            ground_root = ET.Element('ground')
+            ground_dict = [ground.c
+                           for ground in ground_dict_]
 
-            for i in range(0, len(ground_dict)):
-                ground = ET.SubElement(ground_root, 'ground_%i' % i)
-                g_keys = ground_dict[i].keys()
+            # Join meshes
+            meshes = [ground['mesh']
+                      for ground in ground_dict]
+            joined_mesh = rs.JoinMeshes(meshes)
 
-                for g in g_keys:
-                    data = ET.SubElement(ground, str(g))
-                    try:
-                        data_to_write = ground_dict[i][str(g)].c
-                        data.text = str(dict(data_to_write))
-                    except:
-                        data.text = str(ground_dict[i][str(g)])
+            # Compute face indices list
+            joined_mesh_centers = rs.MeshFaceCenters(joined_mesh)
+            for ground in ground_dict:
+                ground_centers = rs.MeshFaceCenters(ground['mesh'])
+                ground['mesh'] = []
+                for center_pt in ground_centers:
+                    ground['mesh'].append(joined_mesh_centers.index(center_pt))
 
-            ground_tree = ET.ElementTree(ground_root)
-            ground_file = 'ground.xml'
-            ground_tree.write(folder + '/' + ground_file, xml_declaration=True)
+
+            # Save Mesh
+            gh_geo.bake_export_delete(joined_mesh, folder, 'mesh', '.obj', doc)
+
+            # Write json file
+            ground_file = 'ground.json'
+            with open(folder + '/' + ground_file, 'w') as outfile:
+                json.dump(ground_dict, outfile)
 
             return ground_file
 
@@ -1129,23 +1336,14 @@ class CMFSolve(GHComponent):
 
             return tree_file
 
-        def write_outputs(output_dict_, folder):
-            # Process outputs
-            output_dict = output_dict_.c
-            output_root = ET.Element('output')
+        def write_outputs(output_dict, folder):
 
-            for out_key in output_dict.keys():
-                data = ET.SubElement(output_root, str(out_key))
-                data.text = str(output_dict[out_key])
-
-            output_tree = ET.ElementTree(output_root)
-            output_file = 'outputs.xml'
-            output_tree.write(folder + '/' + output_file, xml_declaration=True)
+            # Write json file
+            output_file = 'outputs.json'
+            with open(folder + '/' + output_file, 'w') as outfile:
+                json.dump(output_dict.c, outfile)
 
             return output_file
-
-        def write_stream(stream_dict_, folder):
-            pass
 
         def write_boundary_conditions(boundary_dict_, folder):
             # Process boundary conditions
@@ -1191,18 +1389,12 @@ class CMFSolve(GHComponent):
 
             return boundary_condition_file
 
-        def write_solver_info(solver_dict_, folder):
-            # Process solver info
-            solver_root = ET.Element('solver')
-            solver_dict = solver_dict_.c
+        def write_solver_info(solver_dict, folder):
 
-            for solver_key in solver_dict.keys():
-                data = ET.SubElement(solver_root, str(solver_key))
-                data.text = str(solver_dict[solver_key])
-
-            solver_tree = ET.ElementTree(solver_root)
-            solver_file = 'solver.xml'
-            solver_tree.write(folder + '/' + solver_file, xml_declaration=True)
+            # Write json file
+            solver_file = 'solver.json'
+            with open(folder + '/' + solver_file, 'w') as outfile:
+                json.dump(solver_dict.c, outfile)
 
             return solver_file
 
@@ -1215,7 +1407,7 @@ class CMFSolve(GHComponent):
 
             file_transfer = files_written_
             file_run = ['cmf_template.py']
-            file_return = ['results.xml']
+            file_return = ['results.json']
 
             ssh_command['file_transfer'] = ','.join(file_transfer) + ',cmf_template.py'
             ssh_command['file_run'] = ','.join(file_run)
@@ -1230,16 +1422,11 @@ class CMFSolve(GHComponent):
         if os.path.exists(self.case_path):
             self.written = True
         else:
-            os.mkdir(self.folder + '/' + self.case_name)
-
-        files_written = []
-
-        # Save Mesh
-        gh_geo.bake_export_delete(self.mesh, self.case_path, 'mesh', '.obj', doc)
+            os.mkdir(self.case_path)
 
         # Append to files written
+        files_written = list()
         files_written.append('mesh.obj')
-        files_written.append(write_weather(self.weather, self.case_path))
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
         files_written.append(write_solver_info(self.solver_settings, self.case_path))
@@ -1250,31 +1437,35 @@ class CMFSolve(GHComponent):
         if self.boundary_conditions:
             files_written.append(write_boundary_conditions(self.boundary_conditions, self.case_path))
 
-        if self.stream:
-            files_written.append(write_stream(self.stream, self.case_path))
+        if self.weather:
+            files_written.append(write_weather(self.weather, self.case_path))
 
         # template
         pick_template('cmf', self.case_path)
 
         # ssh
-        ssh_cmd = write_ssh_files(files_written)
+        if self.ssh:
+            ssh_cmd = write_ssh_files(files_written)
+            transfer_files = ssh_cmd['file_transfer'].split(',')
+
+            # Copy files from case folder to ssh folder
+            for file_ in transfer_files:
+                copyfile(self.case_path + '/' + file_, ssh.ssh_path + '/' + file_)
+
         self.written = True
-
-        transfer_files = ssh_cmd['file_transfer'].split(',')
-
-        # Copy files from case folder to ssh folder
-        for file_ in transfer_files:
-            copyfile(self.case_path + '/' + file_, ssh.ssh_path + '/' + file_)
 
         return True
 
     def do_case(self):
         """Spawns a new subprocess, that runs the ssh template."""
 
-        ssh_template = ssh.ssh_path + '/ssh_template.py'
+        if self.ssh:
+            template = ssh.ssh_path + '/ssh_template.py'
+        else:
+            template = self.case_path + '/cmf_template.py'
 
         # Run template
-        thread = subprocess.Popen([self.py_exe, ssh_template])
+        thread = subprocess.Popen([self.py_exe, template])
         thread.wait()
         thread.kill()
 
@@ -1286,12 +1477,15 @@ class CMFSolve(GHComponent):
         If not then a warning is raised.
         """
 
-        ssh_result = ssh.ssh_path + '/results.xml'
-        result_path = self.case_path + '/results.xml'
+        ssh_result = ssh.ssh_path + '/results.json'
+        result_path = self.case_path + '/results.json'
 
         if os.path.exists(ssh_result):
             copyfile(ssh_result, result_path)
             ssh.clean_ssh_folder()
+            return result_path
+
+        elif os.path.exists(result_path):
             return result_path
 
         else:
@@ -1469,9 +1663,9 @@ class CMFResults(GHComponent):
             return points_
 
         if self.fetch_result == 2:
-                # fetch_result 2 contains points
-                csv_obj = csv.read_csv(path, False)
-                return convert_file_to_points(csv_obj)
+            # fetch_result 2 contains points
+            csv_obj = csv.read_csv(path, False)
+            return convert_file_to_points(csv_obj)
 
         elif 0 <= self.fetch_result <= 4:
             return csv.read_csv(path, False)
@@ -1568,7 +1762,6 @@ class CMFResults(GHComponent):
         """
 
         if self.checks and self.run_component:
-
             self.set_units()
             self.csv_path = self.process_xml()
             results = self.load_result_csv(self.csv_path)
@@ -1578,7 +1771,6 @@ class CMFResults(GHComponent):
 
 
 class CMFOutputs(GHComponent):
-
     """A component class that specifies the wanted outputs from the CMF simulation."""
 
     def __init__(self, ghenv):
@@ -1857,7 +2049,7 @@ class CMFInlet(GHComponent):
                                           'cell': self.cell,
                                           'layer': self.layer,
                                           'inlet_flux': ','.join([str(elem)
-                                                            for elem in self.inlet_flux]),
+                                                                  for elem in self.inlet_flux]),
                                           'time_step': self.time_step
                                           },
                                          'BoundaryCondition')
@@ -1876,103 +2068,101 @@ class CMFInlet(GHComponent):
 
 
 class CMFSolverSettings(GHComponent):
+    """A component class that sets the solver settings for CMF Solve."""
 
-        """A component class that sets the solver settings for CMF Solve."""
+    def __init__(self, ghenv):
+        GHComponent.__init__(self, ghenv)
 
-        def __init__(self, ghenv):
-            GHComponent.__init__(self, ghenv)
+        def inputs():
+            return {0: {'name': 'AnalysisLength',
+                        'description': 'Total length of the simulation in hours - default is set to 24 hours.',
+                        'access': 'item',
+                        'default_value': 24},
 
-            def inputs():
-                return {0: {'name': 'AnalysisLength',
-                            'description': 'Total length of the simulation in hours - default is set to 24 hours.',
-                            'access': 'item',
-                            'default_value': 24},
+                    1: {'name': 'TimeStep',
+                        'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
+                                       '\n24 is a time step of one day. '
+                                       '\nDefault is 1 hour',
+                        'access': 'item',
+                        'default_value': 1},
 
-                        1: {'name': 'TimeStep',
-                            'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
-                                           '\n24 is a time step of one day. '
-                                           '\nDefault is 1 hour',
-                            'access': 'item',
-                            'default_value': 1},
+                    2: {'name': 'SolverTolerance',
+                        'description': 'Solver tolerance - Default is 1e-8',
+                        'access': 'item',
+                        'default_value': 10 ** -8},
 
-                        2: {'name': 'SolverTolerance',
-                            'description': 'Solver tolerance - Default is 1e-8',
-                            'access': 'item',
-                            'default_value': 10**-8},
+                    3: {'name': 'Verbosity',
+                        'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
+                                       '0 - Prints only at start and end of simulation.\n'
+                                       '1 - Prints at every time step.',
+                        'access': 'item',
+                        'default_value': 1}}
 
-                        3: {'name': 'Verbosity',
-                            'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
-                                           '0 - Prints only at start and end of simulation.\n'
-                                           '1 - Prints at every time step.',
-                            'access': 'item',
-                            'default_value': 1}}
+        def outputs():
+            return {0: {'name': 'readMe!',
+                        'description': 'In case of any errors, it will be shown here.'},
 
-            def outputs():
-                return {0: {'name': 'readMe!',
-                            'description': 'In case of any errors, it will be shown here.'},
+                    1: {'name': 'SolverSettings',
+                        'description': 'Livestock Solver Settings'}}
 
-                        1: {'name': 'SolverSettings',
-                            'description': 'Livestock Solver Settings'}}
+        self.inputs = inputs()
+        self.outputs = outputs()
+        self.component_number = 21
+        self.description = 'Sets the solver settings for CMF Solve'
+        self.length = None
+        self.time_step = None
+        self.tolerance = None
+        self.verbosity = None
+        self.checks = [False, False, False, False]
+        self.results = None
 
-            self.inputs = inputs()
-            self.outputs = outputs()
-            self.component_number = 21
-            self.description = 'Sets the solver settings for CMF Solve'
-            self.length = None
-            self.time_step = None
-            self.tolerance = None
-            self.verbosity = None
-            self.checks = [False, False, False, False]
-            self.results = None
+    def check_inputs(self):
+        """Checks inputs and raises a warning if an input is not the correct type."""
 
-        def check_inputs(self):
-            """Checks inputs and raises a warning if an input is not the correct type."""
+        self.checks = True
 
-            self.checks = True
+    def config(self):
+        """Generates the Grasshopper component."""
 
-        def config(self):
-            """Generates the Grasshopper component."""
+        # Generate Component
+        self.config_component(self.component_number)
 
-            # Generate Component
-            self.config_component(self.component_number)
+    def run_checks(self, length, time_step, tolerance, verbosity):
+        """
+        Gathers the inputs and checks them.
 
-        def run_checks(self, length, time_step, tolerance, verbosity):
-            """
-            Gathers the inputs and checks them.
+        :param length: Number of time steps to be taken.
+        :param time_step: Size of time step.
+        :param tolerance: Solver tolerance.
+        :param verbosity: Solver verbosity.
+        """
 
-            :param length: Number of time steps to be taken.
-            :param time_step: Size of time step.
-            :param tolerance: Solver tolerance.
-            :param verbosity: Solver verbosity.
-            """
+        # Gather data
+        self.length = self.add_default_value(length, 0)
+        self.time_step = self.add_default_value(time_step, 1)
+        self.tolerance = self.add_default_value(tolerance, 2)
+        self.verbosity = self.add_default_value(verbosity, 3)
 
-            # Gather data
-            self.length = self.add_default_value(length, 0)
-            self.time_step = self.add_default_value(time_step, 1)
-            self.tolerance = self.add_default_value(tolerance, 2)
-            self.verbosity = self.add_default_value(verbosity, 3)
+        # Run checks
+        self.check_inputs()
 
-            # Run checks
-            self.check_inputs()
+    def run(self):
+        """
+        | In case all the checks have passed the component runs.
+        | Constructs a solver settings dict, prints it and passes it on with PassClass.
+        """
 
-        def run(self):
-            """
-            | In case all the checks have passed the component runs.
-            | Constructs a solver settings dict, prints it and passes it on with PassClass.
-            """
+        if self.checks:
+            settings_dict = {'analysis_length': int(self.length),
+                             'time_step': float(self.time_step),
+                             'tolerance': self.tolerance,
+                             'verbosity': int(self.verbosity)}
 
-            if self.checks:
-                settings_dict = {'analysis_length': int(self.length),
-                                 'time_step': float(self.time_step),
-                                 'tolerance': self.tolerance,
-                                 'verbosity': int(self.verbosity)}
-
-                print(settings_dict.items())
-                self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
+            print(settings_dict.items())
+            self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
 
 
 class CMFSurfaceFluxResult(GHComponent):
-
     """A component class that visualizes the surface fluxes from a CMF case."""
 
     def __init__(self, ghenv):
@@ -2131,7 +2321,6 @@ class CMFSurfaceFluxResult(GHComponent):
             return True
 
         def flux_config(path_, run_off, rain, evapo, infiltration):
-
             flux_obj = open(path_ + '/flux_config.txt', 'w')
             flux_obj.write(str(run_off) + '\n')
             flux_obj.write(str(rain) + '\n')
@@ -2212,7 +2401,6 @@ class CMFSurfaceFluxResult(GHComponent):
 
 
 class CMFOutlet(GHComponent):
-
     """A component class that creates a CMF Outlet."""
 
     def __init__(self, ghenv):
@@ -2241,22 +2429,22 @@ class CMFOutlet(GHComponent):
 
                     3: {'name': 'OutletType',
                         'description': 'Set type of outlet connection.\n'
-                                        '1 - Richards.\n'
-                                        '2 - Kinematic wave.\n'
-                                        '3 - Technical Flux.',
+                                       '1 - Richards.\n'
+                                       '2 - Kinematic wave.\n'
+                                       '3 - Technical Flux.',
                         'access': 'item',
                         'default_value': None},
 
-                   4: {'name': 'ConnectionParameter',
-                       'description': 'If Richards:\n'
-                                      '    Potential - Sets the potential of the outlet. The difference in potential'
-                                      ' is what drives the flux.\n'
-                                      'If Kinematic wave:\n'
-                                      '    Residence Time - Linear flow parameter of travel time in days.\n'
-                                      'If Technical Flux:\n'
-                                      '    Maximum Flux - The maximum flux is in m3/day.',
-                       'access': 'item',
-                       'default_value': None}
+                    4: {'name': 'ConnectionParameter',
+                        'description': 'If Richards:\n'
+                                       '    Potential - Sets the potential of the outlet. The difference in potential'
+                                       ' is what drives the flux.\n'
+                                       'If Kinematic wave:\n'
+                                       '    Residence Time - Linear flow parameter of travel time in days.\n'
+                                       'If Technical Flux:\n'
+                                       '    Maximum Flux - The maximum flux is in m3/day.',
+                        'access': 'item',
+                        'default_value': None}
 
                     }
 
@@ -2368,120 +2556,3 @@ class CMFOutlet(GHComponent):
 
         if self.checks:
             self.set_outlet()
-
-
-"""
-class CMFStream(GHComponent):
-
-    def __init__(self):
-        GHComponent.__init__(self)
-
-        def inputs(x):
-            if x == 0:
-                return {0: ['MidStreamCurve', 'Curve following the middle of the stream'],
-                        1: ['CrossSections','Cross section curves along the stream']}
-
-        def outputs():
-            return {0: ['readMe!', 'In case of any errors, it will be shown here.'],
-                    1: ['Stream', 'Livestock Stream Data Class'],
-                    2: ['ReconstructedStream', 'The reconstructed stream as represented in CMF']}
-
-        self.inputs = inputs(0)
-        self.outputs = outputs()
-        self.component_number = 13
-        self.mid_curve = None
-        self.cross_sections = None
-        self.shape = []
-        self.x = None
-        self.y = None
-        self.z = None
-        self.lengths = None
-        self.width = None
-        self.slope_bank = None
-        self.water_depth = None
-        self.checks = [False, False]
-        self.results = None
-
-    def check_inputs(self, ghenv):
-        warning = []
-
-        if self.mid_curve:
-            self.checks = True
-
-    def config(self, ghenv):
-
-        # Generate Component
-        self.config_component(ghenv, self.component_number)
-
-    def run_checks(self, ghenv, mid_curve, cross_sections):
-        # Gather data
-        self.mid_curve = mid_curve
-        self.cross_sections = cross_sections
-
-        # Run checks
-        self.check_inputs(ghenv)
-
-    def process_curves(self):
-
-        def intersection_mid_cross_section_curves(cross_sections, mid_curve):
-
-            # get cross section vertices and mid point and cross section intersections
-            intersection_points = []
-            cross_section_verts = []
-
-            for crv in cross_sections:
-                intersection_points.append(rs.CurveCurveIntersection(mid_curve, crv)[0][1])
-                cross_section_verts.append(rs.PolylineVertices(crv))
-
-            if len(cross_section_verts[0]) == 3:
-                shape = 0 # triangular reach
-                return intersection_points, cross_section_verts, shape
-            elif len(cross_section_verts[0]) == 4:
-                shape = 1 # rectangular reach
-                return intersection_points, cross_section_verts, shape
-            else:
-                print('Error in shape')
-                return None, None, None
-
-        def get_mid_points(intersection_points):
-            mid_points = []
-            x = []
-            y = []
-            z = []
-
-            for i in range(len(intersection_points)):
-                pt = intersection_points[i] - intersection_points[i + 1]
-                mid_points.append(pt)
-                x.append(pt.X)
-                y.append(pt.Y)
-                z.append(pt.Z)
-
-            return mid_points, x, y, z
-
-        def sort_cross_section_verts(cross_section_verts, shape):
-            if shape == 0:
-                left = []
-                right = []
-                bottom = []
-                for i in range(len(cross_section_verts)):
-                    pass
-            elif shape == 1:
-                return
-            else:
-                print('Shape with value:', str(shape), 'not defined!')
-                return None
-
-        intersection_points, cross_section_verts, self.shape = intersection_mid_cross_section_curves(self.cross_sections, self.mid_curve)
-
-        return None
-
-    def run(self):
-        if self.checks:
-            ground_dict = {'mesh': self.mesh,
-                           'layers': self.layers,
-                           'retention_curve': self.retention_curve,
-                           'grass': self.grass,
-                           'initial_saturation': self.initial_saturation}
-
-            self.results = gh_misc.PassClass(ground_dict, 'CMF_Ground')
-"""
