@@ -7,6 +7,7 @@ __license__ = "MIT"
 # Module imports
 import collections
 import os
+import datetime
 
 # Livestock imports
 import livestock.lib.livestock_csv as csv
@@ -79,3 +80,25 @@ def load_surface_cover(surface_index, properties_dict={}):
             property[key] = properties_dict[key]
 
     return property
+
+
+def default_solver_settings():
+
+    settings_dict = {'analysis_length': (24, 'h'),
+                     'time_step': (1, 'h'),
+                     'tolerance': 10 ** -8,
+                     'verbosity': 1,
+                     'start_time': {'day': 1,
+                                    'month': 1,
+                                    'year': datetime.datetime.now().year}
+                     }
+
+    return settings_dict
+
+
+def default_outputs():
+
+    output_dict = {'cell': ['surface_water_volume', ],
+                   'layer': ['volume', ]}
+
+    return output_dict

@@ -1248,9 +1248,10 @@ class CMFSolve(GHComponent):
         self.run_case = self.add_default_value(run, 3)
         self.weather = self.add_default_value(weather, 5)
         self.trees = self.add_default_value(trees, 6)
-        self.boundary_conditions = self.add_default_value(boundary_conditions, 7)
-        self.solver_settings = self.add_default_value(solver_settings, 8)
-        self.output_config = self.add_default_value(outputs, 9)
+        self.boundary_conditions = self.add_default_value(boundary_conditions,
+                                                          7)
+        self.solver_settings = self.convert_solver_settings(solver_settings)
+        self.output_config = self.convert_outputs(outputs)
         self.case_name = self.add_default_value(name, 10)
         self.folder = self.add_default_value(folder, 11)
         self.ssh = self.add_default_value(ssh, 12)
@@ -1264,6 +1265,20 @@ class CMFSolve(GHComponent):
         """Updates the case folder path."""
 
         self.case_path = self.folder + '\\' + self.case_name + '\\cmf'
+
+    @staticmethod
+    def convert_solver_settings(solver_settings):
+        if not solver_settings:
+            return cmf_lib.default_solver_settings()
+        else:
+            return solver_settings.c
+
+    @staticmethod
+    def convert_outputs(outputs):
+        if not outputs:
+            return cmf_lib.default_outputs()
+        else:
+            return outputs.c
 
     def write(self, doc):
         """
@@ -1341,7 +1356,7 @@ class CMFSolve(GHComponent):
             # Write json file
             output_file = 'outputs.json'
             with open(folder + '/' + output_file, 'w') as outfile:
-                json.dump(output_dict.c, outfile)
+                json.dump(output_dict, outfile)
 
             return output_file
 
@@ -1394,7 +1409,7 @@ class CMFSolve(GHComponent):
             # Write json file
             solver_file = 'solver.json'
             with open(folder + '/' + solver_file, 'w') as outfile:
-                json.dump(solver_dict.c, outfile)
+                json.dump(solver_dict, outfile)
 
             return solver_file
 
@@ -1429,7 +1444,8 @@ class CMFSolve(GHComponent):
         files_written.append('mesh.obj')
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
-        files_written.append(write_solver_info(self.solver_settings, self.case_path))
+        files_written.append(write_solver_info(self.solver_settings,
+                                               self.case_path))
 
         if self.trees:
             files_written.append(write_trees(self.trees, self.case_path))
@@ -1869,7 +1885,8 @@ class CMFOutputs(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux, heat_flux, aero_res, three_d_flux,
+    def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux,
+                   heat_flux, aero_res, three_d_flux,
                    potential, theta, volume, wetness):
         """
         Gathers the inputs and checks them.
@@ -2113,6 +2130,7 @@ class CMFSolverSettings(GHComponent):
         self.time_step = None
         self.tolerance = None
         self.verbosity = None
+        self.start_time = None
         self.checks = [False, False, False, False]
         self.results = None
 
@@ -2156,7 +2174,8 @@ class CMFSolverSettings(GHComponent):
             settings_dict = {'analysis_length': int(self.length),
                              'time_step': float(self.time_step),
                              'tolerance': self.tolerance,
-                             'verbosity': int(self.verbosity)}
+                             'verbosity': int(self.verbosity),
+                             'start_time': self.start_time}
 
             print(settings_dict.items())
             self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
