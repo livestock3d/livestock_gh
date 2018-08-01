@@ -10,7 +10,8 @@ import subprocess
 # Livestock imports
 import livestock.lib.ssh as ssh
 import livestock.lib.geometry as gh_geo
-from component import GHComponent
+from livestock.components.component import GHComponent
+from livestock.components import component
 import livestock.lib.misc as gh_misc
 from livestock.lib.templates import pick_template
 
