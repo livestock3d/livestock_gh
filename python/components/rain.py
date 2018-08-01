@@ -5,7 +5,8 @@ __license__ = "MIT"
 # Imports
 
 # Module imports
-import subprocess
+from System.Diagnostics import Process
+import os
 
 # Livestock imports
 import livestock.lib.ssh as ssh
@@ -89,7 +90,7 @@ class MeshDrainPaths(GHComponent):
         self.case_path = None
 
         # Additional Parameters
-        self.py_exe = gh_misc.get_python_exe()
+        self.blender = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
         self.written = False
 
 
@@ -144,7 +145,7 @@ class MeshDrainPaths(GHComponent):
             ssh_cmd = write_ssh_files(files_written)
             ssh.write_ssh_commands(ssh_cmd)
         else:
-            pick_template('cmf', self.case_path)
+            pick_template('drain_mesh', self.case_path)
 
         self.written = True
 
@@ -177,9 +178,7 @@ class MeshDrainPaths(GHComponent):
             template = self.case_path + '/drain_mesh_template.py'
 
         # Run template
-        thread = subprocess.Popen([self.py_exe, template])
-        thread.wait()
-        thread.kill()
+        Process.Start(self.blender, '--background --python ' + template).WaitForExit()
 
         return True
 
