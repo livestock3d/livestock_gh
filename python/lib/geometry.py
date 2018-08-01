@@ -1,12 +1,12 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.1.0"
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
 import os
+import json
 
 # Livestock imports
 
@@ -18,7 +18,7 @@ import Rhino as rc
 from System.Threading.Tasks.Parallel import ForEach
 from Rhino.Geometry.Brep import JoinBreps
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
 
 
@@ -163,26 +163,24 @@ def import_obj(path):
     return mesh
 
 
-def load_points(path_and_file):
+def load_points(point_file):
     """
     Loads a text file containing points
 
-    :param path_and_file: Path to the points file.
-    :type path_and_file: str
+    :param point_file: Path to the points file.
+    :type point_file: str
+    :return: List of Rhino 3D points
+    :rtype: list
     """
 
     points = []
-    file_obj = open(path_and_file, 'r')
-    for l in file_obj.readlines():
-        line = l.split("\t")[:-1]
-        pts = []
-        for p in line:
-            pt = p.split(',')
-            pts.append(rg.Point3d(float(pt[0]), float(pt[1]), float(pt[2])))
-        points.append(pts)
+    with open(point_file) as file:
+        raw_pts = json.load(file)
 
-    file_obj.close()
-    os.remove(path_and_file)
+    for line in raw_pts:
+        points.append([rg.Point3d(float(pt[0]), float(pt[1]), float(pt[2]))
+                       for pt in line])
+
     return points
 
 
