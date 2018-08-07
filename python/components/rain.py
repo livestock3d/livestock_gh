@@ -93,7 +93,6 @@ class MeshDrainPaths(GHComponent):
         self.blender = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
         self.written = False
 
-
     def check_inputs(self):
         self.checks = True
 
@@ -178,7 +177,8 @@ class MeshDrainPaths(GHComponent):
             template = self.case_path + '/drain_mesh_template.py'
 
         # Run template
-        Process.Start(self.blender, '--background --python ' + template).WaitForExit()
+        Process.Start(self.blender,
+                      '--background --python ' + template).WaitForExit()
 
         return True
 
