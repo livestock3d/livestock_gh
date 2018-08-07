@@ -71,12 +71,15 @@ def drain_mesh_template(path):
     file.write("print('Running template drain_mesh_template.py')\n")
 
     file.write("# Imports\n")
-    file.write("from pathlib import Path\n")
-    file.write("home_user = str(Path.home())\n")
-    file.write("from livestock_linux.rain import drain_mesh_paths\n")
+    file.write("import sys\n")
+    file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
+    file.write("from livestock.flow import flow_from_centers\n")
+    #file.write("from pathlib import Path\n")
+    #file.write("home_user = str(Path.home())\n")
+    #file.write("from livestock_linux.rain import drain_mesh_paths\n")
 
     file.write("# Run function\n")
-    file.write("drain_mesh_paths(home_user + '/livestock/ssh')\n")
+    file.write("flow_from_centers(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
