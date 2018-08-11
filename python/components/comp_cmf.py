@@ -1,7 +1,7 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
@@ -12,6 +12,7 @@ import subprocess
 from shutil import copyfile
 import pprint
 import json
+from System.Diagnostics import Process
 
 # Livestock imports
 import livestock.lib.ssh as ssh
@@ -28,7 +29,7 @@ import Rhino.Geometry as rg
 import rhinoscriptsyntax as rs
 
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Classes
 
 
@@ -1481,9 +1482,7 @@ class CMFSolve(GHComponent):
             template = self.case_path + '/cmf_template.py'
 
         # Run template
-        thread = subprocess.Popen([self.py_exe, template])
-        thread.wait()
-        thread.kill()
+        Process.Start(self.py_exe, '"' + str(template) + '"').WaitForExit()
 
         return True
 

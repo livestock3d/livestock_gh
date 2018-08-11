@@ -123,14 +123,14 @@ def cmf_template(path):
     file = open(path + file_name, 'w')
 
     file.write("# Imports\n")
-    file.write("from pathlib import Path\n")
-    file.write("home_user = str(Path.home())\n")
-    file.write("from livestock.hydrology import CMFModel\n")
+    #file.write("from pathlib import Path\n")
+    #file.write("home_user = str(Path.home())\n")
+    file.write("import sys\n")
+    file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
+    file.write("from livestock.hydrology import run_model\n")
 
     file.write("# Run CMF Model\n")
-    file.write("folder = home_user + '/livestock/ssh'\n")
-    file.write("model = CMFModel(folder)\n")
-    file.write("model.run_model()\n")
+    file.write("run_model(r'" + path + "')\n")
 
     file.write("# Announce that template finished and create out file\n")
     file.write("print('Finished with template')\n")
