@@ -1523,69 +1523,62 @@ class CMFSolve(GHComponent):
 
 
 class CMFResults(GHComponent):
-    # TODO - If csv exists load results instead of running new
-
     """A component class that loads the CMF results."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'ResultFolder',
-                        'description': 'Path to result folder. Accepts output from Livestock Solve.',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'ResultFolder',
+                        'description': 'Path to result folder. '
+                                       'Accepts output from Livestock Solve.',
                         'access': 'item',
                         'default_value': None},
 
-                    1: {'name': 'FetchResult',
+                    2: {'name': 'FetchResult',
                         'description': 'Choose which result should be loaded:'
                                        '\n0 - Evapotranspiration'
                                        '\n1 - Surface water volume'
                                        '\n2 - Surface water flux'
                                        '\n3 - Heat flux'
-                                       '\n4 - Aerodynamic resistance'
-                                       '\n5 - Soil layer water flux'
-                                       '\n6 - Soil layer potential'
-                                       '\n7 - Soil layer theta'
-                                       '\n8 - Soil layer volume'
-                                       '\n9 - Soil layer wetness',
+                                       '\n4 - Soil layer water flux'
+                                       '\n5 - Soil layer potential'
+                                       '\n6 - Soil layer theta'
+                                       '\n7 - Soil layer volume'
+                                       '\n8 - Soil layer wetness',
                         'access': 'item',
                         'default_value': 0},
-
-                    2: {'name': 'SaveCSV',
-                        'description': 'Save the values as a csv file - Default is set to False',
-                        'access': 'item',
-                        'default_value': False},
 
                     3: {'name': 'Run',
                         'description': 'Run component',
                         'access': 'item',
-                        'default_value': False}}
+                        'default_value': False},
+                    }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'Units',
                         'description': 'Shows the units of the results'},
 
                     2: {'name': 'Values',
                         'description': 'List with chosen result values'},
+                    }
 
-                    3: {'name': 'CSVPath',
-                        'description': 'Path to csv file.'}}
-
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 17
         self.description = 'Load CMF results'
+        self.checks = False
+
+        # Data Parameters
         self.unit = None
         self.path = None
         self.fetch_result = None
-        self.save_csv = None
         self.run_component = None
-        self.py_exe = gh_misc.get_python_exe()
-        self.csv_path = None
-        self.checks = False
         self.results = None
 
     def check_inputs(self):
@@ -1603,165 +1596,60 @@ class CMFResults(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, path, fetch_result, save, run):
+    def run_checks(self, path, fetch_result, run):
         """
         Gathers the inputs and checks them.
 
         :param path: Result path
         :param fetch_result: Which result to fetch
-        :param save: Whether to save the csv file or not.
         :param run: Whether to run the component or not.
         """
 
         # Gather data
-        self.path = path
+        self.path = os.path.join(path, 'results.json')
         self.fetch_result = int(self.add_default_value(fetch_result, 1))
-        self.save_csv = self.add_default_value(save, 2)
         self.run_component = self.add_default_value(run, 3)
 
         # Run checks
         self.check_inputs()
 
-    def process_xml(self):
-        """
-        Processes the xml result file and extracts the wanted information and saves it as a csv file.
-
-        :return: csv file path.
-        """
-
-        possible_results = ['evapotranspiration', 'surface_water_volume', 'surface_water_flux',
-                            'heat_flux', 'aerodynamic_resistance', 'volumetric_flux', 'potential',
-                            'theta', 'volume', 'wetness']
-
-        # Write lookup file
-        if 0 <= self.fetch_result <= 4:
-            out = {'cell': possible_results[self.fetch_result]}
-            gh_misc.write_file(str(out), self.path, 'result_lookup')
-        else:
-            out = {'layer': possible_results[self.fetch_result]}
-            gh_misc.write_file(str(out), self.path, 'result_lookup')
-
-        # Write template
-        pick_template('cmf_results', self.path)
-
-        # Run template
-        thread = subprocess.Popen([self.py_exe, self.path + '/cmf_results_template.py'])
-        thread.wait()
-        thread.kill()
-
-        # Construct csv path
-        csv_path = self.path + '/' + str(possible_results[self.fetch_result]) + '.csv'
-
-        return csv_path
-
-    def load_result_csv(self, path):
-        """
-        Loads the csv file containing the wanted results.
-
-        :param path: Csv file path
-        :return: The results
-        """
-
-        def convert_file_to_points(csv_file):
-            point_list = []
-            for line_ in csv_file:
-                point_list.append(convert_line_to_points(line_))
-
-            return point_list
-
-        def convert_line_to_points(line_):
-            points_ = []
-            for element in line_:
-                x, y, z = element.split(' ')
-                points_.append(rg.Point3d(float(x), float(y), float(z)))
-
-            return points_
-
-        if self.fetch_result == 2:
-            # fetch_result 2 contains points
-            csv_obj = csv.read_csv(path, False)
-            return convert_file_to_points(csv_obj)
-
-        elif 0 <= self.fetch_result <= 4:
-            return csv.read_csv(path, False)
-
-        elif self.fetch_result == 5:
-            # fetch 5 contains points
-            csv_obj = csv.read_csv(path, False)
-            results = []
-            cell_result = []
-            for line in csv_obj:
-                if line[0].startswith('cell'):
-                    results.append(cell_result)
-                    cell_result = []
-                else:
-                    cell_result.append(convert_line_to_points(line))
-
-            return results
-
-        else:
-            csv_obj = csv.read_csv(path, False)
-            results = []
-            cell_result = []
-            for line in csv_obj:
-                if line[0].startswith('cell'):
-                    results.append(cell_result)
-                    cell_result = []
-                else:
-                    cell_result.append(line)
-
-            return results
-
-    def delete_files(self, csv_path):
-        """Delete the helper files."""
-
-        os.remove(self.path + '/cmf_results_template.py')
-        os.remove(self.path + '/result_lookup.txt')
-
-        if not self.save_csv:
-            os.remove(csv_path)
-
-    def set_units(self):
+    def set_fetch_result(self):
         """Function to organize the output units."""
 
         if self.fetch_result == 0:
-            # evapotranspiration
+            self.fetch_result = 'evapotranspiration'
             self.unit = 'm3/day'
 
         elif self.fetch_result == 1:
-            # surface_water_volume
+            self.fetch_result = 'surface_water_volume'
             self.unit = 'm3'
 
         elif self.fetch_result == 2:
-            # surface_water_flux
+            self.fetch_result = 'surface_water_flux'
             self.unit = 'm3/day'
 
         elif self.fetch_result == 3:
-            # heat_flux
+            self.fetch_result = 'heat_flux'
             self.unit = 'W/m2'
 
         elif self.fetch_result == 4:
-            # aerodynamic_resistance
-            self.unit = 's/m'
-
-        elif self.fetch_result == 5:
-            # volumetric_flux
+            self.fetch_result = 'volumetric_flux'
             self.unit = 'm3/day'
 
-        elif self.fetch_result == 6:
-            # potential
+        elif self.fetch_result == 5:
+            self.fetch_result = 'potential'
             self.unit = 'm'
 
+        elif self.fetch_result == 6:
+            self.fetch_result = 'theta'
+            self.unit = 'm3'
+
         elif self.fetch_result == 7:
-            # theta
+            self.fetch_result = 'volume'
             self.unit = 'm3'
 
         elif self.fetch_result == 8:
-            # volume
-            self.unit = 'm3'
-
-        elif self.fetch_result == 9:
-            # wetness
+            self.fetch_result = 'wetness'
             self.unit = '-'
 
     def run(self):
@@ -1769,19 +1657,15 @@ class CMFResults(GHComponent):
         | In case all the checks have passed and run is True the component runs.
         | Following functions are run:
         | set_units()
-        | process_xml()
-        | load_result_csv()
-        | delete_files()
+        | load_cmf_result_file()
         | The results are converted into a Grasshopper Tree structure.
 
         """
 
         if self.checks and self.run_component:
-            self.set_units()
-            self.csv_path = self.process_xml()
-            results = self.load_result_csv(self.csv_path)
-            self.delete_files(self.csv_path)
-
+            self.set_fetch_result()
+            results = cmf_lib.load_cmf_result_file(self.path,
+                                                   self.fetch_result)
             self.results = gh_misc.list_to_tree(results)
 
 

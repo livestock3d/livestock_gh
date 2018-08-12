@@ -426,3 +426,19 @@ def get_mesh_faces(mesh):
 
     return faces
 
+
+def convert_file_to_points(csv_file):
+    point_list = []
+    for line_ in csv_file:
+        point_list.append(convert_line_to_points(line_))
+
+    return point_list
+
+
+def convert_line_to_points(line_):
+    points_ = []
+    for element in line_:
+        x, y, z = element.split(' ')
+        points_.append(rg.Point3d(float(x), float(y), float(z)))
+
+    return points_
