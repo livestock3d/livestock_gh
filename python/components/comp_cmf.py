@@ -103,7 +103,7 @@ class CMFGround(GHComponent):
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 11
-        self.description = 'Generates CMF ground' \
+        self.description = 'Generates CMF ground --- ' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
         self.checks = False
         self.results = None
