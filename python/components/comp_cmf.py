@@ -33,7 +33,6 @@ import rhinoscriptsyntax as rs
 # Classes
 
 
-
 class CMFGround(GHComponent):
     """A component class that generates the CMF ground"""
 
@@ -105,7 +104,8 @@ class CMFGround(GHComponent):
         self.outputs = outputs()
         self.component_number = 11
         self.description = 'Generates CMF ground' \
-                           '\nCMF ground is a surface with porous or glass-like properties.'
+                           '\nCMF ground is a mesh surface with porous or glass-like properties.' \
+                           'CMF ground can be used to model surface runoff and water transport on and within the mesh.' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
         self.checks = False
         self.results = None
