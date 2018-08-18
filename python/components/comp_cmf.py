@@ -1168,9 +1168,12 @@ class CMFSolve(GHComponent):
                          'default_value': r'C:\livestock\analyses'},
 
                     12: {'name': 'SSH',
-                         'description': 'If True the case will be computed through the SSH connection.'
-                                        'To get the SSH connection to work; the Livestock SSH Component '
-                                        'should be configured. If False; the case will be run locally.\n'
+                         'description': 'If True the case will be computed '
+                                        'through the SSH connection.'
+                                        'To get the SSH connection to work; '
+                                        'the Livestock SSH Component '
+                                        'should be configured. If False; '
+                                        'the case will be run locally.\n'
                                         'Default is set to False',
                          'access': 'item',
                          'default_value': False},
@@ -1187,7 +1190,8 @@ class CMFSolve(GHComponent):
         self.outputs = outputs()
         self.component_number = 14
         self.description = 'Solves CMF Case.\n' \
-                           'Icon art based on Vectors Market from the Noun Project.'
+                           'Icon art based on Vectors Market from the ' \
+                           'Noun Project.'
         self.checks = False
         self.results = None
 
@@ -1211,7 +1215,8 @@ class CMFSolve(GHComponent):
         self.written = False
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """Checks inputs and raises a warning if an input is not
+        the correct type."""
 
         if self.ground:
             self.checks = True
@@ -1225,7 +1230,8 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, ground, write, run, weather, trees, boundary_conditions, solver_settings,
+    def run_checks(self, ground, write, run, weather, trees,
+                   boundary_conditions, solver_settings,
                    outputs, name, folder, ssh,):
         """
         Gathers the inputs and checks them.
@@ -1369,7 +1375,8 @@ class CMFSolve(GHComponent):
             boundary_conditions_root = ET.Element('boundary_conditions')
 
             for i in range(0, len(boundary_conditions_dict)):
-                boundary_condition = ET.SubElement(boundary_conditions_root, 'boundary_condition_%i' % i)
+                boundary_condition = ET.SubElement(boundary_conditions_root,
+                                                   'boundary_condition_%i' % i)
 
                 bc_type = ET.SubElement(boundary_condition, 'type')
                 bc_type.text = str(boundary_conditions_dict[i]['type'])
@@ -1390,10 +1397,12 @@ class CMFSolve(GHComponent):
                 elif boundary_conditions_dict[i]['type'] == 'outlet':
                     bc_flux = ET.SubElement(boundary_condition, 'outlet_type')
 
-                    outlet_connection = ET.SubElement(bc_flux, 'outlet_connection')
+                    outlet_connection = ET.SubElement(bc_flux,
+                                                      'outlet_connection')
                     outlet_connection.text = str(boundary_conditions_dict[i]['outlet_type']['connection'])
 
-                    outlet_parameter = ET.SubElement(bc_flux, 'connection_parameter')
+                    outlet_parameter = ET.SubElement(bc_flux,
+                                                     'connection_parameter')
                     outlet_parameter.text = str(boundary_conditions_dict[i]['outlet_type']['connection_parameter'])
 
                     bc_flux = ET.SubElement(boundary_condition, 'location')
@@ -1425,7 +1434,8 @@ class CMFSolve(GHComponent):
             file_run = ['cmf_template.py']
             file_return = ['results.json']
 
-            ssh_command['file_transfer'] = ','.join(file_transfer) + ',cmf_template.py'
+            ssh_command['file_transfer'] = ','.join(file_transfer) + \
+                                           ',cmf_template.py'
             ssh_command['file_run'] = ','.join(file_run)
             ssh_command['file_return'] = ','.join(file_return)
             ssh_command['template'] = 'cmf'
@@ -1452,10 +1462,12 @@ class CMFSolve(GHComponent):
             files_written.append(write_trees(self.trees, self.case_path))
 
         if self.boundary_conditions:
-            files_written.append(write_boundary_conditions(self.boundary_conditions, self.case_path))
+            files_written.append(write_boundary_conditions(
+                self.boundary_conditions, self.case_path))
 
         if self.weather:
-            files_written.append(write_weather(self.weather, self.case_path))
+            files_written.append(write_weather(self.weather,
+                                               self.case_path))
 
         # template
         pick_template('cmf', self.case_path)
@@ -1467,7 +1479,8 @@ class CMFSolve(GHComponent):
 
             # Copy files from case folder to ssh folder
             for file_ in transfer_files:
-                copyfile(self.case_path + '/' + file_, ssh.ssh_path + '/' + file_)
+                copyfile(os.path.join(self.case_path, file_),
+                         os.path.join(ssh.ssh_path, file_))
 
         self.written = True
 
@@ -1488,7 +1501,8 @@ class CMFSolve(GHComponent):
 
     def check_results(self):
         """
-        Checks if the result files exists and then copies them form the ssh folder to the case folder.
+        Checks if the result files exists and then copies them form the ssh
+        folder to the case folder.
         If not then a warning is raised.
         """
 
@@ -1507,11 +1521,25 @@ class CMFSolve(GHComponent):
             warning = 'Could not find result file. Unknown error occurred'
             self.add_warning(warning)
 
+    @staticmethod
+    def read_log():
+        log_file = os.path.join(ssh.livestock_path,
+                                'logs',
+                                'livestock_info.log')
+
+        if os.path.exists(log_file):
+            with open(log_file, 'r') as file_:
+                log_lines = file_.readlines()
+
+            for line in log_lines:
+                print(line.strip())
+
     def run(self, doc):
         """
-        | In case all the checks have passed and write_case is True the component writes the case files.
-        | If all checks have passed and run_case is True the simulation is started.
-
+        In case all the checks have passed and write_case is True the
+        component writes the case files.
+        If all checks have passed and run_case is True the
+        simulation is started.
         """
 
         if self.checks and self.write_case:
@@ -1520,6 +1548,7 @@ class CMFSolve(GHComponent):
         if self.checks and self.run_case:
             self.do_case()
             self.results = self.check_results()
+            self.read_log()
 
 
 class CMFResults(GHComponent):
@@ -1670,7 +1699,10 @@ class CMFResults(GHComponent):
 
 
 class CMFOutputs(GHComponent):
-    """A component class that specifies the wanted outputs from the CMF simulation."""
+    """
+    A component class that specifies the wanted outputs from the
+    CMF simulation.
+    """
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)

@@ -1,8 +1,7 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
-__version__ = "0.1.0"
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
@@ -16,11 +15,13 @@ import livestock.lib.templates as templates
 import scriptcontext as sc
 
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Grasshopper SSH functions
 
-ssh_path = r'C:\livestock\ssh'
-local_path = r'C:\livestock\local'
+livestock_path = r'C:\livestock'
+ssh_path = os.path.join(livestock_path, 'ssh')
+local_path = os.path.join(livestock_path, 'local')
+
 
 def get_ssh():
     """Extracts the SSH information from a sticky"""
