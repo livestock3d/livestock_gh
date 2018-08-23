@@ -43,37 +43,48 @@ class CMFGround(GHComponent):
             return {0: component.inputs('required'),
 
                     1: {'name': 'MeshFaces',
-                        'description': 'The mesh the where the ground properties should be applied.',
+                        'description': 'The mesh the where the ground '
+                                       'properties should be applied.',
                         'access': 'item',
                         'default_value': None},
 
                     2: component.inputs('optional'),
 
                     3: {'name': 'Layers',
-                        'description': 'List of the depth of soil layers to add to the mesh in m.\n'
-                                       'If the values 1 and 2 are given, two layers will be created. '
-                                       'One from 0 to 1m and one from 1m to 2m.\nDefault is 1m',
+                        'description': 'List of the depth of soil layers to '
+                                       'add to the mesh in m.\n'
+                                       'If the values 1 and 2 are given, two '
+                                       'layers will be created. '
+                                       'One from 0 to 1m and one from 1m to 2m.'
+                                       '\nDefault is 1m',
                         'access': 'list',
                         'default_value': 1},
 
                     4: {'name': 'GroundType',
-                        'description': 'Ground type to be applied. A number from 0-6 can be provided or the '
-                                       'Livestock Ground Type component can be connected.\n'
+                        'description': 'Ground type to be applied. A number '
+                                       'from 0-6 can be provided or the '
+                                       'Livestock Ground Type component can be '
+                                       'connected.\n'
                                        '0 - Short grass with medium ground\n'
-                                       '1 - Gravel (light color and permeable)\n'
-                                       '2 - Pavement (dark color and non-permeable)\n'
-                                       'Default is 0 - Short grass with medium ground',
+                                       '1 - Gravel (light color and '
+                                       'permeable)\n'
+                                       '2 - Pavement (dark color and '
+                                       'non-permeable)\n'
+                                       'Default is 0 - Short grass with medium '
+                                       'ground',
                         'access': 'item',
                         'default_value': 0},
 
                     5: {'name': 'SurfaceWater',
-                        'description': 'Initial volume of surface water placed on each mesh face in m3.\n'
+                        'description': 'Initial volume of surface water placed '
+                                       'on each mesh face in m3.\n'
                                        'Default is set to 0m3',
                         'access': 'item',
                         'default_value': 0},
 
                     6: {'name': 'ETMethod',
-                        'description': 'Set method to calculate evapotranspiration.\n'
+                        'description': 'Set method to calculate '
+                                       'evapotranspiration.\n'
                                        '0: No evapotranspiration\n'
                                        '1: Penman-Monteith\n'
                                        '2: Shuttleworth-Wallace\n'
@@ -82,7 +93,8 @@ class CMFGround(GHComponent):
                         'default_value': 0},
 
                     7: {'name': 'SurfaceRunOffMethod',
-                        'description': 'Set the method for computing the surface run-off.\n'
+                        'description': 'Set the method for computing the '
+                                       'surface run-off.\n'
                                        '0 - Kinematic Wave.\n'
                                        '1 - Diffusive Wave.\n'
                                        'Default is set 0 - Kinematic Wave.',
@@ -104,9 +116,12 @@ class CMFGround(GHComponent):
         self.outputs = outputs()
         self.component_number = 11
         self.description = 'Generates CMF ground' \
-                           '\nCMF ground is a mesh surface with porous or glass-like properties.' \
-                           'CMF ground can be used to model surface runoff and water transport on and within the mesh.' \
-                           '\nIcon art based created by Ben Davis from the Noun Project.'
+                           '\nCMF ground is a mesh surface with porous or ' \
+                           'glass-like properties.' \
+                           'CMF ground can be used to model surface runoff and ' \
+                           'water transport on and within the mesh.' \
+                           '\nIcon art based created by Ben Davis from the ' \
+                           'Noun Project.'
         self.checks = False
         self.results = None
 
@@ -119,7 +134,9 @@ class CMFGround(GHComponent):
         self.surface_run_off_method = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -187,14 +204,17 @@ class CMFGround(GHComponent):
                     'saturated_depth': saturated_depth, }
 
         elif index == 2:
-            return {'retention_curve': cmf_lib.load_retention_curve(0, {'k_sat': 0.01}),
+            return {'retention_curve': cmf_lib.load_retention_curve(0,
+                                                                    {'k_sat':
+                                                                         0.01}),
                     'surface_properties': cmf_lib.load_surface_cover(5),
                     'manning': manning,
                     'puddle_depth': puddle,
                     'saturated_depth': saturated_depth, }
 
         else:
-            raise ValueError('Ground type should be an integer from 0-2. Given value was:' + str(index))
+            raise ValueError('Ground type should be an integer from 0-2. '
+                             'Given value was:' + str(index))
 
     def convert_et_number_to_method(self):
         """
@@ -257,7 +277,9 @@ class CMFGroundType(GHComponent):
             return {0: component.inputs('optional'),
 
                     1: {'name': 'RetentionCurve',
-                        'description': 'Sets the retention curve for the ground. Can either be an integer from 0-5 or'
+                        'description': 'Sets the retention curve for the '
+                                       'ground. Can either be an integer from '
+                                       '0-5 or'
                                        'the output from CMF RetentionCurve.\n'
                                        '0 - Standard CMF Retention Curve\n'
                                        '1 - Coarse Soil\n'
@@ -265,12 +287,14 @@ class CMFGroundType(GHComponent):
                                        '3 - Medium Fine Soil\n'
                                        '4 - Fine Soil\n'
                                        '5 - Very Fine Soil\n'
-                                       'Default is set to 0: Standard CMF Retention Curve',
+                                       'Default is set to 0: Standard CMF '
+                                       'Retention Curve',
                         'access': 'item',
                         'default_value': 0},
 
                     2: {'name': 'SurfaceCover',
-                        'description': 'Sets the surface cover for the ground. Can either be an integer from 0-6 or'
+                        'description': 'Sets the surface cover for the ground. '
+                                       'Can either be an integer from 0-6 or'
                                        'the output from CMF Surface Cover.\n'
                                        '0 - Short Grass: 0.12m\n'
                                        '1 - High Grass: 0.4m\n'
@@ -279,18 +303,21 @@ class CMFGroundType(GHComponent):
                                        '4 - White Sand\n'
                                        '5 - Bare Moist Soil\n'
                                        '6 - Bare Dry Soil\n'
-                                       'Default is set to 0: Short Grass: 0.12m',
+                                       'Default is set to 0: '
+                                       'Short Grass: 0.12m',
                         'access': 'item',
                         'default_value': 0},
 
                     3: {'name': 'Manning',
                         'description': 'Set Manning roughness. '
-                                       '\nIf not set CMF calculates it from the above given values.',
+                                       '\nIf not set CMF calculates it from '
+                                       'the above given values.',
                         'access': 'item',
                         'default_value': None},
 
                     4: {'name': 'PuddleDepth',
-                        'description': 'Set puddle depth. Puddle depth is the height were run-off begins.\n '
+                        'description': 'Set puddle depth. Puddle depth is the '
+                                       'height were run-off begins.\n '
                                        'Default is set to 0.01m',
                         'access': 'item',
                         'default_value': 0.01},
@@ -321,7 +348,9 @@ class CMFGroundType(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -331,7 +360,8 @@ class CMFGroundType(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, retention_curve, surface_properties, manning_roughness, puddle_depth, saturated_depth):
+    def run_checks(self, retention_curve, surface_properties,
+                   manning_roughness, puddle_depth, saturated_depth):
         """
         Gathers the inputs and checks them.
 
@@ -371,7 +401,8 @@ class CMFGroundType(GHComponent):
     def run(self):
         """
         In case all the checks have passed the component runs.
-        The component puts all the inputs into a dict and uses PassClass to pass it on.
+        The component puts all the inputs into a dict and uses
+        PassClass to pass it on.
         """
 
         if self.checks:
