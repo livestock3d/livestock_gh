@@ -61,7 +61,7 @@ def export(ids, file_path, file_name, file_type, doc):
     :param file_name: File name
     :param file_type: File extension
     :param doc: Grasshopper document
-    :return: True on succes.
+    :return: True on success.
     """
 
     sel_ids = ""
@@ -71,7 +71,8 @@ def export(ids, file_path, file_name, file_type, doc):
     file_name_and_type = file_name + file_type
     final_path = chr(34) + file_path + '\\' + file_name_and_type + chr(34)
 
-    command_string = "_-Export " + sel_ids + "_Enter " + final_path + " _Enter _Enter _Enter"
+    command_string = "_-Export " + sel_ids + "_Enter " + final_path + \
+                     " _Enter _Enter _Enter"
     echo = False
     done = rs.Command(command_string, echo)
 
@@ -94,7 +95,7 @@ def bake_export_delete(geo, file_path, file_name, file_type, doc):
     :param file_path: File directory
     :param file_name: File name
     :param file_type: File extension.
-    :param doc: Grasshopper doument
+    :param doc: Grasshopper document
     """
 
     g = bake(geo, doc)
@@ -117,46 +118,25 @@ def import_obj(path):
     lines = file_.readlines()
     file_.close()
 
-    # Check if file is generated with PyMesh
-    if lines[0].startswith('# Generated with PyMesh'):
-        print('Generated with PyMesh')
-        for line in lines:
-            if line.find("v") == 0:
-                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
-                                             float((line.split(' '))[2]),
-                                             float((line.split(' '))[3])
-                                             )
-                                  )
+    for line in lines:
+        if line.find("v") == 0 and line.find("n") == -1 and line.find(
+                "t") == -1:
+            mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
+                                         float((line.split(' '))[2]),
+                                         float((line.split(' '))[3])))
+        if line.find("f") == 0:
+            if len(line.split(' ')) == 4:
+                mesh.Faces.AddFace(
+                    rg.MeshFace(int(line.split(' ')[1].split('/')[0]) - 1,
+                                int(line.split(' ')[2].split('/')[0]) - 1,
+                                int(line.split(' ')[3].split('/')[0]) - 1))
 
-            if line.find("f") == 0:
-                line = line[:-2]
-                if len(line.split(' ')) == 4:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
-                                                   int(line.split(' ')[2]) - 1,
-                                                   int(line.split(' ')[3]) - 1)
-                                       )
-
-                elif len(line.split(' ')) == 5:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1]) - 1,
-                                                   int(line.split(' ')[2]) - 1,
-                                                   int(line.split(' ')[3]) - 1,
-                                                   int(line.split(' ')[4]) - 1)
-                                       )
-    else:
-        for line in lines:
-            if line.find("v") == 0 and line.find("n") == -1 and line.find("t") == -1:
-                mesh.Vertices.Add(rg.Point3d(float((line.split(' '))[1]),
-                                             float((line.split(' '))[2]),
-                                             float((line.split(' '))[3])
-                                             )
-                                  )
-
-            if line.find("f") == 0:
-                if len(line.split(' ')) == 4:
-                    mesh.Faces.AddFace(rg.MeshFace(int(line.split(' ')[1].split('/')[0])-1,
-                                                   int(line.split(' ')[2].split('/')[0])-1,
-                                                   int(line.split(' ')[3].split('/')[0])-1)
-                                       )
+            elif len(line.split(' ')) == 5:
+                mesh.Faces.AddFace(
+                    rg.MeshFace(int(line.split(' ')[1].split('/')[0]) - 1,
+                                int(line.split(' ')[2].split('/')[0]) - 1,
+                                int(line.split(' ')[3].split('/')[0]) - 1,
+                                int(line.split(' ')[4].split('/')[0]) - 1))
 
     mesh.Normals.ComputeNormals()
     mesh.Compact()

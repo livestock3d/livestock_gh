@@ -1,7 +1,7 @@
 __author__ = "Christian Kongsgaard"
 __license__ = "MIT"
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
@@ -9,11 +9,12 @@ __license__ = "MIT"
 # Livestock imports
 import livestock.lib.geometry as gh_geo
 from livestock.components.component import GHComponent
+from livestock.components import component
 import livestock.lib.misc as gh_misc
 
 # Grasshopper imports
 
-# -------------------------------------------------------------------------------------------------------------------- #
+# ---------------------------------------------------------------------------- #
 # Livestock Geometry Classes
 
 
@@ -26,18 +27,21 @@ class LoadMesh(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Filename',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'Filename',
                         'description': 'Directory and file name of mesh',
                         'access': 'item',
                         'default_value': None},
-                    1: {'name': 'Load',
+
+                    2: {'name': 'Load',
                         'description': 'Activates the component',
                         'access': 'item',
                         'default_value': False}}
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
+
                     1: {'name': 'Mesh',
                         'description': 'Loaded mesh'},
                     2: {'name': 'MeshData',
@@ -54,7 +58,9 @@ class LoadMesh(GHComponent):
         self.data = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -74,7 +80,7 @@ class LoadMesh(GHComponent):
 
         # Gather data
         self.path = path
-        self.load = self.add_default_value(load, 1)
+        self.load = self.add_default_value(load, 2)
 
         # Run checks
         self.check_inputs()
