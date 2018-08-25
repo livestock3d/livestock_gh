@@ -1520,7 +1520,8 @@ class CMFSolve(GHComponent):
 
         # check if folder exists
         if os.path.exists(self.case_path):
-            self.written = True
+            shutil.rmtree(self.case_path)
+            os.mkdir(self.case_path)
         else:
             os.mkdir(self.case_path)
 
@@ -1684,7 +1685,9 @@ class CMFResults(GHComponent):
         self.results = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         if self.path:
             self.checks = True
@@ -1756,12 +1759,9 @@ class CMFResults(GHComponent):
 
     def run(self):
         """
-        | In case all the checks have passed and run is True the component runs.
-        | Following functions are run:
-        | set_units()
-        | load_cmf_result_file()
-        | The results are converted into a Grasshopper Tree structure.
-
+        In case all the checks have passed and run is True the component runs.
+        Following functions are run: set_units(), load_cmf_result_file()
+        The results are converted into a Grasshopper Tree structure.
         """
 
         if self.checks and self.run_component:
@@ -2209,10 +2209,22 @@ class CMFSolverSettings(GHComponent):
     def modified_settings(self):
 
         if len(self.length) == 1:
+            self.length[0] = int(self.length[0])
             self.length.append('h')
 
+        elif len(self.length) == 2:
+            self.length[0] = int(self.length[0])
+
         if len(self.time_step) == 1:
+            self.time_step[0] = int(self.time_step[0])
             self.time_step.append('h')
+
+        elif len(self.time_step) == 2:
+            self.time_step[0] = int(self.time_step[0])
+
+        self.start_time = {'day': int(self.start_time[0]),
+                           'month': int(self.start_time[1]),
+                           'year': int(self.start_time[2])}
 
         self.settings = {'analysis_length': self.length,
                          'time_step': self.time_step,
