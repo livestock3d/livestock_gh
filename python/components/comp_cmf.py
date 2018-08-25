@@ -1793,7 +1793,7 @@ class CMFOutputs(GHComponent):
                         'description': 'Cell surface water\n'
                                        'Default is set to True',
                         'access': 'item',
-                        'default_value': None},
+                        'default_value': 'init'},
 
                     3: {'name': 'SurfaceWaterFlux',
                         'description': 'Cell surface water flux\n'
@@ -1832,7 +1832,7 @@ class CMFOutputs(GHComponent):
                                        'layer\n'
                                        'Default is set to True',
                         'access': 'item',
-                        'default_value': None},
+                        'default_value': 'init'},
 
                     9: {'name': 'Wetness',
                         'description': 'Soil layer wetness of the soil '
@@ -1930,7 +1930,7 @@ class CMFOutputs(GHComponent):
             output_dict['cell'].append('evaporation')
             output_dict['cell'].append('transpiration')
 
-        if self.surface_water_volume or self.surface_water_volume == None:
+        if self.surface_water_volume or self.surface_water_volume == 'init':
             output_dict['cell'].append('surface_water_volume')
 
         if self.surface_water_flux:
@@ -1948,7 +1948,7 @@ class CMFOutputs(GHComponent):
         if self.theta:
             output_dict['layer'].append('theta')
 
-        if self.volume or self.volume == None:
+        if self.volume or self.volume == 'init':
             output_dict['layer'].append('volume')
 
         if self.wetness:
