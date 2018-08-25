@@ -178,7 +178,8 @@ class CMFGround(GHComponent):
         self.ground_type = self.convert_ground_type(ground_type)
         self.surface_water = self.add_default_value(surface_water, 6)
         self.et_number = self.add_default_value(et_method, 7)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 8)
+        self.surface_run_off_method = self.add_default_value(
+            surface_run_off_method, 8)
 
         # Run checks
         self.check_inputs()
@@ -288,7 +289,7 @@ class CMFGround(GHComponent):
                 'surface_water': self.surface_water,
                 'et_method': self.convert_et_number_to_method(),
                 'runoff_method': self.convert_runoff_number_to_method()
-                           }
+            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
 
@@ -399,7 +400,8 @@ class CMFGroundType(GHComponent):
 
         # Gather data
         self.retention_curve = self.convert_retention_curve(retention_curve)
-        self.surface_properties = self.convert_surface_properties(surface_properties)
+        self.surface_properties = self.convert_surface_properties(
+            surface_properties)
         self.manning = self.add_default_value(manning_roughness, 2)
         self.puddle = self.add_default_value(puddle_depth, 3)
         self.saturated_depth = self.add_default_value(saturated_depth, 4)
@@ -535,7 +537,8 @@ class CMFWeather(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation, rain, ground_temp, location, face_count):
+    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation,
+                   rain, ground_temp, location, face_count):
         """
         Gathers the inputs and checks them.
 
@@ -621,7 +624,8 @@ class CMFWeather(GHComponent):
         :return: Latitude, longitude and time zone
         """
 
-        location_name, lat, long_, time_zone, elevation = gh_misc.decompose_ladybug_location(self.location)
+        location_name, lat, long_, time_zone, elevation = gh_misc.decompose_ladybug_location(
+            self.location)
         return lat, long_, time_zone
 
     def match_cell_count(self, weather_parameter):
@@ -665,12 +669,14 @@ class CMFWeather(GHComponent):
         """Prints the length of each weather parameter."""
 
         def printer(parameter_name, parameter):
-            print(str(parameter_name) + ' includes: ' + str(len(parameter.keys())) + ' lists')
+            print(str(parameter_name) + ' includes: ' + str(
+                len(parameter.keys())) + ' lists')
 
         printer('Temperature', self.temp)
         printer('Wind Speed', self.wind)
         printer('Relative Humidity', self.rel_hum)
-        printer('Sun Shine', self.cloud_cover)  # are converted from cloud cover to sun later, but have same length.
+        printer('Sun Shine',
+                self.cloud_cover)  # are converted from cloud cover to sun later, but have same length.
         printer('Global Radiation', self.global_radiation)
         printer('Rain', self.rain)
         printer('Ground Temperature', self.ground_temp)
@@ -849,7 +855,8 @@ class CMFSurfaceProperties(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, property_, height, lai, albedo, canopy_closure, canopy_par, canopy_cap,
+    def run_checks(self, property_, height, lai, albedo, canopy_closure,
+                   canopy_par, canopy_cap,
                    stomatal, root_depth, root_fraction, leaf_width):
         """
         Gathers the inputs and checks them.
@@ -897,7 +904,8 @@ class CMFSurfaceProperties(GHComponent):
         """
 
         if self.checks:
-            self.property = cmf_lib.load_surface_cover(self.property_index, self.properties_dict)
+            self.property = cmf_lib.load_surface_cover(self.property_index,
+                                                       self.properties_dict)
             self.results = gh_misc.PassClass(self.property, 'SurfaceCover')
 
 
@@ -998,21 +1006,23 @@ class CMFSyntheticTree(GHComponent):
         """Selects the correct tree property. It computes the property information and stores it as a ordered dict."""
 
         self.load_csv()
-        self.property = collections.OrderedDict([('name', 'Synthetic Deciduous'),
-                                                 ('height', self.height),
-                                                 ('lai', float(self.data[0][2]) * self.height + float(self.data[1][2])),
-                                                 ('albedo', float(self.data[0][3]) *
-                                                  self.height + float(self.data[1][3])),
-                                                 ('canopy_closure', float(self.data[2][4])),
-                                                 ('canopy_par', float(self.data[2][5])),
-                                                 ('canopy_capacity', float(self.data[0][6]) *
-                                                  self.height + float(self.data[1][6])),
-                                                 ('stomatal_res', float(self.data[0][7]) *
-                                                  self.height + float(self.data[1][7])),
-                                                 ('root_depth', float(self.data[2][8])),
-                                                 ('root_fraction', float(self.data[2][9])),
-                                                 ('leaf_width', 0.05)
-                                                 ])
+        self.property = collections.OrderedDict(
+            [('name', 'Synthetic Deciduous'),
+             ('height', self.height),
+             ('lai',
+              float(self.data[0][2]) * self.height + float(self.data[1][2])),
+             ('albedo', float(self.data[0][3]) *
+              self.height + float(self.data[1][3])),
+             ('canopy_closure', float(self.data[2][4])),
+             ('canopy_par', float(self.data[2][5])),
+             ('canopy_capacity', float(self.data[0][6]) *
+              self.height + float(self.data[1][6])),
+             ('stomatal_res', float(self.data[0][7]) *
+              self.height + float(self.data[1][7])),
+             ('root_depth', float(self.data[2][8])),
+             ('root_fraction', float(self.data[2][9])),
+             ('leaf_width', 0.05)
+             ])
 
     def run(self):
         """
@@ -1107,7 +1117,9 @@ class CMFRetentionCurve(GHComponent):
         self.l = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -1155,13 +1167,13 @@ class CMFRetentionCurve(GHComponent):
 
     def run(self):
         """
-        | In case all the checks have passed the component runs.
-        | Loads the retention curve data and passes it on with PassClass.
-
+        In case all the checks have passed the component runs.
+        Loads the retention curve data and passes it on with PassClass.
         """
 
         if self.checks:
-            self.property = cmf_lib.load_retention_curve(self.soil_index, self.properties_dict)
+            self.property = cmf_lib.load_retention_curve(self.soil_index,
+                                                         self.properties_dict)
             self.results = gh_misc.PassClass(self.property, 'RetentionCurve')
 
 
@@ -1293,7 +1305,7 @@ class CMFSolve(GHComponent):
 
     def run_checks(self, ground, write, run, weather, trees,
                    boundary_conditions, solver_settings,
-                   outputs, name, folder, ssh,):
+                   outputs, name, folder, ssh, ):
         """
         Gathers the inputs and checks them.
 
@@ -1444,7 +1456,8 @@ class CMFSolve(GHComponent):
 
                 if boundary_conditions_dict[i]['type'] == 'inlet':
                     bc_flux = ET.SubElement(boundary_condition, 'inlet_flux')
-                    bc_flux.text = str(boundary_conditions_dict[i]['inlet_flux'])
+                    bc_flux.text = str(
+                        boundary_conditions_dict[i]['inlet_flux'])
 
                     bc_step = ET.SubElement(boundary_condition, 'time_step')
                     bc_step.text = str(boundary_conditions_dict[i]['time_step'])
@@ -1454,18 +1467,23 @@ class CMFSolve(GHComponent):
 
                     outlet_connection = ET.SubElement(bc_flux,
                                                       'outlet_connection')
-                    outlet_connection.text = str(boundary_conditions_dict[i]['outlet_type']['connection'])
+                    outlet_connection.text = str(
+                        boundary_conditions_dict[i]['outlet_type'][
+                            'connection'])
 
                     outlet_parameter = ET.SubElement(bc_flux,
                                                      'connection_parameter')
-                    outlet_parameter.text = str(boundary_conditions_dict[i]['outlet_type']['connection_parameter'])
+                    outlet_parameter.text = str(
+                        boundary_conditions_dict[i]['outlet_type'][
+                            'connection_parameter'])
 
                     bc_flux = ET.SubElement(boundary_condition, 'location')
                     bc_flux.text = str(boundary_conditions_dict[i]['location'])
 
             boundary_conditions_tree = ET.ElementTree(boundary_conditions_root)
             boundary_condition_file = 'boundary_condition.xml'
-            boundary_conditions_tree.write(folder + '/' + boundary_condition_file, xml_declaration=True)
+            boundary_conditions_tree.write(
+                folder + '/' + boundary_condition_file, xml_declaration=True)
 
             return boundary_condition_file
 
@@ -1762,89 +1780,101 @@ class CMFOutputs(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Evapotranspiration',
-                        'description': 'Cell evaporation - default is set to True',
+            return {0: component.inputs('optional'),
+
+                    1: {'name': 'Evapotranspiration',
+                        'description': 'Cell evaporation'
+                                       '\nDefault is set to False',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'SurfaceWaterVolume',
+                        'description': 'Cell surface water\n'
+                                       'Default is set to True',
                         'access': 'item',
                         'default_value': True},
 
-                    1: {'name': 'SurfaceWaterVolume',
-                        'description': 'Cell surface water - default is set to False',
+                    3: {'name': 'SurfaceWaterFlux',
+                        'description': 'Cell surface water flux\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False},
+                        'default_value': None},
 
-                    2: {'name': 'SurfaceWaterFlux',
-                        'description': 'Cell surface water flux - default is set to False',
+                    4: {'name': 'HeatFlux',
+                        'description': 'Cell surface heat flux\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False},
-
-                    3: {'name': 'HeatFlux',
-                        'description': 'Cell surface heat flux - default is set to False',
-                        'access': 'item',
-                        'default_value': False},
-
-                    4: {'name': 'AerodynamicResistance',
-                        'description': 'Cell aerodynamic resistance - default is set to False',
-                        'access': 'item',
-                        'default_value': False},
+                        'default_value': None},
 
                     5: {'name': 'VolumetricFlux',
-                        'description': 'Soil layer volumetric flux vectors - default is set to False',
+                        'description': 'Soil layer volumetric flux vectors\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False},
+                        'default_value': None},
 
                     6: {'name': 'Potential',
-                        'description': 'Soil layer total potential (Psi_tot = Psi_M + Psi_G - default is set to False',
+                        'description': 'Soil layer total potential '
+                                       '(Psi_tot = Psi_M + Psi_G)\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False},
+                        'default_value': None},
 
                     7: {'name': 'Theta',
-                        'description': 'Soil layer volumetric water content of the layer - default is set to False',
+                        'description': 'Soil layer volumetric water content of '
+                                       'the layer\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False},
+                        'default_value': None},
 
                     8: {'name': 'Volume',
-                        'description': 'Soil layer volume of water in the layer - default is set to False',
+                        'description': 'Soil layer volume of water in the '
+                                       'layer\n'
+                                       'Default is set to True',
                         'access': 'item',
-                        'default_value': False},
+                        'default_value': True},
 
                     9: {'name': 'Wetness',
-                        'description': 'Soil layer wetness of the soil (V_volume/V_pores) - default is set to False',
+                        'description': 'Soil layer wetness of the soil '
+                                       '(V_volume/V_pores)\n'
+                                       'Default is set to False',
                         'access': 'item',
-                        'default_value': False}
+                        'default_value': None}
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'ChosenOutputs',
                         'description': 'Shows the chosen outputs'},
 
                     2: {'name': 'Outputs',
                         'description': 'Livestock Output Data'}
-
                     }
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 16
         self.description = "Specify the wanted outputs from the CMF simulation."
+        self.results = None
+        self.checks = False
+
+        # Data Parameters
         self.evapo_trans = None
         self.surface_water_volume = None
         self.surface_water_flux = None
         self.heat_flux = None
-        self.aero_res = None
         self.three_d_flux = None
         self.potential = None
         self.theta = None
         self.volume = None
         self.wetness = None
-        self.checks = False
         self.output_dict = None
-        self.results = None
 
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -1855,7 +1885,7 @@ class CMFOutputs(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, evapo_trans, surface_water_volume, surface_water_flux,
-                   heat_flux, aero_res, three_d_flux,
+                   heat_flux, three_d_flux,
                    potential, theta, volume, wetness):
         """
         Gathers the inputs and checks them.
@@ -1864,7 +1894,6 @@ class CMFOutputs(GHComponent):
         :param surface_water_volume: Whether to include surface water volume or not.
         :param surface_water_flux: Whether to include surface water flux or not.
         :param heat_flux: Whether to include surface heat flux or not.
-        :param aero_res: Whether to include aerodynamic resistance or not.
         :param three_d_flux: Whether to include soil water flux or not.
         :param potential: Whether to include soil potential or not.
         :param theta: Whether to include soil theta or not.
@@ -1873,11 +1902,11 @@ class CMFOutputs(GHComponent):
         """
 
         # Gather data
-        self.evapo_trans = self.add_default_value(evapo_trans, 0)
-        self.surface_water_volume = self.add_default_value(surface_water_volume, 1)
-        self.surface_water_flux = self.add_default_value(surface_water_flux, 2)
-        self.heat_flux = self.add_default_value(heat_flux, 3)
-        self.aero_res = self.add_default_value(aero_res, 4)
+        self.evapo_trans = self.add_default_value(evapo_trans, 1)
+        self.surface_water_volume = self.add_default_value(surface_water_volume,
+                                                           2)
+        self.surface_water_flux = self.add_default_value(surface_water_flux, 3)
+        self.heat_flux = self.add_default_value(heat_flux, 4)
         self.three_d_flux = self.add_default_value(three_d_flux, 5)
         self.potential = self.add_default_value(potential, 6)
         self.theta = self.add_default_value(theta, 7)
@@ -2035,7 +2064,8 @@ class CMFInlet(GHComponent):
                                           'cell': self.cell,
                                           'layer': self.layer,
                                           'inlet_flux': ','.join([str(elem)
-                                                                  for elem in self.inlet_flux]),
+                                                                  for elem in
+                                                                  self.inlet_flux]),
                                           'time_step': self.time_step
                                           },
                                          'BoundaryCondition')
@@ -2060,51 +2090,96 @@ class CMFSolverSettings(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'AnalysisLength',
-                        'description': 'Total length of the simulation in hours - default is set to 24 hours.',
-                        'access': 'item',
-                        'default_value': 24},
+            return {0: component.inputs('optional'),
 
-                    1: {'name': 'TimeStep',
-                        'description': 'Size of each time step in hours - e.g. 1/60 equals time steps of 1 min and'
-                                       '\n24 is a time step of one day. '
-                                       '\nDefault is 1 hour',
-                        'access': 'item',
+                    1: {'name': 'AnalysisLength',
+                        'description': 'Total length of the simulation.'
+                                       'The input should be a list with two '
+                                       'values. The first value is the '
+                                       'numerical length e.g. 24.\n'
+                                       'Second value is the time unit e.g. h '
+                                       'for hour. The second option is '
+                                       'optional and if not given'
+                                       'the time unit is set to hours.\n'
+                                       'The time unit has to be one of the '
+                                       'following values:\n'
+                                       'y - year\n'
+                                       'd - day\n'
+                                       'h - hour\n'
+                                       'm - minute\n'
+                                       's - second\n'
+                                       'Default is set to 24 hours.',
+                        'access': 'list',
+                        'default_value': None},
+
+                    2: {'name': 'TimeStep',
+                        'description': 'Size of each simulation time step.'
+                                       'The input should be a list with two '
+                                       'values. The first value is the '
+                                       'numerical length e.g. 24.\n'
+                                       'Second value is the time unit e.g. h '
+                                       'for hour. The second option is '
+                                       'optional and if not given'
+                                       'the time unit is set to hours.\n'
+                                       'The time unit has to be one of the '
+                                       'following values:\n'
+                                       'y - year\n'
+                                       'd - day\n'
+                                       'h - hour\n'
+                                       'm - minute\n'
+                                       's - second\n'
+                                       'Default is 1 hour',
+                        'access': 'list',
+                        'default_value': None},
+
+                    3: {'name': 'StartTime',
+                        'description': 'Sets the start time for the '
+                                       'simulation.\n'
+                                       'The input should be a list with three '
+                                       'values. The first value is the day. '
+                                       'Second value is the month. '
+                                       'Third value is the year.\n'
+                                       'All values should be integers and they '
+                                       'all start from 1.\n'
+                                       'Default is 01-01-[current year]',
+                        'access': 'list',
                         'default_value': 1},
 
-                    2: {'name': 'SolverTolerance',
-                        'description': 'Solver tolerance - Default is 1e-8',
+                    4: {'name': 'SolverTolerance',
+                        'description': 'Solver tolerance\nDefault is 1e-8',
                         'access': 'item',
-                        'default_value': 10 ** -8},
-
-                    3: {'name': 'Verbosity',
-                        'description': 'Sets the verbosity of the print statement during runtime - Default is 1.\n'
-                                       '0 - Prints only at start and end of simulation.\n'
-                                       '1 - Prints at every time step.',
-                        'access': 'item',
-                        'default_value': 1}}
+                        'default_value': None},
+                    }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
-                    1: {'name': 'SolverSettings',
+                    1: {'name': 'ChosenSolverSettings',
+                        'description': 'Shows the chosen solver settings'},
+
+                    2: {'name': 'SolverSettings',
                         'description': 'Livestock Solver Settings'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 21
         self.description = 'Sets the solver settings for CMF Solve'
-        self.length = None
-        self.time_step = None
-        self.tolerance = None
-        self.verbosity = None
-        self.start_time = None
         self.checks = [False, False, False, False]
         self.results = None
 
+        # Data Parameters
+        self.length = None
+        self.time_step = None
+        self.tolerance = None
+        self.start_time = None
+        self.settings = None
+        self.settings_dict = None
+
     def check_inputs(self):
-        """Checks inputs and raises a warning if an input is not the correct type."""
+        """
+        Checks inputs and raises a warning if an input is not the correct type.
+        """
 
         self.checks = True
 
@@ -2114,40 +2189,44 @@ class CMFSolverSettings(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, length, time_step, tolerance, verbosity):
+    def run_checks(self, length, time_step, tolerance, start_time):
         """
         Gathers the inputs and checks them.
 
         :param length: Number of time steps to be taken.
         :param time_step: Size of time step.
         :param tolerance: Solver tolerance.
-        :param verbosity: Solver verbosity.
+        :param start_time: Solver start time.
         """
 
         # Gather data
-        self.length = self.add_default_value(length, 0)
-        self.time_step = self.add_default_value(time_step, 1)
-        self.tolerance = self.add_default_value(tolerance, 2)
-        self.verbosity = self.add_default_value(verbosity, 3)
+        self.length = self.add_default_value(length, 1)
+        self.time_step = self.add_default_value(time_step, 2)
+        self.start_time = self.add_default_value(start_time, 3)
+        self.tolerance = self.add_default_value(tolerance, 4)
+        self.modified_settings()
 
         # Run checks
         self.check_inputs()
 
+    def modified_settings(self):
+        self.settings = {'analysis_length': self.length,
+                         'time_step': self.time_step,
+                         'start_time': self.start_time,
+                         'tolerance': self.tolerance
+                         }
+
     def run(self):
         """
-        | In case all the checks have passed the component runs.
-        | Constructs a solver settings dict, prints it and passes it on with PassClass.
+        In case all the checks have passed the component runs.
+        Constructs a solver settings dict, prints it and passes it on with
+        PassClass.
         """
 
         if self.checks:
-            settings_dict = {'analysis_length': int(self.length),
-                             'time_step': float(self.time_step),
-                             'tolerance': self.tolerance,
-                             'verbosity': int(self.verbosity),
-                             'start_time': self.start_time}
-
-            print(settings_dict.items())
-            self.results = gh_misc.PassClass(settings_dict, 'SolverSettings')
+            self.settings_dict = cmf_lib.default_solver_settings(self.settings)
+            self.results = gh_misc.PassClass(self.settings_dict,
+                                             'SolverSettings')
 
 
 class CMFSurfaceFluxResult(GHComponent):
@@ -2253,7 +2332,8 @@ class CMFSurfaceFluxResult(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save, write, run):
+    def run_checks(self, path, mesh, run_off, rain, evapo, infiltration, save,
+                   write, run):
         """
         Gathers the inputs and checks them.
 
@@ -2287,7 +2367,8 @@ class CMFSurfaceFluxResult(GHComponent):
         """Spawns a subprocess that runs the template."""
 
         # Run template
-        thread = subprocess.Popen([self.py_exe, self.path + '/cmf_surface_results_template.py'])
+        thread = subprocess.Popen(
+            [self.py_exe, self.path + '/cmf_surface_results_template.py'])
         thread.wait()
         thread.kill()
 
@@ -2319,7 +2400,8 @@ class CMFSurfaceFluxResult(GHComponent):
             return True
 
         process_mesh(self.mesh, self.path)
-        flux_config(self.path, self.run_off, self.rain, self.evapo, self.infiltration)
+        flux_config(self.path, self.run_off, self.rain, self.evapo,
+                    self.infiltration)
         # Write template
         pick_template('cmf_surface_results', self.path)
 

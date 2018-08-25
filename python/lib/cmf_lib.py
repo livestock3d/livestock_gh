@@ -65,54 +65,56 @@ def load_surface_cover(surface_index, properties_dict={}):
     data_path = os.getenv('APPDATA') + \
                 r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
     units, data = load_csv(data_path)
-    property = collections.OrderedDict([('name',
-                                         str(data[surface_index][0])),
-                                        ('height',
-                                         float(data[surface_index][1])),
-                                        ('lai',
-                                         float(data[surface_index][2])),
-                                        ('albedo',
-                                         float(data[surface_index][3])),
-                                        ('canopy_closure',
-                                         float(data[surface_index][4])),
-                                        ('canopy_par',
-                                         float(data[surface_index][5])),
-                                        ('canopy_capacity',
-                                         float(data[surface_index][6])),
-                                        ('stomatal_res',
-                                         float(data[surface_index][7])),
-                                        ('root_depth',
-                                         float(data[surface_index][8])),
-                                        ('root_fraction',
-                                         float(data[surface_index][9])),
-                                        ('leaf_width',
-                                         float(data[surface_index][10])),
+    property_ = collections.OrderedDict([('name',
+                                          str(data[surface_index][0])),
+                                         ('height',
+                                          float(data[surface_index][1])),
+                                         ('lai',
+                                          float(data[surface_index][2])),
+                                         ('albedo',
+                                          float(data[surface_index][3])),
+                                         ('canopy_closure',
+                                          float(data[surface_index][4])),
+                                         ('canopy_par',
+                                          float(data[surface_index][5])),
+                                         ('canopy_capacity',
+                                          float(data[surface_index][6])),
+                                         ('stomatal_res',
+                                          float(data[surface_index][7])),
+                                         ('root_depth',
+                                          float(data[surface_index][8])),
+                                         ('root_fraction',
+                                          float(data[surface_index][9])),
+                                         ('leaf_width',
+                                          float(data[surface_index][10])),
                                          ])
 
     # Set modified properties
     for key in properties_dict.keys():
         if properties_dict[key]:
-            property[key] = properties_dict[key]
+            property_[key] = properties_dict[key]
 
-    return property
+    return property_
 
 
-def default_solver_settings():
+def default_solver_settings(modified_settings=dict()):
+    settings = {'analysis_length': (24, 'h'),
+                'time_step': (1, 'h'),
+                'tolerance': 10 ** -8,
+                'start_time': {'day': 1,
+                               'month': 1,
+                               'year': datetime.datetime.now().year}
+                }
 
-    settings_dict = {'analysis_length': (24, 'h'),
-                     'time_step': (1, 'h'),
-                     'tolerance': 10 ** -8,
-                     'verbosity': 1,
-                     'start_time': {'day': 1,
-                                    'month': 1,
-                                    'year': datetime.datetime.now().year}
-                     }
+    # Set modified settings
+    for key in modified_settings.keys():
+        if modified_settings[key]:
+            settings[key] = modified_settings[key]
 
-    return settings_dict
+    return settings
 
 
 def default_outputs():
-
     output_dict = {'cell': ['surface_water_volume', ],
                    'layer': ['volume', ]}
 
@@ -120,7 +122,6 @@ def default_outputs():
 
 
 def load_cmf_result_file(file_path, result_type):
-
     with open(file_path, 'r') as json_file:
         result_data = json.load(json_file)
 
