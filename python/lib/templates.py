@@ -66,26 +66,26 @@ def drain_mesh_template(path):
     """
 
     file_name = r'/drain_mesh_template.py'
-    file = open(path + file_name, 'w')
+    file_ = open(path + file_name, 'w')
 
-    file.write("print('Running template drain_mesh_template.py')\n")
+    file_.write("print('Running template drain_mesh_template.py')\n")
 
-    file.write("# Imports\n")
-    file.write("import sys\n")
-    file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
-    file.write("from livestock.flow import flow_from_centers\n")
+    file_.write("# Imports\n")
+    file_.write("import sys\n")
+    #file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
+    file_.write("from livestock.flow import flow_from_centers\n")
     #file.write("from pathlib import Path\n")
     #file.write("home_user = str(Path.home())\n")
     #file.write("from livestock_linux.rain import drain_mesh_paths\n")
 
-    file.write("# Run function\n")
-    file.write("flow_from_centers(r'" + path + "')\n")
+    file_.write("# Run function\n")
+    file_.write("flow_from_centers(r'" + path + "')\n")
 
-    file.write("# Announce that template finished and create out file\n")
-    file.write("print('Finished with template')\n")
-    file.write("file_obj = open('out.txt', 'w')\n")
-    file.write("file_obj.close()")
-    file.close()
+    file_.write("# Announce that template finished and create out file\n")
+    file_.write("print('Finished with template')\n")
+    file_.write("file_obj = open('out.txt', 'w')\n")
+    file_.write("file_obj.close()")
+    file_.close()
 
     return True
 
@@ -120,23 +120,23 @@ def cmf_template(path):
     """
 
     file_name = r'/cmf_template.py'
-    file = open(path + file_name, 'w')
+    file_ = open(path + file_name, 'w')
 
-    file.write("# Imports\n")
+    file_.write("# Imports\n")
     #file.write("from pathlib import Path\n")
     #file.write("home_user = str(Path.home())\n")
-    file.write("import sys\n")
-    file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
-    file.write("from livestock.hydrology import run_model\n")
+    #file.write("import sys\n")
+    #file.write("sys.path.insert(0, r'C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock')\n")
+    file_.write("from livestock.hydrology import run_model\n")
 
-    file.write("# Run CMF Model\n")
-    file.write("run_model(r'" + path + "')\n")
+    file_.write("# Run CMF Model\n")
+    file_.write("run_model(r'" + path + "')\n")
 
-    file.write("# Announce that template finished and create out file\n")
-    file.write("print('Finished with template')\n")
-    file.write("file_obj = open('out.txt', 'w')\n")
-    file.write("file_obj.close()")
-    file.close()
+    file_.write("# Announce that template finished and create out file\n")
+    file_.write("print('Finished with template')\n")
+    file_.write("file_obj = open('out.txt', 'w')\n")
+    file_.write("file_obj.close()")
+    file_.close()
 
     return True
 
