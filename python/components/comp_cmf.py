@@ -13,6 +13,8 @@ from shutil import copyfile
 import pprint
 import json
 from System.Diagnostics import Process
+import shutil
+import tempfile
 
 # Livestock imports
 import livestock.lib.ssh as ssh
@@ -48,9 +50,14 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': None},
 
-                    2: component.inputs('optional'),
+                    2: {'name': 'Write',
+                        'description': 'Boolean to write the mesh to disk',
+                        'access': 'item',
+                        'default_value': False},
 
-                    3: {'name': 'Layers',
+                    3: component.inputs('optional'),
+
+                    4: {'name': 'Layers',
                         'description': 'List of the depth of soil layers to '
                                        'add to the mesh in m.\n'
                                        'If the values 1 and 2 are given, two '
@@ -60,7 +67,7 @@ class CMFGround(GHComponent):
                         'access': 'list',
                         'default_value': 1},
 
-                    4: {'name': 'GroundType',
+                    5: {'name': 'GroundType',
                         'description': 'Ground type to be applied. A number '
                                        'from 0-6 can be provided or the '
                                        'Livestock Ground Type component can be '
@@ -75,24 +82,25 @@ class CMFGround(GHComponent):
                         'access': 'item',
                         'default_value': 0},
 
-                    5: {'name': 'SurfaceWater',
+                    6: {'name': 'SurfaceWater',
                         'description': 'Initial volume of surface water placed '
                                        'on each mesh face in m3.\n'
                                        'Default is set to 0m3',
                         'access': 'item',
                         'default_value': 0},
 
-                    6: {'name': 'ETMethod',
+                    7: {'name': 'ETMethod',
                         'description': 'Set method to calculate '
                                        'evapotranspiration.\n'
                                        '0: No evapotranspiration\n'
                                        '1: Penman-Monteith\n'
                                        '2: Shuttleworth-Wallace\n'
-                                       'Default is set to no evapotranspiration',
+                                       'Default is set to no '
+                                       'evapotranspiratio.',
                         'access': 'item',
                         'default_value': 0},
 
-                    7: {'name': 'SurfaceRunOffMethod',
+                    8: {'name': 'SurfaceRunOffMethod',
                         'description': 'Set the method for computing the '
                                        'surface run-off.\n'
                                        '0 - Kinematic Wave.\n'
@@ -146,7 +154,7 @@ class CMFGround(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh_faces, layers, ground_type, surface_water,
+    def run_checks(self, mesh_faces, write, layers, ground_type, surface_water,
                    et_method, surface_run_off_method):
         """
         Gathers the inputs and checks them.
@@ -164,12 +172,13 @@ class CMFGround(GHComponent):
         """
 
         # Gather data
-        self.mesh_faces = self.add_default_value(rs.coercemesh(mesh_faces), 1)
-        self.layers = self.add_default_value(layers, 3)
+        self.mesh_faces = self.add_default_value(mesh_faces, 1)
+        self.write = self.add_default_value(write, 2)
+        self.layers = self.add_default_value(layers, 4)
         self.ground_type = self.convert_ground_type(ground_type)
-        self.surface_water = self.add_default_value(surface_water, 5)
-        self.et_number = self.add_default_value(et_method, 6)
-        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 7)
+        self.surface_water = self.add_default_value(surface_water, 6)
+        self.et_number = self.add_default_value(et_method, 7)
+        self.surface_run_off_method = self.add_default_value(surface_run_off_method, 8)
 
         # Run checks
         self.check_inputs()
@@ -184,7 +193,8 @@ class CMFGround(GHComponent):
         else:
             return ground_type.c
 
-    def construct_ground_type(self, index):
+    @staticmethod
+    def construct_ground_type(index):
         manning = None
         puddle = 0.01
         saturated_depth = 3
@@ -230,7 +240,8 @@ class CMFGround(GHComponent):
         elif self.et_number == 2:
             return 'shuttleworth_wallace'
         else:
-            w = 'ETMethod has to between 0 and 2. Input was: ' + str(self.et_number)
+            w = 'ETMethod has to between 0 and 2. Input was: ' + \
+                str(self.et_number)
             self.add_warning(w)
             raise ValueError(w)
 
@@ -246,23 +257,37 @@ class CMFGround(GHComponent):
         elif self.surface_run_off_method == 1:
             return 'diffusive'
         else:
-            w = 'SurfaceRunOffMethod has to between 0 and 1. Input was: ' + str(self.surface_run_off_method)
+            w = 'SurfaceRunOffMethod has to between 0 and 1. Input was: ' + \
+                str(self.surface_run_off_method)
             self.add_warning(w)
             raise ValueError(w)
 
-    def run(self):
+    def write_mesh(self, doc):
+        tmp_folder = os.path.join(tempfile.gettempdir(), 'livestock')
+        if not os.path.exists(tmp_folder):
+            os.mkdir(tmp_folder)
+
+        mesh_name = 'mesh_' + str(self.mesh_faces)
+        gh_geo.bake_export_delete(self.mesh_faces, tmp_folder,
+                                  mesh_name, '.obj', doc)
+
+        return mesh_name
+
+    def run(self, doc):
         """
         In case all the checks have passed the component runs.
-        The component puts all the inputs into a dict and uses PassClass to pass it on.
+        The component puts all the inputs into a dict and uses PassClass
+        to pass it on.
         """
 
-        if self.checks:
-            ground_dict = {'mesh': self.mesh_faces,
-                           'layers': self.layers,
-                           'ground_type': self.ground_type,
-                           'surface_water': self.surface_water,
-                           'et_method': self.convert_et_number_to_method(),
-                           'runoff_method': self.convert_runoff_number_to_method()
+        if self.checks and self.write:
+            ground_dict = {
+                'mesh': self.write_mesh(doc),
+                'layers': self.layers,
+                'ground_type': self.ground_type,
+                'surface_water': self.surface_water,
+                'et_method': self.convert_et_number_to_method(),
+                'runoff_method': self.convert_runoff_number_to_method()
                            }
 
             self.results = gh_misc.PassClass(ground_dict, 'Ground')
@@ -991,8 +1016,9 @@ class CMFSyntheticTree(GHComponent):
 
     def run(self):
         """
-        | In case all the checks have passed the component runs.
-        | It runs the function compute_tree. Creates a dict and passes it on with PassClass.
+        In case all the checks have passed the component runs.
+        It runs the function compute_tree.
+        Creates a dict and passes it on with PassClass.
         """
 
         if self.checks:
@@ -1011,8 +1037,10 @@ class CMFRetentionCurve(GHComponent):
 
         def inputs():
             return {0: {'name': 'SoilIndex',
-                        'description': 'Index for choosing soil type. Index from 0-5.\n'
-                                       'Default is set to 0, which is the default CMF retention curve.',
+                        'description': 'Index for choosing soil type. '
+                                       'Index from 0-5.\n'
+                                       'Default is set to 0, which is the '
+                                       'default CMF retention curve.',
                         'access': 'item',
                         'default_value': 0},
 
@@ -1343,29 +1371,23 @@ class CMFSolve(GHComponent):
             ground_dict = [ground.c
                            for ground in ground_dict_]
 
-            # Join meshes
-            meshes = [ground['mesh']
-                      for ground in ground_dict]
-            joined_mesh = rs.JoinMeshes(meshes)
-
-            # Compute face indices list
-            joined_mesh_centers = rs.MeshFaceCenters(joined_mesh)
+            # Copy meshes
+            tmp_folder = os.path.join(tempfile.gettempdir(), 'livestock')
+            meshes = []
             for ground in ground_dict:
-                ground_centers = rs.MeshFaceCenters(ground['mesh'])
-                ground['mesh'] = []
-                for center_pt in ground_centers:
-                    ground['mesh'].append(joined_mesh_centers.index(center_pt))
-
-
-            # Save Mesh
-            gh_geo.bake_export_delete(joined_mesh, folder, 'mesh', '.obj', doc)
+                mesh_name = ground['mesh'] + '.obj'
+                tmp_mesh = os.path.join(tmp_folder, mesh_name)
+                case_mesh = os.path.join(self.case_path,
+                                         mesh_name)
+                shutil.copyfile(tmp_mesh, case_mesh)
+                meshes.append(mesh_name)
 
             # Write json file
             ground_file = 'ground.json'
             with open(folder + '/' + ground_file, 'w') as outfile:
                 json.dump(ground_dict, outfile)
 
-            return ground_file
+            return [ground_file, ] + meshes
 
         def write_trees(tree_dict_, folder):
             # Process trees
@@ -1485,7 +1507,6 @@ class CMFSolve(GHComponent):
 
         # Append to files written
         files_written = list()
-        files_written.append('mesh.obj')
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
         files_written.append(write_solver_info(self.solver_settings,
