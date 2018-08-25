@@ -1938,9 +1938,6 @@ class CMFOutputs(GHComponent):
         if self.heat_flux:
             output_dict['cell'].append('heat_flux')
 
-        if self.aero_res:
-            output_dict['cell'].append('aerodynamic_resistance')
-
         if self.three_d_flux:
             output_dict['layer'].append('volumetric_flux')
 
@@ -1960,9 +1957,8 @@ class CMFOutputs(GHComponent):
 
     def run(self):
         """
-        | In case all the checks have passed the component runs.
-        | set_outputs() are run and passed on with PassClass.
-
+        In case all the checks have passed the component runs.
+        set_outputs() are run and passed on with PassClass.
         """
 
         if self.checks:
@@ -2143,7 +2139,7 @@ class CMFSolverSettings(GHComponent):
                                        'all start from 1.\n'
                                        'Default is 01-01-[current year]',
                         'access': 'list',
-                        'default_value': 1},
+                        'default_value': None},
 
                     4: {'name': 'SolverTolerance',
                         'description': 'Solver tolerance\nDefault is 1e-8',
@@ -2210,6 +2206,13 @@ class CMFSolverSettings(GHComponent):
         self.check_inputs()
 
     def modified_settings(self):
+
+        if len(self.length) == 1:
+            self.length.append('h')
+
+        if len(self.time_step) == 1:
+            self.time_step.append('h')
+
         self.settings = {'analysis_length': self.length,
                          'time_step': self.time_step,
                          'start_time': self.start_time,
