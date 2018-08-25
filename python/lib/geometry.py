@@ -140,6 +140,7 @@ def import_obj(path):
 
     mesh.Normals.ComputeNormals()
     mesh.Compact()
+
     return mesh
 
 
