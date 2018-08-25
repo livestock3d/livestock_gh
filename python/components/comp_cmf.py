@@ -140,6 +140,7 @@ class CMFGround(GHComponent):
         self.surface_water = None
         self.et_number = None
         self.surface_run_off_method = None
+        self.ground_dict = None
 
     def check_inputs(self):
         """
@@ -282,7 +283,7 @@ class CMFGround(GHComponent):
         """
 
         if self.checks and self.write:
-            ground_dict = {
+            self.ground_dict = {
                 'mesh': self.write_mesh(doc),
                 'layers': self.layers,
                 'ground_type': self.ground_type,
@@ -291,7 +292,7 @@ class CMFGround(GHComponent):
                 'runoff_method': self.convert_runoff_number_to_method()
             }
 
-            self.results = gh_misc.PassClass(ground_dict, 'Ground')
+            self.results = gh_misc.PassClass(self.ground_dict, 'Ground')
 
 
 class CMFGroundType(GHComponent):
