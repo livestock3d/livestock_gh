@@ -136,6 +136,7 @@ def cmf_template(path):
     file.write("print('Finished with template')\n")
     file.write("file_obj = open('out.txt', 'w')\n")
     file.write("file_obj.close()")
+    file.close()
 
     return True
 
