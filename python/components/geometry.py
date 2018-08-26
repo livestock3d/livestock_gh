@@ -19,8 +19,6 @@ import livestock.lib.misc as gh_misc
 
 
 class LoadMesh(GHComponent):
-    # TODO - Update to handle quad meshes
-
     """A component class that loads an .obj file onto the Grasshopper canvas"""
 
     def __init__(self, ghenv):
@@ -47,13 +45,16 @@ class LoadMesh(GHComponent):
                     2: {'name': 'MeshData',
                         'description': 'Additional data if any'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 8
         self.description = 'Loads a mesh'
+        self.checks = [False, False]
+
+        # Data Parameters
         self.path = None
         self.load = None
-        self.checks = [False, False]
         self.mesh = None
         self.data = None
 
@@ -97,7 +98,6 @@ class LoadMesh(GHComponent):
 
 
 class SaveMesh(GHComponent):
-    # TODO - Update to handle quad meshes
 
     """A component class that saves a Grasshopper mesh to an .obj file"""
 
@@ -105,13 +105,10 @@ class SaveMesh(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Mesh',
-                        'description': 'Mesh to save',
-                        'access': 'item',
-                        'default_value': None},
+            return {0: component.inputs('required'),
 
-                    1: {'name': 'Data',
-                        'description': 'Additional data if any',
+                    1: {'name': 'Mesh',
+                        'description': 'Mesh to save',
                         'access': 'item',
                         'default_value': None},
 
@@ -128,23 +125,32 @@ class SaveMesh(GHComponent):
                     4: {'name': 'Save',
                         'description': 'Activates the component',
                         'access': 'item',
-                        'default_value': False}
+                        'default_value': False},
+
+                    5: component.inputs('optional'),
+
+                    6: {'name': 'Data',
+                        'description': 'Additional data if any',
+                        'access': 'item',
+                        'default_value': None},
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'}}
+            return {0: component.outputs('readme')}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 7
         self.description = 'Saves a mesh and additional data'
+        self.checks = [False, False]
+
+        # Data Parameters
         self.mesh = None
         self.data = None
         self.dir = None
         self.name = None
         self.save = None
-        self.checks = [False, False]
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -157,7 +163,7 @@ class SaveMesh(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, mesh, data, dir_, name, save):
+    def run_checks(self, mesh, dir_, name, save, data):
         """
         Gathers the inputs and checks them.
 
