@@ -1,7 +1,7 @@
 __author__ = "Christian Kongsgaard"
-__license__ = "MIT"
+__license__ = "GNU GPLv3"
 
-# ---------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------------------------------------- #
 # Imports
 
 # Module imports
@@ -18,7 +18,7 @@ import Rhino as rc
 from System.Threading.Tasks.Parallel import ForEach
 from Rhino.Geometry.Brep import JoinBreps
 
-# ---------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Grasshopper Geometry Classes and Functions
 
 
