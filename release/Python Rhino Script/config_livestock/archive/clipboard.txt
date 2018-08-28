@@ -1,0 +1,74 @@
+# Self-intersections
+        poolMesh = pm.form_mesh(np.array(poolVertices), np.array(poolFaces),np.array(poolVoxels))
+        #inter = pm.detect_self_intersection(poolMesh)
+        #print('intersections',len(inter))
+
+        i = 0
+        lenPool = len(poolFaces)
+        while i < lenPool:
+            print('lenPool',i)
+            print('poolFaces',poolFaces[i])
+            oldVer = [poolFaces[i][0],poolFaces[i][1],poolFaces[i][2]]
+            newVer = [poolFaces[i+1][0],poolFaces[i+1][1],poolFaces[i+1][2]]
+
+            intVert = []
+            for iv, ov in enumerate(oldVer):
+                if poolVertices[newVer[0]][2] < poolVertices[ov][2]:
+                   intVert.append(iv)
+
+            if len(intVert) == 2:
+
+                # First intersection point
+                p1_1 = poolVertices[oldVer[intVert[0]]]
+
+                p1_2 = poolVertices[oldVer[intVert[(intVert[0] + 1) % len(intVert)]]]
+
+                p1_3 = poolVertices[newVer[intVert[0]]]
+
+                p1_4 = poolVertices[newVer[intVert[(intVert[0] + 1) % len(intVert)]]]
+
+                p1 = lineIntersection(p1_1, p1_2, p1_3, p1_4)
+
+                # Second intersection point
+                p2_1 = poolVertices[oldVer[intVert[0]]]
+                p2_2 = poolVertices[oldVer[intVert[(intVert[0] - 1) % len(intVert)]]]
+                p2_3 = poolVertices[newVer[intVert[0]]]
+                p2_4 = poolVertices[newVer[intVert[(intVert[0] - 1) % len(intVert)]]]
+                p2 = lineIntersection(p2_1, p2_2, p2_3, p2_4)
+
+                # Add the new points
+                poolVertices[poolFaces[i][intVert[0]]] = p1
+                poolVertices[poolFaces[i][intVert[0] + 1]] = p2
+
+                poolVertices[poolFaces[i + 1][intVert[0]]] = p1
+                poolVertices[poolFaces[i + 1][intVert[0] + 1]] = p2
+
+            elif len(intVert) == 1:
+
+                # First intersection point
+                p1_1 = poolVertices[oldVer[intVert[0]]]
+                p1_2 = poolVertices[oldVer[intVert[(intVert[0] + 1) % len(intVert)]]]
+                p1_3 = poolVertices[newVer[intVert[0]]]
+                p1_4 = poolVertices[newVer[intVert[(intVert[0] + 1) % len(intVert)]]]
+                p1 = lineIntersection(p1_1, p1_2, p1_3, p1_4)
+
+                # Second intersection point
+                p2_1 = poolVertices[oldVer[intVert[0]]]
+                p2_2 = poolVertices[oldVer[intVert[(intVert[0] - 1) % len(intVert)]]]
+                p2_3 = poolVertices[newVer[intVert[0]]]
+                p2_4 = poolVertices[newVer[intVert[(intVert[0] - 1) % len(intVert)]]]
+                p2 = lineIntersection(p2_1, p2_2, p2_3, p2_4)
+
+                # Add the new points
+                poolVertices[poolFaces[i][intVert[0]]] = p1
+                poolVertices[poolFaces[i + 1][intVert[0]]] = p1
+                poolVertices.append(p2)
+
+                # Add faces
+                poolFaces.append([poolFaces[i][intVert[0]], len(poolVertices), poolFaces[i][intVert[(intVert[0] - 1) % len(intVert)]]])
+                poolFaces.append([poolFaces[i + 1][intVert[0]], len(poolVertices), poolFaces[i + 1][intVert[(intVert[0] - 1) % len(intVert)]]])
+
+            else:
+                pass
+
+            i += 2

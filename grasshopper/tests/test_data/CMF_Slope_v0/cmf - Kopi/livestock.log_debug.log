@@ -1,0 +1,222 @@
+2018-08-11 15:15:50,082 - livestock.log - INFO - weather.json not found
+2018-08-11 15:15:50,083 - livestock.log - INFO - tree.json not found
+2018-08-11 15:15:50,085 - livestock.log - INFO - boundary_condition.json not found
+2018-08-11 15:15:50,087 - livestock.log - INFO - Loaded input files
+2018-08-11 15:15:50,119 - livestock.log - DEBUG - Converted .obj to .shp
+2018-08-11 15:15:50,175 - livestock.log - INFO - Build cells in project
+2018-08-11 15:15:50,179 - livestock.log - DEBUG - Created retention curve.
+2018-08-11 15:15:50,180 - livestock.log - DEBUG - Building cell with ID: 0
+2018-08-11 15:15:50,180 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(0.748,0.5,8.4894)
+2018-08-11 15:15:50,181 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,181 - livestock.log - INFO - Sat surface water to 9.0 for cell with ID: 0
+2018-08-11 15:15:50,182 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,182 - livestock.log - INFO - Installed Darcy kinematic for all cells in project.
+2018-08-11 15:15:50,183 - livestock.log - INFO - Installed diffusive surface run-off. Slope set to 1e-8.
+2018-08-11 15:15:50,184 - livestock.log - INFO - Configured all cells in project.
+2018-08-11 15:15:50,184 - livestock.log - DEBUG - Created retention curve.
+2018-08-11 15:15:50,184 - livestock.log - DEBUG - Building cell with ID: 1
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(2.2085,0.5,7.6756)
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Building cell with ID: 2
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(3.6825,0.5,6.8782)
+2018-08-11 15:15:50,185 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Building cell with ID: 3
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(5.167,0.5,6.1244)
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Building cell with ID: 4
+2018-08-11 15:15:50,186 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(6.642,0.5,5.413)
+2018-08-11 15:15:50,187 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,187 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,187 - livestock.log - DEBUG - Building cell with ID: 5
+2018-08-11 15:15:50,187 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(8.157,0.5,4.7314)
+2018-08-11 15:15:50,187 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Building cell with ID: 6
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(9.69,0.5,4.0888)
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,188 - livestock.log - DEBUG - Building cell with ID: 7
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(11.245,0.5,3.4858)
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Building cell with ID: 8
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(12.815,0.5,2.9258)
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,189 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Building cell with ID: 9
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(14.375,0.5,2.4192)
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Building cell with ID: 10
+2018-08-11 15:15:50,190 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(15.975,0.5,1.9476)
+2018-08-11 15:15:50,191 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,191 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,191 - livestock.log - DEBUG - Building cell with ID: 11
+2018-08-11 15:15:50,191 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(17.605,0.5,1.5232)
+2018-08-11 15:15:50,192 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,192 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,193 - livestock.log - DEBUG - Building cell with ID: 12
+2018-08-11 15:15:50,193 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(19.225,0.5,1.1564)
+2018-08-11 15:15:50,193 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,193 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,193 - livestock.log - DEBUG - Building cell with ID: 13
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(20.855,0.5,0.83998)
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Building cell with ID: 14
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(22.48,0.5,0.57376)
+2018-08-11 15:15:50,194 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,195 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,195 - livestock.log - DEBUG - Building cell with ID: 15
+2018-08-11 15:15:50,195 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(24.145,0.5,0.34016)
+2018-08-11 15:15:50,195 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:15:50,195 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:15:50,196 - livestock.log - INFO - Installed Darcy kinematic for all cells in project.
+2018-08-11 15:15:50,196 - livestock.log - INFO - Installed kinematic surface run-off
+2018-08-11 15:15:50,198 - livestock.log - INFO - Configured all cells in project.
+2018-08-11 15:15:50,198 - livestock.log - INFO - Initializing solving of CMF project
+2018-08-11 15:15:50,200 - livestock.log - DEBUG - Solver start time: 01.01.2018 
+2018-08-11 15:15:50,200 - livestock.log - DEBUG - Configured outputs for CMF project. Outputs was: {'cell_0': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_1': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_2': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_3': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_4': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_5': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_6': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_7': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_8': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_9': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_10': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_11': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_12': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_13': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_14': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_15': {'surface_water_volume': [], 'layer_0': {'volume': []}}}
+2018-08-11 15:15:50,200 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 
+2018-08-11 15:15:50,201 - livestock.log - DEBUG - Analysis length set to: 24 h
+2018-08-11 15:15:50,201 - livestock.log - DEBUG - Solver time step set to: 1 h
+2018-08-11 15:15:50,392 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 01:00
+2018-08-11 15:15:50,398 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 02:00
+2018-08-11 15:15:50,401 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 03:00
+2018-08-11 15:15:50,403 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 04:00
+2018-08-11 15:15:50,405 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 05:00
+2018-08-11 15:15:50,408 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 06:00
+2018-08-11 15:15:50,413 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 07:00
+2018-08-11 15:15:50,415 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 08:00
+2018-08-11 15:15:50,417 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 09:00
+2018-08-11 15:15:50,419 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 10:00
+2018-08-11 15:15:50,421 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 11:00
+2018-08-11 15:15:50,422 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 12:00
+2018-08-11 15:15:50,425 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 13:00
+2018-08-11 15:15:50,429 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 14:00
+2018-08-11 15:15:50,446 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 15:00
+2018-08-11 15:15:50,448 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 16:00
+2018-08-11 15:15:50,450 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 17:00
+2018-08-11 15:15:50,451 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 18:00
+2018-08-11 15:15:50,453 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 19:00
+2018-08-11 15:15:50,455 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 20:00
+2018-08-11 15:15:50,456 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 21:00
+2018-08-11 15:15:50,458 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 22:00
+2018-08-11 15:15:50,460 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 23:00
+2018-08-11 15:15:50,462 - livestock.log - DEBUG - Gathering results for time: 02.01.2018 
+2018-08-11 15:15:50,463 - livestock.log - INFO - Solved CMF project!
+2018-08-11 15:15:50,464 - livestock.log - DEBUG - Saving results to: C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock_gh\grasshopper\tests\test_data\CMF_Slope_v0\cmf\results.json
+2018-08-11 15:17:25,238 - livestock.log - INFO - weather.json not found
+2018-08-11 15:17:25,239 - livestock.log - INFO - tree.json not found
+2018-08-11 15:17:25,240 - livestock.log - INFO - boundary_condition.json not found
+2018-08-11 15:17:25,240 - livestock.log - INFO - Loaded input files
+2018-08-11 15:17:25,262 - livestock.log - DEBUG - Converted .obj to .shp
+2018-08-11 15:17:25,322 - livestock.log - INFO - Build cells in project
+2018-08-11 15:17:25,323 - livestock.log - DEBUG - Created retention curve.
+2018-08-11 15:17:25,323 - livestock.log - DEBUG - Building cell with ID: 0
+2018-08-11 15:17:25,323 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(0.748,0.5,8.4894)
+2018-08-11 15:17:25,323 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,324 - livestock.log - INFO - Sat surface water to 9.0 for cell with ID: 0
+2018-08-11 15:17:25,324 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,324 - livestock.log - INFO - Installed Darcy kinematic for all cells in project.
+2018-08-11 15:17:25,325 - livestock.log - INFO - Installed diffusive surface run-off. Slope set to 1e-8.
+2018-08-11 15:17:25,326 - livestock.log - INFO - Configured all cells in project.
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Created retention curve.
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Building cell with ID: 1
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(2.2085,0.5,7.6756)
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,327 - livestock.log - DEBUG - Building cell with ID: 2
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(3.6825,0.5,6.8782)
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Building cell with ID: 3
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(5.167,0.5,6.1244)
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,328 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Building cell with ID: 4
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(6.642,0.5,5.413)
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Building cell with ID: 5
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(8.157,0.5,4.7314)
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,329 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Building cell with ID: 6
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(9.69,0.5,4.0888)
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Building cell with ID: 7
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(11.245,0.5,3.4858)
+2018-08-11 15:17:25,330 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Building cell with ID: 8
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(12.815,0.5,2.9258)
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Building cell with ID: 9
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(14.375,0.5,2.4192)
+2018-08-11 15:17:25,331 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Building cell with ID: 10
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(15.975,0.5,1.9476)
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Building cell with ID: 11
+2018-08-11 15:17:25,332 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(17.605,0.5,1.5232)
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Building cell with ID: 12
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(19.225,0.5,1.1564)
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,333 - livestock.log - DEBUG - Building cell with ID: 13
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(20.855,0.5,0.83998)
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Building cell with ID: 14
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(22.48,0.5,0.57376)
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,334 - livestock.log - DEBUG - Building cell with ID: 15
+2018-08-11 15:17:25,335 - livestock.log - DEBUG - Sat vegetation properties for cell at: cmf.point(24.145,0.5,0.34016)
+2018-08-11 15:17:25,335 - livestock.log - DEBUG - Sat puddle depth to: 0.01
+2018-08-11 15:17:25,335 - livestock.log - DEBUG - Sat saturated depth to 3
+2018-08-11 15:17:25,335 - livestock.log - INFO - Installed Darcy kinematic for all cells in project.
+2018-08-11 15:17:25,337 - livestock.log - INFO - Installed kinematic surface run-off
+2018-08-11 15:17:25,337 - livestock.log - INFO - Configured all cells in project.
+2018-08-11 15:17:25,338 - livestock.log - INFO - Initializing solving of CMF project
+2018-08-11 15:17:25,338 - livestock.log - DEBUG - Solver start time: 01.01.2018 
+2018-08-11 15:17:25,339 - livestock.log - DEBUG - Configured outputs for CMF project. Outputs was: {'cell_0': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_1': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_2': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_3': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_4': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_5': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_6': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_7': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_8': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_9': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_10': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_11': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_12': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_13': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_14': {'surface_water_volume': [], 'layer_0': {'volume': []}}, 'cell_15': {'surface_water_volume': [], 'layer_0': {'volume': []}}}
+2018-08-11 15:17:25,339 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 
+2018-08-11 15:17:25,340 - livestock.log - DEBUG - Analysis length set to: 24 h
+2018-08-11 15:17:25,340 - livestock.log - DEBUG - Solver time step set to: 1 h
+2018-08-11 15:17:25,552 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 01:00
+2018-08-11 15:17:25,557 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 02:00
+2018-08-11 15:17:25,560 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 03:00
+2018-08-11 15:17:25,562 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 04:00
+2018-08-11 15:17:25,564 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 05:00
+2018-08-11 15:17:25,565 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 06:00
+2018-08-11 15:17:25,567 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 07:00
+2018-08-11 15:17:25,569 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 08:00
+2018-08-11 15:17:25,571 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 09:00
+2018-08-11 15:17:25,572 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 10:00
+2018-08-11 15:17:25,573 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 11:00
+2018-08-11 15:17:25,575 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 12:00
+2018-08-11 15:17:25,576 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 13:00
+2018-08-11 15:17:25,578 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 14:00
+2018-08-11 15:17:25,579 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 15:00
+2018-08-11 15:17:25,580 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 16:00
+2018-08-11 15:17:25,581 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 17:00
+2018-08-11 15:17:25,582 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 18:00
+2018-08-11 15:17:25,583 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 19:00
+2018-08-11 15:17:25,584 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 20:00
+2018-08-11 15:17:25,585 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 21:00
+2018-08-11 15:17:25,587 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 22:00
+2018-08-11 15:17:25,589 - livestock.log - DEBUG - Gathering results for time: 01.01.2018 23:00
+2018-08-11 15:17:25,591 - livestock.log - DEBUG - Gathering results for time: 02.01.2018 
+2018-08-11 15:17:25,591 - livestock.log - INFO - Solved CMF project!
+2018-08-11 15:17:25,592 - livestock.log - DEBUG - Saving results to: C:\Users\Christian\Dropbox\Arbejde\DTU BYG\Livestock\livestock_gh\grasshopper\tests\test_data\CMF_Slope_v0\cmf\results.json

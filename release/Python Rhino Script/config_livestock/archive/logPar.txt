@@ -1,0 +1,342 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.0                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 5.0-dbb428a3a855
+Exec   : decomposePar
+Date   : Nov 13 2017
+Time   : 15:19:53
+Host   : "Kongsgaard-PC"
+PID    : 300
+I/O    : uncollated
+Case   : /mnt/c/ODS/simpleExternalCFD/foam
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+Decomposing mesh region0
+
+Create mesh
+
+Calculating distribution of cells
+Selecting decompositionMethod hierarchical
+
+Finished decomposition in 0.02 s
+
+Calculating original mesh data
+
+Distributing cells to processors
+
+Distributing faces to processors
+
+Distributing points to processors
+
+Constructing processor meshes
+
+Processor 0
+    Number of cells = 3675
+    Number of faces shared with processor 1 = 219
+    Number of faces shared with processor 2 = 222
+    Number of faces shared with processor 3 = 5
+    Number of processor patches = 3
+    Number of processor faces = 446
+    Number of boundary faces = 1030
+
+Processor 1
+    Number of cells = 3675
+    Number of faces shared with processor 0 = 219
+    Number of faces shared with processor 3 = 222
+    Number of processor patches = 2
+    Number of processor faces = 441
+    Number of boundary faces = 1035
+
+Processor 2
+    Number of cells = 3675
+    Number of faces shared with processor 0 = 222
+    Number of faces shared with processor 3 = 219
+    Number of processor patches = 2
+    Number of processor faces = 441
+    Number of boundary faces = 1035
+
+Processor 3
+    Number of cells = 3675
+    Number of faces shared with processor 0 = 5
+    Number of faces shared with processor 1 = 222
+    Number of faces shared with processor 2 = 219
+    Number of processor patches = 3
+    Number of processor faces = 446
+    Number of boundary faces = 1030
+
+Number of processor faces = 887
+Max number of cells = 3675 (0% above average 3675)
+Max number of processor patches = 3 (20% above average 2.5)
+Max number of faces between processors = 446 (0.5636979% above average 443.5)
+
+Time = 0
+
+Processor 0: field transfer
+Processor 1: field transfer
+Processor 2: field transfer
+Processor 3: field transfer
+
+End
+
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.0                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 5.0-dbb428a3a855
+Exec   : reconstructParMesh -constant -mergeTol 1e-6
+Date   : Nov 13 2017
+Time   : 15:20:16
+Host   : "Kongsgaard-PC"
+PID    : 300
+I/O    : uncollated
+Case   : /mnt/c/ODS/simpleExternalCFD/foam
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+This is an experimental tool which tries to merge individual processor
+meshes back into one master mesh. Use it if the original master mesh has
+been deleted or if the processor meshes have been modified (topology change).
+This tool will write the resulting mesh to a new time step and construct
+xxxxProcAddressing files in the processor meshes so reconstructPar can be
+used to regenerate the fields on the master mesh.
+
+Not well tested & use at your own risk!
+
+Merge tolerance : 1e-06
+Write tolerance : 1e-07
+Doing geometric matching on correct procBoundaries only.
+This assumes a correct decomposition.
+Found 4 processor directories
+
+Reading database "foam/processor0"
+Reading database "foam/processor1"
+Reading database "foam/processor2"
+Reading database "foam/processor3"
+Time = constant
+
+Reading points from "foam/processor0" for time = constant
+
+Reading points from "foam/processor1" for time = constant
+
+Reading points from "foam/processor2" for time = constant
+
+Reading points from "foam/processor3" for time = constant
+
+Overall mesh bounding box  : (-35 -35 0) (35 35 24)
+Relative tolerance         : 1e-06
+Absolute matching distance : 0.0001018627
+
+Merging mesh 0 with 1
+Merging mesh 2 with 3
+Merging mesh 0 with 2
+Reading mesh to add from "foam/processor0" for time = constant
+
+
+Reading mesh to add from "foam/processor1" for time = constant
+
+
+Reading mesh to add from "foam/processor2" for time = constant
+
+
+Reading mesh to add from "foam/processor3" for time = constant
+
+
+mergeSharedPoints : detected 0 points that are to be merged.
+
+Writing merged mesh to "/mnt/c/ODS/simpleExternalCFD/foam/constant"
+
+Reconstructing the addressing from the processor meshes to the newly reconstructed mesh
+
+Reading processor 0 mesh from "foam/processor0"
+Writing pointProcAddressing to "foam/processor0/constant/polyMesh"
+Writing faceProcAddressing to "foam/processor0/constant/polyMesh"
+Writing cellProcAddressing to "foam/processor0/constant/polyMesh"
+Writing boundaryProcAddressing to "foam/processor0/constant/polyMesh"
+
+Reading processor 1 mesh from "foam/processor1"
+Writing pointProcAddressing to "foam/processor1/constant/polyMesh"
+Writing faceProcAddressing to "foam/processor1/constant/polyMesh"
+Writing cellProcAddressing to "foam/processor1/constant/polyMesh"
+Writing boundaryProcAddressing to "foam/processor1/constant/polyMesh"
+
+Reading processor 2 mesh from "foam/processor2"
+Writing pointProcAddressing to "foam/processor2/constant/polyMesh"
+Writing faceProcAddressing to "foam/processor2/constant/polyMesh"
+Writing cellProcAddressing to "foam/processor2/constant/polyMesh"
+Writing boundaryProcAddressing to "foam/processor2/constant/polyMesh"
+
+Reading processor 3 mesh from "foam/processor3"
+Writing pointProcAddressing to "foam/processor3/constant/polyMesh"
+Writing faceProcAddressing to "foam/processor3/constant/polyMesh"
+Writing cellProcAddressing to "foam/processor3/constant/polyMesh"
+Writing boundaryProcAddressing to "foam/processor3/constant/polyMesh"
+
+End.
+
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.0                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 5.0-dbb428a3a855
+Exec   : decomposePar
+Date   : Nov 13 2017
+Time   : 15:20:21
+Host   : "Kongsgaard-PC"
+PID    : 300
+I/O    : uncollated
+Case   : /mnt/c/ODS/simpleExternalCFD/foam
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+Decomposing mesh region0
+
+Create mesh
+
+Calculating distribution of cells
+Selecting decompositionMethod hierarchical
+
+Finished decomposition in 0.08 s
+
+Calculating original mesh data
+
+Distributing cells to processors
+
+Distributing faces to processors
+
+Distributing points to processors
+
+Constructing processor meshes
+
+Processor 0
+    Number of cells = 18016
+    Number of faces shared with processor 1 = 713
+    Number of faces shared with processor 2 = 556
+    Number of processor patches = 2
+    Number of processor faces = 1269
+    Number of boundary faces = 4658
+
+Processor 1
+    Number of cells = 18016
+    Number of faces shared with processor 0 = 713
+    Number of faces shared with processor 2 = 94
+    Number of faces shared with processor 3 = 907
+    Number of processor patches = 3
+    Number of processor faces = 1714
+    Number of boundary faces = 4637
+
+Processor 2
+    Number of cells = 18016
+    Number of faces shared with processor 0 = 556
+    Number of faces shared with processor 1 = 94
+    Number of faces shared with processor 3 = 1021
+    Number of processor patches = 3
+    Number of processor faces = 1671
+    Number of boundary faces = 4522
+
+Processor 3
+    Number of cells = 18016
+    Number of faces shared with processor 1 = 907
+    Number of faces shared with processor 2 = 1021
+    Number of processor patches = 2
+    Number of processor faces = 1928
+    Number of boundary faces = 4586
+
+Number of processor faces = 3291
+Max number of cells = 18016 (0% above average 18016)
+Max number of processor patches = 3 (20% above average 2.5)
+Max number of faces between processors = 1928 (17.16803% above average 1645.5)
+
+Time = 0
+
+Processor 0: field transfer
+Processor 1: field transfer
+Processor 2: field transfer
+Processor 3: field transfer
+
+End
+
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.0                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 5.0-dbb428a3a855
+Exec   : reconstructPar -latestTime
+Date   : Nov 13 2017
+Time   : 15:20:49
+Host   : "Kongsgaard-PC"
+PID    : 300
+I/O    : uncollated
+Case   : /mnt/c/ODS/simpleExternalCFD/foam
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+
+Reconstructing fields for mesh region0
+
+Time = 50
+
+Reconstructing FV fields
+
+    Reconstructing volScalarFields
+
+        p
+        nut
+        k
+        epsilon
+
+    Reconstructing volVectorFields
+
+        U
+
+    Reconstructing surfaceScalarFields
+
+        phi
+
+Reconstructing point fields
+
+No point fields
+
+No lagrangian fields
+
+
+End
+
