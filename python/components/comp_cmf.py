@@ -140,7 +140,8 @@ class CMFGround(GHComponent):
         self.surface_water = None
         self.et_number = None
         self.surface_run_off_method = None
-        self.ground_dict = None
+        self.ground_dict = {'mesh': None, 'layers': None, 'ground_type': None, 'surface_water': None,
+                            'et_method': None, 'runoff_method': None}
 
     def check_inputs(self):
         """
