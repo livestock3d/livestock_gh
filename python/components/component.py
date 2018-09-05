@@ -8,6 +8,7 @@ __license__ = "GNU GPLv3"
 import os
 
 # Livestock imports
+from livestock.lib import misc
 
 # Grasshopper imports
 import Grasshopper.Kernel as gh
@@ -115,6 +116,14 @@ class GHComponent:
             return self.inputs[param_number]['default_value']
         else:
             return parameter
+
+    def get_cpython(self):
+
+        try:
+            return misc.get_python_exe()
+        except RuntimeError:
+            self.add_warning('Python Executor was not found. Please drop a Livestock Python Executor component onto '
+                             'the canvas and connect a valid python.exe path to it.')
 
 def component_data(n):
     """Function that reads the grasshopper component list and returns the component data"""

@@ -1285,7 +1285,7 @@ class CMFSolve(GHComponent):
         # Additional Parameters
         self.case_path = None
         self.mesh = None
-        self.py_exe = gh_misc.get_python_exe()
+        self.py_exe = self.get_cpython()
         self.written = False
 
     def check_inputs(self):
