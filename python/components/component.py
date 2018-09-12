@@ -121,7 +121,7 @@ class GHComponent:
 
         try:
             return misc.get_python_exe()
-        except RuntimeError:
+        except KeyError:
             self.add_warning('Python Executor was not found. Please drop a Livestock Python Executor component onto '
                              'the canvas and connect a valid python.exe path to it.')
 

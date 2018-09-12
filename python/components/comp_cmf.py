@@ -12,6 +12,7 @@ import subprocess
 from shutil import copyfile
 import pprint
 import json
+import datetime
 from System.Diagnostics import Process
 import shutil
 import tempfile
@@ -1293,11 +1294,7 @@ class CMFSolve(GHComponent):
         """Checks inputs and raises a warning if an input is not
         the correct type."""
 
-        if self.ground:
-            self.checks = True
-        else:
-            warning = 'Temperature should be a float'
-            self.add_warning(warning)
+        self.checks = True
 
     def config(self):
         """Generates the Grasshopper component."""
@@ -1690,11 +1687,7 @@ class CMFResults(GHComponent):
         Checks inputs and raises a warning if an input is not the correct type.
         """
 
-        if self.path:
-            self.checks = True
-        else:
-            warning = 'Temperature should be a float'
-            self.add_warning(warning)
+        self.checks = True
 
     def config(self):
         """Generates the Grasshopper component."""
@@ -1712,8 +1705,11 @@ class CMFResults(GHComponent):
         """
 
         # Gather data
-        self.path = os.path.join(path, 'results.json')
-        self.fetch_result = int(self.add_default_value(fetch_result, 1))
+        if path:
+            self.path = os.path.join(path, 'results.json')
+        else:
+            self.path = None
+        self.fetch_result = self.add_default_value(fetch_result, 1)
         self.run_component = self.add_default_value(run, 3)
 
         # Run checks
@@ -2141,7 +2137,7 @@ class CMFSolverSettings(GHComponent):
                                        'all start from 1.\n'
                                        'Default is 01-01-[current year]',
                         'access': 'list',
-                        'default_value': None},
+                        'default_value': [1, 1, datetime.datetime.now().year]},
 
                     4: {'name': 'SolverTolerance',
                         'description': 'Solver tolerance\nDefault is 1e-8',
@@ -2209,19 +2205,21 @@ class CMFSolverSettings(GHComponent):
 
     def modified_settings(self):
 
-        if len(self.length) == 1:
-            self.length[0] = int(self.length[0])
-            self.length.append('h')
+        if self.length:
+            if len(self.length) == 1:
+                self.length[0] = int(self.length[0])
+                self.length.append('h')
 
-        elif len(self.length) == 2:
-            self.length[0] = int(self.length[0])
+            elif len(self.length) == 2:
+                self.length[0] = int(self.length[0])
 
-        if len(self.time_step) == 1:
-            self.time_step[0] = int(self.time_step[0])
-            self.time_step.append('h')
+        if self.time_step:
+            if len(self.time_step) == 1:
+                self.time_step[0] = int(self.time_step[0])
+                self.time_step.append('h')
 
-        elif len(self.time_step) == 2:
-            self.time_step[0] = int(self.time_step[0])
+            elif len(self.time_step) == 2:
+                self.time_step[0] = int(self.time_step[0])
 
         self.start_time = {'day': int(self.start_time[0]),
                            'month': int(self.start_time[1]),
