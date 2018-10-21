@@ -1,1 +1,0 @@
-cd "/mnt/c/Users/Christian/Dropbox/Arbejde/DTU BYG/Livestock/Kode - Livestock/01 Python/Tests"
