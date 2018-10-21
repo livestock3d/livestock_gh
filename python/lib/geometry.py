@@ -22,6 +22,24 @@ from Rhino.Geometry.Brep import JoinBreps
 # Livestock Grasshopper Geometry Classes and Functions
 
 
+def obj_export(mesh, file_path):
+
+    if not file_path.endswith('.obj'):
+        file_path = file_path + '.obj'
+
+    with open(file_path, 'w') as file_obj:
+        file_obj.write('# Livestock OBJ exporter\n')
+        for vert in rs.MeshVertices(mesh):
+            file_obj.write('v ' + str(vert.X) + ' ' + str(vert.Y) + ' ' + str(vert.Z) + '\n')
+        for fvert in rs.MeshFaceVertices(mesh):
+            if len(fvert) == 3:
+                file_obj.write('f ' + str(fvert[0] + 1) + ' ' + str(fvert[1] + 1) + ' ' + str(fvert[2] + 1) + '\n')
+            elif len(fvert) == 4:
+                file_obj.write(
+                    'f ' + str(fvert[0] + 1) + ' ' + str(fvert[1] + 1) + ' ' + str(fvert[2] + 1) + ' ' +
+                    str(fvert[3] + 1) + '\n')
+
+
 def bake(geo, doc):
     """
     Bakes geometry from Grasshopper

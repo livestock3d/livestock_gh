@@ -5,6 +5,7 @@ __license__ = "GNU GPLv3"
 # Imports
 
 # Module imports
+import os
 
 # Livestock imports
 import livestock.lib.geometry as gh_geo
@@ -192,8 +193,13 @@ class SaveMesh(GHComponent):
 
         if self.checks and self.save:
             # Export mesh
-            gh_geo.bake_export_delete(self.mesh, self.dir, self.name, '.obj', doc)
-            print("Mesh saved to:\n" + self.dir + self.name + '.obj')
+            path = os.path.join(self.dir, self.name + '.obj')
+            gh_geo.obj_export(self.mesh, path)
+
+            if os.path.exists(path):
+                print("Mesh saved to:" + path)
+            else:
+                self.add_warning('.obj exporter failed')
 
             if self.data:
                 # Export mesh data
