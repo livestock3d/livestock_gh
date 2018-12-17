@@ -389,8 +389,7 @@ class CMFGroundType(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, retention_curve, surface_properties,
-                   manning_roughness, puddle_depth, saturated_depth):
+    def run_checks(self, retention_curve, surface_properties, manning_roughness, puddle_depth, saturated_depth):
         """
         Gathers the inputs and checks them.
 
@@ -403,8 +402,7 @@ class CMFGroundType(GHComponent):
 
         # Gather data
         self.retention_curve = self.convert_retention_curve(retention_curve)
-        self.surface_properties = self.convert_surface_properties(
-            surface_properties)
+        self.surface_properties = self.convert_surface_properties(surface_properties)
         self.manning = self.add_default_value(manning_roughness, 2)
         self.puddle = self.add_default_value(puddle_depth, 3)
         self.saturated_depth = self.add_default_value(saturated_depth, 4)
@@ -412,7 +410,8 @@ class CMFGroundType(GHComponent):
         # Run checks
         self.check_inputs()
 
-    def convert_retention_curve(self, retention_curve):
+    @staticmethod
+    def convert_retention_curve(retention_curve):
         if isinstance(retention_curve, int):
             return cmf_lib.load_retention_curve(retention_curve)
         elif not retention_curve:
@@ -420,7 +419,8 @@ class CMFGroundType(GHComponent):
         else:
             return retention_curve.c
 
-    def convert_surface_properties(self, surface_cover):
+    @staticmethod
+    def convert_surface_properties(surface_cover):
         if isinstance(surface_cover, int):
             return cmf_lib.load_surface_cover(surface_cover)
         elif not surface_cover:
@@ -453,70 +453,79 @@ class CMFWeather(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Temperature',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'Location',
+                        'description': 'A Ladybug Tools Location',
+                        'access': 'item',
+                        'default_value': None},
+
+                    2: {'name': 'MeshFaceCount',
+                        'description': 'Number of faces in the ground mesh',
+                        'access': 'item',
+                        'default_value': None},
+
+                    3: component.inputs('optional'),
+
+                    4: {'name': 'Temperature',
                         'description': 'Temperature in C. Either a list or a tree where the number of branches is equal'
                                        ' to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    1: {'name': 'WindSpeed',
+                    5: {'name': 'WindSpeed',
                         'description': 'Wind speed in m/s. Either a list or a tree where the number of branches is'
                                        ' equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    2: {'name': 'RelativeHumidity',
+                    6: {'name': 'RelativeHumidity',
                         'description': 'Relative humidity in %. Either a list or a tree where the number of branches is'
                                        ' equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    3: {'name': 'CloudCover',
+                    7: {'name': 'CloudCover',
                         'description': 'Cloud cover, unitless between 0 and 1. Either a list or a tree where the number'
                                        ' of branches is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    4: {'name': 'GlobalRadiation',
+                    8: {'name': 'GlobalRadiation',
                         'description': 'Global Radiation in W/m2. Either a list or a tree where the number of branches'
                                        ' is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    5: {'name': 'Rain',
+                    9: {'name': 'Rain',
                         'description': 'Horizontal precipitation in mm/h. Either a list or a tree where the number of'
                                        ' branches is equal to the number of mesh faces.',
                         'access': 'tree',
                         'default_value': None},
 
-                    6: {'name': 'GroundTemperature',
-                        'description': 'Ground temperature in C. Either a list or a tree where the number of branches'
-                                       ' is equal to the number of mesh faces.',
-                        'access': 'tree',
-                        'default_value': None},
-
-                    7: {'name': 'Location',
-                        'description': 'A Ladybug Tools Location',
-                        'access': 'item',
-                        'default_value': None},
-
-                    8: {'name': 'MeshFaceCount',
-                        'description': 'Number of faces in the ground mesh',
-                        'access': 'item',
-                        'default_value': None}}
+                    10: {'name': 'GroundTemperature',
+                         'description': 'Ground temperature in C. Either a list or a tree where the number of branches'
+                                        ' is equal to the number of mesh faces.',
+                         'access': 'tree',
+                         'default_value': None},
+                    }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'Weather',
                         'description': 'Livestock Weather Data Class'}}
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 12
         self.description = 'Generates CMF weather' \
                            '\nIcon art based created by Adrien Coquet from the Noun Project.'
+        self.checks = [False, False, False, False, False, False, False, False]
+        self.results = None
+
+        # Data Parameters
         self.temp = None
         self.wind = None
         self.rel_hum = None
@@ -526,8 +535,6 @@ class CMFWeather(GHComponent):
         self.ground_temp = None
         self.location = None
         self.face_count = None
-        self.checks = [False, False, False, False, False, False, False, False]
-        self.results = None
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -540,8 +547,8 @@ class CMFWeather(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, temp, wind, rel_hum, cloud_cover, global_radiation,
-                   rain, ground_temp, location, face_count):
+    def run_checks(self, location, face_count, temp, wind, rel_hum, cloud_cover, global_radiation,
+                   rain, ground_temp):
         """
         Gathers the inputs and checks them.
 
@@ -557,7 +564,10 @@ class CMFWeather(GHComponent):
         """
 
         # Gather data
-        self.face_count = int(face_count)
+        if face_count:
+            self.face_count = int(face_count)
+        self.location = location
+
         self.temp = self.match_cell_count(temp)
         self.wind = self.match_cell_count(wind)
         self.rel_hum = self.match_cell_count(rel_hum)
@@ -565,7 +575,6 @@ class CMFWeather(GHComponent):
         self.global_radiation = self.match_cell_count(global_radiation)
         self.rain = self.match_cell_count(rain)
         self.ground_temp = self.match_cell_count(ground_temp)
-        self.location = location
 
         # Run checks
         self.check_inputs()
@@ -578,14 +587,15 @@ class CMFWeather(GHComponent):
         :return: list with sun shine fractions.
         """
 
-        sun_shine = {}
+        if self.cloud_cover:
+            sun_shine = {}
 
-        for cloud_key in self.cloud_cover.keys():
-            sun_shine[cloud_key] = []
-            for cc in self.cloud_cover[cloud_key]:
-                sun_shine[cloud_key].append(1 - float(cc))
+            for cloud_key in self.cloud_cover.keys():
+                sun_shine[cloud_key] = []
+                for cc in self.cloud_cover[cloud_key]:
+                    sun_shine[cloud_key].append(1 - float(cc))
 
-        return sun_shine
+            return sun_shine
 
     def convert_radiation_unit(self):
         """
@@ -595,14 +605,15 @@ class CMFWeather(GHComponent):
 
         """
 
-        converted_radiation = {}
+        if self.global_radiation:
+            converted_radiation = {}
 
-        for radiation_key in self.global_radiation.keys():
-            converted_radiation[radiation_key] = []
-            for rad in self.global_radiation[radiation_key]:
-                converted_radiation[radiation_key].append(float(rad) * 0.0864)
+            for radiation_key in self.global_radiation.keys():
+                converted_radiation[radiation_key] = []
+                for rad in self.global_radiation[radiation_key]:
+                    converted_radiation[radiation_key].append(float(rad) * 0.0864)
 
-        self.global_radiation = converted_radiation
+            self.global_radiation = converted_radiation
 
     def convert_rain_unit(self):
         """
@@ -611,14 +622,15 @@ class CMFWeather(GHComponent):
 
         """
 
-        converted_rain = {}
+        if self.rain:
+            converted_rain = {}
 
-        for rain_key in self.rain.keys():
-            converted_rain[rain_key] = []
-            for rain in self.rain[rain_key]:
-                converted_rain[rain_key].append(float(rain) * 24)
+            for rain_key in self.rain.keys():
+                converted_rain[rain_key] = []
+                for rain in self.rain[rain_key]:
+                    converted_rain[rain_key].append(float(rain) * 24)
 
-        self.rain = converted_rain
+            self.rain = converted_rain
 
     def convert_location(self):
         """
@@ -627,9 +639,14 @@ class CMFWeather(GHComponent):
         :return: Latitude, longitude and time zone
         """
 
-        location_name, lat, long_, time_zone, elevation = gh_misc.decompose_ladybug_location(
-            self.location)
-        return lat, long_, time_zone
+        if self.location:
+            location_name, latitude, longitude, time_zone, elevation = gh_misc.decompose_ladybug_location(self.location)
+
+            return latitude, longitude, time_zone
+
+        else:
+            self.add_warning('Component needs a Ladybug Location to run')
+            return None, None, None
 
     def match_cell_count(self, weather_parameter):
         """
@@ -641,44 +658,57 @@ class CMFWeather(GHComponent):
         """
 
         def find_list(weather_list_):
-            cleaned_list = []
+            if weather_list_:
+                cleaned_list = []
 
-            for element in weather_list_:
-                if isinstance(element, list):
-                    cleaned_list.append(element)
+                for element in weather_list_:
+                    if isinstance(element, list):
+                        cleaned_list.append(element)
+                    else:
+                        pass
+
+                if len(cleaned_list) == 1:
+                    return cleaned_list
                 else:
-                    pass
-
-            if len(cleaned_list) == 1:
-                return cleaned_list
+                    return cleaned_list
             else:
-                return cleaned_list
+                return None
 
-        weather_list = gh_misc.tree_to_list(weather_parameter)
-        clean_weather_list = find_list(weather_list)
-        weather_dict = {}
+        if weather_parameter:
+            weather_list = gh_misc.tree_to_list(weather_parameter)
+            clean_weather_list = find_list(weather_list)
+            weather_dict = {}
 
-        if len(clean_weather_list) == 1:
-            weather_dict['all'] = clean_weather_list[0]
+            if not clean_weather_list:
+                return None
 
-        elif len(weather_list) == self.face_count:
-            for i in range(0, len(weather_list)):
-                cell_number = 'cell_' + str(i)
-                weather_dict[cell_number] = weather_list[i]
+            elif len(clean_weather_list) == 1:
+                weather_dict['all'] = clean_weather_list[0]
 
-        return weather_dict
+            elif len(weather_list) == self.face_count:
+                for i in range(0, len(weather_list)):
+                    cell_number = 'cell_' + str(i)
+                    weather_dict[cell_number] = weather_list[i]
+
+            return weather_dict
+
+        else:
+            return None
 
     def print_weather_lengths(self):
         """Prints the length of each weather parameter."""
 
         def printer(parameter_name, parameter):
-            print(str(parameter_name) + ' includes: ' + str(
-                len(parameter.keys())) + ' lists')
+            if parameter:
+                print(str(parameter_name) + ' includes: ' + str(
+                    len(parameter.keys())) + ' lists')
+            else:
+                print(str(parameter_name) + ' is empty')
 
         printer('Temperature', self.temp)
         printer('Wind Speed', self.wind)
         printer('Relative Humidity', self.rel_hum)
-        printer('Sun Shine',
+        printer('Sunshine',
                 self.cloud_cover)  # are converted from cloud cover to sun later, but have same length.
         printer('Global Radiation', self.global_radiation)
         printer('Rain', self.rain)
@@ -1527,19 +1557,16 @@ class CMFSolve(GHComponent):
         files_written = list()
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
-        files_written.append(write_solver_info(self.solver_settings,
-                                               self.case_path))
+        files_written.append(write_solver_info(self.solver_settings, self.case_path))
 
         if self.trees:
             files_written.append(write_trees(self.trees, self.case_path))
 
         if self.boundary_conditions:
-            files_written.append(write_boundary_conditions(
-                self.boundary_conditions, self.case_path))
+            files_written.append(write_boundary_conditions(self.boundary_conditions, self.case_path))
 
         if self.weather:
-            files_written.append(write_weather(self.weather,
-                                               self.case_path))
+            files_written.append(write_weather(self.weather, self.case_path))
 
         # template
         pick_template('cmf', self.case_path)
@@ -1551,8 +1578,7 @@ class CMFSolve(GHComponent):
 
             # Copy files from case folder to ssh folder
             for file_ in transfer_files:
-                copyfile(os.path.join(self.case_path, file_),
-                         os.path.join(ssh.ssh_path, file_))
+                copyfile(os.path.join(self.case_path, file_), os.path.join(ssh.ssh_path, file_))
 
         self.written = True
 
@@ -1595,9 +1621,7 @@ class CMFSolve(GHComponent):
 
     @staticmethod
     def read_log():
-        log_file = os.path.join(ssh.livestock_path,
-                                'logs',
-                                'livestock_info.log')
+        log_file = os.path.join(ssh.livestock_path, 'logs', 'livestock_info.log')
 
         if os.path.exists(log_file):
             with open(log_file, 'r') as file_:
