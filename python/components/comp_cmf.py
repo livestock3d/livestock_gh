@@ -775,75 +775,76 @@ class CMFSurfaceProperties(GHComponent):
                                        '4 - White Sand\n'
                                        '5 - Bare Moist Soil\n'
                                        '6 - Bare Dry Soil\n'
+                                       '7 - Deciduous Tree(s)'
                                        'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
                         'default_value': 0},
 
                     2: {'name': 'Height',
                         'description': 'Height of the surface cover in meters.\n'
-                                       'Default is 0.12m',
+                                       'Default is 0.12m. Unless for trees there it is 5m',
                         'access': 'item',
-                        'default_value': 0.12},
+                        'default_value': None},
 
                     3: {'name': 'LeafAreaIndex',
                         'description': 'Leaf area index of the surface cover. Leaf area index is unitless.\n'
                                        'Default is 2.88',
                         'access': 'item',
-                        'default_value': 2.88},
+                        'default_value': None},
 
                     4: {'name': 'Albedo',
                         'description': 'Albedo of the surface cover. Albedo is unitless.\n'
                                        'Default is 0.23',
                         'access': 'item',
-                        'default_value': 0.23},
+                        'default_value': None},
 
                     5: {'name': 'CanopyClosure',
                         'description': 'Canopy closure of the surface cover. Canopy closure is unitless.\n'
                                        'Default is 1.0',
                         'access': 'item',
-                        'default_value': 1.0},
+                        'default_value': None},
 
                     6: {'name': 'CanopyPARExtinction',
                         'description': 'Canopy PAR Extinction of the surface cover. '
                                        'Canopy PAR Extinction is unitless.\n'
                                        'Default is 0.6',
                         'access': 'item',
-                        'default_value': 0.6},
+                        'default_value': None},
 
                     7: {'name': 'CanopyCapacityLAI',
                         'description': 'Canopy Capacity per LAI of the surface cover. '
                                        'Canopy Capacity per LAI is in millimeters.\n'
                                        'Default is 0.1',
                         'access': 'item',
-                        'default_value': 0.1},
+                        'default_value': None},
 
                     8: {'name': 'StomatalResistance',
                         'description': 'Stomatal Resistance of the surface cover. '
                                        'Stomatal Resistance is in s/m.\n'
                                        'Default is 100.0',
                         'access': 'item',
-                        'default_value': 100.0},
+                        'default_value': None},
 
                     9: {'name': 'RootDepth',
                         'description': 'Root Depth of the surface cover. '
                                        'Root Depth is in meters.\n'
                                        'Default is 0.25',
                         'access': 'item',
-                        'default_value': 0.25},
+                        'default_value': None},
 
                     10: {'name': 'FractionRootDepth',
                          'description': 'Fraction at root depth of the surface cover. '
                                         'Fraction at root depth is unitless.\n'
                                         'Default is 1',
                          'access': 'item',
-                         'default_value': 1},
+                         'default_value': None},
 
                     11: {'name': 'LeafWidth',
                          'description': 'Leaf width of the surface cover. '
                                         'Leaf width is in meters.\n'
                                         'Default is 0.005m',
                          'access': 'item',
-                         'default_value': 0.005}
+                         'default_value': None}
                     }
 
         def outputs():
@@ -865,6 +866,7 @@ class CMFSurfaceProperties(GHComponent):
         self.description = 'Generates CMF Surface Cover Properties' \
                            '\nIcon art based created by Ben Davis from the Noun Project.'
         self.checks = False
+        self.units = cmf_lib.vegetation_units()
         self.results = None
 
         # Data Parameters
@@ -903,17 +905,17 @@ class CMFSurfaceProperties(GHComponent):
         """
 
         # Gather data
-        self.property_index = self.add_default_value(int(property_), 0)
-        self.height = self.add_default_value(height, 1)
-        self.lai = self.add_default_value(lai, 2)
-        self.albedo = self.add_default_value(albedo, 3)
-        self.canopy_closure = self.add_default_value(canopy_closure, 4)
-        self.canopy_par = self.add_default_value(canopy_par, 5)
-        self.canopy_capacity = self.add_default_value(canopy_cap, 6)
-        self.stomatal = self.add_default_value(stomatal, 7)
-        self.root_depth = self.add_default_value(root_depth, 8)
-        self.root_fraction = self.add_default_value(root_fraction, 9)
-        self.leaf_width = self.add_default_value(leaf_width, 10)
+        self.property_index = self.add_default_value(property_, 1)
+        self.height = self.add_default_value(height, 2)
+        self.lai = self.add_default_value(lai, 3)
+        self.albedo = self.add_default_value(albedo, 4)
+        self.canopy_closure = self.add_default_value(canopy_closure, 5)
+        self.canopy_par = self.add_default_value(canopy_par, 6)
+        self.canopy_capacity = self.add_default_value(canopy_cap, 7)
+        self.stomatal = self.add_default_value(stomatal, 8)
+        self.root_depth = self.add_default_value(root_depth, 9)
+        self.root_fraction = self.add_default_value(root_fraction, 10)
+        self.leaf_width = self.add_default_value(leaf_width, 11)
         self.modified_properties()
 
         # Run checks

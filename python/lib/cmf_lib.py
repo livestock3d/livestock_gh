@@ -5,28 +5,18 @@ __license__ = "GNU GPLv3"
 # Imports
 
 # Module imports
-import collections
 import os
 import datetime
 import json
 from collections import OrderedDict
 
-# Livestock imports
-import livestock.lib.livestock_csv as csv
 
+# Livestock imports
 
 # Grasshopper imports
 
-
 # -------------------------------------------------------------------------------------------------------------------- #
 # CMF Component Functions
-
-def load_csv(data_path):
-    """Loads a csv file with the retention curve data."""
-
-    units, data = csv.read_csv(data_path)
-
-    return units, data
 
 
 def load_retention_curve(soil_index, properties_dict={}):
@@ -35,25 +25,31 @@ def load_retention_curve(soil_index, properties_dict={}):
     | If any property is to be overwritten it is also done in this function.
 
     """
-    data_path = os.getenv('APPDATA') + \
-                r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\retention_curves.csv'
 
-    units, data = load_csv(data_path)
-    property = collections.OrderedDict([('type', str(data[soil_index][0])),
-                                        ('k_sat', float(data[soil_index][1])),
-                                        ('phi', float(data[soil_index][2])),
-                                        ('alpha', float(data[soil_index][3])),
-                                        ('n', float(data[soil_index][4])),
-                                        ('m', float(data[soil_index][5])),
-                                        ('l', float(data[soil_index][6]))
-                                        ])
+    data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data'
+
+    with open(os.path.join(data_path, 'retention_curves.json')) as file:
+        file_data = json.load(file)
+
+    data = file_data['data']
+    soil_index = int(soil_index)
+
+    properties = OrderedDict([
+        ('type', data[soil_index][0]),
+        ('k_sat', data[soil_index][1]),
+        ('phi', data[soil_index][2]),
+        ('alpha', data[soil_index][3]),
+        ('n', data[soil_index][4]),
+        ('m', data[soil_index][5]),
+        ('l', data[soil_index][6])
+    ])
 
     # Set modified properties
     for key in properties_dict.keys():
         if properties_dict[key]:
-            property[key] = properties_dict[key]
+            properties[key] = properties_dict[key]
 
-    return property
+    return properties
 
 
 def load_surface_cover(surface_index, properties_dict={}):
@@ -63,39 +59,50 @@ def load_surface_cover(surface_index, properties_dict={}):
 
     """
 
-    data_path = os.getenv('APPDATA') + \
-                r'\McNeel\Rhinoceros\5.0\scripts\livestock\data\vegetation_data.csv'
-    units, data = load_csv(data_path)
-    property_ = collections.OrderedDict([('name',
-                                          str(data[surface_index][0])),
-                                         ('height',
-                                          float(data[surface_index][1])),
-                                         ('lai',
-                                          float(data[surface_index][2])),
-                                         ('albedo',
-                                          float(data[surface_index][3])),
-                                         ('canopy_closure',
-                                          float(data[surface_index][4])),
-                                         ('canopy_par',
-                                          float(data[surface_index][5])),
-                                         ('canopy_capacity',
-                                          float(data[surface_index][6])),
-                                         ('stomatal_res',
-                                          float(data[surface_index][7])),
-                                         ('root_depth',
-                                          float(data[surface_index][8])),
-                                         ('root_fraction',
-                                          float(data[surface_index][9])),
-                                         ('leaf_width',
-                                          float(data[surface_index][10])),
-                                         ])
+    data_path = os.getenv('APPDATA') + r'\McNeel\Rhinoceros\5.0\scripts\livestock\data'
+    surface_index = int(surface_index)
+
+    if surface_index != 7:
+        with open(os.path.join(data_path, 'vegetation_data.json')) as file:
+            file_data = json.load(file)
+
+        data = file_data['data']
+        properties = OrderedDict([
+            ('name', data[surface_index][0]),
+            ('height', data[surface_index][1]),
+            ('lai', data[surface_index][2]),
+            ('albedo', data[surface_index][3]),
+            ('canopy_closure', data[surface_index][4]),
+            ('canopy_par', data[surface_index][5]),
+            ('canopy_capacity', data[surface_index][6]),
+            ('stomatal_res', data[surface_index][7]),
+            ('root_depth', data[surface_index][8]),
+            ('root_fraction', data[surface_index][9]),
+            ('leaf_width', data[surface_index][10]),
+        ])
+
+    elif surface_index == 7:
+        with open(os.path.join(data_path, 'synthetic_deciduous.json')) as file:
+            file_data = json.load(file)
+        data = file_data['data']
+
+        if properties_dict['height']:
+            height = properties_dict['height']
+        else:
+            height = 5
+
+        properties = compute_tree(height, data)
+
+    else:
+        raise ValueError('Surface Index was out of bound! It should be less than or equal to 7. '
+                         'Given value was: ' + str(surface_index))
 
     # Set modified properties
     for key in properties_dict.keys():
         if properties_dict[key]:
-            property_[key] = properties_dict[key]
+            properties[key] = properties_dict[key]
 
-    return property_
+    return properties
 
 
 def default_solver_settings(modified_settings=dict()):
@@ -179,10 +186,48 @@ def load_cmf_result_file(file_path, result_type):
 
 
 def retention_curve_units():
-    units = OrderedDict({'K_sat': 'm/day',
-                         'Phi': 'm3/m3',
-                         'Alpha': '1/cm',
-                         'N': '-',
-                         'M': '-',
-                         'L': '-'})
+    units = OrderedDict([
+        ('K_sat', 'm/day'),
+        ('Phi', 'm3/m3'),
+        ('Alpha', '1/cm'),
+        ('N', '-'),
+        ('M', '-'),
+        ('L', '-')
+    ])
     return units
+
+
+def vegetation_units():
+    units = OrderedDict([
+        ('Height', 'm'),
+        ('LeafAreaIndex', '-'),
+        ('Albedo', '-'),
+        ('CanopyClosure', '-'),
+        ('CanopyPARExtinction', '-'),
+        ('CanopyCapacityLAI', '-'),
+        ('StomatalResistance', 's/m'),
+        ('RootDepth', 'm'),
+        ('FractionRootDepth', '-'),
+        ('LeafWidth', 'm')
+    ])
+    return units
+
+
+def compute_tree(height, tree_data):
+    """Selects the correct tree property. It computes the property information and stores it as a ordered dict."""
+
+    tree = OrderedDict(
+        [('name', 'Deciduous Tree - ' + str(height) + 'm'),
+         ('height', height),
+         ('lai', tree_data[0][2] * height + tree_data[1][2]),
+         ('albedo', tree_data[0][3] * height + tree_data[1][3]),
+         ('canopy_closure', tree_data[2][4]),
+         ('canopy_par', tree_data[2][5]),
+         ('canopy_capacity', tree_data[0][6] * height + tree_data[1][6]),
+         ('stomatal_res', tree_data[0][7] * height + tree_data[1][7]),
+         ('root_depth', tree_data[2][8]),
+         ('root_fraction', tree_data[2][9]),
+         ('leaf_width', 0.05)
+         ])
+
+    return tree
