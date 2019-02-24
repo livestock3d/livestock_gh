@@ -1259,39 +1259,34 @@ class CMFSolve(GHComponent):
                         'access': 'item',
                         'default_value': None},
 
-                    6: {'name': 'Trees',
-                        'description': 'Input from Livestock CMF Tree',
-                        'access': 'list',
-                        'default_value': None},
-
-                    7: {'name': 'BoundaryConditions',
+                    6: {'name': 'BoundaryConditions',
                         'description': 'Input from Livestock CMF Boundary Condition',
                         'access': 'list',
                         'default_value': None},
 
-                    8: {'name': 'SolverSettings',
+                    7: {'name': 'SolverSettings',
                         'description': 'Input from Livestock CMF Solver Settings',
                         'access': 'item',
                         'default_value': None},
 
-                    9: {'name': 'Outputs',
+                    8: {'name': 'Outputs',
                         'description': 'Connect Livestock Outputs',
                         'access': 'item',
                         'default_value': None},
 
-                    10: {'name': 'CaseName',
+                    9: {'name': 'CaseName',
                          'description': 'Case name as string.\n'
                                         'Default is: unnamed_cmf_case',
                          'access': 'item',
                          'default_value': 'unnamed_cmf_case'},
 
-                    11: {'name': 'Folder',
+                    10: {'name': 'Folder',
                          'description': 'Path to case folder.\n'
                                         'Default is C:/livestock/analyses',
                          'access': 'item',
                          'default_value': r'C:\livestock\analyses'},
 
-                    12: {'name': 'SSH',
+                    11: {'name': 'SSH',
                          'description': 'If True the case will be computed '
                                         'through the SSH connection.'
                                         'To get the SSH connection to work; '
@@ -1324,7 +1319,6 @@ class CMFSolve(GHComponent):
         self.write_case = None
         self.run_case = None
         self.weather = None
-        self.trees = None
         self.boundary_conditions = None
         self.solver_settings = None
         self.output_config = None
@@ -1374,14 +1368,12 @@ class CMFSolve(GHComponent):
         self.write_case = self.add_default_value(write, 2)
         self.run_case = self.add_default_value(run, 3)
         self.weather = self.add_default_value(weather, 5)
-        self.trees = self.add_default_value(trees, 6)
-        self.boundary_conditions = self.add_default_value(boundary_conditions,
-                                                          7)
+        self.boundary_conditions = self.add_default_value(boundary_conditions, 6)
         self.solver_settings = self.convert_solver_settings(solver_settings)
         self.output_config = self.convert_outputs(outputs)
-        self.case_name = self.add_default_value(name, 10)
-        self.folder = self.add_default_value(folder, 11)
-        self.ssh = self.add_default_value(ssh, 12)
+        self.case_name = self.add_default_value(name, 9)
+        self.folder = self.add_default_value(folder, 10)
+        self.ssh = self.add_default_value(ssh, 11)
 
         self.update_case_path()
 
@@ -1447,30 +1439,6 @@ class CMFSolve(GHComponent):
                 json.dump(ground_dict, outfile)
 
             return [ground_file, ] + meshes
-
-        def write_trees(tree_dict_, folder):
-            # Process trees
-
-            tree_dict = list(tree.c for tree in tree_dict_)
-            tree_root = ET.Element('tree')
-
-            for i in range(0, len(tree_dict)):
-                tree = ET.SubElement(tree_root, 'tree_%i' % i)
-                t_keys = tree_dict[i].keys()
-
-                for t in t_keys:
-                    data = ET.SubElement(tree, str(t))
-                    data_to_write = tree_dict[i][str(t)]
-                    if isinstance(data_to_write, dict):
-                        data.text = str(dict(data_to_write))
-                    else:
-                        data.text = str(data_to_write)
-
-            tree_tree = ET.ElementTree(tree_root)
-            tree_file = 'trees.xml'
-            tree_tree.write(folder + '/' + tree_file, xml_declaration=True)
-
-            return tree_file
 
         def write_outputs(output_dict, folder):
 
@@ -1576,9 +1544,6 @@ class CMFSolve(GHComponent):
         files_written.append(write_ground(self.ground, self.case_path))
         files_written.append(write_outputs(self.output_config, self.case_path))
         files_written.append(write_solver_info(self.solver_settings, self.case_path))
-
-        if self.trees:
-            files_written.append(write_trees(self.trees, self.case_path))
 
         if self.boundary_conditions:
             files_written.append(write_boundary_conditions(self.boundary_conditions, self.case_path))

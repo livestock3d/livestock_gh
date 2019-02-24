@@ -10,10 +10,10 @@ Livestock Load Mesh;Load Mesh;VER September 2018;Livestock;1 | Geometry;Load a m
 Livestock Topological Index;Topological Index;VER 0.0.1 | September 2017;Livestock;2 | Rain and Flow;Computes the topological index of the mesh
 Livestock Adaptive Clothing;Adaptive Clothing	VER 0.0.1 | September 2017;Livestock;4 | Comfort
 Livestock CMF Ground;CMF Ground;VER September 2018;Livestock;2 | CMF
-Livestock CMF Weather;CMF Weather;VER 0.1.0 | November 2017;Livestock;3 | CMF
-Livestock CMF Vegetation Properties;CMF Vegetation Properties;VER 0.1.0 | November 2017;Livestock;3 | CMF
-Livestock CMF Solve;CMF Solve;VER September 2018;Livestock;2 | CMF
-Livestock CMF Retention Curve;CMF Retention Curve;VER 0.1.0 | November 2017;Livestock;3 | CMF
+Livestock CMF Weather;CMF Weather;VER November 2018;Livestock;3 | CMF
+Livestock CMF Vegetation Properties;CMF Vegetation Properties;VER February 2019;Livestock;3 | CMF
+Livestock CMF Solve;CMF Solve;VER February 2019;Livestock;2 | CMF
+Livestock CMF Retention Curve;CMF Retention Curve;VER February 2019;Livestock;3 | CMF
 Livestock CMF Outputs;CMF Outputs;VER September 2018;Livestock;2 | CMF
 Livestock CMF Results;CMF Results;VER September 2018;Livestock;2 | CMF
 Livestock Synthetic Tree;Synthetic Tree;VER 0.1.0 | November 2017;Livestock;3 | CMF
