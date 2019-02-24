@@ -9,6 +9,7 @@ import collections
 import os
 import datetime
 import json
+from collections import OrderedDict
 
 # Livestock imports
 import livestock.lib.livestock_csv as csv
@@ -175,3 +176,13 @@ def load_cmf_result_file(file_path, result_type):
         raise KeyError('Unknown result: %i to load.' % result_type)
 
     return processed_result
+
+
+def retention_curve_units():
+    units = OrderedDict({'K_sat': 'm/day',
+                         'Phi': 'm3/m3',
+                         'Alpha': '1/cm',
+                         'N': '-',
+                         'M': '-',
+                         'L': '-'})
+    return units

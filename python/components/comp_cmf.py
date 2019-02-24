@@ -316,8 +316,7 @@ class CMFGroundType(GHComponent):
                                        '3 - Medium Fine Soil\n'
                                        '4 - Fine Soil\n'
                                        '5 - Very Fine Soil\n'
-                                       'Default is set to 0: Standard CMF '
-                                       'Retention Curve',
+                                       'Default is set to 0: Standard CMF Retention Curve',
                         'access': 'item',
                         'default_value': 0},
 
@@ -332,8 +331,7 @@ class CMFGroundType(GHComponent):
                                        '4 - White Sand\n'
                                        '5 - Bare Moist Soil\n'
                                        '6 - Bare Dry Soil\n'
-                                       'Default is set to 0: '
-                                       'Short Grass: 0.12m',
+                                       'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
                         'default_value': 0},
 
@@ -350,6 +348,13 @@ class CMFGroundType(GHComponent):
                                        'Default is set to 0.01m',
                         'access': 'item',
                         'default_value': 0.01},
+
+                    5: {'name': 'SaturatedDepth',
+                        'description': 'Set the saturated depth. '
+                                       'The saturated depth is where the ground water level is at.\n '
+                                       'Default is set to 3m',
+                        'access': 'item',
+                        'default_value': 3.0},
                     }
 
         def outputs():
@@ -1108,7 +1113,7 @@ class CMFRetentionCurve(GHComponent):
                         'default_value': None},
 
                     5: {'name': 'M',
-                        'description': 'VanGenuchten m (if negative, 1-1/n is used) is unitless',
+                        'description': 'Van Genuchten m (if negative, 1-1/n is used) is unitless',
                         'access': 'item',
                         'default_value': None},
 
@@ -1137,6 +1142,7 @@ class CMFRetentionCurve(GHComponent):
         self.description = 'Generates CMF retention curve'
         self.checks = False
         self.results = None
+        self.units = cmf_lib.retention_curve_units()
 
         # Data Parameters
         self.property = None
@@ -1176,7 +1182,7 @@ class CMFRetentionCurve(GHComponent):
         """
 
         # Gather data
-        self.soil_index = self.add_default_value(int(soil_index), 0)
+        self.soil_index = self.add_default_value(soil_index, 0)
         self.k_sat = self.add_default_value(k_sat, 1)
         self.phi = self.add_default_value(phi, 2)
         self.alpha = self.add_default_value(alpha, 3)
