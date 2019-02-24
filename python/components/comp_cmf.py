@@ -1344,7 +1344,7 @@ class CMFSolve(GHComponent):
         # Generate Component
         self.config_component(self.component_number)
 
-    def run_checks(self, ground, write, run, weather, trees,
+    def run_checks(self, ground, write, run, weather,
                    boundary_conditions, solver_settings,
                    outputs, name, folder, ssh, ):
         """
@@ -1354,7 +1354,6 @@ class CMFSolve(GHComponent):
         :param write: Whether to write or not
         :param run: Whether to run or not.
         :param weather: Livestock Weather dict
-        :param trees: Livestock Tree dict
         :param boundary_conditions: Livestock Boundary Condition dict
         :param solver_settings: Livestock Solver settings dict
         :param outputs: Livestock Outputs dict
