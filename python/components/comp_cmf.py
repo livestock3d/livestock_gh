@@ -331,6 +331,7 @@ class CMFGroundType(GHComponent):
                                        '4 - White Sand\n'
                                        '5 - Bare Moist Soil\n'
                                        '6 - Bare Dry Soil\n'
+                                       '7 - Deciduous Tree(s)\n'
                                        'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
                         'default_value': 0},
@@ -369,9 +370,10 @@ class CMFGroundType(GHComponent):
         # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
-        self.component_number = 11
+        self.component_number = 30
         self.description = 'Specifies the CMF Ground Type properties.'
         self.checks = False
+        self.results = None
 
         # Data Parameters
         self.retention_curve = None
@@ -379,7 +381,7 @@ class CMFGroundType(GHComponent):
         self.manning = None
         self.puddle = None
         self.saturated_depth = None
-        self.results = None
+        self.property = None
 
     def check_inputs(self):
         """
@@ -417,7 +419,7 @@ class CMFGroundType(GHComponent):
 
     @staticmethod
     def convert_retention_curve(retention_curve):
-        if isinstance(retention_curve, int):
+        if isinstance(retention_curve, int) or isinstance(retention_curve, float):
             return cmf_lib.load_retention_curve(retention_curve)
         elif not retention_curve:
             return cmf_lib.load_retention_curve(0)
@@ -426,7 +428,7 @@ class CMFGroundType(GHComponent):
 
     @staticmethod
     def convert_surface_properties(surface_cover):
-        if isinstance(surface_cover, int):
+        if isinstance(surface_cover, int) or isinstance(surface_cover, float):
             return cmf_lib.load_surface_cover(surface_cover)
         elif not surface_cover:
             return cmf_lib.load_surface_cover(0)
@@ -441,14 +443,14 @@ class CMFGroundType(GHComponent):
         """
 
         if self.checks:
-            ground_type_dict = {'retention_curve': self.retention_curve,
-                                'surface_properties': self.surface_properties,
-                                'manning': self.manning,
-                                'puddle_depth': self.puddle,
-                                'saturated_depth': self.saturated_depth,
-                                }
+            self.property = {'retention_curve': self.retention_curve,
+                             'surface_properties': self.surface_properties,
+                             'manning': self.manning,
+                             'puddle_depth': self.puddle,
+                             'saturated_depth': self.saturated_depth,
+                             }
 
-            self.results = gh_misc.PassClass(ground_type_dict, 'Ground Type')
+            self.results = gh_misc.PassClass(self.property, 'Ground Type')
 
 
 class CMFWeather(GHComponent):
@@ -775,7 +777,7 @@ class CMFSurfaceProperties(GHComponent):
                                        '4 - White Sand\n'
                                        '5 - Bare Moist Soil\n'
                                        '6 - Bare Dry Soil\n'
-                                       '7 - Deciduous Tree(s)'
+                                       '7 - Deciduous Tree(s)\n'
                                        'Default is set to 0: Short Grass: 0.12m',
                         'access': 'item',
                         'default_value': 0},
@@ -950,7 +952,11 @@ class CMFSurfaceProperties(GHComponent):
 
 
 class CMFSyntheticTree(GHComponent):
-    """A component class that generates a synthetic tree."""
+    """
+    DEPRECATED - DEPRECATED - DEPRECATED - DEPRECATED - DEPRECATED
+
+    A component class that generates a synthetic tree.
+    """
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
@@ -1087,10 +1093,14 @@ class CMFRetentionCurve(GHComponent):
 
         def inputs():
             return {0: {'name': 'SoilIndex',
-                        'description': 'Index for choosing soil type. '
-                                       'Index from 0-5.\n'
-                                       'Default is set to 0, which is the '
-                                       'default CMF retention curve.',
+                        'description': 'Sets the retention curve for the ground. Should be an integer from 0-5\n'
+                                       '0 - Standard CMF Retention Curve\n'
+                                       '1 - Coarse Soil\n'
+                                       '2 - Medium Soil\n'
+                                       '3 - Medium Fine Soil\n'
+                                       '4 - Fine Soil\n'
+                                       '5 - Very Fine Soil\n'
+                                       'Default is set to 0: Standard CMF Retention Curve',
                         'access': 'item',
                         'default_value': 0},
 

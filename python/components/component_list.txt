@@ -28,3 +28,4 @@ Livestock Load Air Result;Load Air Result;VER 2018.01.0;Livestock;4 | Comfort
 Livestock Water Evaporation;Water Evaporation;VER 2018.01.0;Livestock;4 | Comfort
 Livestock Hour to Date;Hour to Date;VER 2018.01.0;Livestock;0 | Miscellaneous
 Livestock CMF Outlet;CMF Outlet;VER 2018.01.0;Livestock;3 | CMF
+Livestock CMF Ground Type;CMF Ground Type;VER February 2019;Livestock;2 | CMF
