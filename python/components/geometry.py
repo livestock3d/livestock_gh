@@ -87,6 +87,18 @@ class LoadMesh(GHComponent):
         # Run checks
         self.check_inputs()
 
+    def auto_detect(self):
+        if not self.path.endswith('.obj'):
+            geo_files = []
+            for file in os.listdir(self.path):
+                if file.endswith('.obj'):
+                    geo_files.append(os.path.join(self.path, file))
+
+            if not geo_files:
+                self.add_warning('Could not find any .obj files in the given path: ' + self.path)
+            else:
+                self.path = geo_files
+
     def run(self):
         """
         In case all the checks have passed and Load is True the component runs.
@@ -94,8 +106,18 @@ class LoadMesh(GHComponent):
         """
 
         if self.checks and self.load:
-            self.mesh = gh_geo.import_obj(self.path)
-            self.data = gh_geo.load_mesh_data(self.path)
+            self.auto_detect()
+            if not isinstance(self.path, list):
+                self.mesh = gh_geo.import_obj(self.path)
+                self.data = gh_geo.load_mesh_data(self.path)
+            else:
+                meshes = []
+                data = []
+                for path in self.path:
+                    meshes.append(gh_geo.import_obj(path))
+                    data.append(gh_geo.load_mesh_data(path))
+                self.mesh = meshes
+                self.data = data
 
 
 class SaveMesh(GHComponent):

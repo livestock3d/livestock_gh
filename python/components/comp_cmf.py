@@ -1449,6 +1449,9 @@ class CMFSolve(GHComponent):
             return output_file
 
         def write_boundary_conditions(boundary_dict_, folder):
+            raise NotImplementedError('Boundary Conditions are not implemented yet!')
+
+            """
             # Process boundary conditions
             boundary_conditions_dict = list(bc.c
                                             for bc in boundary_dict_)
@@ -1500,6 +1503,7 @@ class CMFSolve(GHComponent):
                 folder + '/' + boundary_condition_file, xml_declaration=True)
 
             return boundary_condition_file
+            """
 
         def write_solver_info(solver_dict, folder):
 

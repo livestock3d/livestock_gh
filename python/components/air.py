@@ -5,7 +5,7 @@ __license__ = "GNU GPLv3 "
 # Imports
 
 # Module imports
-import subprocess
+from System.Diagnostics import Process
 import os
 
 # Rhino and Grasshopper imports
@@ -14,16 +14,16 @@ import rhinoscriptsyntax as rs
 # Livestock imports
 from livestock.components.component import GHComponent
 import livestock.lib.misc as gh_misc
-import livestock.lib.ssh as gh_ssh
+from livestock.components import component
 import livestock.lib.geometry as gh_geo
 import livestock.lib.templates as template
+
 
 # -------------------------------------------------------------------------------------------------------------------- #
 # Livestock Comfort Classes and Functions
 
 
 class NewAirConditions(GHComponent):
-
     """
     A component class that computes a new air temperature and relative humidity with the
     Atmosphere Model from the thesis of Christian Kongsgaard.
@@ -33,67 +33,68 @@ class NewAirConditions(GHComponent):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'Mesh',
+            return {0: component.inputs('required'),
+                    1: {'name': 'Mesh',
                         'description': 'Ground Mesh',
                         'access': 'item',
                         'default_value': None},
 
-                    1: {'name': 'Evapotranspiration',
+                    2: {'name': 'Evapotranspiration',
                         'description': 'Evapotranspiration in m^3/day. '
                                        '\nEach tree branch should represent one time unit, with all the cell values to '
                                        'that time.',
                         'access': 'tree',
                         'default_value': None},
 
-
-                    2: {'name': 'AirTemperature',
+                    3: {'name': 'AirTemperature',
                         'description': 'Air temperature in C',
                         'access': 'list',
                         'default_value': None},
 
-                    3: {'name': 'AirRelativeHumidity',
+                    4: {'name': 'AirRelativeHumidity',
                         'description': 'Relative Humidity in %',
                         'access': 'list',
                         'default_value': None},
 
-                    4: {'name': 'WindSpeed',
+                    5: {'name': 'WindSpeed',
                         'description': 'Wind speed in m/s',
                         'access': 'list',
                         'default_value': None},
 
-                    5: {'name': 'AirBoundaryHeight',
+                    6: {'name': 'AirBoundaryHeight',
                         'description': 'Top of the air column in m. '
                                        '\nDefault is set to 10m',
                         'access': 'item',
                         'default_value': 10},
 
-                    6: {'name': 'InvestigationHeight',
+                    7: {'name': 'InvestigationHeight',
                         'description': 'Height at which the new air temperature and relative humidity should be '
                                        'calculated. '
                                        '\nDefault is set to 1.1m',
                         'access': 'item',
                         'default_value': 1.1},
 
-                    7: {'name': 'CPUs',
-                        'description': 'Number of cpus to perform the computation on.'
-                                       '\nDefault is set to 2',
-                        'access': 'item',
-                        'default_value': 2},
-
-                    8: {'name': 'ResultFolder',
+                    9: {'name': 'ResultFolder',
                         'description': 'Folder where the result files should be saved',
                         'access': 'item',
                         'default_value': None},
 
-                    9: {'name': 'Run',
-                        'description': 'Run the component',
-                        'access': 'item',
-                        'default_value': None}
+                    10: {'name': 'Run',
+                         'description': 'Run the component',
+                         'access': 'item',
+                         'default_value': None},
+
+                    11: component.inputs('optional'),
+
+                    12: {'name': 'CPUs',
+                         'description': 'Number of cpus to perform the computation on.'
+                                        '\nDefault is set to 2',
+                         'access': 'item',
+                         'default_value': 2}
                     }
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'NewTemperature',
                         'description': 'New temperature in C.'},
@@ -108,10 +109,18 @@ class NewAirConditions(GHComponent):
                         'description': 'Vapour flux used to alter the temperature and relative humidity in kg/h.'},
                     }
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.component_number = 24
-        self.description = 'Computes new air temperature and relative humidity with the Atmosphere Model from the thesis of Christian Kongsgaard.'
+        self.description = 'Computes new air temperature and relative humidity with the Atmosphere Model from the ' \
+                           'thesis of Christian Kongsgaard.'
+        self.checks = [False, False, False, False, False, False, False]
+        self.results = {'temperature': [],
+                        'relative_humidity': [],
+                        'heat_flux': [],
+                        'vapour_flux': []}
+
         self.mesh = None
         self.evapotranspiration = None
         self.heat_flux = None
@@ -119,16 +128,12 @@ class NewAirConditions(GHComponent):
         self.air_relhum = None
         self.boundary_height = None
         self.investigation_height = None
+        self.wind_speed = None
         self.cpus = None
         self.folder = None
         self.run_component = None
         self.area = None
         self.py_exe = gh_misc.get_python_exe()
-        self.checks = [False, False, False, False, False, False, False]
-        self.results = {'temperature': [],
-                        'relative_humidity': [],
-                        'heat_flux': [],
-                        'vapour_flux': []}
 
     def check_inputs(self):
         """Checks inputs and raises a warning if an input is not the correct type."""
@@ -142,7 +147,7 @@ class NewAirConditions(GHComponent):
         self.config_component(self.component_number)
 
     def run_checks(self, mesh, evapotranspiration, temperature, relhum, wind_speed, boundary_height,
-                   investigation_height, cpus, folder, run):
+                   investigation_height, folder, run, cpus):
 
         """
         Gathers the inputs and checks them.
@@ -165,15 +170,14 @@ class NewAirConditions(GHComponent):
         self.air_temperature = temperature
         self.air_relhum = relhum
         self.wind_speed = wind_speed
-        self.boundary_height = self.add_default_value(boundary_height, 5)
-        self.investigation_height = self.add_default_value(investigation_height, 6)
-        self.cpus = self.add_default_value(cpus, 7)
-        self.folder = self.add_default_value(folder, 8) + '/NewAir'
-        self.run_component = self.add_default_value(run, 9)
+        self.boundary_height = self.add_default_value(boundary_height, 6)
+        self.investigation_height = self.add_default_value(investigation_height, 7)
+        self.folder = self.add_default_value(folder, 9) + '/NewAir'
+        self.run_component = self.add_default_value(run, 10)
+        self.cpus = self.add_default_value(cpus, 12)
 
         # Run checks
         self.check_inputs()
-
 
     def get_mesh_data(self):
         """Extracts the data needed from the mesh."""
@@ -203,7 +207,6 @@ class NewAirConditions(GHComponent):
         vapour_obj.close()
         files_written.append(vapour_file)
 
-
         # temperature
         temp_file = 'temperature.txt'
         temp_obj = open(write_folder + '/' + temp_file, 'w')
@@ -224,7 +227,7 @@ class NewAirConditions(GHComponent):
         wind_file = 'wind_speed.txt'
         wind_obj = open(write_folder + '/' + wind_file, 'w')
         wind_obj.write(','.join(str(elem)
-                                  for elem in self.wind_speed))
+                                for elem in self.wind_speed))
         wind_obj.close()
         files_written.append(wind_file)
 
@@ -259,21 +262,20 @@ class NewAirConditions(GHComponent):
     def do_case(self):
         """Runs the case. Spawns a subprocess to run either the local or ssh template."""
 
-        template_to_run = self.folder + '/new_air_conditions_template.py'
+        template = os.path.join(self.folder, 'new_air_conditions_template.py')
 
         # Run template
-        thread = subprocess.Popen([self.py_exe, template_to_run])
-        thread.wait()
-        thread.kill()
+        # Run template
+        Process.Start(self.py_exe, '"' + str(template) + '"').WaitForExit()
 
         return True
 
     def load_results(self):
         """Loads the results from the results files and adds them to self.results."""
 
-        self.results['temperature'], \
-        self.results['relative_humidity'], \
-        self.results['heat_flux'] = load_new_air_results(self.folder)
+        (self.results['temperature'],
+         self.results['relative_humidity'],
+         self.results['heat_flux']) = load_new_air_results(self.folder)
 
         return True
 
@@ -296,26 +298,26 @@ class NewAirConditions(GHComponent):
 
 
 class LoadAirResult(GHComponent):
-
     """A component class that loads the results from Livestock New Air Conditions."""
 
     def __init__(self, ghenv):
         GHComponent.__init__(self, ghenv)
 
         def inputs():
-            return {0: {'name': 'ResultFolder',
+            return {0: component.inputs('required'),
+
+                    1: {'name': 'ResultFolder',
                         'description': 'Path to result folder.',
                         'access': 'item',
                         'default_value': None},
 
-                    1: {'name': 'LoadResult',
+                    2: {'name': 'LoadResult',
                         'description': 'Run component',
                         'access': 'item',
                         'default_value': False}}
 
         def outputs():
-            return {0: {'name': 'readMe!',
-                        'description': 'In case of any errors, it will be shown here.'},
+            return {0: component.outputs('readme'),
 
                     1: {'name': 'NewTemperature',
                         'description': 'New temperature in C.'},
@@ -327,17 +329,20 @@ class LoadAirResult(GHComponent):
                         'description': 'Latent Heat Flux in J/h'}
                     }
 
+        # Component Config
         self.inputs = inputs()
         self.outputs = outputs()
         self.description = 'Load the results from Livestock New Air Conditions'
         self.component_number = 26
-        self.folder = None
-        self.load = None
-        self.checks = False
         self.results = {'temperature': [],
                         'relative_humidity': [],
                         'heat_flux': [],
                         'vapour_flux': []}
+
+        # Data Parameters
+        self.folder = None
+        self.load = None
+        self.checks = False
         self.result_path = None
 
     def check_inputs(self):
@@ -365,7 +370,7 @@ class LoadAirResult(GHComponent):
 
         # Gather data
         self.folder = path
-        self.load = self.add_default_value(load, 1)
+        self.load = self.add_default_value(load, 2)
 
         # Run checks
         self.check_inputs()
@@ -419,4 +424,4 @@ def load_new_air_results(folder):
                                           for line in new_heat.readlines()])
     new_relhum.close()
 
-    return (new_temperature, new_relative_humidity, new_heat_flux)
+    return new_temperature, new_relative_humidity, new_heat_flux
